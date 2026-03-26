@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
 import 'package:flutter/material.dart';
 
 class ProductFilterDialog extends StatefulWidget {
@@ -791,91 +792,10 @@ class _ProductFilterDialogState extends State<ProductFilterDialog> {
     );
   }
 
-  double _roundToMeaningfulNumber(double value) {
-    if (value < 100) {
-      return (value / 10).round() * 10.0;
-    } else if (value < 1000) {
-      return (value / 100).round() * 100.0;
-    } else if (value < 10000) {
-      return (value / 1000).round() * 1000.0;
-    } else {
-      return (value / 5000).round() * 5000.0;
-    }
-  }
-
   List<Map<String, dynamic>> _generateQuickFilters(
     double minPrice,
     double maxPrice,
-  ) {
-    final List<Map<String, dynamic>> filters = [];
-
-    double range1 = maxPrice * 0.1;
-    double range2 = maxPrice * 0.25;
-    double range3 = maxPrice * 0.5;
-    double range4 = maxPrice * 0.75;
-
-    range1 = _roundToMeaningfulNumber(range1);
-    range2 = _roundToMeaningfulNumber(range2);
-    range3 = _roundToMeaningfulNumber(range3);
-    range4 = _roundToMeaningfulNumber(range4);
-
-    if (range1 > minPrice && range1 < maxPrice) {
-      filters.add({
-        'label': 'Under ${range1.toCurrency()}',
-        'range': RangeValues(minPrice, range1),
-      });
-    }
-    if (range2 > range1 && range2 < maxPrice) {
-      filters.add({
-        'label': '${range1.toCurrency()} - ${range2.toCurrency()}',
-        'range': RangeValues(range1, range2),
-      });
-    }
-    if (range3 > range2 && range3 < maxPrice) {
-      filters.add({
-        'label': '${range2.toCurrency()} - ${range3.toCurrency()}',
-        'range': RangeValues(range2, range3),
-      });
-    }
-    if (range4 > range3 && range4 < maxPrice) {
-      filters.add({
-        'label': '${range3.toCurrency()} - ${range4.toCurrency()}',
-        'range': RangeValues(range3, range4),
-      });
-    }
-    if (range4 < maxPrice) {
-      filters.add({
-        'label': 'Above ${range4.toCurrency()}',
-        'range': RangeValues(range4, maxPrice),
-      });
-    }
-
-    if (filters.isEmpty) {
-      final quarter = (maxPrice - minPrice) / 4;
-      filters.addAll([
-        {
-          'label': 'Under ${(minPrice + quarter).toCurrency()}',
-          'range': RangeValues(minPrice, minPrice + quarter),
-        },
-        {
-          'label':
-              '${(minPrice + quarter).toCurrency()} - ${(minPrice + 2 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + quarter, minPrice + 2 * quarter),
-        },
-        {
-          'label':
-              '${(minPrice + 2 * quarter).toCurrency()} - ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 2 * quarter, minPrice + 3 * quarter),
-        },
-        {
-          'label': 'Above ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 3 * quarter, maxPrice),
-        },
-      ]);
-    }
-
-    return filters;
-  }
+  ) => generateQuickFilters(minPrice, maxPrice);
 
   Widget _buildQuickFilterChip(
     String label,

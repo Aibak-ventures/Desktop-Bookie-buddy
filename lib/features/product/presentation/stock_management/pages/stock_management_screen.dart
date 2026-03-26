@@ -3,20 +3,23 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_details/pages/product_details_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_details/bloc/product_details_cubit/product_details_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/add_edit_product_dialog.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_category_tabs.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_product_row.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_search_bar.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_summary_cards.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_table_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class StockManagementScreen extends StatefulWidget {
   const StockManagementScreen({super.key});
@@ -114,1115 +117,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserEntity?>(
-      listener: (context, user) {
-        // Reload products and services when shop switches
-        if (user != null) {
-          // Force reload services
-          context.read<ServiceBloc>().add(
-            const ServiceEvent.loadServices(force: true),
-          );
-          // Reload products
-          context.read<StockManagementCubit>().loadProducts();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
-        body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1400),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Only show header when on product list, not on product details
-                  BlocBuilder<StockManagementCubit, StockManagementState>(
-                    builder: (context, state) {
-                      final showingProductDetails = state.maybeWhen(
-                        loaded:
-                            (
-                              _,
-                              __,
-                              ___,
-                              ____,
-                              _____,
-                              ______,
-                              _______,
-                              selectedProductId,
-                            ) {
-                              return selectedProductId != null;
-                            },
-                        orElse: () => false,
-                      );
-
-                      if (!showingProductDetails) {
-                        return Column(
-                          children: [
-                            _buildHeader(),
-                            const SizedBox(height: 16),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  Expanded(
-                    child:
-                        BlocBuilder<StockManagementCubit, StockManagementState>(
-                          builder: (context, state) {
-                            // Check if we should show product details
-                            return state.maybeWhen(
-                              loaded:
-                                  (
-                                    products,
-                                    __,
-                                    ___,
-                                    ____,
-                                    _____,
-                                    selectedServiceId,
-                                    _______,
-                                    selectedProductId,
-                                  ) {
-                                    if (selectedProductId != null) {
-                                      // Find the product to get its serviceId
-                                      final selectedProduct = products
-                                          .firstWhere(
-                                            (p) => p.id == selectedProductId,
-                                            orElse: () => products.first,
-                                          );
-
-                                      // Show product details
-                                      return BlocProvider(
-                                        create: (context) =>
-                                            ProductDetailsCubit(
-                                              getProductInfo: getIt.get(),
-                                              updateVariant: getIt.get(),
-                                              deleteProduct: getIt.get(),
-                                              addProductVariants: getIt.get(),
-                                              getProductBookings: getIt.get(),
-                                              getProductGrowthData: getIt.get(),
-                                            )..loadProductDetails(
-                                              selectedProductId,
-                                            ),
-                                        child: ProductDetailsScreen(
-                                          productId: selectedProductId,
-                                          serviceId: selectedServiceId,
-                                          mainServiceType:
-                                              selectedProduct.mainServiceType,
-                                          productForEdit: selectedProduct,
-                                        ),
-                                      );
-                                    } else {
-                                      // Show product list
-                                      return _buildProductList();
-                                    }
-                                  },
-                              orElse: () => _buildProductList(),
-                            );
-                          },
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProductList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSummaryCards(),
-        const SizedBox(height: 24),
-        _buildSearchBar(),
-        const SizedBox(height: 20),
-        _buildCategoryTabs(),
-        const SizedBox(height: 20),
-        Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200, width: 1.5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.changeOpacity(0.04),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-                BoxShadow(
-                  color: Colors.black.changeOpacity(0.02),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: _buildProductsTable(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        // IconButton(
-        //   onPressed: () {},
-        //   icon: const Icon(Icons.arrow_back, size: 20),
-        //   padding: EdgeInsets.zero,
-        //   constraints: const BoxConstraints(),
-        // ),
-        // const SizedBox(width: 12),
-        // const Text(
-        //   'All Orders > ',
-        //   style: TextStyle(
-        //     fontSize: 18,
-        //     color: Colors.grey,
-        //     fontWeight: FontWeight.w500,
-        //   ),
-        // ),
-        const Text(
-          'Stock Management',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSummaryCards() {
-    return BlocBuilder<StockManagementCubit, StockManagementState>(
-      builder: (context, state) {
-        return state.maybeWhen(
-          loaded:
-              (
-                _,
-                totalProducts,
-                totalCategories,
-                __,
-                ___,
-                ____,
-                _____,
-                ______,
-              ) {
-                final serviceCount = context
-                    .read<ServiceBloc>()
-                    .getServices()
-                    .length;
-                return Row(
-                  children: [
-                    _summaryCard(
-                      'Total Products',
-                      NumberFormat('#,###').format(totalProducts),
-                    ),
-                    const SizedBox(width: 16),
-                    _summaryCard('Total Categories', serviceCount.toString()),
-                  ],
-                );
-              },
-          orElse: () {
-            final serviceCount = context
-                .read<ServiceBloc>()
-                .getServices()
-                .length;
-            return Row(
-              children: [
-                SizedBox(
-                  width: 227,
-                  height: 98,
-                  child: _summaryCard('Total Products', '-'),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  width: 227,
-                  height: 98,
-                  child: _summaryCard(
-                    'Total Services',
-                    serviceCount.toString(),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _summaryCard(String title, String value) {
-    return Container(
-      width: 217,
-      height: 97,
-      // padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          SizedBox(width: 40),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return BlocBuilder<StockManagementCubit, StockManagementState>(
-      builder: (context, state) {
-        final selectedServiceId = state.maybeWhen(
-          loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
-              selected,
-          orElse: () => -1,
-        );
-
-        return Row(
-          children: [
-            Container(
-              width: 269,
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.search, color: Colors.grey.shade500, size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: _selectedSearchTypeIndex,
-                      builder: (context, searchTypeIndex, child) {
-                        final searchTypes = [
-                          'name',
-                          'category',
-                          'model',
-                          'color',
-                        ];
-                        final searchType = searchTypes[searchTypeIndex];
-                        return TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            hintText: 'Search by $searchType',
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade400,
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                          ),
-                          style: const TextStyle(fontSize: 14),
-                          onChanged: (value) {
-                            // Debounce search — use _applyProductFilters so
-                            // the selected search_by type is always respected
-                            Future.delayed(
-                              const Duration(milliseconds: 500),
-                              () {
-                                if (_searchController.text == value) {
-                                  _applyProductFilters(
-                                    selectedServiceId == -1
-                                        ? null
-                                        : selectedServiceId,
-                                    _selectedSearchTypeIndex.value,
-                                    _priceRange.value,
-                                    _isPriceFilterEnabled.value,
-                                  );
-                                }
-                              },
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  // Only show filter button when not "All Services"
-                  if (selectedServiceId != -1)
-                    IconButton(
-                      onPressed: () {
-                        _showProductFilterBottomSheet();
-                      },
-                      icon: Icon(
-                        Icons.tune,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            // Add Product Button
-            ElevatedButton.icon(
-              onPressed: () {
-                _showAddEditProductDialog(context);
-              },
-              icon: const Icon(Icons.add, size: 18),
-              label: const Text(
-                'Add Product',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.purple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildCategoryTabs() {
-    return BlocBuilder<ServiceBloc, ServiceState>(
-      builder: (context, serviceState) {
-        return BlocBuilder<StockManagementCubit, StockManagementState>(
-          builder: (context, state) {
-            final selectedServiceId = state.maybeWhen(
-              loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
-                  selected,
-              orElse: () => -1, // Default to -1 (All Services)
-            );
-
-            return serviceState.maybeWhen(
-              loaded: (services) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      // "All Services" tab
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: InkWell(
-                          onTap: () {
-                            context
-                                .read<StockManagementCubit>()
-                                .filterByService(-1);
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: selectedServiceId == -1
-                                  ? AppColors.purple.withOpacity(0.1)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: selectedServiceId == -1
-                                    ? AppColors.purple
-                                    : Colors.grey.shade300,
-                                width: selectedServiceId == -1 ? 2 : 1,
-                              ),
-                            ),
-                            child: Text(
-                              'All Services',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: selectedServiceId == -1
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
-                                color: selectedServiceId == -1
-                                    ? AppColors.purple
-                                    : Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Service tabs from API
-                      ...services.map((service) {
-                        final isSelected = service.id == selectedServiceId;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: InkWell(
-                            onTap: () {
-                              context
-                                  .read<StockManagementCubit>()
-                                  .filterByService(service.id);
-                            },
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppColors.purple.withOpacity(0.1)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColors.purple
-                                      : Colors.grey.shade300,
-                                  width: isSelected ? 2 : 1,
-                                ),
-                              ),
-                              child: Text(
-                                service.name,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.w500,
-                                  color: isSelected
-                                      ? AppColors.purple
-                                      : Colors.grey.shade700,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ],
-                  ),
-                );
-              },
-              orElse: () => const Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildProductsTable() {
-    return BlocBuilder<StockManagementCubit, StockManagementState>(
-      builder: (context, state) {
-        return state.when(
-          initial: () => const SizedBox.shrink(),
-          loading: () => const Center(
-            child: Padding(
-              padding: EdgeInsets.all(40),
-              child: CircularProgressIndicator(),
-            ),
-          ),
-          loaded: (products, _, __, ___, isPaginating, ____, _____, ______) {
-            if (products.isEmpty) {
-              return Container(
-                padding: const EdgeInsets.all(40),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Center(
-                  child: Text(
-                    'No products found',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ),
-              );
-            }
-
-            return Column(
-              children: [
-                _buildTableHeader(),
-                Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    padding: EdgeInsets.zero,
-                    itemCount: products.length + (isPaginating ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index < products.length) {
-                        return _buildProductRow(products[index]);
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.purple,
-                              strokeWidth: 3,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-          error: (message) => Container(
-            padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red.shade300,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    message,
-                    style: TextStyle(fontSize: 16, color: Colors.red.shade400),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<StockManagementCubit>().loadProducts();
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTableHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.purple.withOpacity(0.08),
-            AppColors.purple.withOpacity(0.12),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.purple.withOpacity(0.2),
-            width: 2,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          // Item column - enhanced width for better visibility
-          Expanded(
-            flex: 3,
-            child: Text(
-              'ITEM',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Category column
-          Expanded(
-            flex: 2,
-            child: Text(
-              'CATEGORY',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Sale Price column
-          Expanded(
-            flex: 2,
-            child: Text(
-              'SALE PRICE',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Rent Price column
-          Expanded(
-            flex: 2,
-            child: Text(
-              'RENT PRICE',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.changeOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Total Qty column
-          SizedBox(
-            width: 100,
-            child: Text(
-              'TOTAL QTY',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Total Variants column
-          SizedBox(
-            width: 100,
-            child: Text(
-              'VARIANTS',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(width: 16),
-          // Actions column
-          SizedBox(
-            width: 140,
-            child: Text(
-              'ACTIONS',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.purple.withOpacity(0.9),
-                letterSpacing: 0.8,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProductRow(ProductEntity product) {
-    final totalStock = product.variants.fold<int>(
-      0,
-      (sum, variant) => sum + variant.stock,
-    );
-    final variantCount = product.variants.length;
-
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Colors.grey.shade100, width: 1),
-          ),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              context.read<StockManagementCubit>().showProductDetails(
-                product.id,
-              );
-            },
-            hoverColor: AppColors.purple.withOpacity(0.08),
-            splashColor: AppColors.purple.withOpacity(0.12),
-            highlightColor: AppColors.purple.withOpacity(0.1),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Row(
-                children: [
-                  // Item column (image + name)
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      children: [
-                        // Enhanced image with shadow
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade50,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                            border: Border.all(
-                              color: Colors.grey.shade200,
-                              width: 1,
-                            ),
-                          ),
-                          child:
-                              (product.thumbnailImage != null ||
-                                  product.image != null)
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CustomNetworkImage(
-                                    imageUrl:
-                                        product.thumbnailImage ??
-                                        product.image!,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.grey.shade400,
-                                  size: 28,
-                                ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                product.name,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1F2937),
-                                  height: 1.3,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              // Show color, category, and model under product name separated by dots
-                              Builder(
-                                builder: (context) {
-                                  final specs = <String>[];
-                                  if (product.color != null &&
-                                      product.color!.isNotEmpty) {
-                                    specs.add(product.color!);
-                                  }
-                                  if (product.category != null &&
-                                      product.category!.isNotEmpty) {
-                                    specs.add(product.category!);
-                                  }
-                                  if (product.model != null &&
-                                      product.model!.isNotEmpty) {
-                                    specs.add(product.model!);
-                                  }
-
-                                  if (specs.isEmpty) {
-                                    return const SizedBox.shrink();
-                                  }
-
-                                  return Text(
-                                    specs.join(' • '),
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey.shade600,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Category column showing main service name
-                  Expanded(
-                    flex: 2,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.purple.withOpacity(0.12),
-                              AppColors.purple.withOpacity(0.08),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: AppColors.purple.withOpacity(0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          product.generalServiceName ?? '-',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.purple.withOpacity(0.95),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Sale Price column - show actual sale_price from product
-                  Expanded(
-                    flex: 2,
-                    child: Builder(
-                      builder: (context) {
-                        // Get the sale price from product (not variants)
-                        double? salePriceValue;
-                        if (product.salePrice != null &&
-                            product.salePrice!.isNotEmpty) {
-                          salePriceValue = double.tryParse(product.salePrice!);
-                        }
-                        return Text(
-                          salePriceValue != null
-                              ? '₹ ${NumberFormat('#,###.##').format(salePriceValue)}'
-                              : '-',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2937),
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Rent Price column
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      product.price != null
-                          ? '₹ ${NumberFormat('#,###').format(product.price)}'
-                          : '-',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1F2937),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Quantity column with badge
-                  SizedBox(
-                    width: 100,
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          totalStock.toString(),
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.grey.shade800,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Variants column with badge
-                  SizedBox(
-                    width: 100,
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: Colors.blue.shade200,
-                            width: 1,
-                          ),
-                        ),
-                        child: Text(
-                          variantCount.toString(),
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.blue.shade800,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Actions column with modern styled buttons
-                  SizedBox(
-                    width: 140,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildActionButton(
-                          icon: Icons.edit_outlined,
-                          tooltip: 'Edit Product',
-                          color: Colors.blue,
-                          onPressed: () {
-                            performSecureActionDialog(
-                              context,
-                              SecretPasswordLocations.productEdit,
-                              onSuccess: () {
-                                _showAddEditProductDialog(
-                                  context,
-                                  product: product,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        _buildActionButton(
-                          icon: Icons.visibility_outlined,
-                          tooltip: 'View Details',
-                          color: Colors.green,
-                          onPressed: () {
-                            context
-                                .read<StockManagementCubit>()
-                                .showProductDetails(product.id);
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        _buildActionButton(
-                          icon: Icons.delete_outline,
-                          tooltip: 'Delete Product',
-                          color: Colors.red,
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(context, product);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Build a modern styled action button
-  Widget _buildActionButton({
-    required IconData icon,
-    required String tooltip,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      waitDuration: const Duration(milliseconds: 500),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(6),
-        hoverColor: color.withOpacity(0.1),
-        splashColor: color.withOpacity(0.2),
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: color.withOpacity(0.2), width: 1),
-          ),
-          child: Icon(icon, size: 18, color: color),
-        ),
-      ),
-    );
-  }
-
   void _showDeleteConfirmationDialog(
     BuildContext context,
     ProductEntity product,
@@ -1252,7 +146,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     );
   }
 
-  /// Show product filter bottom sheet (from new_booking_screen pattern)
+  /// Show product filter dialog
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
     final currentState = context.read<StockManagementCubit>().state;
@@ -1268,7 +162,6 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
         if (productPrice > maxProductPrice) {
           maxProductPrice = productPrice.toDouble();
         }
-        // Also check variant prices
         for (final variant in product.variants) {
           final variantPrice = variant.price ?? 0;
           if (variantPrice > maxProductPrice) {
@@ -1282,752 +175,38 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       }
     }
 
-    // Get services for filter
-    // final servicesState = context.read<ServiceBloc>().state;
-    // List<ServicesModel> services = [];
-    // servicesState.whenOrNull(loaded: (s) => services = s);
-
-    // Get current selected service ID from state
     final selectedServiceId = currentState.maybeWhen(
       loaded: (_, __, ___, ____, _____, serviceId, ______, _______) =>
           serviceId,
       orElse: () => -1,
     );
 
-    // Setup local state for dialog
-    final TextEditingController maxPriceController = TextEditingController();
-    final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
-      _isPriceFilterEnabled.value,
-    );
-    final tempSelectedServiceId = ValueNotifier<int?>(selectedServiceId);
-    final tempSelectedSearchTypeIndex = ValueNotifier<int>(
-      _selectedSearchTypeIndex.value,
-    );
-    final tempPriceRange = ValueNotifier<RangeValues>(_priceRange.value);
-
-    final searchTypes = ['Name', 'Category', 'Model', 'Color'];
-
-    showDialog(
+    showDialog<StockFilterResult>(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: Container(
-          width: 500,
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 20,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(20),
-                  ),
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF6132E4).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.tune_rounded,
-                        color: Color(0xFF6132E4),
-                        size: 22,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        'Search & Filter',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D2D2D),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: Icon(Icons.close, color: Colors.grey.shade600),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Search Type Section
-                      const Text(
-                        'Search By',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D2D2D),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      ValueListenableBuilder<int>(
-                        valueListenable: tempSelectedSearchTypeIndex,
-                        builder: (context, selectedIndex, child) {
-                          return Wrap(
-                            spacing: 10,
-                            runSpacing: 10,
-                            children: List.generate(searchTypes.length, (
-                              index,
-                            ) {
-                              final isSelected = index == selectedIndex;
-                              return GestureDetector(
-                                onTap: () {
-                                  tempSelectedSearchTypeIndex.value = index;
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? const Color(
-                                            0xFF6132E4,
-                                          ).withOpacity(0.1)
-                                        : Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade300,
-                                      width: isSelected ? 2 : 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    searchTypes[index],
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.normal,
-                                      color: isSelected
-                                          ? const Color(0xFF6132E4)
-                                          : Colors.grey.shade700,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 28),
-                      const Divider(height: 1),
-                      const SizedBox(height: 24),
-
-                      // Price Filter Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Price Range',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF2D2D2D),
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                          ValueListenableBuilder<bool>(
-                            valueListenable: isPriceFilterEnabledWidgetNotifier,
-                            builder: (context, isEnabled, child) =>
-                                Transform.scale(
-                                  scale: 0.85,
-                                  child: Switch(
-                                    value: isEnabled,
-                                    onChanged: (value) {
-                                      isPriceFilterEnabledWidgetNotifier.value =
-                                          value;
-                                    },
-                                    activeThumbColor: const Color(0xFF6132E4),
-                                    activeTrackColor: const Color(
-                                      0xFF6132E4,
-                                    ).withOpacity(0.3),
-                                    inactiveThumbColor: Colors.grey.shade400,
-                                    inactiveTrackColor: Colors.grey.shade200,
-                                  ),
-                                ),
-                          ),
-                        ],
-                      ),
-
-                      // Price Range Content
-                      ValueListenableBuilder<bool>(
-                        valueListenable: isPriceFilterEnabledWidgetNotifier,
-                        builder: (context, isEnabled, child) => AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: isEnabled
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 16),
-
-                                    // Price Range Display
-                                    ValueListenableBuilder<RangeValues>(
-                                      valueListenable: tempPriceRange,
-                                      builder: (context, range, child) => Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.1),
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.05),
-                                                ],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: const Color(
-                                                  0xFF6132E4,
-                                                ).withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              range.start.toCurrency(),
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                            ),
-                                            child: Icon(
-                                              Icons.arrow_forward,
-                                              size: 18,
-                                              color: Colors.grey.shade400,
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.1),
-                                                  const Color(
-                                                    0xFF6132E4,
-                                                  ).withOpacity(0.05),
-                                                ],
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: const Color(
-                                                  0xFF6132E4,
-                                                ).withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              range.end.toCurrency(),
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w700,
-                                                color: Color(0xFF6132E4),
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 8),
-
-                                    // Price Range Slider
-                                    ValueListenableBuilder<RangeValues>(
-                                      valueListenable: tempPriceRange,
-                                      builder: (context, range, child) =>
-                                          ValueListenableBuilder<double>(
-                                            valueListenable: _maxPriceNotifier,
-                                            builder:
-                                                (
-                                                  context,
-                                                  currentMaxPrice,
-                                                  child,
-                                                ) => SliderTheme(
-                                                  data: SliderThemeData(
-                                                    activeTrackColor:
-                                                        const Color(0xFF6132E4),
-                                                    inactiveTrackColor:
-                                                        Colors.grey.shade200,
-                                                    thumbColor: const Color(
-                                                      0xFF6132E4,
-                                                    ),
-                                                    overlayColor: const Color(
-                                                      0xFF6132E4,
-                                                    ).withOpacity(0.2),
-                                                    trackHeight: 4,
-                                                    thumbShape:
-                                                        const RoundSliderThumbShape(
-                                                          enabledThumbRadius: 8,
-                                                        ),
-                                                    overlayShape:
-                                                        const RoundSliderOverlayShape(
-                                                          overlayRadius: 16,
-                                                        ),
-                                                  ),
-                                                  child: RangeSlider(
-                                                    values: range,
-                                                    min: 0,
-                                                    max: currentMaxPrice,
-                                                    divisions: 20,
-                                                    onChanged:
-                                                        (RangeValues newRange) {
-                                                          tempPriceRange.value =
-                                                              newRange;
-                                                        },
-                                                  ),
-                                                ),
-                                          ),
-                                    ),
-
-                                    const SizedBox(height: 16),
-
-                                    // Manual Max Price Input
-                                    const Text(
-                                      'Set Max Price',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF2D2D2D),
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 42,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade50,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                color: Colors.grey.shade300,
-                                              ),
-                                            ),
-                                            child: TextField(
-                                              controller: maxPriceController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                hintText: 'Enter max price',
-                                                prefixText: '₹ ',
-                                                border: InputBorder.none,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 12,
-                                                    ),
-                                              ),
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: 'Inter',
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            final newMax = double.tryParse(
-                                              maxPriceController.text.trim(),
-                                            );
-                                            if (newMax != null && newMax > 0) {
-                                              _maxPriceNotifier.value = newMax;
-                                              tempPriceRange.value =
-                                                  RangeValues(0, newMax);
-                                              maxPriceController.clear();
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 12,
-                                            ),
-                                            backgroundColor: const Color(
-                                              0xFF6132E4,
-                                            ),
-                                            foregroundColor: Colors.white,
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            'Set',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    const SizedBox(height: 20),
-
-                                    // Quick Filters
-                                    const Text(
-                                      'Quick Filters',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF2D2D2D),
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-
-                                    ValueListenableBuilder<double>(
-                                      valueListenable: _maxPriceNotifier,
-                                      builder:
-                                          (context, currentMaxPrice, child) {
-                                            final quickFilters =
-                                                _generateQuickFilters(
-                                                  0,
-                                                  currentMaxPrice,
-                                                );
-
-                                            return Wrap(
-                                              spacing: 8,
-                                              runSpacing: 8,
-                                              children: quickFilters
-                                                  .map(
-                                                    (
-                                                      filter,
-                                                    ) => _buildQuickFilterChip(
-                                                      filter['label'],
-                                                      filter['range'],
-                                                      tempPriceRange,
-                                                      (val) =>
-                                                          tempPriceRange.value =
-                                                              val,
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                            );
-                                          },
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Footer
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(20),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          tempSelectedSearchTypeIndex.value = 0;
-                          tempSelectedServiceId.value = -1;
-                          tempPriceRange.value = RangeValues(
-                            0,
-                            _maxPriceNotifier.value,
-                          );
-                          isPriceFilterEnabledWidgetNotifier.value = false;
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(
-                            color: Colors.grey.shade300,
-                            width: 1.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Text(
-                          'Reset',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade700,
-                            fontFamily: 'Inter',
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Apply changes
-                          setState(() {
-                            _selectedSearchTypeIndex.value =
-                                tempSelectedSearchTypeIndex.value;
-                            _priceRange.value = tempPriceRange.value;
-                            _isPriceFilterEnabled.value =
-                                isPriceFilterEnabledWidgetNotifier.value;
-                          });
-
-                          Navigator.of(context).pop();
-
-                          // Trigger filter application using temp values to avoid timing issues
-                          _applyProductFilters(
-                            tempSelectedServiceId.value,
-                            tempSelectedSearchTypeIndex.value,
-                            tempPriceRange.value,
-                            isPriceFilterEnabledWidgetNotifier.value,
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          backgroundColor: const Color(0xFF6132E4),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shadowColor: const Color(0xFF6132E4).withOpacity(0.3),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check, size: 18),
-                            SizedBox(width: 8),
-                            Text(
-                              'Apply Filters',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) => StockManagementFilterDialog(
+        maxPriceNotifier: _maxPriceNotifier,
+        initialSearchTypeIndex: _selectedSearchTypeIndex.value,
+        initialPriceRange: _priceRange.value,
+        initialIsPriceEnabled: _isPriceFilterEnabled.value,
       ),
-    );
+    ).then((result) {
+      if (result != null) {
+        setState(() {
+          _selectedSearchTypeIndex.value = result.searchTypeIndex;
+          _priceRange.value = result.priceRange;
+          _isPriceFilterEnabled.value = result.isPriceEnabled;
+        });
+        _applyProductFilters(
+          selectedServiceId == -1 ? null : selectedServiceId,
+          result.searchTypeIndex,
+          result.priceRange,
+          result.isPriceEnabled,
+        );
+      }
+    });
   }
-
-  // Helper function to round numbers to meaningful values
-  double _roundToMeaningfulNumber(double value) {
-    if (value < 100) {
-      return (value / 10).round() * 10.0;
-    } else if (value < 1000) {
-      return (value / 100).round() * 100.0;
-    } else if (value < 10000) {
-      return (value / 1000).round() * 1000.0;
-    } else {
-      return (value / 5000).round() * 5000.0;
-    }
-  }
-
-  // Helper function to generate dynamic quick filters based on max price
-  List<Map<String, dynamic>> _generateQuickFilters(
-    double minPrice,
-    double maxPrice,
-  ) {
-    final List<Map<String, dynamic>> filters = [];
-
-    // Calculate dynamic ranges based on maxPrice
-    double range1 = maxPrice * 0.1; // 10% of max
-    double range2 = maxPrice * 0.25; // 25% of max
-    double range3 = maxPrice * 0.5; // 50% of max
-    double range4 = maxPrice * 0.75; // 75% of max
-
-    // Round to nearest meaningful number
-    range1 = _roundToMeaningfulNumber(range1);
-    range2 = _roundToMeaningfulNumber(range2);
-    range3 = _roundToMeaningfulNumber(range3);
-    range4 = _roundToMeaningfulNumber(range4);
-
-    // Ensure ranges are distinct and meaningful
-    if (range1 > minPrice && range1 < maxPrice) {
-      filters.add({
-        'label': 'Under ${range1.toCurrency()}',
-        'range': RangeValues(minPrice, range1),
-      });
-    }
-
-    if (range2 > range1 && range2 < maxPrice) {
-      filters.add({
-        'label': '${range1.toCurrency()} - ${range2.toCurrency()}',
-        'range': RangeValues(range1, range2),
-      });
-    }
-
-    if (range3 > range2 && range3 < maxPrice) {
-      filters.add({
-        'label': '${range2.toCurrency()} - ${range3.toCurrency()}',
-        'range': RangeValues(range2, range3),
-      });
-    }
-
-    if (range4 > range3 && range4 < maxPrice) {
-      filters.add({
-        'label': '${range3.toCurrency()} - ${range4.toCurrency()}',
-        'range': RangeValues(range3, range4),
-      });
-    }
-
-    // Always add "Above X" filter
-    if (range4 < maxPrice) {
-      filters.add({
-        'label': 'Above ${range4.toCurrency()}',
-        'range': RangeValues(range4, maxPrice),
-      });
-    }
-
-    // Fallback: if no meaningful ranges, create simple divisions
-    if (filters.isEmpty) {
-      final quarter = (maxPrice - minPrice) / 4;
-      filters.addAll([
-        {
-          'label': 'Under ${(minPrice + quarter).toCurrency()}',
-          'range': RangeValues(minPrice, minPrice + quarter),
-        },
-        {
-          'label':
-              '${(minPrice + quarter).toCurrency()} - ${(minPrice + 2 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + quarter, minPrice + 2 * quarter),
-        },
-        {
-          'label':
-              '${(minPrice + 2 * quarter).toCurrency()} - ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 2 * quarter, minPrice + 3 * quarter),
-        },
-        {
-          'label': 'Above ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 3 * quarter, maxPrice),
-        },
-      ]);
-    }
-
-    return filters;
-  }
-
-  Widget _buildQuickFilterChip(
-    String label,
-    RangeValues range,
-    ValueNotifier<RangeValues> currentRange,
-    void Function(RangeValues) onChanged,
-  ) => ValueListenableBuilder<RangeValues>(
-    valueListenable: currentRange,
-    builder: (context, current, child) {
-      final isSelected =
-          current.start == range.start && current.end == range.end;
-
-      return GestureDetector(
-        onTap: () {
-          currentRange.value = range;
-          onChanged(range);
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? Colors.white : Colors.grey.shade700,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ),
-      );
-    },
-  );
 
   /// Apply product filters based on selection
   void _applyProductFilters(
@@ -2063,6 +242,298 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
       startPrice: isPriceEnabled ? priceRange.start.toInt() : null,
       endPrice: isPriceEnabled ? priceRange.end.toInt() : null,
       page: 1,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<UserCubit, UserEntity?>(
+      listener: (context, user) {
+        // Reload products and services when shop switches
+        if (user != null) {
+          context.read<ServiceBloc>().add(
+            const ServiceEvent.loadServices(force: true),
+          );
+          context.read<StockManagementCubit>().loadProducts();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1400),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Only show header when on product list, not on product details
+                  BlocBuilder<StockManagementCubit, StockManagementState>(
+                    builder: (context, state) {
+                      final showingProductDetails = state.maybeWhen(
+                        loaded: (
+                          _,
+                          __,
+                          ___,
+                          ____,
+                          _____,
+                          ______,
+                          _______,
+                          selectedProductId,
+                        ) {
+                          return selectedProductId != null;
+                        },
+                        orElse: () => false,
+                      );
+
+                      if (!showingProductDetails) {
+                        return Column(
+                          children: [
+                            _buildHeader(),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  Expanded(
+                    child: BlocBuilder<StockManagementCubit,
+                        StockManagementState>(
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          loaded: (
+                            products,
+                            __,
+                            ___,
+                            ____,
+                            _____,
+                            selectedServiceId,
+                            _______,
+                            selectedProductId,
+                          ) {
+                            if (selectedProductId != null) {
+                              final selectedProduct = products.firstWhere(
+                                (p) => p.id == selectedProductId,
+                                orElse: () => products.first,
+                              );
+                              return BlocProvider(
+                                create: (context) => ProductDetailsCubit(
+                                  getProductInfo: getIt.get(),
+                                  updateVariant: getIt.get(),
+                                  deleteProduct: getIt.get(),
+                                  addProductVariants: getIt.get(),
+                                  getProductBookings: getIt.get(),
+                                  getProductGrowthData: getIt.get(),
+                                )..loadProductDetails(selectedProductId),
+                                child: ProductDetailsScreen(
+                                  productId: selectedProductId,
+                                  serviceId: selectedServiceId,
+                                  mainServiceType:
+                                      selectedProduct.mainServiceType,
+                                  productForEdit: selectedProduct,
+                                ),
+                              );
+                            } else {
+                              return _buildProductList();
+                            }
+                          },
+                          orElse: () => _buildProductList(),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return const Row(
+      children: [
+        Text(
+          'Stock Management',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF2D3436),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProductList() {
+    return BlocBuilder<StockManagementCubit, StockManagementState>(
+      builder: (context, state) {
+        final selectedServiceId = state.maybeWhen(
+              loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
+                  selected,
+              orElse: () => -1,
+            ) ??
+            -1;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const StockManagementSummaryCards(),
+            const SizedBox(height: 24),
+            StockManagementSearchBar(
+              searchController: _searchController,
+              selectedSearchTypeIndex: _selectedSearchTypeIndex,
+              selectedServiceId: selectedServiceId,
+              onFilterTap: _showProductFilterBottomSheet,
+              onAddProduct: () => _showAddEditProductDialog(context),
+              onSearch: () => _applyProductFilters(
+                selectedServiceId == -1 ? null : selectedServiceId,
+                _selectedSearchTypeIndex.value,
+                _priceRange.value,
+                _isPriceFilterEnabled.value,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const StockManagementCategoryTabs(),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200, width: 1.5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.changeOpacity(0.04),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.changeOpacity(0.02),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: _buildProductsTable(),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildProductsTable() {
+    return BlocBuilder<StockManagementCubit, StockManagementState>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => const SizedBox.shrink(),
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          loaded: (products, _, __, ___, isPaginating, ____, _____, ______) {
+            if (products.isEmpty) {
+              return Container(
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Text(
+                    'No products found',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              );
+            }
+
+            return Column(
+              children: [
+                const StockManagementTableHeader(),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.zero,
+                    itemCount: products.length + (isPaginating ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index < products.length) {
+                        final product = products[index];
+                        return StockManagementProductRow(
+                          product: product,
+                          onTap: () => context
+                              .read<StockManagementCubit>()
+                              .showProductDetails(product.id),
+                          onEdit: () => performSecureActionDialog(
+                            context,
+                            SecretPasswordLocations.productEdit,
+                            onSuccess: () => _showAddEditProductDialog(
+                              context,
+                              product: product,
+                            ),
+                          ),
+                          onViewDetails: () => context
+                              .read<StockManagementCubit>()
+                              .showProductDetails(product.id),
+                          onDelete: () =>
+                              _showDeleteConfirmationDialog(context, product),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.purple,
+                              strokeWidth: 3,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+          error: (message) => Container(
+            padding: const EdgeInsets.all(40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: Colors.red.shade300,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    message,
+                    style: TextStyle(
+                        fontSize: 16, color: Colors.red.shade400),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<StockManagementCubit>().loadProducts();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
