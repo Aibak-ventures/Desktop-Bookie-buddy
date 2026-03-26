@@ -172,10 +172,10 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                  color: const Color(0xFF6C5CE7).withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                    color: const Color(0xFF6C5CE7).withValues(alpha:0.3),
                     width: 1,
                   ),
                 ),
@@ -224,7 +224,7 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                           Text(
                             user.shopDetails.place ?? user.shopDetails.address,
                             style: TextStyle(
-                              color: const Color(0xFF6C5CE7).withOpacity(0.7),
+                              color: const Color(0xFF6C5CE7).withValues(alpha:0.7),
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),
@@ -273,10 +273,10 @@ class ShopSwitcherButtonCollapsed extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                  color: const Color(0xFF6C5CE7).withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withOpacity(0.3),
+                    color: const Color(0xFF6C5CE7).withValues(alpha:0.3),
                     width: 1,
                   ),
                 ),

@@ -23,34 +23,32 @@ class OnboardingScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 12),
 
-                  Image.asset(
-                    'assets/images/app_icon_dart.png',
-                    height: 82,
-                  ),
+                  Image.asset('assets/images/app_icon_dart.png', height: 82),
 
                   const Spacer(),
 
                   Center(
                     child: Row(
                       children: [
-                        SizedBox(
-                          width: 101,
-                        ),
+                        SizedBox(width: 101),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
                               "Welcome",
                               style: TextStyle(
-                                  fontSize: 57, fontWeight: FontWeight.w700),
+                                fontSize: 57,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                             const SizedBox(height: 22),
                             const Text(
                               "Manage bookings, ledger,\nand inventory — all in one smooth flow",
                               style: TextStyle(
-                                  fontSize: 26,
-                                  height: 1.4,
-                                  color: Color(0xFF555555)),
+                                fontSize: 26,
+                                height: 1.4,
+                                color: Color(0xFF555555),
+                              ),
                             ),
                             const SizedBox(height: 30),
                             SizedBox(
@@ -60,27 +58,28 @@ class OnboardingScreen extends StatelessWidget {
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (_) => const LoginScreen()),
+                                    builder: (_) => const LoginScreen(),
+                                  ),
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF8B6CFF),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
                                 child: const Text(
                                   "Log in",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500),
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 30,
-                        ),
+                        SizedBox(width: 30),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.56,
                           child: Stack(
@@ -108,20 +107,10 @@ class OnboardingScreen extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-
-//  Image.asset(
-//                     'assets/assets/images/app_icon_dart.png',
-//                     height: 82,
-//                   ),
-                  // const SizedBox(height: 28),
-
-                  // const SizedBox(height: 24),
-
-                  // const SizedBox(height: 16),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -71,11 +71,11 @@ class _ChangeSecretPasswordScreenState
     FocusScope.of(context).unfocus();
 
     context.read<SecretPasswordBloc>().add(
-          SecretPasswordEvent.submitPasswordChange(
-            oldPassword: _oldPasswordController.text.trim(),
-            newPassword: _newPasswordController.text.trim(),
-          ),
-        );
+      SecretPasswordEvent.submitPasswordChange(
+        oldPassword: _oldPasswordController.text.trim(),
+        newPassword: _newPasswordController.text.trim(),
+      ),
+    );
   }
 
   String? _validateConfirmPassword(String? value) {
@@ -91,9 +91,7 @@ class _ChangeSecretPasswordScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Secret Password'),
-      ),
+      appBar: AppBar(title: const Text('Secret Password')),
       body: BlocConsumer<SecretPasswordBloc, SecretPasswordState>(
         listener: (context, state) {
           state.maybeWhen(
@@ -107,10 +105,7 @@ class _ChangeSecretPasswordScreenState
               context.pop();
               context.showSnackBar('Password changed successfully!');
             },
-            failure: (message) => context.showSnackBar(
-              message,
-              isError: true,
-            ),
+            failure: (message) => context.showSnackBar(message, isError: true),
           );
         },
         builder: (context, state) {
@@ -222,10 +217,7 @@ class _ChangeSecretPasswordScreenState
         16.height,
         Text(
           'Update Your Password',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24.sp,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
           textAlign: TextAlign.center,
         ),
         8.height,
@@ -263,7 +255,8 @@ class _ChangeSecretPasswordScreenState
       hintText: hint,
       isEnabled: isEnabled,
       textInputAction: textInputAction,
-      onFieldSubmit: onSubmitted ??
+      onFieldSubmit:
+          onSubmitted ??
           (_) {
             if (nextFocusNode != null) {
               FocusScope.of(context).requestFocus(nextFocusNode);
@@ -272,57 +265,10 @@ class _ChangeSecretPasswordScreenState
           },
       prefixIcon: const Icon(Icons.lock_outline),
       suffixIcon: IconButton(
-        icon: Icon(
-          isVisible ? Icons.visibility : Icons.visibility_off,
-        ),
+        icon: Icon(isVisible ? Icons.visibility : Icons.visibility_off),
         onPressed: isEnabled ? onToggleVisibility : null,
         tooltip: isVisible ? 'Hide password' : 'Show password',
       ),
     );
   }
-
-  // Widget _buildSecurityTip() {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       color: Theme.of(context).colorScheme.surfaceVariant,
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: Border.all(
-  //         color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Icon(
-  //           Icons.info_outline,
-  //           size: 20,
-  //           color: Theme.of(context).colorScheme.primary,
-  //         ),
-  //         12.width,
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 'Security Tips',
-  //                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-  //                       fontWeight: FontWeight.w600,
-  //                       color: Theme.of(context).colorScheme.primary,
-  //                     ),
-  //               ),
-  //               4.height,
-  //               Text(
-  //                 'Use a strong password with at least 8 characters, including uppercase, lowercase, numbers, and special characters.',
-  //                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-  //                       color: Theme.of(context).colorScheme.onSurfaceVariant,
-  //                     ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
