@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
@@ -29,6 +30,64 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// Implementing class must provide [form] — the shared [BookingFormControllers].
 mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
   BookingFormControllers get form;
+
+  StreamSubscription<SelectProductState>? _selectProductBlocSubscription;
+
+  /// Call this from [initState] to wire the [SelectProductBloc] stream into
+  /// [form.overlayProducts] and [form.overlayIsLoading] so search results are
+  /// reflected in the overlay.
+  void setupSelectProductBlocListener() {
+    _selectProductBlocSubscription = form.selectProductBloc.stream.listen((
+      state,
+    ) {
+      state.maybeWhen(
+        loading: () {
+          form.overlayIsLoading.value = true;
+          if (form.searchOverlayEntry == null &&
+              form.serviceSearchController.text.isNotEmpty) {
+            showSearchOverlay();
+          }
+        },
+        loaded: (
+          products,
+          _nextPageUrl,
+          _serviceId,
+          _pickupDate,
+          _returnDate,
+          _isPaginating,
+          isSearching,
+          _searchQuery,
+          _searchType,
+          _startPrice,
+          _endPrice,
+          _pickupTime,
+          _returnTime,
+          _useAvailableProductsApi,
+          _isSales,
+        ) {
+          final hasSearchText = form.serviceSearchController.text.isNotEmpty;
+          if (hasSearchText && isSearching) {
+            form.overlayProducts.value = products;
+            form.overlayIsLoading.value = false;
+            if (form.searchOverlayEntry == null) showSearchOverlay();
+          } else {
+            form.overlayIsLoading.value = false;
+          }
+        },
+        orElse: () {
+          if (form.serviceSearchController.text.isEmpty) {
+            form.removeSearchOverlay();
+          }
+        },
+      );
+    });
+  }
+
+  /// Call this from [dispose] to cancel the subscription.
+  void disposeSelectProductBlocListener() {
+    _selectProductBlocSubscription?.cancel();
+    _selectProductBlocSubscription = null;
+  }
 
   bool hasAnyProductWithVariants() {
     final products = form.selectedProductsNotifier.value;

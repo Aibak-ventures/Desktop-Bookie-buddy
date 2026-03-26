@@ -110,6 +110,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     _searchResultsScrollController.addListener(
       () => handleSearchOverlayScroll(_searchResultsScrollController),
     );
+    setupSelectProductBlocListener();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
@@ -150,6 +151,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     _searchResultsScrollController.removeListener(
       () => handleSearchOverlayScroll(_searchResultsScrollController),
     );
+    disposeSelectProductBlocListener();
     _searchResultsScrollController.dispose();
     _form.dispose();
     super.dispose();

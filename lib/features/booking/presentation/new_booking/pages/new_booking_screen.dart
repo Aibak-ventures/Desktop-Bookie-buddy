@@ -120,6 +120,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
     if (kIsWeb) {
       web_helper.setupBeforeUnloadListener(() => hasUnsavedChanges());
     }
+    setupSelectProductBlocListener();
 
     // Load initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -140,6 +141,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
     _searchResultsScrollController.removeListener(
       () => handleSearchOverlayScroll(_searchResultsScrollController),
     );
+    disposeSelectProductBlocListener();
     _searchResultsScrollController.dispose();
     _form.dispose();
     super.dispose();
