@@ -1,12 +1,12 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
-import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_bookings_columns.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_card.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart'
@@ -28,14 +28,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // Listen for booking updates and refresh dashboard
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Listen to AllBookingBloc for booking status changes
       context.read<all_booking.AllBookingBloc>().stream.listen((state) {
         state.maybeWhen(
           loaded:
               (_, __, ___, ____, _____, ______, _______, ________, _________) {
-                // Refresh dashboard when bookings are updated
                 context.read<DashboardBloc>().add(
                   const DashboardEvent.loadDashboardData(useOldState: true),
                 );
@@ -53,14 +50,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return BlocListener<UserCubit, UserEntity?>(
       listener: (context, userState) {
-        // When shop changes, reload dashboard data
         if (userState != null) {
           bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
         }
       },
       child: BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
         listener: (context, drawerState) {
-          // When drawer opens with a booking ID, fetch the booking details
           if (drawerState.isOpen && drawerState.selectedBookingId != null) {
             context.read<BookingDetailsBloc>().add(
               BookingDetailsEvent.fetchBookingDetails(
@@ -73,8 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           backgroundColor: const Color(0xFFF5F7FA),
           body: Stack(
             children: [
-              _buildDesktopLayout(context, bloc),
-              // Drawer overlay
+              _buildDesktopLayout(bloc),
               const BookingDetailsDrawer(),
             ],
           ),
@@ -83,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context, DashboardBloc bloc) {
+  Widget _buildDesktopLayout(DashboardBloc bloc) {
     return Container(
       height: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -93,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(context, bloc),
+              const DashboardHeader(),
               const SizedBox(height: 24),
               Expanded(
                 child: RefreshIndicator(
@@ -107,30 +101,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildCard(
+                        DashboardCard(
                           title: 'Overview',
                           child: BlocBuilder<DashboardBloc, DashboardState>(
                             builder: (context, state) {
                               return state.maybeWhen(
-                                loaded:
-                                    (
-                                      _,
-                                      __,
-                                      carouselData,
-                                      ___,
-                                      ____,
-                                      _____,
-                                      ______,
-                                    ) {
-                                      return SizedBox(
-                                        height: 120,
-                                        child: CarouselDashboard(
-                                          data: carouselData,
-                                          onNavigateToBookings:
-                                              widget.onNavigateToBookings,
-                                        ),
-                                      );
-                                    },
+                                loaded: (
+                                  _,
+                                  __,
+                                  carouselData,
+                                  ___,
+                                  ____,
+                                  _____,
+                                  ______,
+                                ) =>
+                                    SizedBox(
+                                      height: 120,
+                                      child: CarouselDashboard(
+                                        data: carouselData,
+                                        onNavigateToBookings:
+                                            widget.onNavigateToBookings,
+                                      ),
+                                    ),
                                 orElse: () => SizedBox(
                                   height: 120,
                                   child: CarouselDashboard(
@@ -154,8 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Two column layout without tabs
-                        _buildTwoColumnBookings(context),
+                        const DashboardBookingsColumns(),
                         const SizedBox(height: 50),
                       ],
                     ),
@@ -166,391 +157,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, DashboardBloc bloc) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        BlocBuilder<UserCubit, UserEntity?>(
-          builder: (context, user) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    text: 'Hello ',
-                    children: [
-                      TextSpan(
-                        text: '${user?.userFullName ?? 'Owner'}!',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF667eea),
-                        ),
-                      ),
-                    ],
-                  ),
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Have a nice day',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                ),
-              ],
-            );
-          },
-        ),
-        IconButton(
-          onPressed: () {
-            bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
-          },
-          icon: const Icon(Icons.refresh),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCard({required String title, required Widget child}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 16),
-          child,
-        ],
-      ),
-    );
-  }
-
-  /// Shimmer placeholder for a booking column while data loads
-  Widget _buildShimmerColumn(Color color, String title, IconData icon) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: BookingListShimmer(itemCount: 4, alwaysScrollable: false),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Two column layout showing Upcoming and Returns bookings with Today/Tomorrow/Upcoming grouping
-  Widget _buildTwoColumnBookings(BuildContext context) {
-    return SizedBox(
-      height: 600, // Fixed height for scrollable columns
-      child: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          return state.maybeWhen(
-            loading: () => Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _buildShimmerColumn(
-                    const Color(0xFF667eea),
-                    'Upcoming Bookings',
-                    Icons.schedule,
-                  ),
-                ),
-                const SizedBox(width: 24),
-                Expanded(
-                  child: _buildShimmerColumn(
-                    const Color(0xFFff8a00),
-                    'Returns Booking',
-                    Icons.assignment_return,
-                  ),
-                ),
-              ],
-            ),
-            loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
-              // Calculate total counts
-              final upcomingCount = upcomingGrouped.values.fold<int>(
-                0,
-                (sum, list) => sum + list.length,
-              );
-              final returnsCount = returnsGrouped.values.fold<int>(
-                0,
-                (sum, list) => sum + list.length,
-              );
-
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Upcoming Column
-                  Expanded(
-                    child: _buildBookingColumn(
-                      context,
-                      title: 'Upcoming Bookings',
-                      icon: Icons.schedule,
-                      groupedBookings: upcomingGrouped,
-                      totalCount: upcomingCount,
-                      color: const Color(0xFF667eea),
-                      useReturnDate: false,
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  // Returns Column (renamed from Ongoing)
-                  Expanded(
-                    child: _buildBookingColumn(
-                      context,
-                      title: 'Returns Booking',
-                      icon: Icons.assignment_return,
-                      groupedBookings: returnsGrouped,
-                      totalCount: returnsCount,
-                      color: const Color(0xFFff8a00),
-                      useReturnDate: true,
-                    ),
-                  ),
-                ],
-              );
-            },
-            orElse: () => const SizedBox.shrink(),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildBookingColumn(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Map<String, List<BookingEntity>> groupedBookings,
-    required int totalCount,
-    required Color color,
-    required bool useReturnDate,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with total count
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '$totalCount',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Booking List with Today/Tomorrow/Upcoming sections
-          if (totalCount == 0)
-            const Expanded(
-              child: Center(
-                child: NoResultFoundAnimationWidget(isScrollable: false),
-              ),
-            )
-          else
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  // Today Section
-                  if (groupedBookings['today']?.isNotEmpty == true) ...[
-                    _buildDateSection(
-                      context,
-                      title: 'Today',
-                      bookings: groupedBookings['today']!,
-                      color: Colors.red,
-                      useReturnDate: useReturnDate,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  // Tomorrow Section
-                  if (groupedBookings['tomorrow']?.isNotEmpty == true) ...[
-                    _buildDateSection(
-                      context,
-                      title: 'Tomorrow',
-                      bookings: groupedBookings['tomorrow']!,
-                      color: Colors.orange,
-                      useReturnDate: useReturnDate,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  // Upcoming Section
-                  if (groupedBookings['upcoming']?.isNotEmpty == true) ...[
-                    _buildDateSection(
-                      context,
-                      title: 'Upcoming',
-                      bookings: groupedBookings['upcoming']!,
-                      color: Colors.blue,
-                      useReturnDate: useReturnDate,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDateSection(
-    BuildContext context, {
-    required String title,
-    required List<BookingEntity> bookings,
-    required Color color,
-    required bool useReturnDate,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section header
-        Row(
-          children: [
-            Container(
-              width: 4,
-              height: 16,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                '${bookings.length}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: color,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        // Bookings list
-        ...bookings.map(
-          (booking) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: BookingCard(
-              booking: booking,
-              useReturnDate: useReturnDate,
-              onTap: () {
-                // Open booking details drawer
-                context.read<BookingDetailsDrawerCubit>().openDrawer(
-                  booking.id!,
-                );
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -87,7 +87,7 @@ class CarouselDashboard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12), // Reduced from 16
         boxShadow: [
           BoxShadow(
-            color: gradient.first.withOpacity(0.3),
+            color: gradient.first.withValues(alpha: 0.3),
             blurRadius: 16, // Reduced from 20
             offset: const Offset(0, 6), // Reduced from 8
           ),
@@ -103,7 +103,7 @@ class CarouselDashboard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6), // Reduced from 8
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6), // Reduced from 8
                 ),
                 child: const Icon(
@@ -128,7 +128,7 @@ class CarouselDashboard extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 14, // Reduced from 16
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               fontWeight: FontWeight.w500,
             ),
           ),
