@@ -154,7 +154,7 @@ class MonthlyBarChart extends StatelessWidget {
                 : value.toInt().toString(),
             style: TextStyle(
               fontSize: 9,
-              color: color.withOpacity(0.8),
+              color: color.withValues(alpha: 0.8),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -170,7 +170,7 @@ class MonthlyBarChart extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
