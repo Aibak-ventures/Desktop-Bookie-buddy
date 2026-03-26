@@ -203,7 +203,6 @@ class BookingProductRowWidget extends StatelessWidget {
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildQuantityBtn(
                   icon: Icons.remove,
@@ -213,7 +212,7 @@ class BookingProductRowWidget extends StatelessWidget {
                 const SizedBox(width: 3),
                 if (quantityController != null && quantityFocusNode != null)
                   SizedBox(
-                    width: 34,
+                    width: 30,
                     height: 28,
                     child: TextField(
                       controller: quantityController,
@@ -239,7 +238,9 @@ class BookingProductRowWidget extends StatelessWidget {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
-                          borderSide: const BorderSide(color: Color(0xFF6132E4)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF6132E4),
+                          ),
                         ),
                       ),
                       onSubmitted: onSaveTypedQuantity,
@@ -407,9 +408,7 @@ Widget _buildQuantityBtn({
       width: compact ? 20 : 27,
       height: compact ? 20 : 22,
       decoration: BoxDecoration(
-        color: isDisabled
-            ? Colors.grey.shade300
-            : const Color(0xFFF3F0FF),
+        color: isDisabled ? Colors.grey.shade300 : const Color(0xFFF3F0FF),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Icon(
