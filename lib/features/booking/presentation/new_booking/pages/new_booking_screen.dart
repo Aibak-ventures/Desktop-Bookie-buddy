@@ -1,14 +1,11 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
@@ -19,8 +16,8 @@ import 'package:bookie_buddy_web/features/sales/data/models/request_sales_model/
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/booking_sales_right_panel.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_search_overlay_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_selected_products_list_widget.dart';
@@ -97,7 +94,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
   PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
 
   // UI Constants
-  static const double _fieldSpacing = 8.0;
 
   // Customization state
   bool showCustomization = false;
@@ -316,23 +312,149 @@ class NewBookingScreenState extends State<NewBookingScreen>
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade300),
                 ),
-                child: TextField(
-                  controller: _form.serviceSearchController,
-                  decoration: const InputDecoration(
-                    hintText: 'Search products',
-                    prefixIcon: Icon(Icons.search, size: 18),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 14,
-                    ),
-                  ),
-                  onChanged: (value) {
-                    onSearchChanged(selectedBookingType, value);
-                    if (value.isNotEmpty)
-                      showSearchOverlay();
-                    else
-                      _form.removeSearchOverlay();
+                child: ValueListenableBuilder(
+                  valueListenable: _form.selectedSearchTypeIndex,
+                  builder: (context, searchTypeIndex, _) {
+                    return ValueListenableBuilder(
+                      valueListenable: _form.isPriceFilterEnabled,
+                      builder: (context, isPriceEnabled, _) {
+                        // Build active filter badge text
+                        String? filterText;
+                        if (searchTypeIndex != 0) {
+                          filterText = _searchTypes[searchTypeIndex];
+                        }
+                        if (isPriceEnabled) {
+                          filterText = filterText != null
+                              ? '$filterText | Price'
+                              : 'Price';
+                        }
+
+                        return TextField(
+                          controller: _form.serviceSearchController,
+                          onTap: () {
+                            if (_form.serviceSearchController.text
+                                .trim()
+                                .isEmpty) {
+                              searchAllProductsForOverlay(
+                                bookingType: selectedBookingType,
+                                pickupDate: pickupDate,
+                                returnDate: returnDate,
+                                pickupTime: pickupTime,
+                                returnTime: returnTime,
+                                showSearchOverlay: showSearchOverlay,
+                              );
+                            }
+                          },
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Search products',
+                            hintStyle: const TextStyle(
+                              fontSize: 13,
+                              fontFamily: 'Inter',
+                              color: Color(0xFF8C8C8C),
+                            ),
+                            prefixIcon: const Icon(Icons.search, size: 18),
+                            suffixIcon: filterText != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Chip(
+                                      label: Text(
+                                        filterText,
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF6132E4),
+                                        ),
+                                      ),
+                                      backgroundColor: const Color(
+                                        0xFF6132E4,
+                                      ).withValues(alpha: 0.1),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                  )
+                                : null,
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
+                            ),
+                          ),
+                          onChanged: (value) {
+                            onSearchChanged(selectedBookingType, value);
+                            if (value.isEmpty) {
+                              _form.removeSearchOverlay();
+                            } else {
+                              showSearchOverlay();
+                              // Dispatch immediately for every keystroke
+                              final query = value.trim().toLowerCase();
+                              final isSales =
+                                  selectedBookingType == BookingType.sales;
+                              final serviceIdToUse =
+                                  (selectedServiceId == null ||
+                                      selectedServiceId == -1)
+                                  ? null
+                                  : selectedServiceId;
+                              String searchType;
+                              switch (_form.selectedSearchTypeIndex.value) {
+                                case 1:
+                                  searchType = 'category';
+                                  break;
+                                case 2:
+                                  searchType = 'model';
+                                  break;
+                                case 3:
+                                  final st = _form.currentServiceType;
+                                  if (st != null &&
+                                      st.isMultiVariantProductType) {
+                                    if (st == MainServiceType.dress ||
+                                        st == MainServiceType.costume) {
+                                      searchType = 'size';
+                                    } else if (st == MainServiceType.gadgets) {
+                                      searchType = 'serial_number';
+                                    } else {
+                                      searchType = 'variant';
+                                    }
+                                  } else {
+                                    searchType = 'color';
+                                  }
+                                  break;
+                                default:
+                                  searchType = 'name';
+                              }
+                              _form.selectProductBloc.add(
+                                SelectProductEvent.searchProducts(
+                                  serviceId: serviceIdToUse,
+                                  query: query,
+                                  type: searchType,
+                                  startPrice: _form.isPriceFilterEnabled.value
+                                      ? _form.priceRange.value.start.round()
+                                      : null,
+                                  endPrice: _form.isPriceFilterEnabled.value
+                                      ? _form.priceRange.value.end.round()
+                                      : null,
+                                  pickupDate: pickupDate.format(),
+                                  returnDate: returnDate.format(),
+                                  pickupTime: pickupTime,
+                                  returnTime: returnTime,
+                                  useAvailableProductsApi:
+                                      selectedBookingType ==
+                                      BookingType.booking,
+                                  isSales: isSales,
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      },
+                    );
                   },
                 ),
               ),
@@ -357,7 +479,11 @@ class NewBookingScreenState extends State<NewBookingScreen>
       child: IconButton(
         onPressed: () {
           _form.removeSearchOverlay();
-          _showProductFilterBottomSheet();
+          showProductFilterDialog(
+            bookingType: selectedBookingType,
+            selectedServiceId: selectedServiceId,
+            onServiceIdChanged: (id) => setState(() => selectedServiceId = id),
+          );
         },
         icon: const Icon(Icons.tune, size: 20, color: Color(0xFF6132E4)),
       ),
@@ -394,196 +520,19 @@ class NewBookingScreenState extends State<NewBookingScreen>
   }
 
   Widget _buildSalesSinglePanel() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientPhone1Controller,
-                    hint: 'Client Phone (WP)',
-                    isNumber: true,
-                    errorText: _phoneError,
-                    prefixIcon: Icons.phone,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.clientAddressController,
-                    hint: 'Place',
-                    prefixIcon: Icons.location_on,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  const Text(
-                    'Staff',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 7),
-                  StaffSearchNameField(
-                    nameController: _form.staffNameController,
-                    errorText: _staffNameError,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  _buildNotesField(),
-                  const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: _form.discountAmountController,
-                    hint: 'Discount amount',
-                    isNumber: true,
-                  ),
-                  const SizedBox(height: _fieldSpacing),
-                  _buildPaymentMethodSection(),
-                  const SizedBox(height: 16),
-                  _buildWhatsAppCheckbox(),
-                  if (isPastDate()) _buildPastDateStockCheckbox(),
-                ],
-              ),
-            ),
-          ),
-          _buildSummarySection(),
-        ],
-      ),
-    );
-  }
-
-  // ── Helper UI components ───────────────────────────────────────────────────
-
-  Widget _buildNotesField() {
-    return Container(
-      height: 80,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: TextField(
-        controller: _form.descriptionController,
-        maxLines: null,
-        expands: true,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: 'Notes',
-          hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-        ),
-        style: const TextStyle(fontSize: 13),
-      ),
-    );
-  }
-
-  Widget _buildWhatsAppCheckbox() {
-    if (!context.read<UserCubit>().hasFeature(
-      AppPremiumFeatures.whatsappMessage,
-    ))
-      return const SizedBox.shrink();
-    return Row(
-      children: [
-        Checkbox(
-          value: sendPdfToWhatsApp,
-          onChanged: (v) => setState(() => sendPdfToWhatsApp = v ?? false),
-          activeColor: Colors.black87,
-        ),
-        const Text(
-          'Send invoice to whatsapp',
-          style: TextStyle(fontSize: 13, color: Colors.grey),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPastDateStockCheckbox() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF5F2FE),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Checkbox(
-              value: decreaseStockForPastDate,
-              onChanged: (v) =>
-                  setState(() => decreaseStockForPastDate = v ?? false),
-            ),
-            const Expanded(
-              child: Text(
-                'Decrease Stock quantity',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaymentMethodSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Payment Method',
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
-            const SizedBox(width: 8),
-            _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentMethodOption(PaymentMethod method, IconData icon) {
-    final isSelected = _selectedPaymentMethod == method;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => _selectedPaymentMethod = method),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
-            ),
-            borderRadius: BorderRadius.circular(8),
-            color: isSelected
-                ? const Color(0xFF6132E4).withOpacity(0.05)
-                : Colors.white,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                method.name,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade700,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+    return BookingSalesRightPanel(
+      form: _form,
+      phoneError: _phoneError,
+      staffNameError: _staffNameError,
+      sendPdfToWhatsApp: sendPdfToWhatsApp,
+      onSendPdfChanged: (v) => setState(() => sendPdfToWhatsApp = v),
+      selectedPaymentMethod: _selectedPaymentMethod,
+      onPaymentMethodChanged: (m) => setState(() => _selectedPaymentMethod = m),
+      decreaseStockForPastDate: decreaseStockForPastDate,
+      onDecreaseStockChanged: (v) =>
+          setState(() => decreaseStockForPastDate = v),
+      isPastDate: isPastDate(),
+      summarySection: _buildSummarySection(),
     );
   }
 
@@ -756,40 +705,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
     );
   }
 
-  void _showProductFilterBottomSheet() {
-    showDialog(
-      context: context,
-      builder: (_) => ProductFilterDialog(
-        services: [],
-        searchTypes: _searchTypes,
-        initialServiceId: selectedServiceId,
-        initialSearchTypeIndex: _form.selectedSearchTypeIndex.value,
-        initialPriceRange: const RangeValues(0, 100000),
-        initialMaxPrice: 100000,
-        initialIsPriceFilterEnabled: false,
-        onApply:
-            ({
-              required serviceId,
-              required searchTypeIndex,
-              required priceRange,
-              required maxPrice,
-              required isPriceFilterEnabled,
-            }) {
-              setState(() {
-                selectedServiceId = serviceId;
-                _form.selectedSearchTypeIndex.value = searchTypeIndex;
-              });
-              applyProductFilters(
-                selectedBookingType,
-                searchTypeIndex,
-                priceRange,
-                isPriceFilterEnabled,
-              );
-            },
-      ),
-    );
-  }
-
   void showSearchOverlay() {
     BookingSearchOverlayHelper.showSearchOverlay(
       form: _form,
@@ -818,41 +733,178 @@ class NewBookingScreenState extends State<NewBookingScreen>
   BookingType _convertTabTypeToBookingType(BookingTabType type) =>
       BookingType.values[type.index];
 
-  // Bridging methods to mixin
   Future<void> selectDate({required bool isPickup}) async {
-    // Basic implementation - can be refined if mixin version is more robust
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: isPickup ? pickupDate : returnDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isPickup)
+    final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
+    final today = DateTime.now().dateOnly;
+    final oldBookingMinDate = DateTime(2015);
+
+    if (isPickup) {
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: pickupDate,
+        firstDate: isOldBooking
+            ? oldBookingMinDate
+            : DateTime.now().subtract(const Duration(days: 365)),
+        lastDate: (isSales || isOldBooking)
+            ? DateTime.now()
+            : DateTime.now().add(const Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (picked != null) {
+        setState(() {
           pickupDate = picked;
-        else
+
+          if (isSales) {
+            decreaseStockForPastDate = false;
+          }
+
+          // Ripple: if pickup > return, push return forward
+          if (picked.dateOnly.isAfter(returnDate.dateOnly)) {
+            returnDate = isOldBooking
+                ? picked
+                : picked.add(const Duration(days: 1));
+            if (coolingPeriodDate != null)
+              recalculateCoolingPeriodDate(
+                pickupDate: pickupDate,
+                returnDate: returnDate,
+                coolingPeriodDays: coolingPeriodDays,
+              );
+          }
+        });
+        loadProductsForService(selectedBookingType, selectedServiceId);
+      }
+    } else {
+      // Return date picker
+      if (isOldBooking) {
+        final minReturnDate = pickupDate.dateOnly;
+        final initialReturnDate = returnDate.dateOnly.isBefore(minReturnDate)
+            ? minReturnDate
+            : returnDate.dateOnly.isAfter(today)
+            ? today
+            : returnDate.dateOnly;
+
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: initialReturnDate,
+          firstDate: minReturnDate,
+          lastDate: today,
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: Color(0xFF6132E4),
+                ),
+              ),
+              child: child!,
+            );
+          },
+        );
+
+        if (picked != null) {
+          setState(() => returnDate = picked);
+          loadProductsForService(selectedBookingType, selectedServiceId);
+        }
+        return;
+      }
+
+      // Regular booking: return must be today or future
+      final minReturnDate = pickupDate.dateOnly.isAfter(today)
+          ? pickupDate.dateOnly
+          : today;
+
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: minReturnDate.isAfter(returnDate.dateOnly)
+            ? minReturnDate
+            : returnDate,
+        firstDate: minReturnDate,
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (picked != null) {
+        setState(() {
           returnDate = picked;
-      });
-      loadProductsForService(selectedBookingType, selectedServiceId);
+          if (coolingPeriodDate != null)
+            recalculateCoolingPeriodDate(
+              pickupDate: pickupDate,
+              returnDate: returnDate,
+              coolingPeriodDays: coolingPeriodDays,
+            );
+        });
+        loadProductsForService(selectedBookingType, selectedServiceId);
+      }
     }
   }
 
   Future<void> selectTime({required bool isPickup}) async {
+    final initialTime = isPickup
+        ? (pickupTime ?? TimeOfDay.now())
+        : (returnTime ?? TimeOfDay.now());
     final picked = await showTimePicker(
       context: context,
-      initialTime: isPickup
-          ? (pickupTime ?? TimeOfDay.now())
-          : (returnTime ?? TimeOfDay.now()),
+      initialTime: initialTime,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (picked != null) {
-      setState(() {
-        if (isPickup)
+      if (isPickup) {
+        if (pickupDate.isDateToday && isTimeInPast(picked)) {
+          showTimeError('Pickup time cannot be in the past');
+          return;
+        }
+        setState(() {
           pickupTime = picked;
-        else
-          returnTime = picked;
-      });
-      loadProductsForService(selectedBookingType, selectedServiceId);
+        });
+        // If same-day booking, clear an invalid return time
+        if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
+            returnTime != null) {
+          if (!isReturnTimeAfterPickupTime(picked, returnTime!)) {
+            setState(() => returnTime = null);
+            showTimeError(
+              'Return time has been cleared as it was before the new pickup time',
+            );
+          }
+        }
+        loadProductsForService(selectedBookingType, selectedServiceId);
+      } else {
+        if (returnDate.isDateToday && isTimeInPast(picked)) {
+          showTimeError('Return time cannot be in the past');
+          return;
+        }
+        if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
+            pickupTime != null) {
+          if (!isReturnTimeAfterPickupTime(pickupTime!, picked)) {
+            showTimeError('Return time must be after pickup time');
+            return;
+          }
+        }
+        setState(() => returnTime = picked);
+        loadProductsForService(selectedBookingType, selectedServiceId);
+      }
     }
   }
 
