@@ -8,6 +8,22 @@
             "name": "bookie_buddy_web",
             "request": "launch",
             "type": "dart"
-        }
+        },
+        {
+            "name": "Flutter: Run Dev",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=PROD=false"
+            ]
+        },
+        {
+            "name": "Flutter: Run Prod",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=PROD=true"
+            ]
+        },
     ]
 }

@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_edit_new_booking/pages/old_edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
@@ -38,9 +39,7 @@ class BookingDetailsActionBar extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade200, width: 1),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -76,7 +75,8 @@ class BookingDetailsActionBar extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: const Text('Delete Booking'),
                       content: const Text(
-                          'Are you sure you want to delete this booking? This action cannot be undone.'),
+                        'Are you sure you want to delete this booking? This action cannot be undone.',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
@@ -85,7 +85,8 @@ class BookingDetailsActionBar extends StatelessWidget {
                         TextButton(
                           onPressed: () => Navigator.pop(context, true),
                           style: TextButton.styleFrom(
-                              foregroundColor: Colors.red),
+                            foregroundColor: Colors.red,
+                          ),
                           child: const Text('Delete'),
                         ),
                       ],
@@ -94,12 +95,9 @@ class BookingDetailsActionBar extends StatelessWidget {
 
                   if (confirm == true && context.mounted) {
                     context.read<AllBookingBloc>().add(
-                          AllBookingEvent.deleteBooking(
-                              bookingId: booking.id),
-                        );
-                    context
-                        .read<BookingDetailsDrawerCubit>()
-                        .closeDrawer();
+                      AllBookingEvent.deleteBooking(bookingId: booking.id),
+                    );
+                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
                   }
                 },
               );
@@ -127,38 +125,32 @@ class BookingDetailsActionBar extends StatelessWidget {
                                 ServiceBloc(getShopServices: getIt()),
                           ),
                           BlocProvider(
-                            create: (_) =>
-                                ClientCubit(getClients: getIt()),
+                            create: (_) => ClientCubit(getClients: getIt()),
                           ),
                           BlocProvider(
-                            create: (_) =>
-                                StaffSearchCubit(getStaffs: getIt()),
+                            create: (_) => StaffSearchCubit(getStaffs: getIt()),
                           ),
-                          BlocProvider(
-                            create: (_) => SelectedProductsCubit(),
-                          ),
+                          BlocProvider(create: (_) => SelectedProductsCubit()),
                         ],
-                        child: EditNewBookingScreen(
-                          bookingDetails: booking,
-                        ),
+                        child: OldEditNewBookingScreen(bookingDetails: booking),
                       ),
                     ),
                   );
 
                   if (result == true && context.mounted) {
                     context.read<BookingDetailsBloc>().add(
-                          BookingDetailsEvent.fetchBookingDetails(
-                              booking.id),
-                        );
+                      BookingDetailsEvent.fetchBookingDetails(booking.id),
+                    );
                     final allBookingBloc = context.read<AllBookingBloc>();
                     allBookingBloc.state.mapOrNull(
-                      loaded: (s) =>
-                          allBookingBloc.add(AllBookingEvent.loadBookings(
-                        status: s.status,
-                        startDate: s.startDate,
-                        endDate: s.endDate,
-                        searchQuery: s.searchQuery,
-                      )),
+                      loaded: (s) => allBookingBloc.add(
+                        AllBookingEvent.loadBookings(
+                          status: s.status,
+                          startDate: s.startDate,
+                          endDate: s.endDate,
+                          searchQuery: s.searchQuery,
+                        ),
+                      ),
                     );
                   }
                 },
@@ -191,7 +183,8 @@ class BookingDetailsActionBar extends StatelessWidget {
                     builder: (context) => AlertDialog(
                       title: const Text('Delete Booking'),
                       content: const Text(
-                          'Are you sure you want to delete this booking? This action cannot be undone.'),
+                        'Are you sure you want to delete this booking? This action cannot be undone.',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
@@ -200,7 +193,8 @@ class BookingDetailsActionBar extends StatelessWidget {
                         TextButton(
                           onPressed: () => Navigator.pop(context, true),
                           style: TextButton.styleFrom(
-                              foregroundColor: Colors.red),
+                            foregroundColor: Colors.red,
+                          ),
                           child: const Text('Delete'),
                         ),
                       ],
@@ -209,12 +203,9 @@ class BookingDetailsActionBar extends StatelessWidget {
 
                   if (confirm == true && context.mounted) {
                     context.read<AllBookingBloc>().add(
-                          AllBookingEvent.deleteBooking(
-                              bookingId: booking.id),
-                        );
-                    context
-                        .read<BookingDetailsDrawerCubit>()
-                        .closeDrawer();
+                      AllBookingEvent.deleteBooking(bookingId: booking.id),
+                    );
+                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
                   }
                 },
               );
@@ -224,17 +215,17 @@ class BookingDetailsActionBar extends StatelessWidget {
         if (isCompleted || isCancelled)
           Expanded(
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isCompletedButCancelled || isCancelled
                     ? const Color(0xFFFFEBEE)
                     : const Color(0xFFE8F5E9),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                    color: isCompletedButCancelled || isCancelled
-                        ? const Color(0xFFF44336)
-                        : const Color(0xFF4CAF50)),
+                  color: isCompletedButCancelled || isCancelled
+                      ? const Color(0xFFF44336)
+                      : const Color(0xFF4CAF50),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -286,7 +277,8 @@ class BookingDetailsActionBar extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               if (!isCancelled) {
-                final balance = booking.totalAmount -
+                final balance =
+                    booking.totalAmount -
                     booking.actualPaidAmount -
                     (booking.discountAmount ?? 0);
 
@@ -310,12 +302,16 @@ class BookingDetailsActionBar extends StatelessWidget {
               final confirm = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text(isCancelled
-                      ? 'Complete Cancelled Work'
-                      : 'Mark as Completed'),
-                  content: Text(isCancelled
-                      ? 'Are you sure you want to complete this cancelled booking?'
-                      : 'Are you sure you want to mark this booking as completed?'),
+                  title: Text(
+                    isCancelled
+                        ? 'Complete Cancelled Work'
+                        : 'Mark as Completed',
+                  ),
+                  content: Text(
+                    isCancelled
+                        ? 'Are you sure you want to complete this cancelled booking?'
+                        : 'Are you sure you want to mark this booking as completed?',
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
@@ -331,19 +327,19 @@ class BookingDetailsActionBar extends StatelessWidget {
 
               if (confirm == true && context.mounted) {
                 context.read<AllBookingBloc>().add(
-                      AllBookingEvent.markAsCompleted(
-                        bookingId: booking.id,
-                        currentStatus: booking.deliveryStatus,
-                      ),
-                    );
+                  AllBookingEvent.markAsCompleted(
+                    bookingId: booking.id,
+                    currentStatus: booking.deliveryStatus,
+                  ),
+                );
                 context.read<BookingDetailsDrawerCubit>().closeDrawer();
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  isCancelled ? Colors.red.shade600 : AppColors.purple,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              backgroundColor: isCancelled
+                  ? Colors.red.shade600
+                  : AppColors.purple,
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -398,7 +394,9 @@ class BookingDetailsActionBar extends StatelessWidget {
   }
 
   Future<void> _openInvoicePdf(
-      BuildContext context, BookingDetailsEntity booking) async {
+    BuildContext context,
+    BookingDetailsEntity booking,
+  ) async {
     showDialog(
       context: context,
       barrierDismissible: false,

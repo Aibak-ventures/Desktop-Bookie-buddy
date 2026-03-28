@@ -24,25 +24,31 @@ Future<void> showShopSelector(BuildContext context, UserEntity user) async {
   final buttonPosition = renderBox?.localToGlobal(Offset.zero);
   final buttonSize = renderBox?.size ?? Size.zero;
 
-  bloc.add(ShopListEvent.loadShops());
+  final List<ShopEntity>? shops;
+  // use already loaded shop list, else fetch
+  if (bloc.shops.isNotEmpty) {
+    shops = bloc.shops;
+  } else {
+    bloc.add(ShopListEvent.loadShops());
 
-  final shops = await showDialog<List<ShopEntity>?>(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) => BlocListener<ShopListBloc, ShopListState>(
-      listener: (ctx, state) {
-        state.maybeWhen(
-          orElse: () {},
-          loaded: (shops, currentShopId) => Navigator.pop(ctx, shops),
-          error: (error) {
-            Navigator.pop(ctx);
-            ctx.showSnackBar(error, isError: true);
-          },
-        );
-      },
-      child: const Center(child: CircularProgressIndicator()),
-    ),
-  );
+    shops = await showDialog<List<ShopEntity>?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => BlocListener<ShopListBloc, ShopListState>(
+        listener: (ctx, state) {
+          state.maybeWhen(
+            orElse: () {},
+            loaded: (shops, currentShopId) => Navigator.pop(ctx, shops),
+            error: (error) {
+              Navigator.pop(ctx);
+              ctx.showSnackBar(error, isError: true);
+            },
+          );
+        },
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
 
   if (shops == null || shops.isEmpty) return;
 
