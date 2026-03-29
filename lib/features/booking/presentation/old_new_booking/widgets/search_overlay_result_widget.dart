@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
@@ -43,6 +44,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 
   @override
   Widget build(BuildContext context) {
+    final serviceType = widget.product.mainServiceType;
     // Show sale_price in sales mode, rent price in booking mode
     final price = widget.isSales
         ? (double.tryParse(widget.product.salePrice ?? '')?.toInt() ??
@@ -51,7 +53,8 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         : (widget.product.price ?? 0);
     final variants = widget.product.variants;
     // Define min width preventing squeeze/overflow
-    const double minRowWidth = 700;
+    const double minRowWidth = 760;
+    final serviceTypeLabel = serviceType?.name.toUpperCase() ?? 'PRODUCT';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -65,46 +68,87 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
               // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: Container(
-                  width: 50,
-                  height: 40,
-                  color: Colors.grey.shade100,
-                  child:
-                      widget.product.image != null &&
-                          widget.product.image!.isNotEmpty
-                      ? Image.network(
-                          widget.product.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.image_outlined,
-                            size: 20,
-                            color: Colors.grey.shade400,
-                          ),
-                        )
-                      : Icon(
-                          Icons.image_outlined,
-                          size: 20,
-                          color: Colors.grey.shade400,
-                        ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap:
+                        widget.product.image != null &&
+                            widget.product.image!.isNotEmpty
+                        ? () => ZoomableImageDialog.show(
+                            context,
+                            imageUrl: widget.product.image!,
+                            title: widget.product.name,
+                          )
+                        : null,
+                    child: Container(
+                      width: 50,
+                      height: 40,
+                      color: Colors.grey.shade100,
+                      child:
+                          widget.product.image != null &&
+                              widget.product.image!.isNotEmpty
+                          ? Image.network(
+                              widget.product.image!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Icon(
+                                Icons.image_outlined,
+                                size: 20,
+                                color: Colors.grey.shade400,
+                              ),
+                            )
+                          : Icon(
+                              Icons.image_outlined,
+                              size: 20,
+                              color: Colors.grey.shade400,
+                            ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
 
               // Product Info - Fixed width
               SizedBox(
-                width: 180,
+                width: 240,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3EEFF),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        serviceTypeLabel,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF6132E4),
+                          letterSpacing: 0.4,
+                        ),
+                      ),
                     ),
+                    const SizedBox(height: 6),
+                    Tooltip(
+                      message: widget.product.name,
+                      waitDuration: const Duration(milliseconds: 250),
+                      child: Text(
+                        widget.product.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                          height: 1.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
                     Text(
                       widget.product.color ?? 'color',
                       style: const TextStyle(
@@ -112,7 +156,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

@@ -13,9 +13,13 @@ class StaffSearchNameField extends StatelessWidget {
     super.key,
     required this.nameController,
     this.errorText,
+    this.focusNode,
+    this.nextFocusNode,
   });
   final TextEditingController nameController;
   final String? errorText;
+  final FocusNode? focusNode;
+  final FocusNode? nextFocusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +43,20 @@ class StaffSearchNameField extends StatelessWidget {
             context.read<StaffSearchCubit>().selectStaff(staff);
             nameController.text = staff.name;
           },
-          builder: (context, controller, focusNode) => TextFormField(
-            focusNode: focusNode,
+          builder: (context, controller, fieldFocusNode) => TextFormField(
+            focusNode: focusNode ?? fieldFocusNode,
             controller: controller,
             keyboardType: TextInputType.name,
-            textInputAction: TextInputAction.next,
-            onEditingComplete: () => FocusScope.of(context).nextFocus(),
+            textInputAction: nextFocusNode != null
+                ? TextInputAction.next
+                : TextInputAction.done,
+            onEditingComplete: () {
+              if (nextFocusNode != null) {
+                nextFocusNode!.requestFocus();
+              } else {
+                (focusNode ?? fieldFocusNode).nextFocus();
+              }
+            },
             style: const TextStyle(
               fontSize: 13,
               fontFamily: 'Inter',

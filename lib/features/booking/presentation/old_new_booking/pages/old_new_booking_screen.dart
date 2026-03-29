@@ -89,7 +89,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
-  PaymentMethod paymentMethod = PaymentMethod.gPay;
+  PaymentMethod paymentMethod = PaymentMethod.cash;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool sendPdfToWhatsApp = false; // Unchecked by default
   bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
@@ -190,8 +190,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final Map<int, TextEditingController> _quantityControllers = {};
   final Map<int, FocusNode> _quantityFocusNodes = {};
 
-  // State variables for payment method
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
+  // State variables for payment methods
+  List<PaymentMethod> _selectedPaymentMethods = [PaymentMethod.cash];
 
   // UI Constants
   static const double _fieldSpacing = 8.0;
@@ -201,6 +201,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final _clientPhone1FocusNode = FocusNode();
   final _clientPhone2FocusNode = FocusNode();
   final _clientAddressFocusNode = FocusNode();
+  final _staffNameFocusNode = FocusNode();
+  final _notesFocusNode = FocusNode();
+  final _advanceAmountFocusNode = FocusNode();
+  final _securityAmountFocusNode = FocusNode();
+  final _discountAmountFocusNode = FocusNode();
 
   // Customization state
   bool showCustomization = false;
@@ -273,6 +278,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     _clientPhone1FocusNode.dispose();
     _clientPhone2FocusNode.dispose();
     _clientAddressFocusNode.dispose();
+    _staffNameFocusNode.dispose();
+    _notesFocusNode.dispose();
+    _advanceAmountFocusNode.dispose();
+    _securityAmountFocusNode.dispose();
+    _discountAmountFocusNode.dispose();
     staffNameController.dispose();
     advanceAmountController.dispose();
     securityAmountController.dispose();
@@ -293,6 +303,38 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
     _searchResultsScrollController.dispose();
     super.dispose();
+  }
+
+  void _togglePaymentMethodSelection(PaymentMethod method) {
+    setState(() {
+      if (_selectedPaymentMethods.contains(method)) {
+        if (_selectedPaymentMethods.length == 1) {
+          return;
+        }
+        _selectedPaymentMethods = _selectedPaymentMethods
+            .where((item) => item != method)
+            .toList();
+      } else {
+        _selectedPaymentMethods = [..._selectedPaymentMethods, method];
+      }
+
+      paymentMethod = _selectedPaymentMethods.first;
+    });
+  }
+
+  String? _buildDescriptionWithPaymentSummary() {
+    final description = descriptionController.text.trim();
+    if (_selectedPaymentMethods.length <= 1) {
+      return description.isEmpty ? null : description;
+    }
+
+    final paymentSummary =
+        'Payment methods: ${_selectedPaymentMethods.map((method) => method.name).join(', ')}';
+    if (description.isEmpty) {
+      return paymentSummary;
+    }
+
+    return '$description\n$paymentSummary';
   }
 
   void _removeSearchOverlay() {
@@ -2485,10 +2527,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   }
 
   Widget _buildPaymentMethodOption(PaymentMethod method, IconData icon) {
-    final isSelected = _selectedPaymentMethod == method;
+    final isSelected = _selectedPaymentMethods.contains(method);
     return Expanded(
       child: InkWell(
-        onTap: () => setState(() => _selectedPaymentMethod = method),
+        onTap: () => _togglePaymentMethodSelection(method),
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -2537,7 +2579,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Payment Method',
+          'Payment Methods',
           style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 4),
@@ -2547,6 +2589,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             const SizedBox(width: 8),
             _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
           ],
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'You can select both if the customer is splitting payment.',
+          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
         ),
       ],
     );
@@ -4326,9 +4373,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       additionalCharges: additionalCharges.isNotEmpty
           ? additionalCharges
           : null,
-      description: descriptionController.text.trim().isNotEmpty
-          ? descriptionController.text.trim()
-          : null,
+      description: _buildDescriptionWithPaymentSummary(),
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
       runningKilometers: runningKilometersController.text
@@ -4371,9 +4416,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           ? null
           : clientAddressController.text.trim(),
       saleDate: pickupDate.format(), // Use pickup date as sale date
-      description: descriptionController.text.trim().isEmpty
-          ? null
-          : descriptionController.text.trim(),
+      description: _buildDescriptionWithPaymentSummary(),
       sendInvoice: sendPdfToWhatsApp,
       variants: variants,
       // Sales flow has no paid field in UI; mark as fully paid by default.
@@ -4422,6 +4465,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                 label: 'Sale date',
                 value: pickupDate.format(),
                 onTap: () => _selectDate(isPickup: true),
+                autofocus: true,
               ),
             )
           else if (isOldBooking)
@@ -4435,6 +4479,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     label: 'Pickup date',
                     value: pickupDate.format(),
                     onTap: () => _selectDate(isPickup: true),
+                    autofocus: true,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -4536,44 +4581,54 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                           border: Border.all(color: Colors.grey.shade300),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<int>(
-                            value: coolingPeriodDays,
-                            isExpanded: true,
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 18,
-                            ),
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            items: [
-                              // Add "None" option
-                              const DropdownMenuItem(
-                                value: 0,
-                                child: Text('None'),
+                        child: Focus(
+                          onKeyEvent: (_, event) {
+                            if (event is KeyDownEvent &&
+                                (event.logicalKey == LogicalKeyboardKey.enter ||
+                                    event.logicalKey ==
+                                        LogicalKeyboardKey.numpadEnter)) {
+                              _clientNameFocusNode.requestFocus();
+                              return KeyEventResult.handled;
+                            }
+                            return KeyEventResult.ignored;
+                          },
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<int>(
+                              value: coolingPeriodDays,
+                              isExpanded: true,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 18,
                               ),
-                              // Generate 1-10 days
-                              ...List.generate(10, (index) {
-                                final days = index + 1;
-                                return DropdownMenuItem(
-                                  value: days,
-                                  child: Text(
-                                    '$days day${days > 1 ? 's' : ''}',
-                                  ),
-                                );
-                              }),
-                            ],
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() => coolingPeriodDays = val);
-                                // Reload products with new cooling period
-                                _loadProductsForService(selectedServiceId);
-                              }
-                            },
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black87,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w500,
+                              ),
+                              items: [
+                                const DropdownMenuItem(
+                                  value: 0,
+                                  child: Text('None'),
+                                ),
+                                ...List.generate(10, (index) {
+                                  final days = index + 1;
+                                  return DropdownMenuItem(
+                                    value: days,
+                                    child: Text(
+                                      '$days day${days > 1 ? 's' : ''}',
+                                    ),
+                                  );
+                                }),
+                              ],
+                              onChanged: (val) {
+                                if (val != null) {
+                                  setState(() => coolingPeriodDays = val);
+                                  _loadProductsForService(selectedServiceId);
+                                  _clientNameFocusNode.requestFocus();
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -4591,6 +4646,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     required String label,
     required String value,
     required Future<void> Function() onTap,
+    bool autofocus = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4606,6 +4662,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         ),
         const SizedBox(height: 8),
         Focus(
+          autofocus: autofocus,
           onKeyEvent: (_, event) {
             if (event is KeyDownEvent &&
                 (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -4748,6 +4805,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     required String label,
     required String value,
     required Future<void> Function() onTap,
+    bool autofocus = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4763,6 +4821,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         ),
         const SizedBox(height: 8),
         Focus(
+          autofocus: autofocus,
           onKeyEvent: (_, event) {
             if (event is KeyDownEvent &&
                 (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -4864,6 +4923,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'Place',
+                    focusNode: _clientAddressFocusNode,
+                    nextFocusNode: _staffNameFocusNode,
                     prefixIcon: Icons.location_on,
                   ),
                   const SizedBox(height: _fieldSpacing),
@@ -4881,6 +4942,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   StaffSearchNameField(
                     nameController: staffNameController,
                     errorText: _staffNameError,
+                    focusNode: _staffNameFocusNode,
+                    nextFocusNode: _notesFocusNode,
                   ),
                   const SizedBox(height: _fieldSpacing),
 
@@ -4897,11 +4960,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     ),
                     child: TextField(
                       controller: descriptionController,
+                      focusNode: _notesFocusNode,
+                      keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
+                      textInputAction: TextInputAction.newline,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -5138,7 +5201,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     controller: clientAddressController,
                     hint: 'place',
                     focusNode: _clientAddressFocusNode,
-                    nextFocusNode: null, // Last field
+                    nextFocusNode: _staffNameFocusNode,
                     prefixIcon: Icons.location_on,
                   ),
 
@@ -5213,6 +5276,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   StaffSearchNameField(
                     nameController: staffNameController,
                     errorText: _staffNameError,
+                    focusNode: _staffNameFocusNode,
+                    nextFocusNode: _notesFocusNode,
                   ),
 
                   const SizedBox(height: 7),
@@ -5230,11 +5295,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     ),
                     child: TextField(
                       controller: descriptionController,
+                      focusNode: _notesFocusNode,
+                      keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
+                      textInputAction: TextInputAction.newline,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -5741,18 +5806,23 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     controller: advanceAmountController,
                     hint: 'Advance amount',
                     isNumber: true,
+                    focusNode: _advanceAmountFocusNode,
+                    nextFocusNode: _securityAmountFocusNode,
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: securityAmountController,
                     hint: 'Security amount',
                     isNumber: true,
+                    focusNode: _securityAmountFocusNode,
+                    nextFocusNode: _discountAmountFocusNode,
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: discountAmountController,
                     hint: 'Discount amount',
                     isNumber: true,
+                    focusNode: _discountAmountFocusNode,
                   ),
 
                   const SizedBox(height: 14),
@@ -6041,11 +6111,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     ),
                     child: TextField(
                       controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
+                      textInputAction: TextInputAction.newline,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes / Description',
@@ -6222,12 +6291,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       pickupDate: pickupDate.format(),
       returnDate: returnDate.format(),
       advanceAmount: totalAmount,
-      paymentMethod: _selectedPaymentMethod,
+      paymentMethod: paymentMethod,
       deliveryStatus: DeliveryStatus.returned,
       bookingStatus: BookingStatus.completed,
-      description: descriptionController.text.trim().isEmpty
-          ? null
-          : descriptionController.text.trim(),
+      description: _buildDescriptionWithPaymentSummary(),
       products: requestProducts,
     );
   }

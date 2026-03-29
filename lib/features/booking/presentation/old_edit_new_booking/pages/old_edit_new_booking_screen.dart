@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
@@ -4229,8 +4230,10 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     ),
                     child: TextField(
                       controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
+                      textInputAction: TextInputAction.newline,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -4549,6 +4552,8 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
   Widget build(BuildContext context) {
     final price = widget.product.price ?? 0;
     final variants = widget.product.variants;
+    final serviceType = widget.product.mainServiceType;
+    final serviceTypeLabel = serviceType?.name.toUpperCase() ?? 'PRODUCT';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -4557,46 +4562,87 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
           // Product Image
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Container(
-              width: 50,
-              height: 40,
-              color: Colors.grey.shade100,
-              child:
-                  widget.product.image != null &&
-                      widget.product.image!.isNotEmpty
-                  ? Image.network(
-                      widget.product.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.image_outlined,
-                        size: 20,
-                        color: Colors.grey.shade400,
-                      ),
-                    )
-                  : Icon(
-                      Icons.image_outlined,
-                      size: 20,
-                      color: Colors.grey.shade400,
-                    ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap:
+                    widget.product.image != null &&
+                        widget.product.image!.isNotEmpty
+                    ? () => ZoomableImageDialog.show(
+                        context,
+                        imageUrl: widget.product.image!,
+                        title: widget.product.name,
+                      )
+                    : null,
+                child: Container(
+                  width: 50,
+                  height: 40,
+                  color: Colors.grey.shade100,
+                  child:
+                      widget.product.image != null &&
+                          widget.product.image!.isNotEmpty
+                      ? Image.network(
+                          widget.product.image!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Icon(
+                            Icons.image_outlined,
+                            size: 20,
+                            color: Colors.grey.shade400,
+                          ),
+                        )
+                      : Icon(
+                          Icons.image_outlined,
+                          size: 20,
+                          color: Colors.grey.shade400,
+                        ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 10),
 
           // Product Info - Fixed width
           SizedBox(
-            width: 180,
+            width: 240,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.product.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF3EEFF),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    serviceTypeLabel,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF6132E4),
+                      letterSpacing: 0.4,
+                    ),
+                  ),
                 ),
+                const SizedBox(height: 6),
+                Tooltip(
+                  message: widget.product.name,
+                  waitDuration: const Duration(milliseconds: 250),
+                  child: Text(
+                    widget.product.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF111827),
+                      height: 1.2,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 2),
                 Text(
                   widget.product.color ?? 'color',
                   style: const TextStyle(
@@ -4604,7 +4650,7 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
