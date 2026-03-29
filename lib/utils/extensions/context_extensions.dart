@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/image_preview_dialog.dart';
 import 'package:flutter/material.dart';
 
 /// Extensions on [BuildContext] that provide convenience methods for
@@ -106,6 +107,54 @@ extension GlobalX on BuildContext {
   }
 
   void clearSnackBars() => ScaffoldMessenger.of(this).clearSnackBars();
+
+  /// Shows a standardized error/alert dialog.
+  ///
+  /// [onDismiss] is an optional callback that runs after the dialog is dismissed.
+  Future<void> showErrorDialog({
+    required String title,
+    required String message,
+    String buttonText = 'OK',
+    VoidCallback? onDismiss,
+    VoidCallback? onButtonPressed,
+  }) =>
+      showDialog(
+        context: this,
+        builder: (dialogContext) => AlertDialog(
+          // Add a clear error icon
+          icon: Icon(
+            Icons.error_outline,
+            color: Theme.of(this).colorScheme.error,
+            size: 48,
+          ),
+          title: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(message, textAlign: TextAlign.center),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            // A single, centered button to dismiss
+            FilledButton(
+              style: FilledButton.styleFrom(
+                // Use error color for consistency
+                backgroundColor: Theme.of(this).colorScheme.error,
+                foregroundColor: Theme.of(this).colorScheme.onError,
+              ),
+              onPressed:
+                  onButtonPressed ??
+                  () {
+                    Navigator.of(dialogContext).pop(); // Dismiss the dialog
+                  },
+              child: Text(buttonText),
+            ),
+          ],
+        ),
+      ).then((_) {
+        // Run the callback *after* the dialog is popped
+        onDismiss?.call();
+      });
 }
 
 //--------------------------------------------------------------------------------------
@@ -164,8 +213,8 @@ extension NavigatorX<T> on BuildContext {
   /// Returns a [Future] that completes to the [T] type once the push
   /// operation is complete.
   Future<T?> pushAndRemoveUntil<T>(Widget screen) async => Navigator.of(
-        this,
-      ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
+    this,
+  ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
 
   /// Creates a route for navigation based on the specified [transitionType].
   ///
@@ -177,4 +226,33 @@ extension NavigatorX<T> on BuildContext {
   /// Returns a [Route] object configured with the appropriate transition.
   Route<T> _createRoute<T>(Widget widget) =>
       MaterialPageRoute<T>(builder: (context) => widget);
+}
+
+/// Extensions on [BuildContext] for image preview functionality.
+extension ImageX on BuildContext {
+  /// Displays an image preview dialog.
+  ///
+  /// [imageUrl] is the URL or file path of the image to preview.
+  /// [imageUrls] (optional) enables gallery-like navigation.
+  /// [errorWidgetBuilder] is an optional builder for a custom error widget.
+  /// [downloadable] indicates if the image can be downloaded.
+  /// [shareable] indicates if the image can be shared.
+  void showImagePreview(
+    String? imageUrl, {
+    List<String>? imageUrls,
+    Widget Function()? errorWidgetBuilder,
+    bool downloadable = false,
+    bool shareable = false,
+  }) {
+    showDialog<void>(
+      context: this,
+      builder: (_) => ImagePreviewDialog(
+        imageUrl: imageUrl,
+        imageUrls: imageUrls,
+        errorWidgetBuilder: errorWidgetBuilder,
+        downloadable: downloadable,
+        shareable: shareable,
+      ),
+    );
+  }
 }

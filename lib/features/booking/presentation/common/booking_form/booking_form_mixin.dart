@@ -15,6 +15,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_select
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
@@ -872,6 +873,127 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       } else {
         Navigator.of(context).pop();
       }
+    }
+  }
+
+  // ── Search & Filter helpers ──────────────────────────────────────────────
+
+  /// Loads all products into the overlay when the search field is tapped while
+  /// empty. Equivalent to the original `_searchAllProductsForOverlay`.
+  void searchAllProductsForOverlay({
+    required BookingType bookingType,
+    required DateTime pickupDate,
+    required DateTime returnDate,
+    required TimeOfDay? pickupTime,
+    required TimeOfDay? returnTime,
+    required VoidCallback showSearchOverlay,
+  }) {
+    final isSales = bookingType == BookingType.sales;
+    final serviceIdToUse =
+        (form.selectedServiceId == null || form.selectedServiceId == -1)
+            ? null
+            : form.selectedServiceId;
+
+    form.overlayIsLoading.value = true;
+    if (form.searchOverlayEntry == null) {
+      showSearchOverlay();
+    }
+
+    form.selectProductBloc.add(
+      SelectProductEvent.searchProducts(
+        serviceId: serviceIdToUse,
+        query: '',
+        type: 'name',
+        startPrice: form.isPriceFilterEnabled.value
+            ? form.priceRange.value.start.round()
+            : null,
+        endPrice: form.isPriceFilterEnabled.value
+            ? form.priceRange.value.end.round()
+            : null,
+        pickupDate: pickupDate.format(),
+        returnDate: returnDate.format(),
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+        useAvailableProductsApi: bookingType == BookingType.booking,
+        isSales: isSales,
+      ),
+    );
+  }
+
+  /// Opens the product filter dialog. Equivalent to `_showProductFilterBottomSheet`.
+  void showProductFilterDialog({
+    required BookingType bookingType,
+    required int? selectedServiceId,
+    required void Function(int? serviceId) onServiceIdChanged,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) => ProductFilterDialog(
+        services: context.read<ServiceBloc>().getServices(),
+        searchTypes: form.searchTypes,
+        initialServiceId: selectedServiceId,
+        initialSearchTypeIndex: form.selectedSearchTypeIndex.value,
+        initialPriceRange: const RangeValues(0, 100000),
+        initialMaxPrice: 100000,
+        initialIsPriceFilterEnabled: false,
+        computeSearchTypes: (serviceId) {
+          updateSearchTypesForService(serviceId);
+          return form.searchTypes;
+        },
+        onApply: ({
+          required serviceId,
+          required searchTypeIndex,
+          required priceRange,
+          required maxPrice,
+          required isPriceFilterEnabled,
+        }) {
+          onServiceIdChanged(serviceId);
+          form.selectedSearchTypeIndex.value = searchTypeIndex;
+          applyProductFilters(
+            bookingType,
+            searchTypeIndex,
+            priceRange,
+            isPriceFilterEnabled,
+          );
+        },
+      ),
+    );
+  }
+
+  // ── Date/Time helpers ────────────────────────────────────────────────────
+
+  /// Returns true if [time] is earlier than the current time of day.
+  bool isTimeInPast(TimeOfDay time) {
+    final now = TimeOfDay.now();
+    return (time.hour * 60 + time.minute) < (now.hour * 60 + now.minute);
+  }
+
+  /// Returns true if [returnT] is strictly after [pickup].
+  bool isReturnTimeAfterPickupTime(TimeOfDay pickup, TimeOfDay returnT) {
+    return (returnT.hour * 60 + returnT.minute) >
+        (pickup.hour * 60 + pickup.minute);
+  }
+
+  /// Shows a time-validation error snackbar.
+  void showTimeError(String message) {
+    context.showSnackBar(message, isError: true);
+  }
+
+  /// Recalculates [form.coolingPeriodDate] after pickup/return date changes.
+  void recalculateCoolingPeriodDate({
+    required DateTime pickupDate,
+    required DateTime returnDate,
+    required int coolingPeriodDays,
+  }) {
+    final coolingMode =
+        context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
+            CoolingPeriodMode.after;
+    if (coolingMode.isAfter) {
+      form.coolingPeriodDate =
+          returnDate.add(Duration(days: coolingPeriodDays));
+    } else {
+      form.coolingPeriodDate =
+          pickupDate.subtract(Duration(days: coolingPeriodDays));
     }
   }
 

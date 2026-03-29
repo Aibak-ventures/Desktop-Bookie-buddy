@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/pages/old_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
@@ -10,7 +11,6 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
@@ -36,7 +36,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   bool newOrderActive = false;
   bool showNewBookingInContent = false;
 
-  final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
+  final GlobalKey<OldNewBookingScreenState> _newBookingKey = GlobalKey();
   final GlobalKey<AllBookingsDesktopScreenState> _allBookingsKey = GlobalKey();
 
   late final List<Widget> screens;
@@ -169,7 +169,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           Positioned.fill(
             left: 80,
             child: showNewBookingInContent
-                ? NewBookingScreen(
+                ? OldNewBookingScreen(
                     key: _newBookingKey,
                     onClose: () {
                       setState(() {
@@ -273,10 +273,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red.shade400,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -7,56 +8,61 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Shows shop selector menu and handles shop switching
 Future<void> showShopSelector(BuildContext context, UserEntity user) async {
-  context.read<ShopListBloc>().add(const ShopListEvent.loadShops());
-
-  // Show loading indicator while shops are being fetched
   if (!context.mounted) return;
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (_) => const Center(child: CircularProgressIndicator()),
-  );
 
-  // Wait for loaded or error state
-  final state = await context.read<ShopListBloc>().stream.firstWhere(
-    (s) => s.maybeWhen(loading: () => false, orElse: () => true),
-  );
+  // Capture all context-dependent references BEFORE any await.
+  // The calling widget's context becomes stale after ShopListBloc emits
+  // its loaded state, which triggers a BlocBuilder rebuild.
+  final bloc = context.read<ShopListBloc>();
+  final userCubit = context.read<UserCubit>();
+  final navigator = Navigator.of(context, rootNavigator: true);
 
-  if (!context.mounted) return;
-  Navigator.pop(context); // close loading dialog
+  // Capture the button's screen position before any async work.
+  // After the dialog closes, the original render box may be detached
+  // due to BlocBuilder rebuilding, so we store absolute coordinates now.
+  final renderBox = context.findRenderObject() as RenderBox?;
+  final buttonPosition = renderBox?.localToGlobal(Offset.zero);
+  final buttonSize = renderBox?.size ?? Size.zero;
 
-  final shops = state.whenOrNull(loaded: (shops, _) => shops);
+  final List<ShopEntity>? shops;
+  // use already loaded shop list, else fetch
+  if (bloc.shops.isNotEmpty) {
+    shops = bloc.shops;
+  } else {
+    bloc.add(ShopListEvent.loadShops());
 
-  if (shops == null) {
-    // error state
-    final message =
-        state.whenOrNull(error: (msg) => msg) ?? 'Failed to load shops';
-    if (context.mounted) {
-      context.showSnackBar(message, isError: true);
-    }
-    return;
+    shops = await showDialog<List<ShopEntity>?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => BlocListener<ShopListBloc, ShopListState>(
+        listener: (ctx, state) {
+          state.maybeWhen(
+            orElse: () {},
+            loaded: (shops, currentShopId) => Navigator.pop(ctx, shops),
+            error: (error) {
+              Navigator.pop(ctx);
+              ctx.showSnackBar(error, isError: true);
+            },
+          );
+        },
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+    );
   }
 
-  if (shops.isEmpty) {
-    if (context.mounted) {
-      context.showSnackBar('No shops available');
-    }
-    return;
-  }
+  if (shops == null || shops.isEmpty) return;
 
-  final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-  if (renderBox == null) return;
-
-  final position = renderBox.localToGlobal(Offset.zero);
-  final size = renderBox.size;
+  // Use stored absolute position (render box may be detached after rebuild).
+  final dx = buttonPosition?.dx ?? 0;
+  final dy = buttonPosition?.dy ?? 0;
 
   final selectedShopId = await showMenu<int>(
-    context: context,
+    context: navigator.context,
     position: RelativeRect.fromLTRB(
-      position.dx,
-      position.dy + size.height + 8,
-      position.dx + 300,
-      position.dy,
+      dx,
+      dy + buttonSize.height + 8,
+      dx + 300,
+      dy,
     ),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     items: shops.map((shop) {
@@ -111,40 +117,41 @@ Future<void> showShopSelector(BuildContext context, UserEntity user) async {
               ),
             ),
             if (isCurrentShop)
-              Icon(
-                Icons.check_circle,
-                color: Colors.green.shade600,
-                size: 20,
-              ),
+              Icon(Icons.check_circle, color: Colors.green.shade600, size: 20),
           ],
         ),
       );
     }).toList(),
   );
 
-  if (selectedShopId != null && selectedShopId != user.shopDetails.id) {
-    if (!context.mounted) return;
-    showDialog(
-      context: context,
+  if (selectedShopId == null || selectedShopId == user.shopDetails.id) return;
+
+  navigator.push(
+    PageRouteBuilder(
+      opaque: false,
       barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+      pageBuilder: (_, __, ___) =>
+          const Center(child: CircularProgressIndicator()),
+    ),
+  );
+  try {
+    bloc.add(
+      ShopListEvent.changeAccount(
+        shops.firstWhere((s) => s.id == selectedShopId),
+      ),
     );
-    try {
-      context.read<ShopListBloc>().add(
-        ShopListEvent.changeAccount(
-          shops.firstWhere((s) => s.id == selectedShopId),
-        ),
+    await userCubit.switchShop(selectedShopId, null);
+    navigator.pop();
+    if (navigator.context.mounted) {
+      navigator.context.showSnackBar('Shop switched successfully');
+    }
+  } catch (e) {
+    navigator.pop();
+    if (navigator.context.mounted) {
+      navigator.context.showSnackBar(
+        'Failed to switch shop: $e',
+        isError: true,
       );
-      await context.read<UserCubit>().switchShop(selectedShopId, null);
-      if (context.mounted) {
-        Navigator.pop(context);
-        context.showSnackBar('Shop switched successfully');
-      }
-    } catch (e) {
-      if (context.mounted) {
-        Navigator.pop(context);
-        context.showSnackBar('Failed to switch shop: $e', isError: true);
-      }
     }
   }
 }
@@ -172,10 +179,10 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withValues(alpha:0.1),
+                  color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withValues(alpha:0.3),
+                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -224,7 +231,9 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                           Text(
                             user.shopDetails.place ?? user.shopDetails.address,
                             style: TextStyle(
-                              color: const Color(0xFF6C5CE7).withValues(alpha:0.7),
+                              color: const Color(
+                                0xFF6C5CE7,
+                              ).withValues(alpha: 0.7),
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),
@@ -273,10 +282,10 @@ class ShopSwitcherButtonCollapsed extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withValues(alpha:0.1),
+                  color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withValues(alpha:0.3),
+                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),

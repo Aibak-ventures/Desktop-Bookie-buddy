@@ -17,9 +17,9 @@ class ShopListBloc extends Bloc<ShopListEvent, ShopListState> {
   ShopListBloc({
     required GetShopsUseCase getShops,
     required IUserRepository userRepo,
-  })  : _getShops = getShops,
-        _userRepo = userRepo,
-        super(const ShopListState.loading()) {
+  }) : _getShops = getShops,
+       _userRepo = userRepo,
+       super(const ShopListState.loading()) {
     on<_LoadShops>((event, emit) async {
       if (state is! _Loading) emit(const ShopListState.loading());
 
@@ -41,5 +41,13 @@ class ShopListBloc extends Bloc<ShopListEvent, ShopListState> {
         emit(ShopListState.error(e.toString()));
       }
     });
+  }
+
+  /// Returns shop list if present in the bloc state
+  List<ShopEntity> get shops {
+    return state.maybeWhen(
+      orElse: () => [],
+      loaded: (shops, currentShopId) => shops,
+    );
   }
 }
