@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
@@ -52,6 +53,10 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 
   @override
   Widget build(BuildContext context) {
+    final serviceType = widget.product.mainServiceType;
+    final serviceTypeLabel =
+        serviceType?.name.toUpperCase() ?? 'PRODUCT';
+
     // Show sale_price in sales mode, rent price in booking mode
     final price = widget.isSales
         ? (double.tryParse(widget.product.salePrice ?? '')?.toInt() ??
@@ -60,7 +65,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         : (widget.product.price ?? 0);
     final variants = widget.product.variants;
     // Define min width preventing squeeze/overflow
-    const double minRowWidth = 700;
+    const double minRowWidth = 860;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -78,16 +83,25 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                   width: 50,
                   height: 40,
                   color: Colors.grey.shade100,
-                  child:
-                      widget.product.image != null &&
+                  child: widget.product.image != null &&
                           widget.product.image!.isNotEmpty
-                      ? Image.network(
-                          widget.product.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.image_outlined,
-                            size: 20,
-                            color: Colors.grey.shade400,
+                      ? Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => ZoomableImageDialog.show(
+                              context,
+                              imageUrl: widget.product.image!,
+                              title: widget.product.name,
+                            ),
+                            child: Image.network(
+                              widget.product.image!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Icon(
+                                Icons.image_outlined,
+                                size: 20,
+                                color: Colors.grey.shade400,
+                              ),
+                            ),
                           ),
                         )
                       : Icon(
@@ -99,29 +113,72 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
               ),
               const SizedBox(width: 10),
 
-              // Product Info - Fixed width
+              // Product Info - wider and more readable
               SizedBox(
-                width: 180,
+                width: 240,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3F0FF),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        serviceTypeLabel,
+                        style: const TextStyle(
+                          color: AppColors.purple,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
                       widget.product.name,
                       style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        height: 1.2,
+                        color: Color(0xFF1F2937),
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
                     Text(
-                      widget.product.color ?? 'color',
+                      [
+                        if ((widget.product.color ?? '').isNotEmpty)
+                          widget.product.color!,
+                        if ((widget.product.category ?? '').isNotEmpty)
+                          widget.product.category!,
+                        if ((widget.product.model ?? '').isNotEmpty)
+                          widget.product.model!,
+                      ].join(' • ').isNotEmpty
+                          ? [
+                              if ((widget.product.color ?? '').isNotEmpty)
+                                widget.product.color!,
+                              if ((widget.product.category ?? '').isNotEmpty)
+                                widget.product.category!,
+                              if ((widget.product.model ?? '').isNotEmpty)
+                                widget.product.model!,
+                            ].join(' • ')
+                          : (widget.product.description ?? 'No extra details'),
                       style: const TextStyle(
-                        color: Color(0xFF707070),
+                        color: Color(0xFF6B7280),
                         fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
+                        height: 1.3,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],

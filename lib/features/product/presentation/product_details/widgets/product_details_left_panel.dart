@@ -420,16 +420,27 @@ class ProductDetailsLeftPanel extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 12),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      SizedBox(
+        height: isGadget ? 84 : 70,
         child: Row(
           children: [
-            ...displayVariants.map(
-              (variant) => Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: _variantCard(variant),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: displayVariants
+                      .map(
+                        (variant) => Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _variantCard(variant),
+                        ),
+                      )
+                      .toList(),
+                ),
               ),
             ),
+            const SizedBox(width: 12),
             _addVariantButton(),
           ],
         ),
@@ -507,10 +518,10 @@ class ProductDetailsLeftPanel extends StatelessWidget {
 
   Widget _addVariantButton() {
     return Container(
-      width: 52,
+      width: 118,
       height: 58,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF7F4FF),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: AppColors.purple,
@@ -518,9 +529,33 @@ class ProductDetailsLeftPanel extends StatelessWidget {
           style: BorderStyle.solid,
         ),
       ),
-      child: IconButton(
-        onPressed: onAddVariant,
-        icon: const Icon(Icons.add, color: AppColors.purple),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onAddVariant,
+          borderRadius: BorderRadius.circular(10),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: AppColors.purple, size: 18),
+                SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    'Add Variant',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppColors.purple,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

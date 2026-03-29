@@ -30,6 +30,9 @@ class BookingFormControllers {
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
   PaymentMethod paymentMethod = PaymentMethod.gPay;
+  final selectedPaymentMethods = ValueNotifier<List<PaymentMethod>>([
+    PaymentMethod.gPay,
+  ]);
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
 
   // ── Description / service / location ────────────────────────────────────────
@@ -126,6 +129,7 @@ class BookingFormControllers {
     selectedProductsNotifier.dispose();
     additionalChargesNotifier.dispose();
     documentsNotifier.dispose();
+    selectedPaymentMethods.dispose();
     overlayProducts.dispose();
     overlayIsLoading.dispose();
     selectedSearchTypeIndex.dispose();

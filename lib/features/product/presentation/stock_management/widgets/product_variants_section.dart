@@ -201,39 +201,56 @@ class _ProductVariantsSectionState extends State<ProductVariantsSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Product Variants',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-              ),
-              ValueListenableBuilder<bool>(
-                valueListenable: _isAddingVariant,
-                builder: (context, isAdding, child) {
-                  return ElevatedButton.icon(
-                    onPressed: isAdding ? null : _startAddingVariant,
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text('Add Variant'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.purple,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final header = Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Product Variants',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                  const SizedBox(width: 16),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _isAddingVariant,
+                    builder: (context, isAdding, child) {
+                      return ElevatedButton.icon(
+                        onPressed: isAdding ? null : _startAddingVariant,
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Add Variant'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.purple,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: constraints.maxWidth < 420
+                        ? 420
+                        : constraints.maxWidth,
+                  ),
+                  child: header,
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
@@ -282,119 +299,131 @@ class _ProductVariantsSectionState extends State<ProductVariantsSection> {
                 );
               }
 
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Column(
-                  children: [
-                    // Header row
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(8),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              'Size/Variant',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Stock',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 80),
-                        ],
-                      ),
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 520),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade200),
                     ),
-
-                    // Variant rows
-                    ...variants.asMap().entries.map((entry) {
-                      final index = entry.key;
-                      final variant = entry.value;
-                      final isLast = index == variants.length - 1;
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: isLast
-                                ? BorderSide.none
-                                : BorderSide(color: Colors.grey.shade200),
+                    child: Column(
+                      children: [
+                        // Header row
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(8),
+                            ),
+                          ),
+                          child: const Row(
+                            children: [
+                              SizedBox(
+                                width: 240,
+                                child: Text(
+                                  'Size/Variant',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              SizedBox(
+                                width: 80,
+                                child: Text(
+                                  'Stock',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 96),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                variant.attribute,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
+
+                        // Variant rows
+                        ...variants.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final variant = entry.value;
+                          final isLast = index == variants.length - 1;
+
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: isLast
+                                    ? BorderSide.none
+                                    : BorderSide(color: Colors.grey.shade200),
                               ),
                             ),
-                            Expanded(
-                              child: Text(
-                                variant.stock.toString(),
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
+                            child: Row(
                               children: [
-                                IconButton(
-                                  onPressed: () =>
-                                      _startEditingVariant(variant),
-                                  icon: const Icon(
-                                    Icons.edit_outlined,
-                                    size: 18,
+                                SizedBox(
+                                  width: 240,
+                                  child: Text(
+                                    variant.attribute,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
-                                  tooltip: 'Edit',
-                                  color: AppColors.purple,
                                 ),
-                                IconButton(
-                                  onPressed: () => _deleteVariant(variant.id),
-                                  icon: const Icon(
-                                    Icons.delete_outline,
-                                    size: 18,
+                                const SizedBox(width: 16),
+                                SizedBox(
+                                  width: 80,
+                                  child: Text(
+                                    variant.stock.toString(),
+                                    style: const TextStyle(fontSize: 14),
                                   ),
-                                  tooltip: 'Delete',
-                                  color: Colors.red,
+                                ),
+                                const SizedBox(width: 16),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () =>
+                                          _startEditingVariant(variant),
+                                      icon: const Icon(
+                                        Icons.edit_outlined,
+                                        size: 18,
+                                      ),
+                                      tooltip: 'Edit',
+                                      color: AppColors.purple,
+                                    ),
+                                    IconButton(
+                                      onPressed: () =>
+                                          _deleteVariant(variant.id),
+                                      icon: const Icon(
+                                        Icons.delete_outline,
+                                        size: 18,
+                                      ),
+                                      tooltip: 'Delete',
+                                      color: Colors.red,
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
                 ),
               );
             },

@@ -105,6 +105,8 @@ class NewBookingScreenState extends State<NewBookingScreen>
   @override
   void initState() {
     super.initState();
+    _selectedPaymentMethod = _form.paymentMethod;
+    _form.selectedPaymentMethods.value = [_form.paymentMethod];
     pickupDate = DateTime.now();
     returnDate = DateTime.now().add(const Duration(days: 1));
 
@@ -384,9 +386,6 @@ class NewBookingScreenState extends State<NewBookingScreen>
             )
           : BookingPaymentSummaryPanel(
               form: _form,
-              selectedPaymentMethod: _selectedPaymentMethod,
-              onPaymentMethodChanged: (method) =>
-                  setState(() => _selectedPaymentMethod = method),
               onBack: () => setState(() => _bookingStep = 0),
               summarySection: _buildSummarySection(),
             ),
@@ -464,6 +463,8 @@ class NewBookingScreenState extends State<NewBookingScreen>
         controller: _form.descriptionController,
         maxLines: null,
         expands: true,
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
         decoration: const InputDecoration(
           border: InputBorder.none,
           hintText: 'Notes',
@@ -546,7 +547,11 @@ class NewBookingScreenState extends State<NewBookingScreen>
     final isSelected = _selectedPaymentMethod == method;
     return Expanded(
       child: InkWell(
-        onTap: () => setState(() => _selectedPaymentMethod = method),
+        onTap: () => setState(() {
+          _selectedPaymentMethod = method;
+          _form.paymentMethod = method;
+          _form.selectedPaymentMethods.value = [method];
+        }),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
@@ -604,11 +609,14 @@ class NewBookingScreenState extends State<NewBookingScreen>
 
   void _validateAndContinue() {
     if (_form.clientNameController.text.trim().isEmpty) {
-      setState(() => _clientNameError = 'Please enter client name');
+      setState(() => _clientNameError = 'Please enter the client name');
       return;
     }
     if (_form.selectedProductsNotifier.value.isEmpty) {
-      context.showSnackBar('Please select at least one item', isError: true);
+      context.showSnackBar(
+        'Add at least one product before continuing.',
+        isError: true,
+      );
       return;
     }
     setState(() {
@@ -638,7 +646,10 @@ class NewBookingScreenState extends State<NewBookingScreen>
 
     final products = _form.selectedProductsNotifier.value;
     if (products.isEmpty) {
-      context.showSnackBar('Please select at least one item', isError: true);
+      context.showSnackBar(
+        'Add at least one product before confirming this order.',
+        isError: true,
+      );
       return;
     }
 
@@ -658,7 +669,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
         if (id != 0)
           _showSuccessDialog(id, selectedBookingType);
         else {
-          context.showSnackBar('Success!');
+          context.showSnackBar('Order saved successfully.');
           if (widget.onClose != null)
             widget.onClose!();
           else
@@ -667,7 +678,10 @@ class NewBookingScreenState extends State<NewBookingScreen>
       }
     } catch (e) {
       GlobalLoadingOverlay.hide();
-      context.showSnackBar('Error: $e', isError: true);
+      context.showSnackBar(
+        _formatUserFriendlyError(e),
+        isError: true,
+      );
     }
   }
 
@@ -700,7 +714,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
       paymentMethod: _form.paymentMethod,
       deliveryStatus: _form.deliveryStatus,
       products: _form.selectedProductsNotifier.value,
-      description: _form.descriptionController.text.trim(),
+      description: _buildDescriptionWithPaymentMethods(),
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
     );
@@ -727,7 +741,7 @@ class NewBookingScreenState extends State<NewBookingScreen>
       staffId: context.read<StaffSearchCubit>().state.selectedStaff?.id,
       clientPhone: _form.clientPhone1Controller.text.trim(),
       saleDate: pickupDate.format(),
-      description: _form.descriptionController.text.trim(),
+      description: _buildDescriptionWithPaymentMethods(),
       sendInvoice: sendPdfToWhatsApp,
       variants: variants,
       paidAmount: total > 0 ? total : 0,
@@ -894,11 +908,40 @@ class NewBookingScreenState extends State<NewBookingScreen>
             staffNameError: _staffNameError,
             selectedPaymentMethod: _selectedPaymentMethod,
             onPaymentMethodChanged: (m) =>
-                setState(() => _selectedPaymentMethod = m),
+                setState(() {
+                  _selectedPaymentMethod = m;
+                  _form.paymentMethod = m;
+                  _form.selectedPaymentMethods.value = [m];
+                }),
             onConfirm: () {}, // Implement old booking confirm if needed
           ),
         ),
       ],
     );
+  }
+
+  String _buildDescriptionWithPaymentMethods() {
+    final note = _form.descriptionController.text.trim();
+    final methods = _form.selectedPaymentMethods.value;
+    if (methods.length <= 1) return note;
+
+    final paymentLine = 'Payment split via: ${methods.map((m) => m.name).join(', ')}';
+    if (note.isEmpty) return paymentLine;
+    if (note.contains(paymentLine)) return note;
+    return '$note\n$paymentLine';
+  }
+
+  String _formatUserFriendlyError(Object error) {
+    final message = error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+    if (message.contains('Failed to add booking')) {
+      return 'Could not save the booking right now. Please check the details and try again.';
+    }
+    if (message.contains('Failed to create sale')) {
+      return 'Could not complete the sale right now. Please try again.';
+    }
+    if (message.contains('network') || message.contains('SocketException')) {
+      return 'Network issue detected. Please check your internet connection and try again.';
+    }
+    return message.startsWith('Error: ') ? message.substring(7) : message;
   }
 }

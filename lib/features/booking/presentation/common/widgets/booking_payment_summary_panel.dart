@@ -9,16 +9,12 @@ import 'package:flutter/material.dart';
 
 class BookingPaymentSummaryPanel extends StatefulWidget {
   final BookingFormControllers form;
-  final PaymentMethod? selectedPaymentMethod;
-  final ValueChanged<PaymentMethod>? onPaymentMethodChanged;
   final VoidCallback onBack;
   final Widget summarySection;
 
   const BookingPaymentSummaryPanel({
     super.key,
     required this.form,
-    this.selectedPaymentMethod,
-    this.onPaymentMethodChanged,
     required this.onBack,
     required this.summarySection,
   });
@@ -141,7 +137,7 @@ class _BookingPaymentSummaryPanelState
                       final hasAdvanceAmount =
                           value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
-                      if (hasAdvanceAmount && widget.selectedPaymentMethod != null && widget.onPaymentMethodChanged != null) {
+                      if (hasAdvanceAmount) {
                         return Column(
                           children: [
                             _buildPaymentMethodSection(),
@@ -320,26 +316,58 @@ class _BookingPaymentSummaryPanelState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Payment Method',
+          'Payment Methods',
           style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
         ),
         const SizedBox(height: 4),
-        Row(
-          children: [
-            _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
-            const SizedBox(width: 8),
-            _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
-          ],
+        Text(
+          'You can select more than one method if the payment is split.',
+          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 8),
+        ValueListenableBuilder<List<PaymentMethod>>(
+          valueListenable: form.selectedPaymentMethods,
+          builder: (context, selectedMethods, child) {
+            return Row(
+              children: [
+                _buildPaymentMethodOption(
+                  PaymentMethod.gPay,
+                  Icons.qr_code,
+                  selectedMethods,
+                ),
+                const SizedBox(width: 8),
+                _buildPaymentMethodOption(
+                  PaymentMethod.cash,
+                  Icons.money,
+                  selectedMethods,
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildPaymentMethodOption(PaymentMethod method, IconData icon) {
-    final isSelected = widget.selectedPaymentMethod == method;
+  Widget _buildPaymentMethodOption(
+    PaymentMethod method,
+    IconData icon,
+    List<PaymentMethod> selectedMethods,
+  ) {
+    final isSelected = selectedMethods.contains(method);
     return Expanded(
       child: InkWell(
-        onTap: () => widget.onPaymentMethodChanged?.call(method),
+        onTap: () {
+          final updatedMethods = List<PaymentMethod>.from(selectedMethods);
+          if (isSelected) {
+            if (updatedMethods.length == 1) return;
+            updatedMethods.remove(method);
+          } else {
+            updatedMethods.add(method);
+          }
+          form.selectedPaymentMethods.value = updatedMethods;
+          form.paymentMethod = updatedMethods.first;
+        },
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -376,6 +404,14 @@ class _BookingPaymentSummaryPanelState
                       : Colors.grey.shade700,
                 ),
               ),
+              if (isSelected) ...[
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.check_circle,
+                  size: 18,
+                  color: Color(0xFF6132E4),
+                ),
+              ],
             ],
           ),
         ),

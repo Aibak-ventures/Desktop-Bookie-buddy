@@ -1,4 +1,6 @@
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
+// import 'package:bookie_buddy_web/core/common\widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
@@ -273,12 +275,23 @@ class _BookingCustomizationSectionState
                     width: 48,
                     height: 48,
                     color: Colors.grey.shade100,
-                    child: product.variant.image != null
-                        ? Image.network(
-                            product.variant.image!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) =>
-                                const Icon(Icons.image, size: 24),
+                    child: product.variant.image != null &&
+                            product.variant.image!.isNotEmpty
+                        ? Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => ZoomableImageDialog.show(
+                                context,
+                                imageUrl: product.variant.image!,
+                                title: product.variant.name,
+                              ),
+                              child: Image.network(
+                                product.variant.image!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) =>
+                                    const Icon(Icons.image, size: 24),
+                              ),
+                            ),
                           )
                         : const Icon(Icons.image, size: 24),
                   ),

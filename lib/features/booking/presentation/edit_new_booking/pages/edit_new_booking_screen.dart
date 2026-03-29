@@ -242,6 +242,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
     _form.advanceAmountController.text = sale.paidAmount.toString();
     _form.discountAmountController.text = sale.discountAmount.toString();
     _form.paymentMethod = sale.paymentMethod;
+    _form.selectedPaymentMethods.value = [sale.paymentMethod];
     _form.descriptionController.text = sale.description;
 
     _form.selectedProductsNotifier.value = sale.products
@@ -608,7 +609,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
       }
       GlobalLoadingOverlay.hide();
       if (mounted) {
-        context.showSnackBar('Updated successfully!');
+        context.showSnackBar('Changes saved successfully.');
         if (widget.onClose != null)
           widget.onClose!();
         else
@@ -616,7 +617,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
       }
     } catch (e) {
       GlobalLoadingOverlay.hide();
-      context.showSnackBar('Failed to save: $e', isError: true);
+      context.showSnackBar(
+        _formatUserFriendlyError(e),
+        isError: true,
+      );
     }
   }
 
@@ -674,7 +678,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
         )
         .toList();
     updates['delivery_status'] = _form.deliveryStatus.toValue();
-    updates['description'] = _form.descriptionController.text.trim();
+    updates['description'] = _buildDescriptionWithPaymentMethods();
 
     return updates;
   }
@@ -686,7 +690,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
       clientPhone: _form.clientPhone1Controller.text.trim(),
       address: _form.clientAddressController.text.trim(),
       saleDate: pickupDate.format(),
-      description: _form.descriptionController.text.trim(),
+      description: _buildDescriptionWithPaymentMethods(),
       sendPdfToWhatsApp: sendPdfToWhatsApp,
       products: _form.selectedProductsNotifier.value,
       paidAmount: _form.advanceAmountController.text.trim().toIntOrNull() ?? 0,
@@ -708,5 +712,30 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen>
         isSales: selectedBookingType == BookingType.sales,
       ),
     );
+  }
+
+  String _buildDescriptionWithPaymentMethods() {
+    final note = _form.descriptionController.text.trim();
+    final methods = _form.selectedPaymentMethods.value;
+    if (methods.length <= 1) return note;
+
+    final paymentLine = 'Payment split via: ${methods.map((m) => m.name).join(', ')}';
+    if (note.isEmpty) return paymentLine;
+    if (note.contains(paymentLine)) return note;
+    return '$note\n$paymentLine';
+  }
+
+  String _formatUserFriendlyError(Object error) {
+    final message = error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+    if (message.contains('Failed to update booking')) {
+      return 'Could not save the booking changes right now. Please try again.';
+    }
+    if (message.contains('Failed to update sale')) {
+      return 'Could not save the sale changes right now. Please try again.';
+    }
+    if (message.contains('network') || message.contains('SocketException')) {
+      return 'Network issue detected. Please check your internet connection and try again.';
+    }
+    return message.startsWith('Error: ') ? message.substring(7) : message;
   }
 }

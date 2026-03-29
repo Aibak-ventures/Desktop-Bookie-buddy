@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
@@ -706,17 +707,27 @@ class _ProductCustomizationWidgetState
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child:
-                                  product.variant.image != null &&
+                              child: product.variant.image != null &&
                                       product.variant.image!.isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(6),
-                                      child: Image.network(
-                                        product.variant.image!,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) => Icon(
-                                          Icons.image,
-                                          color: Colors.grey.shade400,
+                                  ? Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () => ZoomableImageDialog.show(
+                                          context,
+                                          imageUrl: product.variant.image!,
+                                          title: product.variant.name,
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          child: Image.network(
+                                            product.variant.image!,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (_, __, ___) => Icon(
+                                              Icons.image,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     )

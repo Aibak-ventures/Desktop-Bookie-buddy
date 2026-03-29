@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -55,14 +56,26 @@ class BookingDetailsItemsSection extends StatelessWidget {
                           border: Border.all(color: Colors.grey.shade200),
                         ),
                         child: item.image != null && item.image!.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  item.image!,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.image,
-                                          color: Colors.grey.shade400),
+                            ? Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => ZoomableImageDialog.show(
+                                    context,
+                                    imageUrl: item.image!,
+                                    title: item.name,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      item.image!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) => Icon(
+                                            Icons.image,
+                                            color: Colors.grey.shade400,
+                                          ),
+                                    ),
+                                  ),
                                 ),
                               )
                             : Icon(Icons.image, color: Colors.grey.shade400),

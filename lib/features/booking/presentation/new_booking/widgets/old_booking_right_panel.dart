@@ -189,9 +189,8 @@ class OldBookingRightPanel extends StatelessWidget {
                       controller: form.descriptionController,
                       maxLines: null,
                       expands: true,
-                      textInputAction: TextInputAction.next,
-                      onEditingComplete: () =>
-                          FocusScope.of(context).nextFocus(),
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes / Description',
