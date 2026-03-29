@@ -198,6 +198,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // Focus nodes for client details navigation
   final _clientNameFocusNode = FocusNode();
+  final _pickupDateFocusNode = FocusNode();
+  final _pickupTimeFocusNode = FocusNode();
+  final _returnDateFocusNode = FocusNode();
+  final _returnTimeFocusNode = FocusNode();
+  final _coolingPeriodFocusNode = FocusNode();
   final _clientPhone1FocusNode = FocusNode();
   final _clientPhone2FocusNode = FocusNode();
   final _clientAddressFocusNode = FocusNode();
@@ -275,6 +280,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     }
     _inlinePriceFocusNode.dispose();
     _clientNameFocusNode.dispose();
+    _pickupDateFocusNode.dispose();
+    _pickupTimeFocusNode.dispose();
+    _returnDateFocusNode.dispose();
+    _returnTimeFocusNode.dispose();
+    _coolingPeriodFocusNode.dispose();
     _clientPhone1FocusNode.dispose();
     _clientPhone2FocusNode.dispose();
     _clientAddressFocusNode.dispose();
@@ -2346,11 +2356,40 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       context: context,
       initialTime: initialTime,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+        return Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            const SingleActivator(LogicalKeyboardKey.enter):
+                const ActivateIntent(),
+            const SingleActivator(LogicalKeyboardKey.numpadEnter):
+                const ActivateIntent(),
+          },
+          child: Actions(
+            actions: <Type, Action<Intent>>{
+              ActivateIntent: CallbackAction<ActivateIntent>(
+                onInvoke: (intent) {
+                  final focusContext = FocusManager.instance.primaryFocus?.context;
+                  if (focusContext != null) {
+                    return Actions.maybeInvoke<ActivateIntent>(
+                      focusContext,
+                      const ActivateIntent(),
+                    );
+                  }
+                  return null;
+                },
+              ),
+            },
+            child: Focus(
+              autofocus: true,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: const ColorScheme.light(
+                    primary: Color(0xFF6132E4),
+                  ),
+                ),
+                child: child!,
+              ),
+            ),
           ),
-          child: child!,
         );
       },
     );
@@ -4504,6 +4543,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     label: 'Pickup date',
                     value: pickupDate.format(),
                     onTap: () => _selectDate(isPickup: true),
+                    focusNode: _pickupDateFocusNode,
+                    nextFocusNode: _pickupTimeFocusNode,
+                    autofocus: true,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -4514,6 +4556,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     label: 'time',
                     value: pickupTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: true),
+                    focusNode: _pickupTimeFocusNode,
+                    nextFocusNode: _returnDateFocusNode,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -4534,6 +4578,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     label: 'Return date',
                     value: returnDate.format(),
                     onTap: () => _selectDate(isPickup: false),
+                    focusNode: _returnDateFocusNode,
+                    nextFocusNode: _returnTimeFocusNode,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -4544,6 +4590,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     label: 'time',
                     value: returnTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: false),
+                    focusNode: _returnTimeFocusNode,
+                    nextFocusNode: _coolingPeriodFocusNode,
                   ),
                 ),
 
@@ -4582,6 +4630,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Focus(
+                          focusNode: _coolingPeriodFocusNode,
                           onKeyEvent: (_, event) {
                             if (event is KeyDownEvent &&
                                 (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -4646,6 +4695,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     required String label,
     required String value,
     required Future<void> Function() onTap,
+    FocusNode? focusNode,
+    FocusNode? nextFocusNode,
     bool autofocus = false,
   }) {
     return Column(
@@ -4662,19 +4713,34 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         ),
         const SizedBox(height: 8),
         Focus(
+          focusNode: focusNode,
           autofocus: autofocus,
           onKeyEvent: (_, event) {
             if (event is KeyDownEvent &&
                 (event.logicalKey == LogicalKeyboardKey.enter ||
                     event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) => FocusScope.of(context).nextFocus());
+              onTap().then((_) {
+                if (nextFocusNode != null) {
+                  nextFocusNode.requestFocus();
+                } else {
+                  FocusScope.of(context).nextFocus();
+                }
+              });
               return KeyEventResult.handled;
             }
             return KeyEventResult.ignored;
           },
           child: InkWell(
-            onTap: () =>
-                onTap().then((_) => FocusScope.of(context).nextFocus()),
+            onTap: () {
+              focusNode?.requestFocus();
+              onTap().then((_) {
+                if (nextFocusNode != null) {
+                  nextFocusNode.requestFocus();
+                } else {
+                  FocusScope.of(context).nextFocus();
+                }
+              });
+            },
             borderRadius: BorderRadius.circular(8),
             child: Container(
               height: 42,
@@ -4805,6 +4871,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     required String label,
     required String value,
     required Future<void> Function() onTap,
+    FocusNode? focusNode,
+    FocusNode? nextFocusNode,
     bool autofocus = false,
   }) {
     return Column(
@@ -4821,19 +4889,34 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         ),
         const SizedBox(height: 8),
         Focus(
+          focusNode: focusNode,
           autofocus: autofocus,
           onKeyEvent: (_, event) {
             if (event is KeyDownEvent &&
                 (event.logicalKey == LogicalKeyboardKey.enter ||
                     event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) => FocusScope.of(context).nextFocus());
+              onTap().then((_) {
+                if (nextFocusNode != null) {
+                  nextFocusNode.requestFocus();
+                } else {
+                  FocusScope.of(context).nextFocus();
+                }
+              });
               return KeyEventResult.handled;
             }
             return KeyEventResult.ignored;
           },
           child: InkWell(
-            onTap: () =>
-                onTap().then((_) => FocusScope.of(context).nextFocus()),
+            onTap: () {
+              focusNode?.requestFocus();
+              onTap().then((_) {
+                if (nextFocusNode != null) {
+                  nextFocusNode.requestFocus();
+                } else {
+                  FocusScope.of(context).nextFocus();
+                }
+              });
+            },
             borderRadius: BorderRadius.circular(8),
             child: Container(
               height: 42,

@@ -39,6 +39,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OldEditNewBookingScreen extends StatefulWidget {
@@ -2116,11 +2117,40 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       context: context,
       initialTime: initialTime,
       builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+        return Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            const SingleActivator(LogicalKeyboardKey.enter):
+                const ActivateIntent(),
+            const SingleActivator(LogicalKeyboardKey.numpadEnter):
+                const ActivateIntent(),
+          },
+          child: Actions(
+            actions: <Type, Action<Intent>>{
+              ActivateIntent: CallbackAction<ActivateIntent>(
+                onInvoke: (intent) {
+                  final focusContext = FocusManager.instance.primaryFocus?.context;
+                  if (focusContext != null) {
+                    return Actions.maybeInvoke<ActivateIntent>(
+                      focusContext,
+                      const ActivateIntent(),
+                    );
+                  }
+                  return null;
+                },
+              ),
+            },
+            child: Focus(
+              autofocus: true,
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: const ColorScheme.light(
+                    primary: Color(0xFF6132E4),
+                  ),
+                ),
+                child: child!,
+              ),
+            ),
           ),
-          child: child!,
         );
       },
     );
