@@ -54,7 +54,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           ? booking.returnDate
           : booking.pickupDate;
 
-      if (dateString == null || dateString.isEmpty) continue;
+      if (dateString == null || dateString.isEmpty) {
+        upcomingList.add(booking);
+        continue;
+      }
 
       try {
         DateTime date;

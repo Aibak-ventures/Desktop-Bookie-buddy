@@ -102,8 +102,25 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
         expiredCount: expiredCount,
       );
 
-  /// Pagination accessors for ongoing bookings (main paginated data)
-  String? get nextPageUrl => pagination.ongoing.next;
+  /// Returns a combined next-page URL that advances whichever list(s) still
+  /// have pages remaining. Both page numbers are always included so the API
+  /// returns the correct slice for each list in a single request.
+  String? get nextPageUrl {
+    final hasMoreUpcoming = pagination.upcoming.next != null;
+    final hasMoreOngoing = pagination.ongoing.next != null;
+
+    if (!hasMoreUpcoming && !hasMoreOngoing) return null;
+
+    final upcomingNextPage = hasMoreUpcoming
+        ? pagination.upcoming.currentPage + 1
+        : pagination.upcoming.currentPage;
+    final ongoingNextPage = hasMoreOngoing
+        ? pagination.ongoing.currentPage + 1
+        : pagination.ongoing.currentPage;
+
+    return '?upcoming_page=$upcomingNextPage&ongoing_page=$ongoingNextPage';
+  }
+
   int get currentPage => pagination.ongoing.currentPage;
   int get totalPages => pagination.ongoing.totalPages;
 }

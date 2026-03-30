@@ -28,8 +28,7 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
     _returnsScrollController.addListener(_onScroll);
   }
 
-  void _onScroll() { 
-    // Trigger when either list is within 200px of its bottom
+  void _onScroll() {
     final upcoming = _upcomingScrollController;
     final returns = _returnsScrollController;
 
@@ -42,10 +41,31 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
                 returns.position.maxScrollExtent - 200);
 
     if (!nearBottom) return;
+    _tryLoadNextPage();
+  }
 
+  /// Called after each loaded state to auto-load more data when the content
+  /// doesn't fill the viewport (no scroll events would fire otherwise).
+  void _checkAndLoadIfContentFitsViewport() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final upcoming = _upcomingScrollController;
+      final returns = _returnsScrollController;
+
+      final upcomingFits =
+          upcoming.hasClients && upcoming.position.maxScrollExtent == 0;
+      final returnsFits =
+          returns.hasClients && returns.position.maxScrollExtent == 0;
+
+      if (upcomingFits || returnsFits) {
+        _tryLoadNextPage();
+      }
+    });
+  }
+
+  void _tryLoadNextPage() {
     final bloc = context.read<DashboardBloc>();
-    final state = bloc.state;
-    state.maybeWhen(
+    bloc.state.maybeWhen(
       loaded: (_, __, ___, nextPageUrl, ____, _____, isPaginating) {
         if (nextPageUrl != null && !isPaginating) {
           bloc.add(const DashboardEvent.loadDashboardNextPageData());
@@ -66,7 +86,17 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 600,
-      child: BlocBuilder<DashboardBloc, DashboardState>(
+      child: BlocConsumer<DashboardBloc, DashboardState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            loaded: (_, __, ___, nextPageUrl, ____, _____, isPaginating) {
+              if (nextPageUrl != null && !isPaginating) {
+                _checkAndLoadIfContentFitsViewport();
+              }
+            },
+            orElse: () {},
+          );
+        },
         builder: (context, state) {
           return state.maybeWhen(
             loading: () => Row(
