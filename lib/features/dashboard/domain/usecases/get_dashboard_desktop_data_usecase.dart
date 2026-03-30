@@ -9,10 +9,12 @@ class GetDashboardDesktopDataUseCase {
 
   Future<DesktopDashboardEntity> call({
     int page = 1,
+    String? nextPageUrl,
     UserEntity? activeShop,
   }) async {
     return await _repository.getDashboardDesktopData(
       page: page,
+      nextPageUrl: nextPageUrl,
       activeShop: activeShop,
     );
   }

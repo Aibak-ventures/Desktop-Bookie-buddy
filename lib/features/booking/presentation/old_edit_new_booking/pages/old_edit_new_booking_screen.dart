@@ -2967,16 +2967,16 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     color: Colors.grey.shade100,
                     border: Border.all(color: Colors.grey.shade200),
                     image:
-                        product.variant.image != null &&
-                            product.variant.image!.isNotEmpty
+                        (product.variant.thumbnailImage ?? product.variant.image) != null &&
+                            (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
                         ? DecorationImage(
-                            image: NetworkImage(product.variant.image!),
+                            image: NetworkImage(product.variant.thumbnailImage ?? product.variant.image!),
                             fit: BoxFit.cover,
                           )
                         : null,
                   ),
                   child:
-                      product.variant.image == null ||
+                      (product.variant.thumbnailImage ?? product.variant.image) == null ||
                           product.variant.image!.isEmpty
                       ? const Icon(
                           Icons.image_not_supported,
@@ -3557,7 +3557,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                   elevation: 0,
                 ),
                 child: const Text(
-                  'Save Changesss',
+                  'Save Change',
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',
@@ -4621,10 +4621,14 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
                   height: 40,
                   color: Colors.grey.shade100,
                   child:
-                      widget.product.image != null &&
-                          widget.product.image!.isNotEmpty
+                      ((widget.product.thumbnailImage ?? widget.product.image) !=
+                                  null &&
+                              (widget.product.thumbnailImage ??
+                                      widget.product.image)!
+                                  .isNotEmpty)
                       ? Image.network(
-                          widget.product.image!,
+                          widget.product.thumbnailImage ??
+                              widget.product.image!,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Icon(
                             Icons.image_outlined,

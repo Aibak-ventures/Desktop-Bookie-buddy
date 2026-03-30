@@ -12,6 +12,7 @@ abstract class ProductInfoEntity with _$ProductInfoEntity {
     required int? variantId,
     required String name,
     required String? image,
+    String? thumbnailImage,
     MainServiceType? mainServiceType,
     String? variantAttribute,
     String? color,

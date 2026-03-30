@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/utils/error/error_handler.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';
@@ -17,13 +18,23 @@ class DashboardRemoteDatasource {
   /// Fetches dashboard data from the new desktop-dashboard v4 API endpoint
   Future<DesktopDashboardResponse> fetchDesktopDashboardData({
     int page = 1,
+    String? nextPageUrl,
     String? activeShopId,
   }) async {
     try {
+      final resolvedNextUrl = nextPageUrl == null || nextPageUrl.isEmpty
+          ? null
+          : (nextPageUrl.startsWith('http')
+                ? nextPageUrl
+                : Uri.parse(baseUrl)
+                      .resolve('/api/v4/bookings/desktop-dashboard/')
+                      .resolve(nextPageUrl)
+                      .toString());
+
       // Use the new desktop-dashboard endpoint
       final response = await _dio.get(
-        '/api/v4/bookings/desktop-dashboard/',
-        queryParameters: {'page': page},
+        resolvedNextUrl ?? '/api/v4/bookings/desktop-dashboard/',
+        queryParameters: resolvedNextUrl != null ? null : {'page': page},
         options: Options(
           headers: {
             if (activeShopId != null && activeShopId.isNotEmpty)

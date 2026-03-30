@@ -9,18 +9,22 @@ part 'product_info_model.g.dart';
 
 dynamic _idCustomRead(Map json, String key) => json[key] ?? json['product_id'];
 
-/// Prefers full-size [product_image]; falls back to [product_thumbnail].
 dynamic _readProductImage(Map json, String key) =>
     (json['product_image'] as String?)?.isNotEmpty == true
         ? json['product_image']
-        : (json['product_thumbnail'] ?? '');
+        : (json['product_thumbnail'] as String?);
+
+dynamic _readProductThumbnail(Map json, String key) =>
+    (json['product_thumbnail'] as String?)?.isNotEmpty == true
+        ? json['product_thumbnail']
+        : (json['product_image'] as String?);
 
 List<MeasurementValueModel> _parseMeasurements(dynamic json) {
   if (json is Map<String, dynamic>) {
     return json.entries
         .map(
           (entry) => MeasurementValueModel(
-            name: entry.key.capitalizeFirstLetter(), // optional
+            name: entry.key.capitalizeFirstLetter(),
             key: entry.key.toLowerCase().replaceAll(' ', '_'),
             value: entry.value.toString(),
           ),
@@ -37,8 +41,8 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'product_id') required int? productId,
     @JsonKey(name: 'variant_id') required int? variantId,
     @JsonKey(name: 'product_name') required String name,
-    @JsonKey(readValue: _readProductImage)
-    required String? image,
+    @JsonKey(readValue: _readProductImage) required String? image,
+    @JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,
     @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
     MainServiceType? mainServiceType,
     @JsonKey(name: 'variant_attribute') String? variantAttribute,
@@ -50,7 +54,6 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
     @Default(const [])
     List<MeasurementValueModel> measurements,
-    // Available stock from the variant
     int? stock,
     @JsonKey(name: 'remaining_stock') int? remainingStock,
   }) = _ProductInfoModel;
@@ -65,6 +68,7 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         variantId: entity.variantId,
         name: entity.name,
         image: entity.image,
+        thumbnailImage: entity.thumbnailImage,
         mainServiceType: entity.mainServiceType,
         variantAttribute: entity.variantAttribute,
         color: entity.color,
@@ -85,6 +89,7 @@ extension ProductInfoModelMapper on ProductInfoModel {
     variantId: variantId,
     name: name,
     image: image,
+    thumbnailImage: thumbnailImage,
     mainServiceType: mainServiceType,
     variantAttribute: variantAttribute,
     color: color,

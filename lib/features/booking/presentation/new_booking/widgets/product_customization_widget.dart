@@ -707,8 +707,8 @@ class _ProductCustomizationWidgetState
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: product.variant.image != null &&
-                                      product.variant.image!.isNotEmpty
+                              child: (product.variant.thumbnailImage ?? product.variant.image) != null &&
+                                      (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
                                   ? Material(
                                       color: Colors.transparent,
                                       child: InkWell(

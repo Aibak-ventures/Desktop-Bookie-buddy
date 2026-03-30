@@ -28,7 +28,7 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
     _returnsScrollController.addListener(_onScroll);
   }
 
-  void _onScroll() {
+  void _onScroll() { 
     // Trigger when either list is within 200px of its bottom
     final upcoming = _upcomingScrollController;
     final returns = _returnsScrollController;
@@ -92,16 +92,13 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
             loaded: (
               upcomingGrouped,
               returnsGrouped,
-              _,
+              carouselData,
               nextPageUrl,
               __,
               ___,
               isPaginating,
             ) {
-              final upcomingCount = upcomingGrouped.values.fold<int>(
-                0,
-                (sum, list) => sum + list.length,
-              );
+              final upcomingCount = carouselData.upcomingCount;
               final returnsCount = returnsGrouped.values.fold<int>(
                 0,
                 (sum, list) => sum + list.length,

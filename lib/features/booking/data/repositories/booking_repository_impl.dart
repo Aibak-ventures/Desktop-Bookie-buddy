@@ -313,8 +313,8 @@ class BookingRepositoryImpl implements IBookingRepository {
     String? startDate,
     String? endDate,
     String? searchQuery,
-    int page = 1,
-  }) async {
+    int page = 1
+    ,  String? nextPageUrl,  }) async {
     try {
       final response = await safeApiCall(
         () => _datasource.fetchBookingsPagination(
@@ -322,8 +322,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           page: page,
           startDate: startDate,
           endDate: endDate,
-          searchQuery: searchQuery,
-        ),
+          searchQuery: searchQuery,               ),
       );
       if (response.status.isSuccess) {
         return PaginationModel.fromJson(
@@ -359,6 +358,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     String? endDate,
     String? searchQuery,
     int page = 1,
+    String? nextPageUrl,
   }) async {
     try {
       final response = await safeApiCall(
@@ -368,6 +368,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           startDate: startDate,
           endDate: endDate,
           searchQuery: searchQuery,
+          nextPageUrl: nextPageUrl,
         ),
       );
       if (response.status.isSuccess) {
@@ -396,14 +397,13 @@ class BookingRepositoryImpl implements IBookingRepository {
 
         return (pagination: pagination, statusCounts: statusCounts);
       }
-      log('Error fetching desktop bookings pagination: ${response.devMessage}');
+      log('Error fetching desktop bookings pagination: ');
       throw response.message ?? 'Failed to fetch desktop bookings';
     } catch (e, stack) {
-      log('Error fetching desktop bookings pagination: $e', stackTrace: stack);
+      log('Error fetching desktop bookings pagination: ', stackTrace: stack);
       rethrow;
     }
   }
-
   @override
   Future<String> downloadBookingInvoice({
     required int bookingId,

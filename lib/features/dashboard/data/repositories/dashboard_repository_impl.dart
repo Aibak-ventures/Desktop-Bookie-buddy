@@ -15,11 +15,13 @@ class DashboardRepositoryImpl implements IDashboardRepository {
   @override
   Future<DesktopDashboardEntity> getDashboardDesktopData({
     int page = 1,
+    String? nextPageUrl,
     UserEntity? activeShop,
   }) async {
     try {
       final response = await _dashboardService.fetchDesktopDashboardData(
         page: page,
+        nextPageUrl: nextPageUrl,
         activeShopId: activeShop?.id.toString(),
       );
       return response.toEntity();

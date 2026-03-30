@@ -707,8 +707,8 @@ class _ProductCustomizationWidgetState
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child:
-                                  product.variant.image != null &&
-                                      product.variant.image!.isNotEmpty
+                                  (product.variant.thumbnailImage ?? product.variant.image) != null &&
+                                      (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
                                       child: Image.network(

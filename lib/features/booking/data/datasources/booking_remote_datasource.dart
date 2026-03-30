@@ -356,29 +356,31 @@ class BookingRemoteDatasource {
     String? startDate,
     String? endDate,
     int page = 1,
+    String? nextPageUrl,
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.bookings.desktopList,
-        queryParameters: {
-          'status':
-              status, // pending, upcoming, returns, not_returned, completed
-          if (searchQuery != null && searchQuery.isNotEmpty)
-            'search': searchQuery,
-          if (startDate != null && startDate.isNotEmpty)
-            'start_date': startDate,
-          if (endDate != null && endDate.isNotEmpty) 'end_date': endDate,
-          'page': page,
-        },
+        nextPageUrl ?? ApiEndpoints.bookings.desktopList,
+        queryParameters: nextPageUrl != null
+            ? null
+            : {
+                'status':
+                    status, // pending, upcoming, returns, not_returned, completed
+                if (searchQuery != null && searchQuery.isNotEmpty)
+                  'search': searchQuery,
+                if (startDate != null && startDate.isNotEmpty)
+                  'start_date': startDate,
+                if (endDate != null && endDate.isNotEmpty) 'end_date': endDate,
+                'page': page,
+              },
       );
-      log('Desktop bookings API: ${response.realUri.toString()}');
+      log('Desktop bookings API: ');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
-      log('Error fetching desktop bookings: $e', stackTrace: stack);
+      log('Error fetching desktop bookings: ', stackTrace: stack);
       rethrow;
     }
   }
-
   Future<CustomResponseModel> fetchPaymentHistory(int bookingId) async {
     try {
       final response = await _dio.get(

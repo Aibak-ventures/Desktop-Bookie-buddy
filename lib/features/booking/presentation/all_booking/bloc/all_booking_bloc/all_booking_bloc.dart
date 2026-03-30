@@ -200,19 +200,23 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     emit(s.copyWith(isPaginating: true));
 
     try {
-      final nextPage = PaginationModel.getPageFromUrl(s.nextPageUrl);
-
       final result = await _loadDesktopBookings(
         status: s.status ?? 'pending',
         startDate: s.startDate,
         endDate: s.endDate,
-        page: nextPage,
+        page: 1,
+        nextPageUrl: s.nextPageUrl,
         searchQuery: s.searchQuery,
       );
 
+      final mergedBookings = [...s.bookings, ...result.pagination.data];
+      final uniqueBookings = <int, DesktopBookingItemEntity>{
+        for (final booking in mergedBookings) booking.id: booking,
+      }.values.toList();
+
       emit(
         s.copyWith(
-          bookings: [...s.bookings, ...result.pagination.data],
+          bookings: uniqueBookings,
           nextPageUrl: result.pagination.nextPageUrl,
           isPaginating: false,
           endDate: s.endDate,

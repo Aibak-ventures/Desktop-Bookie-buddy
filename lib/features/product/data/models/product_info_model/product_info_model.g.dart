@@ -13,6 +13,7 @@ _ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
       variantId: (json['variant_id'] as num?)?.toInt(),
       name: json['product_name'] as String,
       image: _readProductImage(json, 'image') as String?,
+      thumbnailImage: _readProductThumbnail(json, 'thumbnailImage') as String?,
       mainServiceType: MainServiceType.fromString(
         json['main_service_name'] as String?,
       ),
@@ -35,7 +36,8 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'product_id': instance.productId,
       'variant_id': instance.variantId,
       'product_name': instance.name,
-      'product_thumbnail': instance.image,
+      'image': instance.image,
+      'thumbnailImage': instance.thumbnailImage,
       'main_service_name': _$MainServiceTypeEnumMap[instance.mainServiceType],
       'variant_attribute': instance.variantAttribute,
       'color': instance.color,

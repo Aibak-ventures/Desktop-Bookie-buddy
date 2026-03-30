@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dash
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 
 part 'dashboard_bloc.freezed.dart';
 part 'dashboard_event.dart';
@@ -24,7 +25,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
        _userCubit = userCubit,
        super(const _Loading()) {
     on<_LoadDashboardData>(_onLoadDashboardData);
-    on<_LoadDashboardNextPageData>(_onLoadDashboardNextPageData);
+    on<_LoadDashboardNextPageData>(
+      _onLoadDashboardNextPageData,
+      transformer: throttleDroppable(),
+    );
     on<_UpdateData>(_onUpdateData);
     on<_LoadIfNot>(_loadIfNot);
   }
@@ -153,10 +157,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     emit(s.copyWith(isPaginating: true));
 
     try {
-      final page = PaginationModel.getPageFromUrl(s.nextPageUrl);
       final activeShop = _userCubit?.state;
       final entity = await _getDashboardDesktopDataUseCase.call(
-        page: page,
+        page: 1,
+        nextPageUrl: s.nextPageUrl,
         activeShop: activeShop,
       );
 
@@ -173,22 +177,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final mergedReturnsGrouped = {...s.returnsGrouped};
 
       newUpcomingGrouped.forEach((key, value) {
-        if (mergedUpcomingGrouped.containsKey(key)) {
-          mergedUpcomingGrouped[key] = [
-            ...mergedUpcomingGrouped[key]!,
-            ...value,
-          ];
-        } else {
-          mergedUpcomingGrouped[key] = value;
-        }
+        final merged = [...?mergedUpcomingGrouped[key], ...value];
+        mergedUpcomingGrouped[key] = <int, BookingEntity>{
+          for (final booking in merged)
+            if (booking.id != null) booking.id!: booking,
+        }.values.toList();
       });
 
       newReturnsGrouped.forEach((key, value) {
-        if (mergedReturnsGrouped.containsKey(key)) {
-          mergedReturnsGrouped[key] = [...mergedReturnsGrouped[key]!, ...value];
-        } else {
-          mergedReturnsGrouped[key] = value;
-        }
+        final merged = [...?mergedReturnsGrouped[key], ...value];
+        mergedReturnsGrouped[key] = <int, BookingEntity>{
+          for (final booking in merged)
+            if (booking.id != null) booking.id!: booking,
+        }.values.toList();
       });
 
       emit(

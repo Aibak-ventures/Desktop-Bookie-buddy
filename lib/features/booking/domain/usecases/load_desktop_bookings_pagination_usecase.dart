@@ -19,11 +19,13 @@ class LoadDesktopBookingsPaginationUseCase {
     String? endDate,
     String? searchQuery,
     int page = 1,
+    String? nextPageUrl,
   }) => _repository.loadDesktopBookingsPagination(
     status: status,
     startDate: startDate,
     endDate: endDate,
     searchQuery: searchQuery,
     page: page,
+    nextPageUrl: nextPageUrl,
   );
 }

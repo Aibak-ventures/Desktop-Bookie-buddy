@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dash
 abstract interface class IDashboardRepository {
   Future<DesktopDashboardEntity> getDashboardDesktopData({
     int page = 1,
+    String? nextPageUrl,
     UserEntity? activeShop,
   });
 }

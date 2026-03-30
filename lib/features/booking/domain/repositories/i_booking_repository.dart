@@ -74,6 +74,7 @@ abstract interface class IBookingRepository {
     String? endDate,
     String? searchQuery,
     int page = 1,
+    String? nextPageUrl,
   });
 
   Future<String> downloadBookingInvoice({

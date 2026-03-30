@@ -130,10 +130,15 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                           width: 50,
                           height: 40,
                           color: Colors.grey.shade100,
-                          child: widget.product.image != null &&
-                                  widget.product.image!.isNotEmpty
+                          child: ((widget.product.thumbnailImage ??
+                                          widget.product.image) !=
+                                      null &&
+                                  (widget.product.thumbnailImage ??
+                                          widget.product.image)!
+                                      .isNotEmpty)
                               ? Image.network(
-                                  widget.product.image!,
+                                  widget.product.thumbnailImage ??
+                                      widget.product.image!,
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => Icon(
                                     Icons.image_outlined,

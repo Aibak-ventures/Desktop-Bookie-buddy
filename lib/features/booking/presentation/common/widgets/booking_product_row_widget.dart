@@ -65,16 +65,16 @@ class BookingProductRowWidget extends StatelessWidget {
                     color: Colors.grey.shade100,
                     border: Border.all(color: Colors.grey.shade200),
                     image:
-                        product.variant.image != null &&
-                            product.variant.image!.isNotEmpty
+                        (product.variant.thumbnailImage ?? product.variant.image) != null &&
+                            (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
                         ? DecorationImage(
-                            image: NetworkImage(product.variant.image!),
+                            image: NetworkImage(product.variant.thumbnailImage ?? product.variant.image!),
                             fit: BoxFit.cover,
                           )
                         : null,
                   ),
                   child:
-                      product.variant.image == null ||
+                      (product.variant.thumbnailImage ?? product.variant.image) == null ||
                           product.variant.image!.isEmpty
                       ? const Icon(
                           Icons.image_not_supported,
