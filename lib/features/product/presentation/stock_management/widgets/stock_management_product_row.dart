@@ -59,6 +59,7 @@ class StockManagementProductRow extends StatelessWidget {
                       children: [
                         _ZoomableThumbnail(
                           imageUrl: product.thumbnailImage ?? product.image,
+                          zoomImageUrl: product.image ?? product.thumbnailImage,
                           title: product.name,
                         ),
                         const SizedBox(width: 14),
@@ -332,9 +333,14 @@ class _ActionButton extends StatelessWidget {
 
 class _ZoomableThumbnail extends StatefulWidget {
   final String? imageUrl;
+  final String? zoomImageUrl;
   final String title;
 
-  const _ZoomableThumbnail({required this.imageUrl, required this.title});
+  const _ZoomableThumbnail({
+    required this.imageUrl,
+    required this.zoomImageUrl,
+    required this.title,
+  });
 
   @override
   State<_ZoomableThumbnail> createState() => _ZoomableThumbnailState();
@@ -371,7 +377,9 @@ class _ZoomableThumbnailState extends State<_ZoomableThumbnail> {
                 behavior: HitTestBehavior.opaque,
                 onTap: () => ZoomableImageDialog.show(
                   context,
-                  imageUrl: widget.imageUrl!,
+                  imageUrl: (widget.zoomImageUrl?.isNotEmpty == true
+                      ? widget.zoomImageUrl!
+                      : widget.imageUrl!),
                   title: widget.title,
                 ),
                 child: ClipRRect(
