@@ -12,7 +12,7 @@ _ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
       productId: (json['product_id'] as num?)?.toInt(),
       variantId: (json['variant_id'] as num?)?.toInt(),
       name: json['product_name'] as String,
-      image: json['product_thumbnail'] as String? ?? '',
+      image: _readProductImage(json, 'image') as String?,
       mainServiceType: MainServiceType.fromString(
         json['main_service_name'] as String?,
       ),

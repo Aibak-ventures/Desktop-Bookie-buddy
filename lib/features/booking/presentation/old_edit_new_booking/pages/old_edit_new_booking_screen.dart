@@ -180,6 +180,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
+  int _originalCoolingPeriodDays = 0; // Track original cooling period
 
   // Customization state
   bool showCustomization = false;
@@ -440,6 +441,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     // Store original running kilometers and delivery status
     _originalRunningKm = booking.otherDetails.end;
     _originalDeliveryStatus = booking.deliveryStatus;
+    _originalCoolingPeriodDays = coolingPeriodDays;
 
     log('✅ Original values stored for incremental update tracking');
   }
@@ -554,8 +556,18 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       updates['return_date'] = returnDate.format().appendTimeToDate(
         time: returnTime,
       );
-      // If coolingPeriodDays is 0 (None), use exact return date and time
-      updates['cooling_period_date'] = coolingPeriodDays == 0
+      updates['cooling_period_end'] = coolingPeriodDays == 0
+          ? returnDate.format().appendTimeToDate(time: returnTime)
+          : returnDate
+                .add(Duration(days: coolingPeriodDays))
+                .format()
+                .appendTimeToDate(time: returnTime);
+    } else if (coolingPeriodDays != _originalCoolingPeriodDays) {
+      // Cooling period changed but dates didn't — send return_date + cooling_period_date
+      updates['return_date'] = returnDate.format().appendTimeToDate(
+        time: returnTime,
+      );
+      updates['cooling_period_end'] = coolingPeriodDays == 0
           ? returnDate.format().appendTimeToDate(time: returnTime)
           : returnDate
                 .add(Duration(days: coolingPeriodDays))
@@ -3545,7 +3557,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                   elevation: 0,
                 ),
                 child: const Text(
-                  'Save Changes',
+                  'Save Changesss',
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',
@@ -4919,3 +4931,4 @@ class _SelectableVariantChip extends StatelessWidget {
     );
   }
 }
+

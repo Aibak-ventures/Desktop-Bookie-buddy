@@ -9,7 +9,6 @@ import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
@@ -22,6 +21,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/w
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/data/repositories/product_repository_impl.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
@@ -189,6 +190,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final _inlinePriceFocusNode = FocusNode();
   final Map<int, TextEditingController> _quantityControllers = {};
   final Map<int, FocusNode> _quantityFocusNodes = {};
+  final Map<int, FocusNode> _overlayItemFocusNodes = {};
 
   // State variables for payment methods
   List<PaymentMethod> _selectedPaymentMethods = [PaymentMethod.cash];
@@ -198,6 +200,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // Focus nodes for client details navigation
   final _clientNameFocusNode = FocusNode();
+  final _productSearchFocusNode = FocusNode();
   final _pickupDateFocusNode = FocusNode();
   final _pickupTimeFocusNode = FocusNode();
   final _returnDateFocusNode = FocusNode();
@@ -278,8 +281,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     for (final focusNode in _quantityFocusNodes.values) {
       focusNode.dispose();
     }
+    for (final focusNode in _overlayItemFocusNodes.values) {
+      focusNode.dispose();
+    }
     _inlinePriceFocusNode.dispose();
     _clientNameFocusNode.dispose();
+    _productSearchFocusNode.dispose();
     _pickupDateFocusNode.dispose();
     _pickupTimeFocusNode.dispose();
     _returnDateFocusNode.dispose();
@@ -317,18 +324,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   void _togglePaymentMethodSelection(PaymentMethod method) {
     setState(() {
-      if (_selectedPaymentMethods.contains(method)) {
-        if (_selectedPaymentMethods.length == 1) {
-          return;
-        }
-        _selectedPaymentMethods = _selectedPaymentMethods
-            .where((item) => item != method)
-            .toList();
-      } else {
-        _selectedPaymentMethods = [..._selectedPaymentMethods, method];
-      }
-
-      paymentMethod = _selectedPaymentMethods.first;
+      _selectedPaymentMethods = [method];
+      paymentMethod = method;
     });
   }
 
@@ -2753,6 +2750,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
                               return TextField(
                                 controller: serviceSearchController,
+                                focusNode: _productSearchFocusNode,
                                 onTap: () {
                                   if (serviceSearchController.text
                                       .trim()
@@ -2760,6 +2758,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                     _searchAllProductsForOverlay();
                                   }
                                 },
+                                textInputAction: TextInputAction.next,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontFamily: 'Inter',
@@ -2890,6 +2889,13 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                         isSales: isSales,
                                       ),
                                     );
+                                  }
+                                },
+                                onSubmitted: (_) {
+                                  if (_overlayProducts.value.isNotEmpty) {
+                                    _getOverlayItemFocusNode(0).requestFocus();
+                                  } else {
+                                    _clientNameFocusNode.requestFocus();
                                   }
                                 },
                               );
@@ -3109,8 +3115,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                       height: 1,
                                       color: Colors.grey.shade200,
                                     ),
-                                    itemBuilder: (_, i) =>
-                                        _buildOverlaySearchItem(productList[i]),
+                                    itemBuilder: (_, i) => _buildOverlaySearchItem(
+                                      productList[i],
+                                      index: i,
+                                      itemCount: productList.length,
+                                    ),
                                   ),
                                 ),
                             ],
@@ -3131,14 +3140,36 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   }
 
   /// Builds search item for the overlay - requires variant selection before adding
-  Widget _buildOverlaySearchItem(ProductEntity product) {
+  Widget _buildOverlaySearchItem(
+    ProductEntity product, {
+    required int index,
+    required int itemCount,
+  }) {
     return OverlaySearchItem(
       product: product,
       isSales: selectedBookingType == BookingType.sales,
+      focusNode: _getOverlayItemFocusNode(index),
+      nextFocusNode: index + 1 < itemCount
+          ? _getOverlayItemFocusNode(index + 1)
+          : _clientNameFocusNode,
       onAddProduct: (selectedVariant) {
+        _addProductFromSearchWithVariant(product, selectedVariant);
         _removeSearchOverlay();
         serviceSearchController.clear();
-        _addProductFromSearchWithVariant(product, selectedVariant);
+        _clientNameFocusNode.requestFocus();
+      },
+      onImageTap: (imageUrl, title) async {
+        final cachedProducts = List<ProductEntity>.from(_overlayProducts.value);
+        _removeSearchOverlay();
+        await ZoomableImageDialog.show(
+          context,
+          imageUrl: imageUrl,
+          title: title,
+        );
+        if (mounted && cachedProducts.isNotEmpty) {
+          _overlayProducts.value = cachedProducts;
+          _showSearchOverlay();
+        }
       },
     );
   }
@@ -3740,6 +3771,24 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     return _quantityFocusNodes.putIfAbsent(quantityKey, FocusNode.new);
   }
 
+  FocusNode _getOverlayItemFocusNode(int index) {
+    return _overlayItemFocusNodes.putIfAbsent(index, FocusNode.new);
+  }
+
+  void _focusNextProductRowOrClient(ProductSelectedEntity product) {
+    final products = selectedProductsNotifier.value;
+    final currentIndex = products.indexWhere(
+      (item) => item.variant.variantId == product.variant.variantId,
+    );
+    if (currentIndex != -1 && currentIndex + 1 < products.length) {
+      final nextProduct = products[currentIndex + 1];
+      _getQuantityFocusNode(_quantityKey(nextProduct)).requestFocus();
+      return;
+    }
+
+    _clientNameFocusNode.requestFocus();
+  }
+
   /// Increment quantity of a product with stock validation
   void _incrementQuantity(ProductSelectedEntity product) {
     final isOldBooking = selectedBookingType == BookingType.oldBooking;
@@ -3836,6 +3885,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         .toString();
     selectedProductsNotifier.value = products;
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
+    _focusNextProductRowOrClient(products[index]);
   }
 
   void _startEditingPrice(ProductSelectedEntity product) {
@@ -3871,6 +3921,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       _inlinePriceController.clear();
       _inlinePriceFocusNode.unfocus();
     });
+    _focusNextProductRowOrClient(product);
   }
 
   /// Remove a product from the selected list
@@ -4282,7 +4333,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
 
     try {
-      final repository = getIt<BookingRepositoryImpl>();
+      final repository = getIt<IBookingRepository>();
 
       // Check if it's a sale or booking
       if (selectedBookingType == BookingType.sales) {
@@ -4636,7 +4687,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                 (event.logicalKey == LogicalKeyboardKey.enter ||
                                     event.logicalKey ==
                                         LogicalKeyboardKey.numpadEnter)) {
-                              _clientNameFocusNode.requestFocus();
+                              _searchAllProductsForOverlay();
+                              _productSearchFocusNode.requestFocus();
                               return KeyEventResult.handled;
                             }
                             return KeyEventResult.ignored;
@@ -4674,7 +4726,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                 if (val != null) {
                                   setState(() => coolingPeriodDays = val);
                                   _loadProductsForService(selectedServiceId);
-                                  _clientNameFocusNode.requestFocus();
+                                  _searchAllProductsForOverlay();
+                                  _productSearchFocusNode.requestFocus();
                                 }
                               },
                             ),
@@ -5602,7 +5655,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     if (!isSale) {
       Future.delayed(Duration.zero, () async {
         try {
-          final repo = getIt<BookingRepositoryImpl>();
+          final repo = getIt<IBookingRepository>();
           await repo.sendInvoice(id, sendPdfToWhatsApp);
         } catch (e) {
           log('Error sending invoice: $e');
@@ -5738,7 +5791,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                             }
                           } else {
                             // For bookings, use booking API endpoint
-                            final repo = getIt<BookingRepositoryImpl>();
+                            final repo = getIt<IBookingRepository>();
                             final pdfBytes = await repo.getInvoicePdfBytes(id);
 
                             GlobalLoadingOverlay.hide();
@@ -5790,11 +5843,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                       ),
                       child: Text(
                         isSale ? 'View Sale' : 'View Invoice',
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white,fontSize: 12
                       ),
                     ),
                   ),
-                ],
+              )],
               ),
             ],
           ),
@@ -6310,7 +6363,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
 
     try {
-      final repository = getIt<BookingRepositoryImpl>();
+      final repository = getIt<IBookingRepository>();
       final request = _buildOldBookingRequest();
       log('Old Booking Request: ${request.toString()}');
       await repository.createOldBooking(request);

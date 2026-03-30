@@ -9,6 +9,12 @@ part 'product_info_model.g.dart';
 
 dynamic _idCustomRead(Map json, String key) => json[key] ?? json['product_id'];
 
+/// Prefers full-size [product_image]; falls back to [product_thumbnail].
+dynamic _readProductImage(Map json, String key) =>
+    (json['product_image'] as String?)?.isNotEmpty == true
+        ? json['product_image']
+        : (json['product_thumbnail'] ?? '');
+
 List<MeasurementValueModel> _parseMeasurements(dynamic json) {
   if (json is Map<String, dynamic>) {
     return json.entries
@@ -31,7 +37,7 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'product_id') required int? productId,
     @JsonKey(name: 'variant_id') required int? variantId,
     @JsonKey(name: 'product_name') required String name,
-    @JsonKey(name: 'product_thumbnail', defaultValue: '')
+    @JsonKey(readValue: _readProductImage)
     required String? image,
     @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
     MainServiceType? mainServiceType,

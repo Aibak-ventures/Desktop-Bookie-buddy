@@ -21,44 +21,64 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
 class ProductDependencies {
   static void register() {
-    getIt.registerLazySingleton(
-        () => ProductQueryRemoteDatasource(dio: DioClient.dio));
-    getIt.registerLazySingleton(
-        () => ProductActionRemoteDatasource(dio: DioClient.dio));
-    getIt.registerLazySingleton<IProductRepository>(
-      () => ProductRepositoryImpl(
-        queryDatasource: getIt(),
-        actionDatasource: getIt(),
-      ),
-    );
-    getIt.registerLazySingleton(
-        () => SaveProductUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => DeleteProductUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateVariantUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => AddProductVariantsUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => TransferProductToAnotherShopUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetProductInfoUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetProductsPaginatedUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetAvailableProductsPaginatedUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => SearchAndFilterProductsUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => SearchAllProductsUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetProductBookingsUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetProductGrowthDataUseCase(getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => GetMatchingProductsFromAnotherShopUseCase(
-            getIt<IProductRepository>()));
-    getIt.registerLazySingleton(
-        () => CheckVariantAvailabilityUseCase(getIt<IProductRepository>()));
+    if (!getIt.isRegistered<ProductQueryRemoteDatasource>()) {
+      getIt.registerLazySingleton(() => ProductQueryRemoteDatasource(dio: DioClient.dio));
+    }
+    if (!getIt.isRegistered<ProductActionRemoteDatasource>()) {
+      getIt.registerLazySingleton(() => ProductActionRemoteDatasource(dio: DioClient.dio));
+    }
+    if (!getIt.isRegistered<ProductRepositoryImpl>()) {
+      getIt.registerLazySingleton(
+        () => ProductRepositoryImpl(
+          queryDatasource: getIt(),
+          actionDatasource: getIt(),
+        ),
+      );
+    }
+    if (!getIt.isRegistered<IProductRepository>()) {
+      getIt.registerLazySingleton<IProductRepository>(() => getIt<ProductRepositoryImpl>());
+    }
+    if (!getIt.isRegistered<SaveProductUseCase>()) {
+      getIt.registerLazySingleton(() => SaveProductUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<DeleteProductUseCase>()) {
+      getIt.registerLazySingleton(() => DeleteProductUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateVariantUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateVariantUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<AddProductVariantsUseCase>()) {
+      getIt.registerLazySingleton(() => AddProductVariantsUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<TransferProductToAnotherShopUseCase>()) {
+      getIt.registerLazySingleton(() => TransferProductToAnotherShopUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetProductInfoUseCase>()) {
+      getIt.registerLazySingleton(() => GetProductInfoUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetProductsPaginatedUseCase>()) {
+      getIt.registerLazySingleton(() => GetProductsPaginatedUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetAvailableProductsPaginatedUseCase>()) {
+      getIt.registerLazySingleton(() => GetAvailableProductsPaginatedUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<SearchAndFilterProductsUseCase>()) {
+      getIt.registerLazySingleton(() => SearchAndFilterProductsUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<SearchAllProductsUseCase>()) {
+      getIt.registerLazySingleton(() => SearchAllProductsUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetProductBookingsUseCase>()) {
+      getIt.registerLazySingleton(() => GetProductBookingsUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetProductGrowthDataUseCase>()) {
+      getIt.registerLazySingleton(() => GetProductGrowthDataUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<GetMatchingProductsFromAnotherShopUseCase>()) {
+      getIt.registerLazySingleton(() => GetMatchingProductsFromAnotherShopUseCase(getIt<IProductRepository>()));
+    }
+    if (!getIt.isRegistered<CheckVariantAvailabilityUseCase>()) {
+      getIt.registerLazySingleton(() => CheckVariantAvailabilityUseCase(getIt<IProductRepository>()));
+    }
   }
 }

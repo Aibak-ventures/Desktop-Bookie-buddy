@@ -13,23 +13,35 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
 class SalesDependencies {
   static void register() {
-    getIt.registerLazySingleton(
-        () => SalesRemoteDatasource(dio: DioClient.dio));
-    getIt.registerLazySingleton<ISalesRepository>(
-        () => SalesRepositoryImpl(service: getIt()));
-    getIt.registerLazySingleton(
-        () => GetSalesUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => GetSaleDetailsUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => CreateSaleUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateSaleUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => DeleteSaleUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => GetSaleInvoicePdfUseCase(getIt<ISalesRepository>()));
-    getIt.registerLazySingleton(
-        () => SendSaleInvoiceUsecase(getIt<ISalesRepository>()));
+    if (!getIt.isRegistered<SalesRemoteDatasource>()) {
+      getIt.registerLazySingleton(() => SalesRemoteDatasource(dio: DioClient.dio));
+    }
+    if (!getIt.isRegistered<SalesRepositoryImpl>()) {
+      getIt.registerLazySingleton(() => SalesRepositoryImpl(service: getIt()));
+    }
+    if (!getIt.isRegistered<ISalesRepository>()) {
+      getIt.registerLazySingleton<ISalesRepository>(() => getIt<SalesRepositoryImpl>());
+    }
+    if (!getIt.isRegistered<GetSalesUseCase>()) {
+      getIt.registerLazySingleton(() => GetSalesUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<GetSaleDetailsUseCase>()) {
+      getIt.registerLazySingleton(() => GetSaleDetailsUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<CreateSaleUseCase>()) {
+      getIt.registerLazySingleton(() => CreateSaleUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateSaleUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateSaleUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<DeleteSaleUseCase>()) {
+      getIt.registerLazySingleton(() => DeleteSaleUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<GetSaleInvoicePdfUseCase>()) {
+      getIt.registerLazySingleton(() => GetSaleInvoicePdfUseCase(getIt<ISalesRepository>()));
+    }
+    if (!getIt.isRegistered<SendSaleInvoiceUsecase>()) {
+      getIt.registerLazySingleton(() => SendSaleInvoiceUsecase(getIt<ISalesRepository>()));
+    }
   }
 }

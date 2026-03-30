@@ -8,8 +8,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Two-column booking list (Upcoming + Returns) for [DashboardScreen].
 /// Shows shimmer while loading, grouped date sections when loaded.
-class DashboardBookingsColumns extends StatelessWidget {
+/// Triggers next-page load when either column is scrolled to its bottom.
+class DashboardBookingsColumns extends StatefulWidget {
   const DashboardBookingsColumns({super.key});
+
+  @override
+  State<DashboardBookingsColumns> createState() =>
+      _DashboardBookingsColumnsState();
+}
+
+class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
+  final _upcomingScrollController = ScrollController();
+  final _returnsScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _upcomingScrollController.addListener(_onScroll);
+    _returnsScrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // Trigger when either list is within 200px of its bottom
+    final upcoming = _upcomingScrollController;
+    final returns = _returnsScrollController;
+
+    final nearBottom =
+        (upcoming.hasClients &&
+            upcoming.position.pixels >=
+                upcoming.position.maxScrollExtent - 200) ||
+        (returns.hasClients &&
+            returns.position.pixels >=
+                returns.position.maxScrollExtent - 200);
+
+    if (!nearBottom) return;
+
+    final bloc = context.read<DashboardBloc>();
+    final state = bloc.state;
+    state.maybeWhen(
+      loaded: (_, __, ___, nextPageUrl, ____, _____, isPaginating) {
+        if (nextPageUrl != null && !isPaginating) {
+          bloc.add(const DashboardEvent.loadDashboardNextPageData());
+        }
+      },
+      orElse: () {},
+    );
+  }
+
+  @override
+  void dispose() {
+    _upcomingScrollController.dispose();
+    _returnsScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +89,15 @@ class DashboardBookingsColumns extends StatelessWidget {
                 ),
               ],
             ),
-            loaded: (upcomingGrouped, returnsGrouped, _, __, ___, ____, _____) {
+            loaded: (
+              upcomingGrouped,
+              returnsGrouped,
+              _,
+              nextPageUrl,
+              __,
+              ___,
+              isPaginating,
+            ) {
               final upcomingCount = upcomingGrouped.values.fold<int>(
                 0,
                 (sum, list) => sum + list.length,
@@ -59,6 +118,9 @@ class DashboardBookingsColumns extends StatelessWidget {
                       totalCount: upcomingCount,
                       color: const Color(0xFF667eea),
                       useReturnDate: false,
+                      scrollController: _upcomingScrollController,
+                      isPaginating: isPaginating,
+                      hasMore: nextPageUrl != null,
                     ),
                   ),
                   const SizedBox(width: 24),
@@ -70,6 +132,9 @@ class DashboardBookingsColumns extends StatelessWidget {
                       totalCount: returnsCount,
                       color: const Color(0xFFff8a00),
                       useReturnDate: true,
+                      scrollController: _returnsScrollController,
+                      isPaginating: isPaginating,
+                      hasMore: nextPageUrl != null,
                     ),
                   ),
                 ],
@@ -148,6 +213,9 @@ class _BookingColumn extends StatelessWidget {
   final int totalCount;
   final Color color;
   final bool useReturnDate;
+  final ScrollController scrollController;
+  final bool isPaginating;
+  final bool hasMore;
 
   const _BookingColumn({
     required this.title,
@@ -156,6 +224,9 @@ class _BookingColumn extends StatelessWidget {
     required this.totalCount,
     required this.color,
     required this.useReturnDate,
+    required this.scrollController,
+    required this.isPaginating,
+    required this.hasMore,
   });
 
   @override
@@ -221,6 +292,7 @@ class _BookingColumn extends StatelessWidget {
           else
             Expanded(
               child: ListView(
+                controller: scrollController,
                 padding: const EdgeInsets.all(16),
                 children: [
                   if (groupedBookings['today']?.isNotEmpty == true) ...[
@@ -247,6 +319,31 @@ class _BookingColumn extends StatelessWidget {
                       bookings: groupedBookings['upcoming']!,
                       color: Colors.blue,
                       useReturnDate: useReturnDate,
+                    ),
+                  // Pagination footer
+                  if (isPaginating)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    )
+                  else if (!hasMore && totalCount > 0)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Center(
+                        child: Text(
+                          'All caught up',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade400,
+                          ),
+                        ),
+                      ),
                     ),
                 ],
               ),

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:flutter/material.dart';
@@ -57,41 +57,9 @@ class StockManagementProductRow extends StatelessWidget {
                     flex: 3,
                     child: Row(
                       children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade50,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.08),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                            border: Border.all(
-                              color: Colors.grey.shade200,
-                              width: 1,
-                            ),
-                          ),
-                          child: (product.thumbnailImage != null ||
-                                  product.image != null)
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CustomNetworkImage(
-                                    imageUrl: product.thumbnailImage ??
-                                        product.image!,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.grey.shade400,
-                                  size: 28,
-                                ),
+                        _ZoomableThumbnail(
+                          imageUrl: product.thumbnailImage ?? product.image,
+                          title: product.name,
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -358,6 +326,86 @@ class _ActionButton extends StatelessWidget {
           child: Icon(icon, size: 18, color: color),
         ),
       ),
+    );
+  }
+}
+
+class _ZoomableThumbnail extends StatefulWidget {
+  final String? imageUrl;
+  final String title;
+
+  const _ZoomableThumbnail({required this.imageUrl, required this.title});
+
+  @override
+  State<_ZoomableThumbnail> createState() => _ZoomableThumbnailState();
+}
+
+class _ZoomableThumbnailState extends State<_ZoomableThumbnail> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = widget.imageUrl != null && widget.imageUrl!.isNotEmpty;
+
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(color: Colors.grey.shade200, width: 1),
+      ),
+      child: hasImage
+          ? MouseRegion(
+              cursor: SystemMouseCursors.click,
+              onEnter: (_) => setState(() => _hovered = true),
+              onExit: (_) => setState(() => _hovered = false),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => ZoomableImageDialog.show(
+                  context,
+                  imageUrl: widget.imageUrl!,
+                  title: widget.title,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Stack(
+                    children: [
+                      Image.network(
+                        widget.imageUrl!,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Icon(
+                          Icons.image_outlined,
+                          color: Colors.grey.shade400,
+                          size: 28,
+                        ),
+                      ),
+                      if (_hovered)
+                        Positioned.fill(
+                          child: Container(
+                            color: Colors.black45,
+                            child: const Icon(
+                              Icons.zoom_in,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : Icon(Icons.image_outlined, color: Colors.grey.shade400, size: 28),
     );
   }
 }

@@ -23,44 +23,65 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
 class BookingDependencies {
   static void register() {
-    getIt.registerLazySingleton(
-        () => BookingRemoteDatasource(dio: DioClient.dio));
-    getIt.registerLazySingleton<IBookingRepository>(
-      () => BookingRepositoryImpl(getIt()),
-    );
-    getIt.registerLazySingleton(
-        () => GetBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => AddBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => CreateSaleBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => CreateOldBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdatePaymentUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateBookingPartialUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => DeleteBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => CancelBookingUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateBookingStatusUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => UpdateDeliveryStatusUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => LoadBookingsPaginationUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => LoadDesktopBookingsPaginationUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => DownloadBookingInvoiceUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => GetPaymentHistoryUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => SendInvoiceUseCase(getIt<IBookingRepository>()));
-    getIt.registerLazySingleton(
-        () => GetBookingInvoicePdfBytesUseCase(getIt<IBookingRepository>()));
+    if (!getIt.isRegistered<BookingRemoteDatasource>()) {
+      getIt.registerLazySingleton(() => BookingRemoteDatasource(dio: DioClient.dio));
+    }
+    if (!getIt.isRegistered<BookingRepositoryImpl>()) {
+      getIt.registerLazySingleton(() => BookingRepositoryImpl(getIt()));
+    }
+    if (!getIt.isRegistered<IBookingRepository>()) {
+      getIt.registerLazySingleton<IBookingRepository>(() => getIt<BookingRepositoryImpl>());
+    }
+    if (!getIt.isRegistered<GetBookingUseCase>()) {
+      getIt.registerLazySingleton(() => GetBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<AddBookingUseCase>()) {
+      getIt.registerLazySingleton(() => AddBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<CreateSaleBookingUseCase>()) {
+      getIt.registerLazySingleton(() => CreateSaleBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<CreateOldBookingUseCase>()) {
+      getIt.registerLazySingleton(() => CreateOldBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<UpdatePaymentUseCase>()) {
+      getIt.registerLazySingleton(() => UpdatePaymentUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateBookingUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateBookingPartialUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateBookingPartialUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<DeleteBookingUseCase>()) {
+      getIt.registerLazySingleton(() => DeleteBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<CancelBookingUseCase>()) {
+      getIt.registerLazySingleton(() => CancelBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateBookingStatusUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateBookingStatusUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<UpdateDeliveryStatusUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateDeliveryStatusUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<LoadBookingsPaginationUseCase>()) {
+      getIt.registerLazySingleton(() => LoadBookingsPaginationUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<LoadDesktopBookingsPaginationUseCase>()) {
+      getIt.registerLazySingleton(() => LoadDesktopBookingsPaginationUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<DownloadBookingInvoiceUseCase>()) {
+      getIt.registerLazySingleton(() => DownloadBookingInvoiceUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<GetPaymentHistoryUseCase>()) {
+      getIt.registerLazySingleton(() => GetPaymentHistoryUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<SendInvoiceUseCase>()) {
+      getIt.registerLazySingleton(() => SendInvoiceUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<GetBookingInvoicePdfBytesUseCase>()) {
+      getIt.registerLazySingleton(() => GetBookingInvoicePdfBytesUseCase(getIt<IBookingRepository>()));
+    }
   }
 }

@@ -1,10 +1,10 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:go_router/go_router.dart';
 
 // import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
@@ -13,12 +13,18 @@ import 'package:flutter/material.dart';
 class OverlaySearchItem extends StatefulWidget {
   final ProductEntity product;
   final Function(ProductVariantEntity) onAddProduct;
+  final Function(String imageUrl, String? title)? onImageTap;
   final bool isSales;
+  final FocusNode? focusNode;
+  final FocusNode? nextFocusNode;
 
   const OverlaySearchItem({
     required this.product,
     required this.onAddProduct,
+    this.onImageTap,
     this.isSales = false,
+    this.focusNode,
+    this.nextFocusNode,
   });
 
   @override
@@ -27,6 +33,27 @@ class OverlaySearchItem extends StatefulWidget {
 
 class OverlaySearchItemState extends State<OverlaySearchItem> {
   ProductVariantEntity? selectedVariant;
+  bool _isImageHovered = false;
+
+  void _handleKeyboardActivate() {
+    final variantToAdd =
+        selectedVariant ??
+        (!widget.product.mainServiceType.isMultiVariantProductType &&
+                widget.product.variants.isNotEmpty
+            ? widget.product.variants.first
+            : null);
+
+    if (variantToAdd != null) {
+      widget.onAddProduct(variantToAdd);
+      return;
+    }
+
+    if (widget.product.variants.isNotEmpty) {
+      setState(() {
+        selectedVariant = widget.product.variants.first;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -44,7 +71,6 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 
   @override
   Widget build(BuildContext context) {
-    final serviceType = widget.product.mainServiceType;
     // Show sale_price in sales mode, rent price in booking mode
     final price = widget.isSales
         ? (double.tryParse(widget.product.salePrice ?? '')?.toInt() ??
@@ -54,53 +80,85 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
     final variants = widget.product.variants;
     // Define min width preventing squeeze/overflow
     const double minRowWidth = 760;
-    final serviceTypeLabel = serviceType?.name.toUpperCase() ?? 'PRODUCT';
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isOverflowing = constraints.maxWidth < minRowWidth;
+    return Focus(
+      focusNode: widget.focusNode,
+      onKeyEvent: (_, event) {
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.enter ||
+                event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+          _handleKeyboardActivate();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isOverflowing = constraints.maxWidth < minRowWidth;
 
-          final content = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+            final content = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap:
-                        widget.product.image != null &&
+                child: MouseRegion(
+                  cursor: widget.product.image != null &&
+                          widget.product.image!.isNotEmpty
+                      ? SystemMouseCursors.click
+                      : MouseCursor.defer,
+                  onEnter: (_) {
+                    if (widget.product.image != null &&
+                        widget.product.image!.isNotEmpty) {
+                      setState(() => _isImageHovered = true);
+                    }
+                  },
+                  onExit: (_) => setState(() => _isImageHovered = false),
+                  child: GestureDetector(
+                    onTap: widget.product.image != null &&
                             widget.product.image!.isNotEmpty
-                        ? () => ZoomableImageDialog.show(
-                            context,
-                            imageUrl: widget.product.image!,
-                            title: widget.product.name,
-                          )
-                        : null,
-                    child: Container(
-                      width: 50,
-                      height: 40,
-                      color: Colors.grey.shade100,
-                      child:
-                          widget.product.image != null &&
-                              widget.product.image!.isNotEmpty
-                          ? Image.network(
+                        ? () => widget.onImageTap?.call(
                               widget.product.image!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Icon(
-                                Icons.image_outlined,
-                                size: 20,
-                                color: Colors.grey.shade400,
-                              ),
+                              widget.product.name,
                             )
-                          : Icon(
-                              Icons.image_outlined,
-                              size: 20,
-                              color: Colors.grey.shade400,
+                        : null,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 40,
+                          color: Colors.grey.shade100,
+                          child: widget.product.image != null &&
+                                  widget.product.image!.isNotEmpty
+                              ? Image.network(
+                                  widget.product.image!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Icon(
+                                    Icons.image_outlined,
+                                    size: 20,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.image_outlined,
+                                  size: 20,
+                                  color: Colors.grey.shade400,
+                                ),
+                        ),
+                        if (_isImageHovered)
+                          Positioned.fill(
+                            child: Container(
+                              color: Colors.black45,
+                              child: const Icon(
+                                Icons.zoom_in,
+                                color: Colors.white,
+                                size: 18,
+                              ),
                             ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
@@ -113,34 +171,14 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3EEFF),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(
-                        serviceTypeLabel,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF6132E4),
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
                     Tooltip(
                       message: widget.product.name,
                       waitDuration: const Duration(milliseconds: 250),
                       child: Text(
                         widget.product.name,
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
                           color: Color(0xFF111827),
                           height: 1.2,
                         ),
@@ -361,20 +399,21 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                   ),
                 ),
               ),
-            ],
-          );
+              ],
+            );
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: isOverflowing
-                ? const AlwaysScrollableScrollPhysics()
-                : const NeverScrollableScrollPhysics(),
-            child: SizedBox(
-              width: isOverflowing ? minRowWidth : constraints.maxWidth,
-              child: content,
-            ),
-          );
-        },
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: isOverflowing
+                  ? const AlwaysScrollableScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                width: isOverflowing ? minRowWidth : constraints.maxWidth,
+                child: content,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

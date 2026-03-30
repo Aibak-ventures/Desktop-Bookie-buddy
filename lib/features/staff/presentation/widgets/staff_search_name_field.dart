@@ -27,6 +27,7 @@ class StaffSearchNameField extends StatelessWidget {
       builder: (context, state) {
         return TypeAheadField<StaffEntity>(
           controller: nameController,
+          focusNode: focusNode,
           debounceDuration: const Duration(milliseconds: 150),
           hideWithKeyboard: false,
           hideOnUnfocus: true,
@@ -44,7 +45,7 @@ class StaffSearchNameField extends StatelessWidget {
             nameController.text = staff.name;
           },
           builder: (context, controller, fieldFocusNode) => TextFormField(
-            focusNode: focusNode ?? fieldFocusNode,
+            focusNode: fieldFocusNode,
             controller: controller,
             keyboardType: TextInputType.name,
             textInputAction: nextFocusNode != null
