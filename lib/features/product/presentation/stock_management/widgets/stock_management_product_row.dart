@@ -58,8 +58,12 @@ class StockManagementProductRow extends StatelessWidget {
                     child: Row(
                       children: [
                         _ZoomableThumbnail(
-                          imageUrl: product.thumbnailImage ?? product.image,
-                          zoomImageUrl: product.image ?? product.thumbnailImage,
+                          imageUrl: (product.thumbnailImage?.isNotEmpty == true)
+                              ? product.thumbnailImage
+                              : product.image,
+                          zoomImageUrl: (product.image?.isNotEmpty == true)
+                              ? product.image
+                              : product.thumbnailImage,
                           title: product.name,
                         ),
                         const SizedBox(width: 14),

@@ -2680,6 +2680,14 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         serviceSearchController.clear();
         _addProductFromSearchWithVariant(product, selectedVariant);
       },
+      onImageTap: (imageUrl, title) {
+        _removeSearchOverlay();
+        ZoomableImageDialog.show(
+          context,
+          imageUrl: imageUrl,
+          title: title,
+        );
+      },
     );
   }
 
@@ -4558,8 +4566,13 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
 class _OverlaySearchItem extends StatefulWidget {
   final ProductEntity product;
   final Function(ProductVariantEntity) onAddProduct;
+  final Function(String imageUrl, String? title)? onImageTap;
 
-  const _OverlaySearchItem({required this.product, required this.onAddProduct});
+  const _OverlaySearchItem({
+    required this.product,
+    required this.onAddProduct,
+    this.onImageTap,
+  });
 
   @override
   State<_OverlaySearchItem> createState() => _OverlaySearchItemState();
@@ -4567,6 +4580,7 @@ class _OverlaySearchItem extends StatefulWidget {
 
 class _OverlaySearchItemState extends State<_OverlaySearchItem> {
   ProductVariantEntity? selectedVariant;
+  bool _isImageHovered = false;
 
   @override
   void initState() {
@@ -4594,8 +4608,6 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
   Widget build(BuildContext context) {
     final price = widget.product.price ?? 0;
     final variants = widget.product.variants;
-    final serviceType = widget.product.mainServiceType;
-    final serviceTypeLabel = serviceType?.name.toUpperCase() ?? 'PRODUCT';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -4604,43 +4616,67 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
           // Product Image
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap:
-                    widget.product.image != null &&
+            child: MouseRegion(
+              cursor: widget.product.image != null &&
+                      widget.product.image!.isNotEmpty
+                  ? SystemMouseCursors.click
+                  : MouseCursor.defer,
+              onEnter: (_) {
+                if (widget.product.image != null &&
+                    widget.product.image!.isNotEmpty) {
+                  setState(() => _isImageHovered = true);
+                }
+              },
+              onExit: (_) => setState(() => _isImageHovered = false),
+              child: GestureDetector(
+                onTap: widget.product.image != null &&
                         widget.product.image!.isNotEmpty
-                    ? () => ZoomableImageDialog.show(
-                        context,
-                        imageUrl: widget.product.image!,
-                        title: widget.product.name,
-                      )
-                    : null,
-                child: Container(
-                  width: 50,
-                  height: 40,
-                  color: Colors.grey.shade100,
-                  child:
-                      ((widget.product.thumbnailImage ?? widget.product.image) !=
-                                  null &&
-                              (widget.product.thumbnailImage ??
-                                      widget.product.image)!
-                                  .isNotEmpty)
-                      ? Image.network(
-                          widget.product.thumbnailImage ??
-                              widget.product.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.image_outlined,
-                            size: 20,
-                            color: Colors.grey.shade400,
-                          ),
+                    ? () => widget.onImageTap?.call(
+                          widget.product.image!,
+                          widget.product.name,
                         )
-                      : Icon(
-                          Icons.image_outlined,
-                          size: 20,
-                          color: Colors.grey.shade400,
+                    : null,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 40,
+                      color: Colors.grey.shade100,
+                      child: (() {
+                        final thumb = widget.product.thumbnailImage;
+                        final full = widget.product.image;
+                        final url = (thumb != null && thumb.isNotEmpty)
+                            ? thumb
+                            : (full != null && full.isNotEmpty ? full : null);
+                        return url != null
+                            ? Image.network(
+                                url,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Icon(
+                                  Icons.image_outlined,
+                                  size: 20,
+                                  color: Colors.grey.shade400,
+                                ),
+                              )
+                            : Icon(
+                                Icons.image_outlined,
+                                size: 20,
+                                color: Colors.grey.shade400,
+                              );
+                      })(),
+                    ),
+                    if (_isImageHovered)
+                      Positioned.fill(
+                        child: Container(
+                          color: Colors.black45,
+                          child: const Icon(
+                            Icons.zoom_in,
+                            color: Colors.white,
+                            size: 18,
+                          ),
                         ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -4653,26 +4689,6 @@ class _OverlaySearchItemState extends State<_OverlaySearchItem> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3EEFF),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    serviceTypeLabel,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF6132E4),
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
                 Tooltip(
                   message: widget.product.name,
                   waitDuration: const Duration(milliseconds: 250),
