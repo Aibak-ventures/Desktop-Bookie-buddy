@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -420,29 +421,38 @@ class ProductDetailsLeftPanel extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 12),
-      SizedBox(
-        height: isGadget ? 84 : 70,
-        child: Row(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  children: displayVariants
-                      .map(
-                        (variant) => Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: _variantCard(variant),
-                        ),
-                      )
-                      .toList(),
+      _HorizontalMouseScrollView(
+        builder: (controller, isHovered) => SizedBox(
+          height: isGadget ? 90 : 76,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Scrollbar(
+                  controller: controller,
+                  thumbVisibility: isHovered,
+                  trackVisibility: isHovered,
+                  child: SingleChildScrollView(
+                    controller: controller,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Row(
+                      children: displayVariants
+                          .map(
+                            (variant) => Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: _variantCard(variant),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            _addVariantButton(),
-          ],
+              const SizedBox(width: 12),
+              _addVariantButton(),
+            ],
+          ),
         ),
       ),
       const SizedBox(height: 12),
@@ -617,6 +627,50 @@ class ProductDetailsLeftPanel extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Translates vertical mouse-wheel events into horizontal scroll so desktop
+/// users can scroll the variants row without a horizontal scroll device.
+class _HorizontalMouseScrollView extends StatefulWidget {
+  final Widget Function(ScrollController controller, bool isHovered) builder;
+
+  const _HorizontalMouseScrollView({required this.builder});
+
+  @override
+  State<_HorizontalMouseScrollView> createState() =>
+      _HorizontalMouseScrollViewState();
+}
+
+class _HorizontalMouseScrollViewState
+    extends State<_HorizontalMouseScrollView> {
+  final _controller = ScrollController();
+  bool _hovered = false;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: Listener(
+        onPointerSignal: (event) {
+          if (event is PointerScrollEvent && _controller.hasClients) {
+            final newOffset = (_controller.offset + event.scrollDelta.dy).clamp(
+              _controller.position.minScrollExtent,
+              _controller.position.maxScrollExtent,
+            );
+            _controller.jumpTo(newOffset);
+          }
+        },
+        child: widget.builder(_controller, _hovered),
+      ),
     );
   }
 }
