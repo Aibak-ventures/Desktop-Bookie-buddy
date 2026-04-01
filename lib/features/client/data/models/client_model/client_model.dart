@@ -40,6 +40,6 @@ extension ClientModelMapper on ClientModel {
     phone1: phone1,
     phone2: phone2,
     phone1E164: phone1E164,
-    phone2E164: phone1E164,
+    phone2E164: phone2E164,
   );
 }
