@@ -11,7 +11,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/edit_sales_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_stub.dart';
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';//added
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
