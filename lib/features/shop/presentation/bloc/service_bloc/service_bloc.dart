@@ -26,12 +26,20 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
       try {
         final services = await _getShopServices();
-        emit(_Loaded(services));
+        emit(_Loaded(_uniqueServices(services)));
       } catch (e, stack) {
         log(e.toString(), stackTrace: stack);
         emit(_Error(e.toString()));
       }
     });
+  }
+
+  List<ServiceEntity> _uniqueServices(List<ServiceEntity> services) {
+    final Map<int, ServiceEntity> uniqueById = <int, ServiceEntity>{};
+    for (final service in services) {
+      uniqueById.putIfAbsent(service.id, () => service);
+    }
+    return uniqueById.values.toList();
   }
 
   List<ServiceEntity> getServices() {

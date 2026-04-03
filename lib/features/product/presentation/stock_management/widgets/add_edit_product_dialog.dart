@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
@@ -65,6 +66,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     _initializeServices();
   }
 
+  List<ServiceEntity> _uniqueServices(List<ServiceEntity> services) {
+    final Map<int, ServiceEntity> uniqueById = <int, ServiceEntity>{};
+    for (final service in services) {
+      uniqueById.putIfAbsent(service.id, () => service);
+    }
+    return uniqueById.values.toList();
+  }
+
   void _initializeServices() {
     context.read<ServiceBloc>().add(
       const ServiceEvent.loadServices(force: true),
@@ -73,7 +82,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     final product = widget.product;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final services = context.read<ServiceBloc>().getServices();
+      final services = _uniqueServices(context.read<ServiceBloc>().getServices());
       if (services.isNotEmpty && !_servicesLoaded) {
         setState(() {
           selectedServiceId = product?.mainServiceType != null
@@ -231,13 +240,14 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   listener: (context, state) {
                     state.maybeWhen(
                       loaded: (services) {
+                        final uniqueServices = _uniqueServices(services);
                         if (services.isNotEmpty && !_servicesLoaded) {
                           setState(() {
                             if (selectedServiceId == null) {
                               selectedServiceId = widget.serviceId;
                             }
                             mainServiceType = MainServiceType.fromServiceList(
-                              services,
+                              uniqueServices,
                               selectedServiceId,
                             );
                             _servicesLoaded = true;
@@ -250,9 +260,12 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   builder: (context, state) {
                     return state.maybeWhen(
                       loaded: (services) {
+                        final uniqueServices = _uniqueServices(services);
                         final validServiceId =
                             selectedServiceId != null &&
-                                services.any((s) => s.id == selectedServiceId)
+                                uniqueServices.any(
+                                  (s) => s.id == selectedServiceId,
+                                )
                             ? selectedServiceId
                             : null;
 
@@ -268,7 +281,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                               isExpanded: true,
                               value: validServiceId,
                               hint: const Text('Choose a service category'),
-                              items: services.map((service) {
+                              items: uniqueServices.map((service) {
                                 return DropdownMenuItem<int>(
                                   value: service.id,
                                   child: Text(service.name),
@@ -280,7 +293,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                                     selectedServiceId = value;
                                     mainServiceType =
                                         MainServiceType.fromServiceList(
-                                          services,
+                                          uniqueServices,
                                           value,
                                         );
                                   });
