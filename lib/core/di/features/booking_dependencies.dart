@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/cancel_booking
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_payment_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/download_booking_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
@@ -55,6 +56,9 @@ class BookingDependencies {
     }
     if (!getIt.isRegistered<DeleteBookingUseCase>()) {
       getIt.registerLazySingleton(() => DeleteBookingUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<DeletePaymentUseCase>()) {
+      getIt.registerLazySingleton(() => DeletePaymentUseCase(getIt<IBookingRepository>()));
     }
     if (!getIt.isRegistered<CancelBookingUseCase>()) {
       getIt.registerLazySingleton(() => CancelBookingUseCase(getIt<IBookingRepository>()));

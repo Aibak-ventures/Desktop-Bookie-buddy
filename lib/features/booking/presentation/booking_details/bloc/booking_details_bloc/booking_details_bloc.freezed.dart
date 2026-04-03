@@ -86,14 +86,15 @@ extension BookingDetailsEventPatterns on BookingDetailsEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult Function( _UpdatePayment value)?  updatePayment,TResult Function( _CancelBooking value)?  cancelBooking,TResult Function( _DeleteBooking value)?  deleteBooking,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult Function( _UpdatePayment value)?  updatePayment,TResult Function( _DeletePayment value)?  deletePayment,TResult Function( _CancelBooking value)?  cancelBooking,TResult Function( _DeleteBooking value)?  deleteBooking,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that);case _CancelBooking() when cancelBooking != null:
+return updatePayment(_that);case _DeletePayment() when deletePayment != null:
+return deletePayment(_that);case _CancelBooking() when cancelBooking != null:
 return cancelBooking(_that);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that);case _:
   return orElse();
@@ -113,14 +114,15 @@ return deleteBooking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchBookingDetails value)  fetchBookingDetails,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _UpdateBookingStatus value)  updateBookingStatus,required TResult Function( _UpdatePayment value)  updatePayment,required TResult Function( _CancelBooking value)  cancelBooking,required TResult Function( _DeleteBooking value)  deleteBooking,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchBookingDetails value)  fetchBookingDetails,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _UpdateBookingStatus value)  updateBookingStatus,required TResult Function( _UpdatePayment value)  updatePayment,required TResult Function( _DeletePayment value)  deletePayment,required TResult Function( _CancelBooking value)  cancelBooking,required TResult Function( _DeleteBooking value)  deleteBooking,}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails():
 return fetchBookingDetails(_that);case _UpdateDeliveryStatus():
 return updateDeliveryStatus(_that);case _UpdateBookingStatus():
 return updateBookingStatus(_that);case _UpdatePayment():
-return updatePayment(_that);case _CancelBooking():
+return updatePayment(_that);case _DeletePayment():
+return deletePayment(_that);case _CancelBooking():
 return cancelBooking(_that);case _DeleteBooking():
 return deleteBooking(_that);case _:
   throw StateError('Unexpected subclass');
@@ -139,14 +141,15 @@ return deleteBooking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult? Function( _UpdatePayment value)?  updatePayment,TResult? Function( _CancelBooking value)?  cancelBooking,TResult? Function( _DeleteBooking value)?  deleteBooking,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult? Function( _UpdatePayment value)?  updatePayment,TResult? Function( _DeletePayment value)?  deletePayment,TResult? Function( _CancelBooking value)?  cancelBooking,TResult? Function( _DeleteBooking value)?  deleteBooking,}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that);case _CancelBooking() when cancelBooking != null:
+return updatePayment(_that);case _DeletePayment() when deletePayment != null:
+return deletePayment(_that);case _CancelBooking() when cancelBooking != null:
 return cancelBooking(_that);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that);case _:
   return null;
@@ -165,13 +168,14 @@ return deleteBooking(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult Function( int bookingId,  int paymentId)?  deletePayment,TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking() when cancelBooking != null:
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _DeletePayment() when deletePayment != null:
+return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking() when cancelBooking != null:
 return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that.bookingId);case _:
   return orElse();
@@ -191,13 +195,14 @@ return deleteBooking(_that.bookingId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)  updatePayment,required TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  PaymentMethod paymentMethod)  updatePayment,required TResult Function( int bookingId,  int paymentId)  deletePayment,required TResult Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails():
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus():
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus():
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment():
-return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking():
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _DeletePayment():
+return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking():
 return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking():
 return deleteBooking(_that.bookingId);case _:
   throw StateError('Unexpected subclass');
@@ -216,13 +221,14 @@ return deleteBooking(_that.bookingId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult? Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  PaymentMethod paymentMethod)?  updatePayment,TResult? Function( int bookingId,  int paymentId)?  deletePayment,TResult? Function( int bookingId,  int? refundAmount,  PaymentMethod? paymentMethod)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _CancelBooking() when cancelBooking != null:
+return updatePayment(_that.bookingId,_that.amount,_that.paymentMethod);case _DeletePayment() when deletePayment != null:
+return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking() when cancelBooking != null:
 return cancelBooking(_that.bookingId,_that.refundAmount,_that.paymentMethod);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that.bookingId);case _:
   return null;
@@ -498,6 +504,74 @@ bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nulla
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as PaymentMethod,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class _DeletePayment implements BookingDetailsEvent {
+  const _DeletePayment({required this.bookingId, required this.paymentId});
+  
+
+@override final  int bookingId;
+ final  int paymentId;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$DeletePaymentCopyWith<_DeletePayment> get copyWith => __$DeletePaymentCopyWithImpl<_DeletePayment>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeletePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,paymentId);
+
+@override
+String toString() {
+  return 'BookingDetailsEvent.deletePayment(bookingId: $bookingId, paymentId: $paymentId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$DeletePaymentCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$DeletePaymentCopyWith(_DeletePayment value, $Res Function(_DeletePayment) _then) = __$DeletePaymentCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, int paymentId
+});
+
+
+
+
+}
+/// @nodoc
+class __$DeletePaymentCopyWithImpl<$Res>
+    implements _$DeletePaymentCopyWith<$Res> {
+  __$DeletePaymentCopyWithImpl(this._self, this._then);
+
+  final _DeletePayment _self;
+  final $Res Function(_DeletePayment) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? paymentId = null,}) {
+  return _then(_DeletePayment(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,paymentId: null == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

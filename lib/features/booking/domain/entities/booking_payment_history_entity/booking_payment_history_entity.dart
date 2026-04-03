@@ -6,6 +6,7 @@ part 'booking_payment_history_entity.freezed.dart';
 @freezed
 abstract class BookingPaymentHistoryEntity with _$BookingPaymentHistoryEntity {
   const factory BookingPaymentHistoryEntity({
+    int? id,
     required int amount,
     required PaymentMethod paymentMethod,
     required String dateTime,
