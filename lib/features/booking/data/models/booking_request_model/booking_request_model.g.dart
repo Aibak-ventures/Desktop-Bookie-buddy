@@ -48,7 +48,7 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
             (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
-      runningKilometers: json['running_kilometers'] as String?,
+      coolingPeriodType: json['cooling_period_type'] as String?,
     );
 
 Map<String, dynamic> _$BookingRequestModelToJson(
@@ -74,7 +74,7 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'details': ?instance.otherDetails,
   'additional_charges': ?instance.additionalCharges,
   'send_invoice': instance.sendPdfToWhatsApp,
-  'running_kilometers': ?instance.runningKilometers,
+  'cooling_period_type': ?instance.coolingPeriodType,
 };
 
 const _$PaymentMethodEnumMap = {

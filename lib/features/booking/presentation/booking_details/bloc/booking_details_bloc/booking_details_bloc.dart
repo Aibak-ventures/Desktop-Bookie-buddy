@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/cancel_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_payment_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -23,6 +24,7 @@ class BookingDetailsBloc
   final UpdateDeliveryStatusUseCase _updateDeliveryStatus;
   final UpdateBookingStatusUseCase _updateBookingStatus;
   final UpdatePaymentUseCase _updatePayment;
+  final DeletePaymentUseCase _deletePayment;
   final CancelBookingUseCase _cancelBooking;
   final DeleteBookingUseCase _deleteBooking;
 
@@ -31,12 +33,14 @@ class BookingDetailsBloc
     required UpdateDeliveryStatusUseCase updateDeliveryStatus,
     required UpdateBookingStatusUseCase updateBookingStatus,
     required UpdatePaymentUseCase updatePayment,
+    required DeletePaymentUseCase deletePayment,
     required CancelBookingUseCase cancelBooking,
     required DeleteBookingUseCase deleteBooking,
   }) : _getBooking = getBooking,
        _updateDeliveryStatus = updateDeliveryStatus,
        _updateBookingStatus = updateBookingStatus,
        _updatePayment = updatePayment,
+       _deletePayment = deletePayment,
        _cancelBooking = cancelBooking,
        _deleteBooking = deleteBooking,
        super(const BookingDetailsState.loading()) {
@@ -44,6 +48,7 @@ class BookingDetailsBloc
     on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
     on<_UpdateBookingStatus>(_onUpdateBookingStatus);
     on<_UpdatePayment>(_onUpdatePayment);
+    on<_DeletePayment>(_onDeletePayment);
     on<_CancelBooking>(_onCancelBooking);
     on<_DeleteBooking>(_onDeleteBooking);
   }
@@ -126,6 +131,29 @@ class BookingDetailsBloc
       final booking = await _getBooking(event.bookingId);
       log(
         '📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}',
+      );
+      emit(BookingDetailsState.loaded(booking: booking));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  Future<void> _onDeletePayment(
+    _DeletePayment event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      await _deletePayment(event.paymentId);
+
+      final booking = await _getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
+      emit(
+        const BookingDetailsState.success(
+          'Payment deleted successfully',
+          needRefresh: true,
+        ),
       );
       emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {

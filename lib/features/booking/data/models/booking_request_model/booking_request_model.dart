@@ -55,7 +55,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
-    @JsonKey(name: 'running_kilometers') String? runningKilometers,
+    @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
   }) = _BookingRequestModel;
 
   factory BookingRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -90,7 +90,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         pickupTime: entity.pickupTime,
         returnTime: entity.returnTime,
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
-        runningKilometers: entity.runningKilometers,
+        coolingPeriodType: entity.coolingPeriodType,
       );
 }
 

@@ -57,6 +57,13 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
         measurementMap[m.name] = m.value;
       }
 
+    // Add running kilometers for vehicles inside measurements
+    if (includeMeasurement &&
+        runningKilometers != null &&
+        runningKilometers!.isNotEmpty) {
+      measurementMap['running_kilometers'] = runningKilometers;
+    }
+
     final json = <String, dynamic>{
       'id': variant.variantId,
       'amount': amount * quantity,
@@ -66,11 +73,6 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
     // Add measurements if included and not empty
     if (includeMeasurement && measurementMap.isNotEmpty) {
       json['measurements'] = measurementMap;
-    }
-
-    // Add running kilometers for vehicles if present
-    if (runningKilometers != null && runningKilometers!.isNotEmpty) {
-      json['running_kilometers'] = runningKilometers;
     }
 
     return json;

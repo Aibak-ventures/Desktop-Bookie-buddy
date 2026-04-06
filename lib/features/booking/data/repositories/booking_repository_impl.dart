@@ -143,6 +143,23 @@ class BookingRepositoryImpl implements IBookingRepository {
     }
   }
 
+  @override
+  Future<void> deletePayment(int paymentId) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.deletePayment(paymentId),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error deleting payment: ${response.devMessage}');
+      throw response.message ?? 'Failed to delete payment';
+    } catch (e, stack) {
+      log('Error deleting payment: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   // Update full booking data
   @override
   Future<CustomResponseModel> updateBooking(

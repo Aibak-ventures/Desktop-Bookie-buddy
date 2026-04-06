@@ -285,13 +285,17 @@ class BookingDetailsPaymentSection extends StatelessWidget {
           builder: (context, state) => state.maybeWhen(
             orElse: () => const SizedBox.shrink(),
             loading: () => BookingPaymentHistoryTile(
+              bookingId: booking.id,
               paymentHistory: const [],
               refunds: booking.refunds,
               isLoading: true,
+              canDeletePayments: false,
             ),
             expanded: (paymentHistory) => BookingPaymentHistoryTile(
+              bookingId: booking.id,
               paymentHistory: paymentHistory,
               refunds: booking.refunds,
+              canDeletePayments: !isCancelled && !isCompleted,
             ),
           ),
         ),

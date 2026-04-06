@@ -20,6 +20,8 @@ class BookingDetailsCustomerSection extends StatelessWidget {
         booking.client.phone1.toString();
     final phone2 = _preferredPhone(
         booking.client.phone2E164, booking.client.phone2?.toString());
+    final place = booking.address?.trim();
+    final hasPlace = place != null && place.isNotEmpty;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -41,158 +43,43 @@ class BookingDetailsCustomerSection extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Name',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600)),
-                    const SizedBox(height: 4),
-                    Text(
-                      booking.client.name,
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                child: _buildInfoCell(
+                  label: 'Name',
+                  value: booking.client.name,
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Phone 1',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600)),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(phone1,
-                              style: const TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w500)),
-                        ),
-                        IconButton(
-                          icon: const Icon(LucideIcons.phone,
-                              size: 16, color: AppColors.purple),
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          onPressed: () async {
-                            final uri = Uri.parse('tel:$phone1');
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        InkWell(
-                          onTap: () async {
-                            final uri = Uri.parse(
-                                'https://wa.me/${phone1.toWaPhone}');
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          },
-                          child: SvgPicture.asset(
-                            AppAssets.whatsAppSvg,
-                            width: 18,
-                            height: 18,
-                            colorFilter: ColorFilter.mode(
-                              Colors.green.shade600,
-                              BlendMode.srcIn,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                child: _buildPhoneCell(
+                  label: 'Phone 1',
+                  phone: phone1,
                 ),
               ),
             ],
           ),
-          if (phone2 != null && phone2.isNotEmpty && phone2 != '0') ...[
+          if ((phone2 != null && phone2.isNotEmpty && phone2 != '0') ||
+              hasPlace) ...[
             const SizedBox(height: 12),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: const SizedBox()),
+                Expanded(
+                  child: phone2 != null && phone2.isNotEmpty && phone2 != '0'
+                      ? _buildPhoneCell(
+                          label: 'Phone 2',
+                          phone: phone2,
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Phone 2',
-                          style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade600)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(phone2,
-                                style: const TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.w500)),
-                          ),
-                          IconButton(
-                            icon: const Icon(LucideIcons.phone,
-                                size: 16, color: AppColors.purple),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () async {
-                              final uri = Uri.parse('tel:$phone2');
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          InkWell(
-                            onTap: () async {
-                              final uri = Uri.parse(
-                                  'https://wa.me/${phone2.toWaPhone}');
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              }
-                            },
-                            child: SvgPicture.asset(
-                              AppAssets.whatsAppSvg,
-                              width: 18,
-                              height: 18,
-                              colorFilter: ColorFilter.mode(
-                                Colors.green.shade600,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-          if (booking.address != null && booking.address!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Address',
-                          style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade600)),
-                      const SizedBox(height: 4),
-                      Text(
-                        booking.address!,
-                        style: const TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
+                  child: hasPlace
+                      ? _buildInfoCell(
+                          label: 'Place',
+                          value: place,
+                        )
+                      : const SizedBox.shrink(),
                 ),
               ],
             ),
@@ -208,5 +95,84 @@ class BookingDetailsCustomerSection extends StatelessWidget {
     final raw = rawPhone?.trim();
     if (raw != null && raw.isNotEmpty && raw != '0') return raw;
     return null;
+  }
+
+  Widget _buildInfoCell({
+    required String label,
+    required String value,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPhoneCell({
+    required String label,
+    required String phone,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                phone,
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                LucideIcons.phone,
+                size: 16,
+                color: AppColors.purple,
+              ),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () async {
+                final uri = Uri.parse('tel:$phone');
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                }
+              },
+            ),
+            const SizedBox(width: 8),
+            InkWell(
+              onTap: () async {
+                final uri = Uri.parse('https://wa.me/${phone.toWaPhone}');
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                }
+              },
+              child: SvgPicture.asset(
+                AppAssets.whatsAppSvg,
+                width: 18,
+                height: 18,
+                colorFilter: ColorFilter.mode(
+                  Colors.green.shade600,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

@@ -165,6 +165,7 @@ class CarouselDashboard extends StatelessWidget {
                 updateDeliveryStatus: getIt.get(),
                 updateBookingStatus: getIt.get(),
                 updatePayment: getIt.get(),
+                deletePayment: getIt.get(),
                 cancelBooking: getIt.get(),
                 deleteBooking: getIt.get(),
               ),

@@ -27,6 +27,8 @@ abstract interface class IBookingRepository {
     required PaymentMethod paymentMethod,
   });
 
+  Future<void> deletePayment(int paymentId);
+
   Future<CustomResponseModel> updateBooking(
     int bookingId,
     BookingRequestEntity updatedBooking,

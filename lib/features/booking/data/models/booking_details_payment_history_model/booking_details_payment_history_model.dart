@@ -14,6 +14,7 @@ String _readDateTime(Map json, String key) {
 abstract class BookingDetailsPaymentHistoryModel
     with _$BookingDetailsPaymentHistoryModel {
   const factory BookingDetailsPaymentHistoryModel({
+    @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'amount') required int amount,
     @JsonKey(
       name: 'payment_method',
@@ -33,6 +34,7 @@ abstract class BookingDetailsPaymentHistoryModel
 extension BookingPaymentHistoryModelMapper
     on BookingDetailsPaymentHistoryModel {
   BookingPaymentHistoryEntity toEntity() => BookingPaymentHistoryEntity(
+    id: id,
     amount: amount,
     paymentMethod: paymentMethod,
     dateTime: dateTime,

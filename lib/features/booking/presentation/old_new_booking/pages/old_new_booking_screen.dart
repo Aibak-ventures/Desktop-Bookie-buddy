@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
@@ -4405,12 +4406,21 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   BookingRequestEntity _buildBookingRequest() {
     final products = selectedProductsNotifier.value;
     final additionalCharges = additionalChargesNotifier.value;
+    final runningKm = runningKilometersController.text.trim();
+
+    // Propagate running kilometers into each vehicle product so it is sent
+    // inside the variant's measurements JSON (not as a top-level field).
     final requestProducts = products
-        .map(
-          (product) => product.copyWith(
+        .map((product) {
+          final adjusted = product.copyWith(
             amount: product.amount * _getDaysMultiplierForProduct(product),
-          ),
-        )
+          );
+          if ((product.variant.mainServiceType?.isVehicle ?? false) &&
+              runningKm.isNotEmpty) {
+            return adjusted.copyWith(runningKilometers: runningKm);
+          }
+          return adjusted;
+        })
         .toList();
 
     // Get staff ID from cubit
@@ -4433,6 +4443,29 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       );
     }
 
+    // Location fields go under the "details" key.
+    final locationStart = startLocationController.text.trim();
+    final locationFrom = pickupLocationController.text.trim();
+    final locationTo = destinationLocationController.text.trim();
+    final hasLocationData =
+        locationStart.isNotEmpty ||
+        locationFrom.isNotEmpty ||
+        locationTo.isNotEmpty;
+    final otherDetails = hasLocationData
+        ? BookingOtherDetailsEntity(
+            locationStart: locationStart.isEmpty ? null : locationStart,
+            locationFrom: locationFrom.isEmpty ? null : locationFrom,
+            locationTo: locationTo.isEmpty ? null : locationTo,
+          )
+        : null;
+
+    // cooling_period_type is sent as a top-level field based on shop settings.
+    final coolingMode =
+        context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
+        CoolingPeriodMode.after;
+    final coolingPeriodType =
+        coolingPeriodDays > 0 ? coolingMode.value.toLowerCase() : null;
+
     return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: staffId,
@@ -4453,6 +4486,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                 .add(Duration(days: coolingPeriodDays))
                 .format()
                 .appendTimeToDate(time: returnTime),
+      coolingPeriodType: coolingPeriodType,
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
@@ -4460,14 +4494,13 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
       products: requestProducts,
+      otherDetails: otherDetails,
       additionalCharges: additionalCharges.isNotEmpty
           ? additionalCharges
           : null,
       description: _buildDescriptionWithPaymentSummary(),
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
-      runningKilometers: runningKilometersController.text
-          .trim(), // Added running kilometers
     );
   }
 

@@ -94,6 +94,22 @@ class BookingRemoteDatasource {
     }
   }
 
+  Future<CustomResponseModel> deletePayment(int paymentId) async {
+    try {
+      final response = await _dio.delete(
+        ApiEndpoints.bookings.deletePayment(paymentId),
+      );
+
+      log(
+        'delete payment response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error deleting payment: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
   Future<CustomResponseModel> updateBookingStatus({
     required int bookingId,
     required String bookingStatus,

@@ -5,6 +5,8 @@ import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart'
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -258,11 +260,20 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
 
     if (booking.coolingPeriodDate != null) {
       coolingPeriodDate = booking.coolingPeriodDate!.parseToDateTime();
-      // Calculate cooling period days from the dates
       final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
-      coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
+      // Use shop cooling mode to correctly compute the number of cooling days.
+      // "after"  → cooling date is after return  → diff from returnDate
+      // "before" → cooling date is before pickup → diff from pickupDate
+      final coolingMode =
+          context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
+          CoolingPeriodMode.after;
+      if (coolingMode.isBefore) {
+        coolingPeriodDays = pickupDate.difference(coolingDate).inDays.abs();
+      } else {
+        coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
+      }
       log(
-        '🔧 Cooling period: $coolingPeriodDays days (Return: $returnDate, Cooling: $coolingDate)',
+        '🔧 Cooling period: $coolingPeriodDays days (mode: ${coolingMode.value}, Return: $returnDate, Cooling: $coolingDate)',
       );
     } else {
       // No cooling period set
@@ -317,8 +328,23 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     if (booking.otherDetails.locationTo != null) {
       destinationLocationController.text = booking.otherDetails.locationTo!;
     }
-    if (booking.otherDetails.end != null) {
-      runningKilometersController.text = booking.otherDetails.end!;
+    // running_kilometers: read from vehicle product measurements (new format)
+    // or fall back to otherDetails.end (old format).
+    String? runningKmValue;
+    outer:
+    for (final item in booking.bookedItems) {
+      if (item.mainServiceType?.isVehicle ?? false) {
+        for (final m in item.measurements) {
+          if (m.key == 'running_kilometers') {
+            runningKmValue = m.value;
+            break outer;
+          }
+        }
+      }
+    }
+    runningKmValue ??= booking.otherDetails.end;
+    if (runningKmValue != null && runningKmValue.isNotEmpty) {
+      runningKilometersController.text = runningKmValue;
     }
 
     // Store original delivery status
@@ -438,8 +464,20 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         )
         .toList();
 
-    // Store original running kilometers and delivery status
-    _originalRunningKm = booking.otherDetails.end;
+    // Store original running kilometers (new: from vehicle measurements; old: from otherDetails.end)
+    String? originalKm;
+    outer:
+    for (final item in booking.bookedItems) {
+      if (item.mainServiceType?.isVehicle ?? false) {
+        for (final m in item.measurements) {
+          if (m.key == 'running_kilometers') {
+            originalKm = m.value;
+            break outer;
+          }
+        }
+      }
+    }
+    _originalRunningKm = originalKm ?? booking.otherDetails.end;
     _originalDeliveryStatus = booking.deliveryStatus;
     _originalCoolingPeriodDays = coolingPeriodDays;
 
@@ -632,6 +670,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     //   product variant id. 'variant_id' as a separate key is ignored by the server.
     {
       final products = selectedProductsNotifier.value;
+      final runningKm = runningKilometersController.text.trim();
       updates['variants'] = products.map((p) {
         // Use variantId (actual product variant) if present, fallback to id (from search)
         final variantId = p.variant.variantId ?? p.variant.id;
@@ -640,9 +679,21 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
           'quantity': p.quantity,
           'amount': p.amount * p.quantity,
         };
-        // Include measurements if present
-        if (p.measurements.isNotEmpty) {
-          variantData['measurements'] = p.measurements;
+        // Convert measurements entity list to a JSON-serialisable map.
+        // Exclude running_kilometers here — it's added separately below.
+        final measurementMap = <String, dynamic>{};
+        for (final m in p.measurements) {
+          if (m.key != 'running_kilometers') {
+            measurementMap[m.name] = m.value;
+          }
+        }
+        // running_kilometers goes inside measurements for vehicle products.
+        if ((p.variant.mainServiceType?.isVehicle ?? false) &&
+            runningKm.isNotEmpty) {
+          measurementMap['running_kilometers'] = runningKm;
+        }
+        if (measurementMap.isNotEmpty) {
+          variantData['measurements'] = measurementMap;
         }
         return variantData;
       }).toList();
@@ -675,16 +726,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     final description = descriptionController.text.trim();
     if (description.isNotEmpty) {
       updates['description'] = description;
-    }
-
-    // Include running kilometers if changed (even if cleared to null/empty)
-    if (_hasRunningKmChanged()) {
-      final runningKm = runningKilometersController.text.trim().nullIfEmpty;
-      // Send as both flat field and nested other_details for API compatibility
-      if (runningKm != null) {
-        updates['running_km'] = runningKm;
-      }
-      updates['other_details'] = {'end': runningKm ?? ''};
     }
 
     log('📝 Partial update payload: $updates');

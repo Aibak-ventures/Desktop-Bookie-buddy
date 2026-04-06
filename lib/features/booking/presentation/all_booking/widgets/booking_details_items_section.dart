@@ -173,7 +173,7 @@ class BookingDetailsItemsSection extends StatelessWidget {
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Text(
-                            '${measurement.name}: ${measurement.value}',
+                            '${measurement.name.replaceAll('_', ' ')}: ${measurement.value}',
                             style: const TextStyle(
                               fontSize: 11,
                               color: Colors.black87,

@@ -36,6 +36,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     TimeOfDay? returnTime,
     @Default(false) bool sendPdfToWhatsApp,
     String? runningKilometers,
+    String? coolingPeriodType,
   }) = _BookingRequestEntity;
 }
 
