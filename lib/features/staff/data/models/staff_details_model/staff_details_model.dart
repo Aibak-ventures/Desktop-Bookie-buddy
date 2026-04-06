@@ -1,0 +1,27 @@
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_details_entity/staff_details_entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'staff_details_model.freezed.dart';
+part 'staff_details_model.g.dart';
+
+@freezed
+abstract class StaffDetailsModel with _$StaffDetailsModel {
+  const factory StaffDetailsModel({
+    required int id,
+    required String name,
+    @JsonKey(name: 'phone') required String phoneNumber,
+    @JsonKey(name: 'created_at', defaultValue: '') required String createdAt,
+  }) = _StaffDetailsModel;
+
+  factory StaffDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$StaffDetailsModelFromJson(json);
+}
+
+extension StaffDetailsModelMapper on StaffDetailsModel {
+  StaffDetailsEntity toEntity() => StaffDetailsEntity(
+        id: id,
+        name: name,
+        phoneNumber: phoneNumber,
+        createdAt: createdAt,
+      );
+}

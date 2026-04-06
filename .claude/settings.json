@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -:*)",
+      "Bash(git stash:*)",
+      "Read(//Widget _buildSalesSinglePanel/,/^  Widget /**)",
+      "Bash(grep -l \"AppTextStyle\\\\|textStyle\" /Users/afnanp/Desktop/Work/Desktop-Bookie-buddy/lib/core/theme/*.dart)"
+    ]
+  }
+}

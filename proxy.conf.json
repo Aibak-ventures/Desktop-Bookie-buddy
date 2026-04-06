@@ -1,0 +1,8 @@
+{
+  "/api/*": {
+    "target": "https://dev.bookiebuddy.in",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

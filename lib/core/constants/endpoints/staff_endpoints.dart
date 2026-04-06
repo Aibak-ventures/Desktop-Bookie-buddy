@@ -1,0 +1,17 @@
+import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
+
+class StaffEndpoints {
+  static const _root = '${ApiConfig.v3}/shop/';
+  static const String staff = '${_root}staff/';
+  static const String staffAnalyticsReport =
+      '${_root}staff-earnings/earnings-report/';
+  static const String staffMonthlyBookingsOrSales =
+      '${_root}staff-earnings/monthly-transactions/';
+  static String staffById(int id) => '${staff}$id/';
+  static String staffAnalyticsReportById(int id) =>
+      '${staffAnalyticsReport}$id/';
+
+  // Staff Management
+  static String restoreStaff(int id) => '${staff}$id/restore/';
+  static String deactivateStaff(int id) => '${staff}$id/deactivate/';
+}
