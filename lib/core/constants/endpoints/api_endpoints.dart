@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/endpoints/account_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/auth_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
@@ -36,6 +37,7 @@ class ApiEndpoints {
   static const customizationWork = _CustomizationWorkNamespace();
   static const products = _ProductsNamespace();
   static const search = SearchEndpoints();
+  static const accounts = AccountEndpoints();
 }
 
 class _ApiConfigNamespace {
@@ -62,16 +64,8 @@ class _ShopNamespace {
   String get updateSettings => ShopEndpoints.updateSettings;
 
   // Shop Summary
-  String allShopSummary({
-    required int year,
-    required int month,
-    int? shopId,
-  }) =>
-      ShopEndpoints.allShopSummary(
-        year: year,
-        month: month,
-        shopId: shopId,
-      );
+  String allShopSummary({required int year, required int month, int? shopId}) =>
+      ShopEndpoints.allShopSummary(year: year, month: month, shopId: shopId);
 
   // Activity Logs
   String get activityLogs => ShopEndpoints.activityLogs;
