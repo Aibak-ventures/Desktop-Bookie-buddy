@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
@@ -34,30 +35,32 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AuthBloc(loginUseCase: getIt.get())),
         BlocProvider(
           create: (context) => UserCubit(
-                getUser: getIt.get(),
-                logout: getIt.get(),
-                switchShop: getIt.get(),
-                registerFCMToken: getIt.get(),
-                userRepository: getIt.get(),
-              )..loadUserIfNot(),
+            getUser: getIt.get(),
+            logout: getIt.get(),
+            switchShop: getIt.get(),
+            registerFCMToken: getIt.get(),
+            userRepository: getIt.get(),
+          )..loadUserIfNot(),
         ),
         BlocProvider(
-            create: (context) => AllBookingBloc(
-                  updateDeliveryStatus: getIt.get(),
-                  deleteBooking: getIt.get(),
-                  updateBookingStatus: getIt.get(),
-                  loadDesktopBookings: getIt.get(),
-                )),
+          create: (context) => AllBookingBloc(
+            updateDeliveryStatus: getIt.get(),
+            deleteBooking: getIt.get(),
+            updateBookingStatus: getIt.get(),
+            loadDesktopBookings: getIt.get(),
+          ),
+        ),
         BlocProvider(
-            create: (context) => BookingDetailsBloc(
-                  getBooking: getIt.get(),
-                  updateDeliveryStatus: getIt.get(),
-                  updateBookingStatus: getIt.get(),
-                  updatePayment: getIt.get(),
-                  deletePayment: getIt.get(),
-                  cancelBooking: getIt.get(),
-                  deleteBooking: getIt.get(),
-                )),
+          create: (context) => BookingDetailsBloc(
+            getBooking: getIt.get(),
+            updateDeliveryStatus: getIt.get(),
+            updateBookingStatus: getIt.get(),
+            updatePayment: getIt.get(),
+            deletePayment: getIt.get(),
+            cancelBooking: getIt.get(),
+            deleteBooking: getIt.get(),
+          ),
+        ),
         BlocProvider(
           create: (context) => SelectProductBloc(
             getAvailableProducts: getIt(),
@@ -66,48 +69,44 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => ServiceBloc(getShopServices: getIt.get())
-            ..add(const ServiceEvent.loadServices()),
+          create: (context) =>
+              ServiceBloc(getShopServices: getIt.get())
+                ..add(const ServiceEvent.loadServices()),
         ),
         BlocProvider(create: (context) => SelectedProductsCubit()),
         BlocProvider(
           create: (context) => DashboardBloc(
             getDashboardDesktopDataUseCase: getIt.get(),
             userCubit: context.read<UserCubit>(),
-          )..add(
-              const DashboardEvent.loadDashboardData(),
-            ),
+          )..add(const DashboardEvent.loadDashboardData()),
         ),
         BlocProvider(create: (context) => BookingDetailsPaymentHistoryCubit()),
         BlocProvider(
-            create: (context) => ProductBloc(
-                  getProducts: getIt.get(),
-                  searchAndFilterProducts: getIt.get(),
-                )),
+          create: (context) => ProductBloc(
+            getProducts: getIt.get(),
+            searchAndFilterProducts: getIt.get(),
+          ),
+        ),
         BlocProvider(
           create: (context) => StaffSearchCubit(getStaffs: getIt.get()),
         ),
         BlocProvider(
-            create: (context) => SaveProductCubit(
-                  saveProduct: getIt.get(),
-                )),
+          create: (context) => SaveProductCubit(saveProduct: getIt.get()),
+        ),
         BlocProvider(create: (context) => BookingSelectionCubit()),
         BlocProvider(
           create: (context) =>
               ShopListBloc(getShops: getIt.get(), userRepo: getIt.get()),
         ),
         BlocProvider(
-          create: (context) => ClientCubit(
-            getClients: getIt.get(),
-            getClientById: getIt.get(),
-          ),
+          create: (context) =>
+              ClientCubit(getClients: getIt.get(), getClientById: getIt.get()),
         ),
-        // BlocProvider(
-        //   create: (context) => ClientSaveBloc(addClient: getIt.get()),
-        // ),
+        BlocProvider(create: (context) => AccountsCubit(getAccounts: getIt())),
         BlocProvider(
-            create: (context) =>
-                ProductSearchCubit(searchAllProductsUseCase: getIt.get())),
+          create: (context) =>
+              ProductSearchCubit(searchAllProductsUseCase: getIt.get()),
+        ),
       ],
       child: MaterialApp(
         title: 'Bookie Buddy',

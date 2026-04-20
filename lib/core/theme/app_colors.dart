@@ -18,6 +18,7 @@ class AppColors {
   static const redTomato = Color(0xFFFF3B30);
   static const red = Color(0xFFC62B2B);
   static const redLight = Color(0xFFFFD8D8);
+  static const redLightOnDarkBg = Color.fromARGB(255, 255, 137, 131);
   static const green2 = Color(0xFF047500);
   static const green2Light = Color(0xFFD0FFCF);
   static const greenLight = Color(0xFFA7FF8F);
