@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/services.dart';
 class CancelBookingDialog extends StatefulWidget {
   final int maxRefundAmount;
   final VoidCallback onCancel;
-  final Function(int refundAmount, PaymentMethod? paymentMethod) onConfirm;
+  final Function(int refundAmount, int? accountId) onConfirm;
 
   const CancelBookingDialog({
     required this.maxRefundAmount,
@@ -23,7 +24,7 @@ class CancelBookingDialog extends StatefulWidget {
 class _CancelBookingDialogState extends State<CancelBookingDialog> {
   final _formKey = GlobalKey<FormState>();
   final _refundAmountController = TextEditingController();
-  PaymentMethod? _selectedPaymentMethod;
+  AccountEntity? _selectedAccount;
   bool _noRefund = false;
 
   @override
@@ -45,17 +46,16 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
 
   void _handleConfirm() {
     if (_formKey.currentState!.validate()) {
-      if (!_noRefund && _selectedPaymentMethod == null) {
-        // Use context extension for snackbar
-        context.showSnackBar('Please select refund method', isError: true);
+      if (!_noRefund && _selectedAccount == null) {
+        context.showSnackBar('Please select refund account', isError: true);
         return;
       }
 
-      final refundAmount =
-          _noRefund ? 0 : (int.tryParse(_refundAmountController.text) ?? 0);
+      final refundAmount = _noRefund
+          ? 0
+          : (int.tryParse(_refundAmountController.text) ?? 0);
 
-      // Call the callback - the calling code will handle dialog closure
-      widget.onConfirm(refundAmount, _selectedPaymentMethod);
+      widget.onConfirm(refundAmount, _selectedAccount?.id);
     }
   }
 
@@ -148,7 +148,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                           enabled: !_noRefund,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly,
                           ],
                           style: const TextStyle(
                             fontSize: 18,
@@ -187,35 +187,14 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
 
                   const SizedBox(height: 20),
 
-                  // Payment Method - Radio buttons
+                  // Refund account selector
                   if (!_noRefund) ...[
-                    Text(
-                      'Refund Method',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildRadioButton(
-                            method: PaymentMethod.upi,
-                            label: 'UPI',
-                            icon: Icons.account_balance_wallet,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildRadioButton(
-                            method: PaymentMethod.cash,
-                            label: 'Cash',
-                            icon: Icons.money,
-                          ),
-                        ),
-                      ],
+                    AccountSelectionField(
+                      selectedAccount: _selectedAccount,
+                      width: context.screenWidth * 0.32,
+                      onChanged: (account) =>
+                          setState(() => _selectedAccount = account),
+                      label: 'Refund Account',
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -226,11 +205,11 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                       setState(() {
                         _noRefund = !_noRefund;
                         if (_noRefund) {
-                          _selectedPaymentMethod = null;
+                          _selectedAccount = null;
                           _refundAmountController.text = '0';
                         } else {
-                          _refundAmountController.text =
-                              widget.maxRefundAmount.toString();
+                          _refundAmountController.text = widget.maxRefundAmount
+                              .toString();
                         }
                       });
                     },
@@ -254,11 +233,12 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                               setState(() {
                                 _noRefund = value ?? false;
                                 if (_noRefund) {
-                                  _selectedPaymentMethod = null;
+                                  _selectedAccount = null;
                                   _refundAmountController.text = '0';
                                 } else {
-                                  _refundAmountController.text =
-                                      widget.maxRefundAmount.toString();
+                                  _refundAmountController.text = widget
+                                      .maxRefundAmount
+                                      .toString();
                                 }
                               });
                             },
@@ -321,56 +301,10 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRadioButton({
-    required PaymentMethod method,
-    required String label,
-    required IconData icon,
-  }) {
-    final isSelected = _selectedPaymentMethod == method;
-    return InkWell(
-      onTap: _noRefund
-          ? null
-          : () => setState(() => _selectedPaymentMethod = method),
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.purple.withOpacity(0.1)
-              : Colors.grey.shade50,
-          border: Border.all(
-            color: isSelected ? AppColors.purple : Colors.grey.shade300,
-            width: isSelected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? AppColors.purple : Colors.grey.shade600,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? AppColors.purple : Colors.grey.shade700,
-                fontSize: 14,
-              ),
-            ),
-          ],
         ),
       ),
     );

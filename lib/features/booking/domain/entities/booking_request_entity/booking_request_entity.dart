@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_request_entity/booking_payment_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,6 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     int? discountAmount,
     String? purchaseMode,
     String? description,
-    PaymentMethod? paymentMethod,
     DeliveryStatus? deliveryStatus,
     BookingStatus? bookingStatus,
     List<ProductSelectedEntity>? products,
@@ -37,7 +36,8 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     @Default(false) bool sendPdfToWhatsApp,
     String? runningKilometers,
     String? coolingPeriodType,
-    PaymentMethod? securityPaymentMethod,
+    int? securityPaymentAccountId,
+    List<BookingPaymentRequestEntity>? payments,
   }) = _BookingRequestEntity;
 }
 
@@ -55,7 +55,8 @@ extension BookingRequestEntityX on BookingRequestEntity {
       discountAmount != null ||
       purchaseMode != null ||
       description != null ||
-      paymentMethod != null ||
+      securityPaymentAccountId != null ||
+      // paymentMethod != null ||
       deliveryStatus != null ||
       bookingStatus != null ||
       (products != null && products!.isNotEmpty) ||

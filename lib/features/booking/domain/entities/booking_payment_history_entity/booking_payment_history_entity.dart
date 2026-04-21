@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_payment_history_entity.freezed.dart';
@@ -8,7 +7,8 @@ abstract class BookingPaymentHistoryEntity with _$BookingPaymentHistoryEntity {
   const factory BookingPaymentHistoryEntity({
     int? id,
     required int amount,
-    required PaymentMethod paymentMethod,
-    required String dateTime,
+    String? accountName,
+    int? accountId,
+    required String createdAt,
   }) = _BookingPaymentHistoryEntity;
 }

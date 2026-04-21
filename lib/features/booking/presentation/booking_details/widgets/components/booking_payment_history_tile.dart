@@ -1,6 +1,4 @@
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -15,14 +13,16 @@ import 'package:skeletonizer/skeletonizer.dart';
 class TransactionEntry {
   final int? id;
   final int amount;
-  final PaymentMethod paymentMethod;
+  final String? accountName;
+  final int? accountId;
   final String dateTime;
   final bool isRefund;
 
   TransactionEntry({
     required this.id,
     required this.amount,
-    required this.paymentMethod,
+    required this.accountName,
+    required this.accountId,
     required this.dateTime,
     required this.isRefund,
   });
@@ -49,13 +49,16 @@ class BookingPaymentHistoryTile extends StatelessWidget {
 
     // Add payments
     for (final payment in paymentHistory) {
-      transactions.add(TransactionEntry(
-        id: payment.id,
-        amount: payment.amount,
-        paymentMethod: payment.paymentMethod,
-        dateTime: payment.dateTime,
-        isRefund: false,
-      ));
+      transactions.add(
+        TransactionEntry(
+          id: payment.id,
+          amount: payment.amount,
+          accountName: payment.accountName,
+          accountId: payment.accountId,
+          dateTime: payment.createdAt,
+          isRefund: false,
+        ),
+      );
     }
 
     // Add refunds - API uses 'refunded_amount' field
@@ -66,18 +69,21 @@ class BookingPaymentHistoryTile extends StatelessWidget {
         final dynamic refundAmountRaw =
             refund['refunded_amount'] ?? refund['amount'] ?? 0;
         final int amount = refundAmountRaw is num ? refundAmountRaw.toInt() : 0;
-        // API uses 'refund_method' for refunds
-        final paymentMethodStr =
-            refund['refund_method'] ?? refund['payment_method'] ?? 'cash';
+
+        final String? accountName = refund['account_name'] as String?;
+        final int? accountId = refund['account_id'] as int?;
         final dateTime = refund['created_at'] ?? refund['datetime'] ?? '';
 
-        transactions.add(TransactionEntry(
-          id: refundIdRaw is num ? refundIdRaw.toInt() : null,
-          amount: amount,
-          paymentMethod: PaymentMethod.fromJson(paymentMethodStr.toString()),
-          dateTime: dateTime.toString(),
-          isRefund: true,
-        ));
+        transactions.add(
+          TransactionEntry(
+            id: refundIdRaw is num ? refundIdRaw.toInt() : null,
+            amount: amount,
+            accountName: accountName,
+            accountId: accountId,
+            dateTime: dateTime.toString(),
+            isRefund: true,
+          ),
+        );
       }
     }
 
@@ -101,10 +107,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'No Payment History',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                 ),
               )
@@ -120,13 +123,17 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                       transaction.id != null;
 
                   return Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: transaction.isRefund
-                          ? Colors.transparent // No background for refunds
-                          : AppColors.purple
-                              .withOpacity(0.05), // Light purple for payments
+                          ? Colors
+                                .transparent // No background for refunds
+                          : AppColors.purple.withOpacity(
+                              0.05,
+                            ), // Light purple for payments
                     ),
                     child: Row(
                       children: [
@@ -138,7 +145,9 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13,
                               color: transaction.isRefund
-                                  ? Colors.red.shade700 // Red for refunds
+                                  ? Colors
+                                        .red
+                                        .shade700 // Red for refunds
                                   : Colors.black87,
                             ),
                           ),
@@ -151,7 +160,9 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13,
                               color: transaction.isRefund
-                                  ? Colors.red.shade700 // Red for refunds
+                                  ? Colors
+                                        .red
+                                        .shade700 // Red for refunds
                                   : Colors.black87,
                             ),
                           ),
@@ -159,12 +170,17 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                         // Payment Icon
                         Expanded(
                           flex: 2,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child:
-                                transaction.paymentMethod == PaymentMethod.cash
-                                    ? AppAssets.cash
-                                    : AppAssets.upi,
+                          // child: Align(
+                          //   alignment: Alignment.center,
+                          //   child:
+                          //       transaction.paymentMethod == PaymentMethod.cash
+                          //       ? AppAssets.cash
+                          //       : AppAssets.upi,
+                          // ),
+                          child: Text(
+                            transaction.accountName ?? 'Payment',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12),
                           ),
                         ),
                         // Amount
@@ -179,7 +195,9 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: transaction.isRefund
-                                  ? Colors.red.shade700 // Red for refunds
+                                  ? Colors
+                                        .red
+                                        .shade700 // Red for refunds
                                   : Colors.black87,
                             ),
                           ),
@@ -194,10 +212,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                             ),
                             onSelected: (value) {
                               if (value == 'delete') {
-                                _onDeletePaymentPressed(
-                                  context,
-                                  transaction,
-                                );
+                                _onDeletePaymentPressed(context, transaction);
                               }
                             },
                             itemBuilder: (context) => const [

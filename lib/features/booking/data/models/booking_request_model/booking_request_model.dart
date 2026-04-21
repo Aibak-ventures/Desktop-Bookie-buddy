@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_payment_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
@@ -42,7 +42,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     @JsonKey(name: 'discount_amount') int? discountAmount,
     @JsonKey(name: 'purchase_mode') String? purchaseMode,
     @JsonKey(name: 'description') String? description,
-    @JsonKey(name: 'payment_method') PaymentMethod? paymentMethod,
+    @JsonKey(name: 'payments') List<BookingPaymentRequestModel>? payments,
     @JsonKey(name: 'delivery_status', toJson: DeliveryStatus.toJson)
     DeliveryStatus? deliveryStatus,
     @JsonKey(name: 'booking_status', toJson: BookingStatus.toJson)
@@ -70,8 +70,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     @Default(false)
     bool sendPdfToWhatsApp,
     @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
-    @JsonKey(name: 'security_payment_method')
-    PaymentMethod? securityPaymentMethod,
+    @JsonKey(name: 'security_account_id') int? securityPaymentAccountId,
   }) = _BookingRequestModel;
 
   factory BookingRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -94,7 +93,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         discountAmount: entity.discountAmount,
         purchaseMode: entity.purchaseMode,
         description: entity.description,
-        paymentMethod: entity.paymentMethod,
+        securityPaymentAccountId: entity.securityPaymentAccountId,
         deliveryStatus: entity.deliveryStatus,
         bookingStatus: entity.bookingStatus,
         products: entity.products?.map((e) => e.toModel()).toList(),
@@ -107,7 +106,9 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         returnTime: entity.returnTime,
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
         coolingPeriodType: entity.coolingPeriodType,
-        securityPaymentMethod: entity.securityPaymentMethod,
+        payments: entity.payments
+            ?.map((e) => BookingPaymentRequestModel.fromEntity(e))
+            .toList(),
       );
 }
 
@@ -125,7 +126,9 @@ extension BookingRequestModelX on BookingRequestModel {
         json['pickup_date'] = pickupDate!.appendTimeToDate(time: pickupTime);
         json['pickup_time'] = _pickupTimeToJson(pickupTime);
       } else {
-        json['pickup_date'] = pickupDate!.appendTimeToDate(time24HourAsString: '00:00:00');
+        json['pickup_date'] = pickupDate!.appendTimeToDate(
+          time24HourAsString: '00:00:00',
+        );
         json.remove('pickup_time');
       }
     }
@@ -135,7 +138,9 @@ extension BookingRequestModelX on BookingRequestModel {
         json['return_date'] = returnDate!.appendTimeToDate(time: returnTime);
         json['return_time'] = _returnTimeToJson(returnTime);
       } else {
-        json['return_date'] = returnDate!.appendTimeToDate(time24HourAsString: '23:59:00');
+        json['return_date'] = returnDate!.appendTimeToDate(
+          time24HourAsString: '23:59:00',
+        );
         json.remove('return_time');
       }
     }
@@ -143,34 +148,20 @@ extension BookingRequestModelX on BookingRequestModel {
     if (coolingPeriodDate != null) {
       final isBefore = coolingPeriodType == 'BEFORE';
       if (isBefore) {
-        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time24HourAsString: '00:00:00');
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
+          time24HourAsString: '00:00:00',
+        );
       } else if (returnTime != null) {
-        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time: returnTime);
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
+          time: returnTime,
+        );
       } else {
-        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time24HourAsString: '23:59:00');
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
+          time24HourAsString: '23:59:00',
+        );
       }
     }
 
     return json;
   }
-
-  bool get hasChanges =>
-      clientId != null ||
-      staffId != null ||
-      address != null ||
-      bookedDate != null ||
-      pickupDate != null ||
-      returnDate != null ||
-      coolingPeriodDate != null ||
-      advanceAmount != null ||
-      securityAmount != null ||
-      discountAmount != null ||
-      purchaseMode != null ||
-      description != null ||
-      paymentMethod != null ||
-      deliveryStatus != null ||
-      bookingStatus != null ||
-      (products != null && products!.isNotEmpty) ||
-      otherDetails != null ||
-      (additionalCharges != null && additionalCharges!.isNotEmpty);
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingPaymentHistoryEntity {
 
- int? get id; int get amount; PaymentMethod get paymentMethod; String get dateTime;
+ int? get id; int get amount; String? get accountName; int? get accountId; String get createdAt;
 /// Create a copy of BookingPaymentHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingPaymentHistoryEntityCopyWith<BookingPaymentHistoryEntity> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingPaymentHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingPaymentHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,paymentMethod,dateTime);
+int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt);
 
 @override
 String toString() {
-  return 'BookingPaymentHistoryEntity(id: $id, amount: $amount, paymentMethod: $paymentMethod, dateTime: $dateTime)';
+  return 'BookingPaymentHistoryEntity(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $BookingPaymentHistoryEntityCopyWith<$Res>  {
   factory $BookingPaymentHistoryEntityCopyWith(BookingPaymentHistoryEntity value, $Res Function(BookingPaymentHistoryEntity) _then) = _$BookingPaymentHistoryEntityCopyWithImpl;
 @useResult
 $Res call({
- int? id, int amount, PaymentMethod paymentMethod, String dateTime
+ int? id, int amount, String? accountName, int? accountId, String createdAt
 });
 
 
@@ -62,12 +62,13 @@ class _$BookingPaymentHistoryEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingPaymentHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? amount = null,Object? paymentMethod = null,Object? dateTime = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int amount,  PaymentMethod paymentMethod,  String dateTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int amount,  String? accountName,  int? accountId,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingPaymentHistoryEntity() when $default != null:
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int amount,  PaymentMethod paymentMethod,  String dateTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int amount,  String? accountName,  int? accountId,  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _BookingPaymentHistoryEntity():
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int amount,  PaymentMethod paymentMethod,  String dateTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int amount,  String? accountName,  int? accountId,  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingPaymentHistoryEntity() when $default != null:
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   return null;
 
 }
@@ -209,13 +210,14 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 
 
 class _BookingPaymentHistoryEntity implements BookingPaymentHistoryEntity {
-  const _BookingPaymentHistoryEntity({this.id, required this.amount, required this.paymentMethod, required this.dateTime});
+  const _BookingPaymentHistoryEntity({this.id, required this.amount, this.accountName, this.accountId, required this.createdAt});
   
 
 @override final  int? id;
 @override final  int amount;
-@override final  PaymentMethod paymentMethod;
-@override final  String dateTime;
+@override final  String? accountName;
+@override final  int? accountId;
+@override final  String createdAt;
 
 /// Create a copy of BookingPaymentHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ _$BookingPaymentHistoryEntityCopyWith<_BookingPaymentHistoryEntity> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingPaymentHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingPaymentHistoryEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,paymentMethod,dateTime);
+int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt);
 
 @override
 String toString() {
-  return 'BookingPaymentHistoryEntity(id: $id, amount: $amount, paymentMethod: $paymentMethod, dateTime: $dateTime)';
+  return 'BookingPaymentHistoryEntity(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$BookingPaymentHistoryEntityCopyWith<$Res> implements $Boo
   factory _$BookingPaymentHistoryEntityCopyWith(_BookingPaymentHistoryEntity value, $Res Function(_BookingPaymentHistoryEntity) _then) = __$BookingPaymentHistoryEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int amount, PaymentMethod paymentMethod, String dateTime
+ int? id, int amount, String? accountName, int? accountId, String createdAt
 });
 
 
@@ -264,12 +266,13 @@ class __$BookingPaymentHistoryEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingPaymentHistoryEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? amount = null,Object? paymentMethod = null,Object? dateTime = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? createdAt = null,}) {
   return _then(_BookingPaymentHistoryEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

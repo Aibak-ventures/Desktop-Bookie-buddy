@@ -140,6 +140,7 @@ class _AccountSelectionFieldState extends State<AccountSelectionField> {
             label: widget.label ?? 'Payment Option',
             menuHeight: MediaQuery.sizeOf(context).height * 0.3,
             width: width,
+            enableFilter: true,
             prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
             selectedValue: widget.selectedAccount,
             onChanged: widget.onChanged,

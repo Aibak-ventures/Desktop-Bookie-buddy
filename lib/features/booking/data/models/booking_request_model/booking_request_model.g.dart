@@ -23,10 +23,12 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
       discountAmount: (json['discount_amount'] as num?)?.toInt(),
       purchaseMode: json['purchase_mode'] as String?,
       description: json['description'] as String?,
-      paymentMethod: $enumDecodeNullable(
-        _$PaymentMethodEnumMap,
-        json['payment_method'],
-      ),
+      payments: (json['payments'] as List<dynamic>?)
+          ?.map(
+            (e) =>
+                BookingPaymentRequestModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
       deliveryStatus: $enumDecodeNullable(
         _$DeliveryStatusEnumMap,
         json['delivery_status'],
@@ -49,10 +51,7 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
           )
           .toList(),
       coolingPeriodType: json['cooling_period_type'] as String?,
-      securityPaymentMethod: $enumDecodeNullable(
-        _$PaymentMethodEnumMap,
-        json['security_payment_method'],
-      ),
+      securityPaymentAccountId: (json['security_account_id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$BookingRequestModelToJson(
@@ -71,7 +70,7 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'discount_amount': ?instance.discountAmount,
   'purchase_mode': ?instance.purchaseMode,
   'description': ?instance.description,
-  'payment_method': ?instance.paymentMethod,
+  'payments': ?instance.payments,
   'delivery_status': ?DeliveryStatus.toJson(instance.deliveryStatus),
   'booking_status': ?BookingStatus.toJson(instance.bookingStatus),
   'variants': ?_productsToJson(instance.products),
@@ -79,12 +78,7 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'additional_charges': ?instance.additionalCharges,
   'send_invoice': instance.sendPdfToWhatsApp,
   'cooling_period_type': ?instance.coolingPeriodType,
-  'security_payment_method': ?instance.securityPaymentMethod,
-};
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.upi: 'upi',
-  PaymentMethod.cash: 'cash',
+  'security_account_id': ?instance.securityPaymentAccountId,
 };
 
 const _$DeliveryStatusEnumMap = {

@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,8 +10,6 @@ List<Map<String, dynamic>>? _variantsToJson(
 ) => variants == null || variants.isEmpty
     ? null
     : variants.map((e) => e.toCustomJson(includeMeasurement: false)).toList();
-
-String? _paymentMethodToJson(PaymentMethod? method) => method?.value;
 
 @freezed
 abstract class SalesRequestModel with _$SalesRequestModel {
@@ -29,9 +26,7 @@ abstract class SalesRequestModel with _$SalesRequestModel {
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'discount') int? discountAmount,
     @JsonKey(name: 'paid_amount') int? paidAmount,
-    @JsonKey(name: 'payment_method', toJson: _paymentMethodToJson)
-    @Default(PaymentMethod.cash)
-    PaymentMethod? paymentMethod,
+    @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
@@ -52,7 +47,7 @@ abstract class SalesRequestModel with _$SalesRequestModel {
         description: entity.description,
         discountAmount: entity.discountAmount,
         paidAmount: entity.paidAmount,
-        paymentMethod: entity.paymentMethod,
+        accountId: entity.accountId,
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
       );
 }

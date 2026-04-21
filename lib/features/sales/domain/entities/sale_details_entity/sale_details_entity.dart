@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,7 +20,8 @@ abstract class SaleDetailsEntity with _$SaleDetailsEntity {
     required String invoiceId,
     required int balanceDueAmount,
     required List<ProductSaleInfoEntity> products,
-    @Default(PaymentMethod.cash) PaymentMethod paymentMethod,
+    int? accountId,
+    String? accountName,
     int? staffId,
     String? staffName,
   }) = _SaleDetailsEntity;

@@ -5,7 +5,8 @@
       "Bash(fvm dart:*)",
       "Bash(where fvm:*)",
       "Read(//c/Users/Adinan/fvm/default/**)",
-      "Read(//c/Users/Adinan/AppData/Local/Pub/Cache/**)"
+      "Read(//c/Users/Adinan/AppData/Local/Pub/Cache/**)",
+      "Bash(fvm flutter *)"
     ]
   }
 }
