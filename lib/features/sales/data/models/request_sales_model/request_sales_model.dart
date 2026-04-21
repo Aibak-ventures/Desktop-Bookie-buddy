@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'request_sales_model.freezed.dart';
@@ -17,7 +16,7 @@ abstract class RequestSalesModel with _$RequestSalesModel {
     @JsonKey(name: 'send_invoice') @Default(false) bool sendInvoice,
     @JsonKey(name: 'variants') List<Map<String, dynamic>>? variants,
     @JsonKey(name: 'paid_amount') int? paidAmount,
-    @JsonKey(name: 'payment_method') PaymentMethod? paymentMethod,
+    @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'discount') int? discount,
     @JsonKey(name: 'decrease_stock') @Default(false) bool decreaseStock,
   }) = _RequestSalesModel;

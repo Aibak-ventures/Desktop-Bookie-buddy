@@ -25,11 +25,8 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       products: (json['items'] as List<dynamic>)
           .map((e) => ProductSaleInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      paymentMethod: _paymentMethodReadValue(json, 'method') == null
-          ? PaymentMethod.cash
-          : PaymentMethod.fromJson(
-              _paymentMethodReadValue(json, 'method') as String?,
-            ),
+      accountId: (_readAccountId(json, 'account_id') as num?)?.toInt(),
+      accountName: _readAccountName(json, 'account_name') as String?,
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
     );
@@ -49,7 +46,8 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
       'shop_sale_id': instance.invoiceId,
       'balance_due': instance.balanceDueAmount,
       'items': instance.products,
-      'method': instance.paymentMethod,
+      'account_id': instance.accountId,
+      'account_name': instance.accountName,
       'staff_id': instance.staffId,
       'staff_name': instance.staffName,
     };

@@ -73,9 +73,8 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
       : SecuritySummaryModel.fromJson(
           json['security_summary'] as Map<String, dynamic>,
         ),
-  securityPaymentMethod: PaymentMethod.tryFromJson(
-    json['security_payment_method'] as String?,
-  ),
+  securityAccountName: json['security_account_name'] as String?,
+  securityAccountId: (json['security_account_id'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$BookingDetailsModelToJson(
@@ -113,7 +112,8 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'total_refunded': instance.totalRefunded,
   'refundable_balance': instance.refundableBalance,
   'security_summary': instance.securitySummary,
-  'security_payment_method': instance.securityPaymentMethod,
+  'security_account_name': instance.securityAccountName,
+  'security_account_id': instance.securityAccountId,
 };
 
 const _$PurchaseModeEnumMap = {

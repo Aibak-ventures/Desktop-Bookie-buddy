@@ -33,27 +33,28 @@ class SalesDetailsPaymentSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Text(
-                'Payment method: ',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade700,
-                  fontWeight: FontWeight.w500,
+          if (sale.accountName != null)
+            Row(
+              children: [
+                Text(
+                  'Payment Option: ',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade700,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                sale.paymentMethod.name.toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
+                const Spacer(),
+                Text(
+                  sale.accountName?.toUpperCase() ?? '—',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           const SizedBox(height: 16),
           _buildPaymentRow('Subtotal', '₹$subtotal'),
           const SizedBox(height: 8),

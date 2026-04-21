@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/common/usecases/launch_email_support_usecase.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
+import 'package:bookie_buddy_web/core/di/features/account_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/auth_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/booking_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/client_dependencies.dart';
@@ -35,6 +36,7 @@ class AppDependencies {
     SalesDependencies.register();
     ProductDependencies.register();
     BookingDependencies.register();
+    AccountDependencies.register();
   }
 
   // ================== common ==================

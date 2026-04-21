@@ -74,11 +74,8 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'security_summary')
     @Default(SecuritySummaryModel.empty)
     SecuritySummaryModel securitySummary,
-    @JsonKey(
-      name: 'security_payment_method',
-      fromJson: PaymentMethod.tryFromJson,
-    )
-    PaymentMethod? securityPaymentMethod,
+    @JsonKey(name: 'security_account_name') String? securityAccountName,
+    @JsonKey(name: 'security_account_id') int? securityAccountId,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -149,6 +146,7 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     totalRefunded: totalRefunded,
     refundableBalance: refundableBalance,
     securitySummary: securitySummary.toEntity(),
-    securityPaymentMethod: securityPaymentMethod,
+    securityAccountId: securityAccountId,
+    securityAccountName: securityAccountName,
   );
 }

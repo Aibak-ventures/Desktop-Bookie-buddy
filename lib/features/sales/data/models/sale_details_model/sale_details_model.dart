@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
@@ -13,14 +12,16 @@ dynamic _readSaleProductImage(Map json, String key) =>
         ? json['product_image']
         : json['thumbnail'];
 
-String _paymentMethodReadValue(Map json, String key) {
+int? _readAccountId(Map json, String key) {
   final payments = json['payments'] as List?;
+  if (payments == null || payments.isEmpty) return null;
+  return (payments.first as Map)['account_id'] as int?;
+}
 
-  if (payments == null || payments.firstOrNull == null)
-    return PaymentMethod.cash.toString();
-
-  final fistPayment = payments.first;
-  return (fistPayment as Map)[key];
+String? _readAccountName(Map json, String key) {
+  final payments = json['payments'] as List?;
+  if (payments == null || payments.isEmpty) return null;
+  return (payments.first as Map)['account_name'] as String?;
 }
 
 @freezed
@@ -39,13 +40,9 @@ abstract class SaleDetailsModel with _$SaleDetailsModel {
     @JsonKey(name: 'shop_sale_id', defaultValue: '') required String invoiceId,
     @JsonKey(name: 'balance_due') required int balanceDueAmount,
     @JsonKey(name: 'items') required List<ProductSaleInfoModel> products,
-    @JsonKey(
-      name: 'method',
-      fromJson: PaymentMethod.fromJson,
-      readValue: _paymentMethodReadValue,
-    )
-    @Default(PaymentMethod.cash)
-    PaymentMethod paymentMethod,
+    @JsonKey(name: 'account_id', readValue: _readAccountId) int? accountId,
+    @JsonKey(name: 'account_name', readValue: _readAccountName)
+    String? accountName,
     @JsonKey(name: 'staff_id') int? staffId,
     @JsonKey(name: 'staff_name') String? staffName,
   }) = _SaleDetailsModel;
@@ -92,7 +89,8 @@ extension SaleDetailsModelMapper on SaleDetailsModel {
     invoiceId: invoiceId,
     balanceDueAmount: balanceDueAmount,
     products: products.map((e) => e.toEntity()).toList(),
-    paymentMethod: paymentMethod,
+    accountId: accountId,
+    accountName: accountName,
     staffId: staffId,
     staffName: staffName,
   );

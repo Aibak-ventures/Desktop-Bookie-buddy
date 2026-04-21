@@ -10,7 +10,8 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cub
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_app_bar.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_date_section.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_payment_method_section.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_list_header.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_table_row.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_summary_section.dart';
@@ -462,9 +463,19 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  SalesFormPaymentMethodSection(
-                    paymentMethodNotifier:
-                        _formController.paymentMethodNotifier,
+                  const SizedBox(height: _fieldSpacing),
+                  ValueListenableBuilder<AccountEntity?>(
+                    valueListenable: _formController.selectedAccountNotifier,
+                    builder: (context, selectedAccount, _) =>
+                        AccountSelectionField(
+                          selectedAccount: selectedAccount,
+                          width: context.screenWidth * 0.25,
+                          onChanged: (account) {
+                            _formController.selectedAccountNotifier.value =
+                                account;
+                          },
+                          initialAccountId: widget.saleDetails.accountId,
+                        ),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -1099,9 +1110,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     final discountChanged =
         (discountText.isNotEmpty ? discountText.toIntOrNull() ?? 0 : 0) !=
         widget.saleDetails.discountAmount;
-    final paymentChanged =
-        _formController.paymentMethodNotifier.value !=
-        widget.saleDetails.paymentMethod;
+    final accountChanged =
+        _formController.selectedAccountNotifier.value?.id !=
+        widget.saleDetails.accountId;
     final productsChanged =
         products.length != widget.saleDetails.products.length;
 
@@ -1110,7 +1121,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         placeChanged ||
         descChanged ||
         discountChanged ||
-        paymentChanged ||
+        accountChanged ||
         productsChanged;
   }
 }

@@ -15,6 +15,7 @@ class CustomDropDownField<T> extends StatelessWidget {
   final double? menuHeight;
   final InputDecorationTheme? inputDecorationTheme;
   final double? width;
+  final bool enableFilter;
 
   const CustomDropDownField({
     super.key,
@@ -32,6 +33,7 @@ class CustomDropDownField<T> extends StatelessWidget {
     this.inputDecorationTheme,
     this.label,
     this.width,
+    this.enableFilter = false,
   });
 
   @override
@@ -41,12 +43,28 @@ class CustomDropDownField<T> extends StatelessWidget {
       onSelected: onChanged,
       menuHeight: menuHeight,
       hintText: hintText,
+      filterCallback: !enableFilter
+          ? null
+          : (entries, filter) {
+              final String trimmedFilter = filter.trim().toLowerCase();
+              if (trimmedFilter.isEmpty) {
+                return entries;
+              }
+
+              return entries
+                  .where(
+                    (entry) =>
+                        entry.label.toLowerCase().contains(trimmedFilter),
+                  )
+                  .toList();
+            },
+      enableFilter: enableFilter,
+      enableSearch: false,
       label: label != null
           ? Text(label!, style: TextStyle(color: AppColors.grey600))
           : null,
       leadingIcon: prefixIcon,
       width: width,
-      // alignmentOffset: const Offset(-7, 0),
       trailingIcon: Icon(
         Icons.keyboard_arrow_down_outlined,
         color: AppColors.grey600,

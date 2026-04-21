@@ -18,7 +18,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
   const factory BookingDetailsEvent.updatePayment({
     required int bookingId,
     required int amount,
-    required PaymentMethod paymentMethod,
+    required int accountId,
   }) = _UpdatePayment;
 
   const factory BookingDetailsEvent.deletePayment({
@@ -29,7 +29,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
   const factory BookingDetailsEvent.cancelBooking({
     required int bookingId,
     int? refundAmount,
-    PaymentMethod? paymentMethod,
+    int? accountId,
   }) = _CancelBooking;
 
   const factory BookingDetailsEvent.deleteBooking(int bookingId) =

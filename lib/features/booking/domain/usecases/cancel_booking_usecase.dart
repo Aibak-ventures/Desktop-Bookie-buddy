@@ -1,4 +1,3 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 
 class CancelBookingUseCase {
@@ -8,11 +7,10 @@ class CancelBookingUseCase {
   Future<void> call({
     required int bookingId,
     int? refundAmount,
-    PaymentMethod? paymentMethod,
-  }) =>
-      _repository.cancelBooking(
-        bookingId: bookingId,
-        refundAmount: refundAmount,
-        paymentMethod: paymentMethod,
-      );
+    int? accountId,
+  }) => _repository.cancelBooking(
+    bookingId: bookingId,
+    refundAmount: refundAmount,
+    accountId: accountId,
+  );
 }

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
@@ -24,7 +23,7 @@ abstract interface class IBookingRepository {
   Future<void> updatePayment({
     required int bookingId,
     required int amount,
-    required PaymentMethod paymentMethod,
+    required int accountId,
   });
 
   Future<void> deletePayment(int paymentId);
@@ -46,7 +45,7 @@ abstract interface class IBookingRepository {
   Future<void> cancelBooking({
     required int bookingId,
     int? refundAmount,
-    PaymentMethod? paymentMethod,
+    int? accountId,
   });
 
   Future<void> updateBookingStatus(int bookingId, BookingStatus bookingStatus);

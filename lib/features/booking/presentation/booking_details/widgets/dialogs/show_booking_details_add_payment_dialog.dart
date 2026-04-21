@@ -3,7 +3,8 @@
 import 'dart:async';
 
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -21,8 +22,8 @@ void showBookingDetailsAddPaymentDialog({
 }) {
   final TextEditingController textController = TextEditingController();
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
-  final ValueNotifier<PaymentMethod> paymentMethodNotifier = ValueNotifier(
-    PaymentMethod.upi,
+  final ValueNotifier<AccountEntity?> selectedAccountNotifier = ValueNotifier(
+    null,
   );
   showDialog(
     context: context,
@@ -82,81 +83,13 @@ void showBookingDetailsAddPaymentDialog({
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
-            Text(
-              'Payment Method',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const SizedBox(height: 8),
-            ValueListenableBuilder(
-              valueListenable: paymentMethodNotifier,
-              builder: (context, paymentMethod, child) => RadioGroup(
-                onChanged: (value) {
-                  if (value != null) paymentMethodNotifier.value = value;
-                },
-                groupValue: paymentMethod,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: RadioListTile(
-                          title: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.phone_android,
-                                  size: 18, color: AppColors.purple),
-                              const SizedBox(width: 4),
-                              Text(
-                                PaymentMethod.upi.name,
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 8),
-                          visualDensity: VisualDensity.compact,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: PaymentMethod.upi,
-                          activeColor: AppColors.purple,
-                        ),
-                      ),
-                      Container(
-                          width: 1, height: 40, color: Colors.grey.shade300),
-                      Expanded(
-                        child: RadioListTile(
-                          title: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.money,
-                                  size: 18, color: Colors.green),
-                              const SizedBox(width: 4),
-                              Text(
-                                PaymentMethod.cash.name,
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 8),
-                          visualDensity: VisualDensity.compact,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: PaymentMethod.cash,
-                          activeColor: AppColors.purple,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            ValueListenableBuilder<AccountEntity?>(
+              valueListenable: selectedAccountNotifier,
+              builder: (context, selectedAccount, _) => AccountSelectionField(
+                selectedAccount: selectedAccount,
+                width: context.screenWidth * 0.32,
+                onChanged: (account) => selectedAccountNotifier.value = account,
+                label: 'Payment Account',
               ),
             ),
           ],
@@ -171,11 +104,14 @@ void showBookingDetailsAddPaymentDialog({
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             side: BorderSide(color: Colors.grey.shade400),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
-          child: const Text('Cancel',
-              style: TextStyle(fontSize: 14, color: Colors.black87)),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(fontSize: 14, color: Colors.black87),
+          ),
         ),
         ValueListenableBuilder<bool>(
           valueListenable: isLoading,
@@ -188,7 +124,6 @@ void showBookingDetailsAddPaymentDialog({
                 : () async {
                     final amount = int.tryParse(textController.text);
 
-                    // Validate input amount
                     if (amount == null || amount <= 0) {
                       CustomSnackBar(
                         title: 'Invalid Input',
@@ -197,7 +132,6 @@ void showBookingDetailsAddPaymentDialog({
                       return;
                     }
 
-                    // Ensure the user cannot enter an amount greater than the balance
                     if (amount > balanceAmount) {
                       CustomSnackBar(
                         title: 'Exceeded Balance',
@@ -206,52 +140,51 @@ void showBookingDetailsAddPaymentDialog({
                       return;
                     }
 
-                    isLoading.value = true; // Start loading
+                    if (selectedAccountNotifier.value == null) {
+                      context.showSnackBar(
+                        'Please select a payment account',
+                        isError: true,
+                      );
+                      return;
+                    }
+
+                    isLoading.value = true;
 
                     try {
-                      // Get the bloc from the correct context
                       final bloc = context.read<BookingDetailsBloc>();
 
-                      // Dispatch the update payment event
                       bloc.add(
                         BookingDetailsEvent.updatePayment(
                           bookingId: id,
                           amount: amount,
-                          paymentMethod: paymentMethodNotifier.value,
+                          accountId: selectedAccountNotifier.value!.id,
                         ),
                       );
 
-                      // Wait for the bloc to emit the loaded or failed state with a timeout
                       final state = await bloc.stream
                           .firstWhere(
-                        (state) => state.maybeWhen(
-                          loaded: (_) => true,
-                          failed: (_) => true,
-                          orElse: () => false,
-                        ),
-                      )
+                            (state) => state.maybeWhen(
+                              loaded: (_) => true,
+                              failed: (_) => true,
+                              orElse: () => false,
+                            ),
+                          )
                           .timeout(
-                        const Duration(seconds: 30),
-                        onTimeout: () {
-                          throw TimeoutException('Request timed out');
-                        },
-                      );
+                            const Duration(seconds: 30),
+                            onTimeout: () {
+                              throw TimeoutException('Request timed out');
+                            },
+                          );
 
-                      // Check if the operation was successful
                       state.maybeWhen(
                         loaded: (_) {
-                          // Close the dialog after update completes
                           if (dialogCtx.mounted) {
                             dialogCtx.pop();
-                            // Show success message
                             context.showSnackBar('Payment added successfully');
                           }
                         },
                         failed: (error) {
-                          CustomSnackBar(
-                            title: 'Error',
-                            message: error,
-                          );
+                          CustomSnackBar(title: 'Error', message: error);
                           isLoading.value = false;
                         },
                         orElse: () {},
@@ -266,12 +199,6 @@ void showBookingDetailsAddPaymentDialog({
                       }
                     }
                   },
-            // style: ElevatedButton.styleFrom(
-            //   backgroundColor: loading ? Colors.grey : AppColors.purple,
-            //   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-            //   shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8)),
-            // ),
             child: loading
                 ? Row(
                     mainAxisSize: MainAxisSize.min,
@@ -294,9 +221,10 @@ void showBookingDetailsAddPaymentDialog({
                 : const Text(
                     'Add Payment',
                     style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w600),
+                      fontSize: 14,
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
           ),
         ),

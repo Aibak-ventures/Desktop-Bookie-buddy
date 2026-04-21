@@ -76,12 +76,12 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> updatePayment({
     required int bookingId,
     required int amount,
-    required String paymentMethod,
+    required int accountId,
   }) async {
     try {
       final response = await _dio.post(
         '${ApiEndpoints.bookings.addPayment}$bookingId/',
-        data: {'amount': amount, 'payment_method': paymentMethod},
+        data: {'amount': amount, 'account_id': accountId},
       );
 
       log(
@@ -316,7 +316,7 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> addRefund({
     required int bookingId,
     required int amount,
-    required String paymentMethod,
+    required int accountId,
     String? refundReason,
   }) async {
     try {
@@ -324,7 +324,7 @@ class BookingRemoteDatasource {
         ApiEndpoints.bookings.addRefund(bookingId),
         data: {
           'amount': amount,
-          'refund_method': paymentMethod,
+          'account_id': accountId,
           if (refundReason != null) 'refund_reason': refundReason,
         },
       );
@@ -397,6 +397,7 @@ class BookingRemoteDatasource {
       rethrow;
     }
   }
+
   Future<CustomResponseModel> fetchPaymentHistory(int bookingId) async {
     try {
       final response = await _dio.get(
@@ -507,7 +508,9 @@ class BookingRemoteDatasource {
 
       // When send_whatsapp=false the API streams back a PDF — treat as success.
       if (contentType.contains('application/pdf')) {
-        log('Received PDF response (${response.data.length} bytes) — invoice ready');
+        log(
+          'Received PDF response (${response.data.length} bytes) — invoice ready',
+        );
         return CustomResponseModel(
           status: CustomResponseStatus.success,
           message: 'Invoice sent successfully',

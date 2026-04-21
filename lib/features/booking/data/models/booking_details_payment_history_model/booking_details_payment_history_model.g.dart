@@ -11,10 +11,9 @@ _BookingDetailsPaymentHistoryModel _$BookingDetailsPaymentHistoryModelFromJson(
 ) => _BookingDetailsPaymentHistoryModel(
   id: (json['id'] as num?)?.toInt(),
   amount: (json['amount'] as num).toInt(),
-  paymentMethod: json['payment_method'] == null
-      ? PaymentMethod.cash
-      : PaymentMethod.fromJson(json['payment_method'] as String?),
-  dateTime: _readDateTime(json, 'datetime') as String,
+  accountName: json['account_name'] as String?,
+  accountId: (json['account_id'] as num?)?.toInt(),
+  createdAt: json['created_at'] as String,
 );
 
 Map<String, dynamic> _$BookingDetailsPaymentHistoryModelToJson(
@@ -22,6 +21,7 @@ Map<String, dynamic> _$BookingDetailsPaymentHistoryModelToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'amount': instance.amount,
-  'payment_method': instance.paymentMethod,
-  'datetime': instance.dateTime,
+  'account_name': instance.accountName,
+  'account_id': instance.accountId,
+  'created_at': instance.createdAt,
 };

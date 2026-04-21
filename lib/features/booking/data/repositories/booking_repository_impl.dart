@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
@@ -122,14 +121,14 @@ class BookingRepositoryImpl implements IBookingRepository {
   Future<void> updatePayment({
     required int bookingId,
     required int amount,
-    required PaymentMethod paymentMethod,
+    required int accountId,
   }) async {
     try {
       final response = await safeApiCall(
         () => _datasource.updatePayment(
           bookingId: bookingId,
           amount: amount,
-          paymentMethod: paymentMethod.value,
+          accountId: accountId,
         ),
       );
       if (response.status.isSuccess) {
@@ -248,7 +247,7 @@ class BookingRepositoryImpl implements IBookingRepository {
   Future<void> cancelBooking({
     required int bookingId,
     int? refundAmount,
-    PaymentMethod? paymentMethod,
+    int? accountId,
   }) async {
     try {
       // First, update delivery status to cancelled
@@ -261,14 +260,12 @@ class BookingRepositoryImpl implements IBookingRepository {
       }
 
       // If there's a refund amount, add the refund
-      if (refundAmount != null && refundAmount > 0 && paymentMethod != null) {
+      if (refundAmount != null && refundAmount > 0 && accountId != null) {
         final refundResponse = await safeApiCall(
           () => _datasource.addRefund(
             bookingId: bookingId,
             amount: refundAmount,
-            paymentMethod: paymentMethod == PaymentMethod.upi
-                ? 'upi'
-                : paymentMethod.value,
+            accountId: accountId,
             refundReason: 'Booking cancelled',
           ),
         );

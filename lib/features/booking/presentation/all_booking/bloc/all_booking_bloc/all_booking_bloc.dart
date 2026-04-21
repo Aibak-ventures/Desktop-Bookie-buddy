@@ -5,7 +5,6 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
@@ -29,11 +28,11 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     required DeleteBookingUseCase deleteBooking,
     required UpdateBookingStatusUseCase updateBookingStatus,
     required LoadDesktopBookingsPaginationUseCase loadDesktopBookings,
-  })  : _updateDeliveryStatus = updateDeliveryStatus,
-        _deleteBooking = deleteBooking,
-        _updateBookingStatus = updateBookingStatus,
-        _loadDesktopBookings = loadDesktopBookings,
-        super(const AllBookingState.loading()) {
+  }) : _updateDeliveryStatus = updateDeliveryStatus,
+       _deleteBooking = deleteBooking,
+       _updateBookingStatus = updateBookingStatus,
+       _loadDesktopBookings = loadDesktopBookings,
+       super(const AllBookingState.loading()) {
     on<_LoadBookings>(_onFetchBookings);
     on<_LoadNextPageBookings>(
       _onFetchNextPage,
@@ -52,10 +51,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     Emitter<AllBookingState> emit,
   ) async {
     try {
-      await _updateDeliveryStatus(
-        event.bookingId,
-        event.deliveryStatus,
-      );
+      await _updateDeliveryStatus(event.bookingId, event.deliveryStatus);
 
       // Update the local state instead of reloading
       if (state is _Loaded) {
@@ -89,12 +85,14 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
       if (state is _Loaded) {
         final s = state as _Loaded;
         // Reload to ensure data consistency
-        add(AllBookingEvent.loadBookings(
-          status: s.status,
-          startDate: s.startDate,
-          endDate: s.endDate,
-          searchQuery: s.searchQuery,
-        ));
+        add(
+          AllBookingEvent.loadBookings(
+            status: s.status,
+            startDate: s.startDate,
+            endDate: s.endDate,
+            searchQuery: s.searchQuery,
+          ),
+        );
       }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
@@ -116,27 +114,23 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
       // EXCEPT for cancelled bookings - skip delivery status update for those
       if (event.currentStatus != DeliveryStatus.returned &&
           event.currentStatus != DeliveryStatus.cancelled) {
-        await _updateDeliveryStatus(
-          event.bookingId,
-          DeliveryStatus.returned,
-        );
+        await _updateDeliveryStatus(event.bookingId, DeliveryStatus.returned);
       }
 
-      await _updateBookingStatus(
-        event.bookingId,
-        BookingStatus.completed,
-      );
+      await _updateBookingStatus(event.bookingId, BookingStatus.completed);
 
       if (state is _Loaded) {
         final s = state as _Loaded;
         // Reload to ensure data consistency
-        add(AllBookingEvent.loadBookings(
-          status: s
-              .status, // If status was 'pending', removing item should happen via reload naturally
-          startDate: s.startDate,
-          endDate: s.endDate,
-          searchQuery: s.searchQuery,
-        ));
+        add(
+          AllBookingEvent.loadBookings(
+            status: s
+                .status, // If status was 'pending', removing item should happen via reload naturally
+            startDate: s.startDate,
+            endDate: s.endDate,
+            searchQuery: s.searchQuery,
+          ),
+        );
       }
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
@@ -168,8 +162,9 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         status: event.status ?? 'pending',
         startDate: event.startDate,
         endDate: event.endDate,
-        searchQuery:
-            event.searchQuery.isNotNullOrEmpty ? event.searchQuery : null,
+        searchQuery: event.searchQuery.isNotNullOrEmpty
+            ? event.searchQuery
+            : null,
       );
 
       emit(
@@ -244,12 +239,14 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
       log('refreshing');
       if (state is _Loaded) {
         final s = state as _Loaded;
-        add(AllBookingEvent.loadBookings(
-          status: s.status,
-          startDate: s.startDate,
-          endDate: s.endDate,
-          searchQuery: s.searchQuery,
-        ));
+        add(
+          AllBookingEvent.loadBookings(
+            status: s.status,
+            startDate: s.startDate,
+            endDate: s.endDate,
+            searchQuery: s.searchQuery,
+          ),
+        );
       } else {
         add(const AllBookingEvent.loadBookings());
       }

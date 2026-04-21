@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingRequestEntity {
 
- int? get clientId; int? get staffId; ClientRequestEntity? get client; String? get address; String? get bookedDate; String? get pickupDate; String? get returnDate; String? get coolingPeriodDate; int? get advanceAmount; int? get securityAmount; int? get discountAmount; String? get purchaseMode; String? get description; PaymentMethod? get paymentMethod; DeliveryStatus? get deliveryStatus; BookingStatus? get bookingStatus; List<ProductSelectedEntity>? get products; BookingOtherDetailsEntity? get otherDetails; List<AdditionalChargesEntity>? get additionalCharges; int? get serviceId; TimeOfDay? get pickupTime; TimeOfDay? get returnTime; bool get sendPdfToWhatsApp; String? get runningKilometers; String? get coolingPeriodType; PaymentMethod? get securityPaymentMethod;
+ int? get clientId; int? get staffId; ClientRequestEntity? get client; String? get address; String? get bookedDate; String? get pickupDate; String? get returnDate; String? get coolingPeriodDate; int? get advanceAmount; int? get securityAmount; int? get discountAmount; String? get purchaseMode; String? get description; DeliveryStatus? get deliveryStatus; BookingStatus? get bookingStatus; List<ProductSelectedEntity>? get products; BookingOtherDetailsEntity? get otherDetails; List<AdditionalChargesEntity>? get additionalCharges; int? get serviceId; TimeOfDay? get pickupTime; TimeOfDay? get returnTime; bool get sendPdfToWhatsApp; String? get runningKilometers; String? get coolingPeriodType; int? get securityPaymentAccountId; List<BookingPaymentRequestEntity>? get payments;
 /// Create a copy of BookingRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingRequestEntityCopyWith<BookingRequestEntity> get copyWith => _$BookingReq
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingRequestEntity&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.client, client) || other.client == client)&&(identical(other.address, address) || other.address == address)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.coolingPeriodDate, coolingPeriodDate) || other.coolingPeriodDate == coolingPeriodDate)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.description, description) || other.description == description)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.otherDetails, otherDetails) || other.otherDetails == otherDetails)&&const DeepCollectionEquality().equals(other.additionalCharges, additionalCharges)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.securityPaymentMethod, securityPaymentMethod) || other.securityPaymentMethod == securityPaymentMethod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingRequestEntity&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.client, client) || other.client == client)&&(identical(other.address, address) || other.address == address)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.coolingPeriodDate, coolingPeriodDate) || other.coolingPeriodDate == coolingPeriodDate)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.description, description) || other.description == description)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.otherDetails, otherDetails) || other.otherDetails == otherDetails)&&const DeepCollectionEquality().equals(other.additionalCharges, additionalCharges)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.securityPaymentAccountId, securityPaymentAccountId) || other.securityPaymentAccountId == securityPaymentAccountId)&&const DeepCollectionEquality().equals(other.payments, payments));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,clientId,staffId,client,address,bookedDate,pickupDate,returnDate,coolingPeriodDate,advanceAmount,securityAmount,discountAmount,purchaseMode,description,paymentMethod,deliveryStatus,bookingStatus,const DeepCollectionEquality().hash(products),otherDetails,const DeepCollectionEquality().hash(additionalCharges),serviceId,pickupTime,returnTime,sendPdfToWhatsApp,runningKilometers,coolingPeriodType,securityPaymentMethod]);
+int get hashCode => Object.hashAll([runtimeType,clientId,staffId,client,address,bookedDate,pickupDate,returnDate,coolingPeriodDate,advanceAmount,securityAmount,discountAmount,purchaseMode,description,deliveryStatus,bookingStatus,const DeepCollectionEquality().hash(products),otherDetails,const DeepCollectionEquality().hash(additionalCharges),serviceId,pickupTime,returnTime,sendPdfToWhatsApp,runningKilometers,coolingPeriodType,securityPaymentAccountId,const DeepCollectionEquality().hash(payments)]);
 
 @override
 String toString() {
-  return 'BookingRequestEntity(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp, runningKilometers: $runningKilometers, coolingPeriodType: $coolingPeriodType, securityPaymentMethod: $securityPaymentMethod)';
+  return 'BookingRequestEntity(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp, runningKilometers: $runningKilometers, coolingPeriodType: $coolingPeriodType, securityPaymentAccountId: $securityPaymentAccountId, payments: $payments)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $BookingRequestEntityCopyWith<$Res>  {
   factory $BookingRequestEntityCopyWith(BookingRequestEntity value, $Res Function(BookingRequestEntity) _then) = _$BookingRequestEntityCopyWithImpl;
 @useResult
 $Res call({
- int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers, String? coolingPeriodType, PaymentMethod? securityPaymentMethod
+ int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers, String? coolingPeriodType, int? securityPaymentAccountId, List<BookingPaymentRequestEntity>? payments
 });
 
 
@@ -62,7 +62,7 @@ class _$BookingRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? clientId = freezed,Object? staffId = freezed,Object? client = freezed,Object? address = freezed,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? coolingPeriodDate = freezed,Object? advanceAmount = freezed,Object? securityAmount = freezed,Object? discountAmount = freezed,Object? purchaseMode = freezed,Object? description = freezed,Object? paymentMethod = freezed,Object? deliveryStatus = freezed,Object? bookingStatus = freezed,Object? products = freezed,Object? otherDetails = freezed,Object? additionalCharges = freezed,Object? serviceId = freezed,Object? pickupTime = freezed,Object? returnTime = freezed,Object? sendPdfToWhatsApp = null,Object? runningKilometers = freezed,Object? coolingPeriodType = freezed,Object? securityPaymentMethod = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? clientId = freezed,Object? staffId = freezed,Object? client = freezed,Object? address = freezed,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? coolingPeriodDate = freezed,Object? advanceAmount = freezed,Object? securityAmount = freezed,Object? discountAmount = freezed,Object? purchaseMode = freezed,Object? description = freezed,Object? deliveryStatus = freezed,Object? bookingStatus = freezed,Object? products = freezed,Object? otherDetails = freezed,Object? additionalCharges = freezed,Object? serviceId = freezed,Object? pickupTime = freezed,Object? returnTime = freezed,Object? sendPdfToWhatsApp = null,Object? runningKilometers = freezed,Object? coolingPeriodType = freezed,Object? securityPaymentAccountId = freezed,Object? payments = freezed,}) {
   return _then(_self.copyWith(
 clientId: freezed == clientId ? _self.clientId : clientId // ignore: cast_nullable_to_non_nullable
 as int?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
@@ -77,8 +77,7 @@ as int?,securityAmount: freezed == securityAmount ? _self.securityAmount : secur
 as int?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
 as int?,purchaseMode: freezed == purchaseMode ? _self.purchaseMode : purchaseMode // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
+as String?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
 as DeliveryStatus?,bookingStatus: freezed == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
 as BookingStatus?,products: freezed == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
 as List<ProductSelectedEntity>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
@@ -89,8 +88,9 @@ as TimeOfDay?,returnTime: freezed == returnTime ? _self.returnTime : returnTime 
 as TimeOfDay?,sendPdfToWhatsApp: null == sendPdfToWhatsApp ? _self.sendPdfToWhatsApp : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
 as bool,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,securityPaymentMethod: freezed == securityPaymentMethod ? _self.securityPaymentMethod : securityPaymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod?,
+as String?,securityPaymentAccountId: freezed == securityPaymentAccountId ? _self.securityPaymentAccountId : securityPaymentAccountId // ignore: cast_nullable_to_non_nullable
+as int?,payments: freezed == payments ? _self.payments : payments // ignore: cast_nullable_to_non_nullable
+as List<BookingPaymentRequestEntity>?,
   ));
 }
 /// Create a copy of BookingRequestEntity
@@ -199,10 +199,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  PaymentMethod? securityPaymentMethod)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  int? securityPaymentAccountId,  List<BookingPaymentRequestEntity>? payments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity() when $default != null:
-return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentMethod);case _:
+return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentAccountId,_that.payments);case _:
   return orElse();
 
 }
@@ -220,10 +220,10 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  PaymentMethod? securityPaymentMethod)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  int? securityPaymentAccountId,  List<BookingPaymentRequestEntity>? payments)  $default,) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity():
-return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentMethod);case _:
+return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentAccountId,_that.payments);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -240,10 +240,10 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  PaymentMethod? paymentMethod,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  PaymentMethod? securityPaymentMethod)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? clientId,  int? staffId,  ClientRequestEntity? client,  String? address,  String? bookedDate,  String? pickupDate,  String? returnDate,  String? coolingPeriodDate,  int? advanceAmount,  int? securityAmount,  int? discountAmount,  String? purchaseMode,  String? description,  DeliveryStatus? deliveryStatus,  BookingStatus? bookingStatus,  List<ProductSelectedEntity>? products,  BookingOtherDetailsEntity? otherDetails,  List<AdditionalChargesEntity>? additionalCharges,  int? serviceId,  TimeOfDay? pickupTime,  TimeOfDay? returnTime,  bool sendPdfToWhatsApp,  String? runningKilometers,  String? coolingPeriodType,  int? securityPaymentAccountId,  List<BookingPaymentRequestEntity>? payments)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingRequestEntity() when $default != null:
-return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.paymentMethod,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentMethod);case _:
+return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bookedDate,_that.pickupDate,_that.returnDate,_that.coolingPeriodDate,_that.advanceAmount,_that.securityAmount,_that.discountAmount,_that.purchaseMode,_that.description,_that.deliveryStatus,_that.bookingStatus,_that.products,_that.otherDetails,_that.additionalCharges,_that.serviceId,_that.pickupTime,_that.returnTime,_that.sendPdfToWhatsApp,_that.runningKilometers,_that.coolingPeriodType,_that.securityPaymentAccountId,_that.payments);case _:
   return null;
 
 }
@@ -255,7 +255,7 @@ return $default(_that.clientId,_that.staffId,_that.client,_that.address,_that.bo
 
 
 class _BookingRequestEntity implements BookingRequestEntity {
-  const _BookingRequestEntity({this.clientId, this.staffId, this.client, this.address, this.bookedDate, this.pickupDate, this.returnDate, this.coolingPeriodDate, this.advanceAmount, this.securityAmount, this.discountAmount, this.purchaseMode, this.description, this.paymentMethod, this.deliveryStatus, this.bookingStatus, final  List<ProductSelectedEntity>? products, this.otherDetails, final  List<AdditionalChargesEntity>? additionalCharges, this.serviceId, this.pickupTime, this.returnTime, this.sendPdfToWhatsApp = false, this.runningKilometers, this.coolingPeriodType, this.securityPaymentMethod}): _products = products,_additionalCharges = additionalCharges;
+  const _BookingRequestEntity({this.clientId, this.staffId, this.client, this.address, this.bookedDate, this.pickupDate, this.returnDate, this.coolingPeriodDate, this.advanceAmount, this.securityAmount, this.discountAmount, this.purchaseMode, this.description, this.deliveryStatus, this.bookingStatus, final  List<ProductSelectedEntity>? products, this.otherDetails, final  List<AdditionalChargesEntity>? additionalCharges, this.serviceId, this.pickupTime, this.returnTime, this.sendPdfToWhatsApp = false, this.runningKilometers, this.coolingPeriodType, this.securityPaymentAccountId, final  List<BookingPaymentRequestEntity>? payments}): _products = products,_additionalCharges = additionalCharges,_payments = payments;
   
 
 @override final  int? clientId;
@@ -271,7 +271,6 @@ class _BookingRequestEntity implements BookingRequestEntity {
 @override final  int? discountAmount;
 @override final  String? purchaseMode;
 @override final  String? description;
-@override final  PaymentMethod? paymentMethod;
 @override final  DeliveryStatus? deliveryStatus;
 @override final  BookingStatus? bookingStatus;
  final  List<ProductSelectedEntity>? _products;
@@ -299,7 +298,16 @@ class _BookingRequestEntity implements BookingRequestEntity {
 @override@JsonKey() final  bool sendPdfToWhatsApp;
 @override final  String? runningKilometers;
 @override final  String? coolingPeriodType;
-@override final  PaymentMethod? securityPaymentMethod;
+@override final  int? securityPaymentAccountId;
+ final  List<BookingPaymentRequestEntity>? _payments;
+@override List<BookingPaymentRequestEntity>? get payments {
+  final value = _payments;
+  if (value == null) return null;
+  if (_payments is EqualUnmodifiableListView) return _payments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of BookingRequestEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -311,16 +319,16 @@ _$BookingRequestEntityCopyWith<_BookingRequestEntity> get copyWith => __$Booking
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingRequestEntity&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.client, client) || other.client == client)&&(identical(other.address, address) || other.address == address)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.coolingPeriodDate, coolingPeriodDate) || other.coolingPeriodDate == coolingPeriodDate)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.description, description) || other.description == description)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.otherDetails, otherDetails) || other.otherDetails == otherDetails)&&const DeepCollectionEquality().equals(other._additionalCharges, _additionalCharges)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.securityPaymentMethod, securityPaymentMethod) || other.securityPaymentMethod == securityPaymentMethod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingRequestEntity&&(identical(other.clientId, clientId) || other.clientId == clientId)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.client, client) || other.client == client)&&(identical(other.address, address) || other.address == address)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.coolingPeriodDate, coolingPeriodDate) || other.coolingPeriodDate == coolingPeriodDate)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.description, description) || other.description == description)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.otherDetails, otherDetails) || other.otherDetails == otherDetails)&&const DeepCollectionEquality().equals(other._additionalCharges, _additionalCharges)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.securityPaymentAccountId, securityPaymentAccountId) || other.securityPaymentAccountId == securityPaymentAccountId)&&const DeepCollectionEquality().equals(other._payments, _payments));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,clientId,staffId,client,address,bookedDate,pickupDate,returnDate,coolingPeriodDate,advanceAmount,securityAmount,discountAmount,purchaseMode,description,paymentMethod,deliveryStatus,bookingStatus,const DeepCollectionEquality().hash(_products),otherDetails,const DeepCollectionEquality().hash(_additionalCharges),serviceId,pickupTime,returnTime,sendPdfToWhatsApp,runningKilometers,coolingPeriodType,securityPaymentMethod]);
+int get hashCode => Object.hashAll([runtimeType,clientId,staffId,client,address,bookedDate,pickupDate,returnDate,coolingPeriodDate,advanceAmount,securityAmount,discountAmount,purchaseMode,description,deliveryStatus,bookingStatus,const DeepCollectionEquality().hash(_products),otherDetails,const DeepCollectionEquality().hash(_additionalCharges),serviceId,pickupTime,returnTime,sendPdfToWhatsApp,runningKilometers,coolingPeriodType,securityPaymentAccountId,const DeepCollectionEquality().hash(_payments)]);
 
 @override
 String toString() {
-  return 'BookingRequestEntity(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, paymentMethod: $paymentMethod, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp, runningKilometers: $runningKilometers, coolingPeriodType: $coolingPeriodType, securityPaymentMethod: $securityPaymentMethod)';
+  return 'BookingRequestEntity(clientId: $clientId, staffId: $staffId, client: $client, address: $address, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, coolingPeriodDate: $coolingPeriodDate, advanceAmount: $advanceAmount, securityAmount: $securityAmount, discountAmount: $discountAmount, purchaseMode: $purchaseMode, description: $description, deliveryStatus: $deliveryStatus, bookingStatus: $bookingStatus, products: $products, otherDetails: $otherDetails, additionalCharges: $additionalCharges, serviceId: $serviceId, pickupTime: $pickupTime, returnTime: $returnTime, sendPdfToWhatsApp: $sendPdfToWhatsApp, runningKilometers: $runningKilometers, coolingPeriodType: $coolingPeriodType, securityPaymentAccountId: $securityPaymentAccountId, payments: $payments)';
 }
 
 
@@ -331,7 +339,7 @@ abstract mixin class _$BookingRequestEntityCopyWith<$Res> implements $BookingReq
   factory _$BookingRequestEntityCopyWith(_BookingRequestEntity value, $Res Function(_BookingRequestEntity) _then) = __$BookingRequestEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, PaymentMethod? paymentMethod, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers, String? coolingPeriodType, PaymentMethod? securityPaymentMethod
+ int? clientId, int? staffId, ClientRequestEntity? client, String? address, String? bookedDate, String? pickupDate, String? returnDate, String? coolingPeriodDate, int? advanceAmount, int? securityAmount, int? discountAmount, String? purchaseMode, String? description, DeliveryStatus? deliveryStatus, BookingStatus? bookingStatus, List<ProductSelectedEntity>? products, BookingOtherDetailsEntity? otherDetails, List<AdditionalChargesEntity>? additionalCharges, int? serviceId, TimeOfDay? pickupTime, TimeOfDay? returnTime, bool sendPdfToWhatsApp, String? runningKilometers, String? coolingPeriodType, int? securityPaymentAccountId, List<BookingPaymentRequestEntity>? payments
 });
 
 
@@ -348,7 +356,7 @@ class __$BookingRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? clientId = freezed,Object? staffId = freezed,Object? client = freezed,Object? address = freezed,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? coolingPeriodDate = freezed,Object? advanceAmount = freezed,Object? securityAmount = freezed,Object? discountAmount = freezed,Object? purchaseMode = freezed,Object? description = freezed,Object? paymentMethod = freezed,Object? deliveryStatus = freezed,Object? bookingStatus = freezed,Object? products = freezed,Object? otherDetails = freezed,Object? additionalCharges = freezed,Object? serviceId = freezed,Object? pickupTime = freezed,Object? returnTime = freezed,Object? sendPdfToWhatsApp = null,Object? runningKilometers = freezed,Object? coolingPeriodType = freezed,Object? securityPaymentMethod = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? clientId = freezed,Object? staffId = freezed,Object? client = freezed,Object? address = freezed,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? coolingPeriodDate = freezed,Object? advanceAmount = freezed,Object? securityAmount = freezed,Object? discountAmount = freezed,Object? purchaseMode = freezed,Object? description = freezed,Object? deliveryStatus = freezed,Object? bookingStatus = freezed,Object? products = freezed,Object? otherDetails = freezed,Object? additionalCharges = freezed,Object? serviceId = freezed,Object? pickupTime = freezed,Object? returnTime = freezed,Object? sendPdfToWhatsApp = null,Object? runningKilometers = freezed,Object? coolingPeriodType = freezed,Object? securityPaymentAccountId = freezed,Object? payments = freezed,}) {
   return _then(_BookingRequestEntity(
 clientId: freezed == clientId ? _self.clientId : clientId // ignore: cast_nullable_to_non_nullable
 as int?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
@@ -363,8 +371,7 @@ as int?,securityAmount: freezed == securityAmount ? _self.securityAmount : secur
 as int?,discountAmount: freezed == discountAmount ? _self.discountAmount : discountAmount // ignore: cast_nullable_to_non_nullable
 as int?,purchaseMode: freezed == purchaseMode ? _self.purchaseMode : purchaseMode // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,paymentMethod: freezed == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
+as String?,deliveryStatus: freezed == deliveryStatus ? _self.deliveryStatus : deliveryStatus // ignore: cast_nullable_to_non_nullable
 as DeliveryStatus?,bookingStatus: freezed == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
 as BookingStatus?,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
 as List<ProductSelectedEntity>?,otherDetails: freezed == otherDetails ? _self.otherDetails : otherDetails // ignore: cast_nullable_to_non_nullable
@@ -375,8 +382,9 @@ as TimeOfDay?,returnTime: freezed == returnTime ? _self.returnTime : returnTime 
 as TimeOfDay?,sendPdfToWhatsApp: null == sendPdfToWhatsApp ? _self.sendPdfToWhatsApp : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
 as bool,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,securityPaymentMethod: freezed == securityPaymentMethod ? _self.securityPaymentMethod : securityPaymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod?,
+as String?,securityPaymentAccountId: freezed == securityPaymentAccountId ? _self.securityPaymentAccountId : securityPaymentAccountId // ignore: cast_nullable_to_non_nullable
+as int?,payments: freezed == payments ? _self._payments : payments // ignore: cast_nullable_to_non_nullable
+as List<BookingPaymentRequestEntity>?,
   ));
 }
 

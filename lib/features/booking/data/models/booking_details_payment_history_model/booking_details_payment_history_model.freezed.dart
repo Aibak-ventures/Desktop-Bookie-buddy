@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingDetailsPaymentHistoryModel {
 
-@JsonKey(name: 'id') int? get id;@JsonKey(name: 'amount') int get amount;@JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson) PaymentMethod get paymentMethod;@JsonKey(name: 'datetime', readValue: _readDateTime) String get dateTime;
+@JsonKey(name: 'id') int? get id;@JsonKey(name: 'amount') int get amount;@JsonKey(name: 'account_name') String? get accountName;@JsonKey(name: 'account_id') int? get accountId;@JsonKey(name: 'created_at') String get createdAt;
 /// Create a copy of BookingDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BookingDetailsPaymentHistoryModelCopyWith<BookingDetailsPaymentHistoryModel> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,paymentMethod,dateTime);
+int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt);
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, paymentMethod: $paymentMethod, dateTime: $dateTime)';
+  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $BookingDetailsPaymentHistoryModelCopyWith<$Res>  {
   factory $BookingDetailsPaymentHistoryModelCopyWith(BookingDetailsPaymentHistoryModel value, $Res Function(BookingDetailsPaymentHistoryModel) _then) = _$BookingDetailsPaymentHistoryModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'amount') int amount,@JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson) PaymentMethod paymentMethod,@JsonKey(name: 'datetime', readValue: _readDateTime) String dateTime
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'amount') int amount,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -65,12 +65,13 @@ class _$BookingDetailsPaymentHistoryModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? amount = null,Object? paymentMethod = null,Object? dateTime = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson)  PaymentMethod paymentMethod, @JsonKey(name: 'datetime', readValue: _readDateTime)  String dateTime)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingDetailsPaymentHistoryModel() when $default != null:
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson)  PaymentMethod paymentMethod, @JsonKey(name: 'datetime', readValue: _readDateTime)  String dateTime)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _BookingDetailsPaymentHistoryModel():
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson)  PaymentMethod paymentMethod, @JsonKey(name: 'datetime', readValue: _readDateTime)  String dateTime)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int? id, @JsonKey(name: 'amount')  int amount, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingDetailsPaymentHistoryModel() when $default != null:
-return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _:
+return $default(_that.id,_that.amount,_that.accountName,_that.accountId,_that.createdAt);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.id,_that.amount,_that.paymentMethod,_that.dateTime);case _
 @JsonSerializable()
 
 class _BookingDetailsPaymentHistoryModel implements BookingDetailsPaymentHistoryModel {
-  const _BookingDetailsPaymentHistoryModel({@JsonKey(name: 'id') this.id, @JsonKey(name: 'amount') required this.amount, @JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson) required this.paymentMethod, @JsonKey(name: 'datetime', readValue: _readDateTime) required this.dateTime});
+  const _BookingDetailsPaymentHistoryModel({@JsonKey(name: 'id') this.id, @JsonKey(name: 'amount') required this.amount, @JsonKey(name: 'account_name') this.accountName, @JsonKey(name: 'account_id') this.accountId, @JsonKey(name: 'created_at') required this.createdAt});
   factory _BookingDetailsPaymentHistoryModel.fromJson(Map<String, dynamic> json) => _$BookingDetailsPaymentHistoryModelFromJson(json);
 
 @override@JsonKey(name: 'id') final  int? id;
 @override@JsonKey(name: 'amount') final  int amount;
-@override@JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson) final  PaymentMethod paymentMethod;
-@override@JsonKey(name: 'datetime', readValue: _readDateTime) final  String dateTime;
+@override@JsonKey(name: 'account_name') final  String? accountName;
+@override@JsonKey(name: 'account_id') final  int? accountId;
+@override@JsonKey(name: 'created_at') final  String createdAt;
 
 /// Create a copy of BookingDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.dateTime, dateTime) || other.dateTime == dateTime));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,paymentMethod,dateTime);
+int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt);
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, paymentMethod: $paymentMethod, dateTime: $dateTime)';
+  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$BookingDetailsPaymentHistoryModelCopyWith<$Res> implement
   factory _$BookingDetailsPaymentHistoryModelCopyWith(_BookingDetailsPaymentHistoryModel value, $Res Function(_BookingDetailsPaymentHistoryModel) _then) = __$BookingDetailsPaymentHistoryModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int? id,@JsonKey(name: 'amount') int amount,@JsonKey(name: 'payment_method', defaultValue: PaymentMethod.cash, fromJson: PaymentMethod.fromJson) PaymentMethod paymentMethod,@JsonKey(name: 'datetime', readValue: _readDateTime) String dateTime
+@JsonKey(name: 'id') int? id,@JsonKey(name: 'amount') int amount,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'created_at') String createdAt
 });
 
 
@@ -270,12 +272,13 @@ class __$BookingDetailsPaymentHistoryModelCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? amount = null,Object? paymentMethod = null,Object? dateTime = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? createdAt = null,}) {
   return _then(_BookingDetailsPaymentHistoryModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,dateTime: null == dateTime ? _self.dateTime : dateTime // ignore: cast_nullable_to_non_nullable
+as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

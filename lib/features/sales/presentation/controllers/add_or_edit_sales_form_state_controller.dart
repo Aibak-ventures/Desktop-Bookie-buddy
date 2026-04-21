@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
@@ -37,7 +37,7 @@ class AddOrEditSalesFormStateController {
 
   final stockCountDecreaseNotifier = ValueNotifier<bool>(true);
 
-  final paymentMethodNotifier = ValueNotifier(PaymentMethod.upi);
+  final selectedAccountNotifier = ValueNotifier<AccountEntity?>(null);
 
   final isSharingPdfToWhatsAppNotifier = ValueNotifier<bool>(false);
 
@@ -53,7 +53,7 @@ class AddOrEditSalesFormStateController {
     selectedProductsNotifier.dispose();
     // isClientSearchEnabledNotifier.dispose();
     stockCountDecreaseNotifier.dispose();
-    paymentMethodNotifier.dispose();
+    selectedAccountNotifier.dispose();
     isSharingPdfToWhatsAppNotifier.dispose();
     focusGuard.dispose();
   }
@@ -65,7 +65,7 @@ class AddOrEditSalesFormStateController {
     staffNameController.text = saleDetails.staffName ?? 'Staff Name';
 
     // nameController.text = saleDetails.client.name;
-    paymentMethodNotifier.value = saleDetails.paymentMethod;
+    // accountId is passed to AccountSelectionField via initialAccountId for auto-selection
     clientPhoneController.text = saleDetails.clientPhone.toString();
     // if (saleDetails.client.phone2 != null) {
     //   phone2Controller.text = saleDetails.client.phone2.toString();
@@ -163,6 +163,18 @@ class AddOrEditSalesFormStateController {
       return null;
     }
 
+    if ((!isEditMode && selectedAccountNotifier.value?.id == null) ||
+        (isEditMode &&
+            selectedAccountNotifier.value?.id == null &&
+            saleDetails.accountId == null)) {
+      context.showSnackBar(
+        'Please select a payment option',
+        title: 'Payment Option Required',
+        isError: true,
+      );
+      return null;
+    }
+
     // Fetch original sale details from the ancestor widget
     final original = saleDetails;
 
@@ -190,8 +202,8 @@ class AddOrEditSalesFormStateController {
       // Compare discount
       final discountAmount = discountController.text.trim().toIntOrNull() ?? 0;
       final discountChanged = discountAmount != original.discountAmount;
-      final paymentMethodChanged =
-          paymentMethodNotifier.value != original.paymentMethod;
+      final accountChanged =
+          selectedAccountNotifier.value?.id != original.accountId;
 
       // Compare products (id + variantId + quantity + amount)
       bool productsChanged = false;
@@ -225,7 +237,7 @@ class AddOrEditSalesFormStateController {
           addressChanged ||
           descriptionChanged ||
           discountChanged ||
-          paymentMethodChanged ||
+          accountChanged ||
           isStaffChanged ||
           productsChanged)) {
         context
@@ -253,9 +265,7 @@ class AddOrEditSalesFormStateController {
             : null,
         discountAmount: discountChanged ? discountAmount : null,
 
-        paymentMethod: paymentMethodChanged
-            ? paymentMethodNotifier.value
-            : null,
+        accountId: accountChanged ? selectedAccountNotifier.value?.id : null,
       );
     }
     return SalesRequestEntity(
@@ -268,7 +278,7 @@ class AddOrEditSalesFormStateController {
       description: descriptionController.text.trim(),
       discountAmount: discountAmount,
       paidAmount: totalAmount - discountAmount,
-      paymentMethod: paymentMethodNotifier.value,
+      accountId: selectedAccountNotifier.value?.id,
       sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
     );
   }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SaleDetailsModel {
 
- int get id;@JsonKey(name: 'client') ClientModel? get client;@JsonKey(name: 'client_phone') dynamic get clientPhone;@JsonKey(name: 'address', defaultValue: '') String get address;@JsonKey(name: 'description') String get description;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at', defaultValue: '') String get createdAt;@JsonKey(name: 'total_amount') int get totalAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'shop_sale_id', defaultValue: '') String get invoiceId;@JsonKey(name: 'balance_due') int get balanceDueAmount;@JsonKey(name: 'items') List<ProductSaleInfoModel> get products;@JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue) PaymentMethod get paymentMethod;@JsonKey(name: 'staff_id') int? get staffId;@JsonKey(name: 'staff_name') String? get staffName;
+ int get id;@JsonKey(name: 'client') ClientModel? get client;@JsonKey(name: 'client_phone') dynamic get clientPhone;@JsonKey(name: 'address', defaultValue: '') String get address;@JsonKey(name: 'description') String get description;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at', defaultValue: '') String get createdAt;@JsonKey(name: 'total_amount') int get totalAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'shop_sale_id', defaultValue: '') String get invoiceId;@JsonKey(name: 'balance_due') int get balanceDueAmount;@JsonKey(name: 'items') List<ProductSaleInfoModel> get products;@JsonKey(name: 'account_id', readValue: _readAccountId) int? get accountId;@JsonKey(name: 'account_name', readValue: _readAccountName) String? get accountName;@JsonKey(name: 'staff_id') int? get staffId;@JsonKey(name: 'staff_name') String? get staffName;
 /// Create a copy of SaleDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SaleDetailsModelCopyWith<SaleDetailsModel> get copyWith => _$SaleDetailsModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(products),paymentMethod,staffId,staffName);
+int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(products),accountId,accountName,staffId,staffName);
 
 @override
 String toString() {
-  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, paymentMethod: $paymentMethod, staffId: $staffId, staffName: $staffName)';
+  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SaleDetailsModelCopyWith<$Res>  {
   factory $SaleDetailsModelCopyWith(SaleDetailsModel value, $Res Function(SaleDetailsModel) _then) = _$SaleDetailsModelCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'client') ClientModel? client,@JsonKey(name: 'client_phone') dynamic clientPhone,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'description') String description,@JsonKey(name: 'sale_date') String saleDate,@JsonKey(name: 'created_at', defaultValue: '') String createdAt,@JsonKey(name: 'total_amount') int totalAmount,@JsonKey(name: 'discount') int discountAmount,@JsonKey(name: 'paid_amount') int paidAmount,@JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,@JsonKey(name: 'balance_due') int balanceDueAmount,@JsonKey(name: 'items') List<ProductSaleInfoModel> products,@JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue) PaymentMethod paymentMethod,@JsonKey(name: 'staff_id') int? staffId,@JsonKey(name: 'staff_name') String? staffName
+ int id,@JsonKey(name: 'client') ClientModel? client,@JsonKey(name: 'client_phone') dynamic clientPhone,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'description') String description,@JsonKey(name: 'sale_date') String saleDate,@JsonKey(name: 'created_at', defaultValue: '') String createdAt,@JsonKey(name: 'total_amount') int totalAmount,@JsonKey(name: 'discount') int discountAmount,@JsonKey(name: 'paid_amount') int paidAmount,@JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,@JsonKey(name: 'balance_due') int balanceDueAmount,@JsonKey(name: 'items') List<ProductSaleInfoModel> products,@JsonKey(name: 'account_id', readValue: _readAccountId) int? accountId,@JsonKey(name: 'account_name', readValue: _readAccountName) String? accountName,@JsonKey(name: 'staff_id') int? staffId,@JsonKey(name: 'staff_name') String? staffName
 });
 
 
@@ -65,7 +65,7 @@ class _$SaleDetailsModelCopyWithImpl<$Res>
 
 /// Create a copy of SaleDetailsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? paymentMethod = null,Object? staffId = freezed,Object? staffName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,client: freezed == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
@@ -80,8 +80,9 @@ as int,paidAmount: null == paidAmount ? _self.paidAmount : paidAmount // ignore:
 as int,invoiceId: null == invoiceId ? _self.invoiceId : invoiceId // ignore: cast_nullable_to_non_nullable
 as String,balanceDueAmount: null == balanceDueAmount ? _self.balanceDueAmount : balanceDueAmount // ignore: cast_nullable_to_non_nullable
 as int,products: null == products ? _self.products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSaleInfoModel>,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
+as List<ProductSaleInfoModel>,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -180,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue)  PaymentMethod paymentMethod, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'account_id', readValue: _readAccountId)  int? accountId, @JsonKey(name: 'account_name', readValue: _readAccountName)  String? accountName, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SaleDetailsModel() when $default != null:
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.paymentMethod,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
   return orElse();
 
 }
@@ -201,10 +202,10 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue)  PaymentMethod paymentMethod, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'account_id', readValue: _readAccountId)  int? accountId, @JsonKey(name: 'account_name', readValue: _readAccountName)  String? accountName, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsModel():
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.paymentMethod,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -221,10 +222,10 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue)  PaymentMethod paymentMethod, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'client')  ClientModel? client, @JsonKey(name: 'client_phone')  dynamic clientPhone, @JsonKey(name: 'address', defaultValue: '')  String address, @JsonKey(name: 'description')  String description, @JsonKey(name: 'sale_date')  String saleDate, @JsonKey(name: 'created_at', defaultValue: '')  String createdAt, @JsonKey(name: 'total_amount')  int totalAmount, @JsonKey(name: 'discount')  int discountAmount, @JsonKey(name: 'paid_amount')  int paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '')  String invoiceId, @JsonKey(name: 'balance_due')  int balanceDueAmount, @JsonKey(name: 'items')  List<ProductSaleInfoModel> products, @JsonKey(name: 'account_id', readValue: _readAccountId)  int? accountId, @JsonKey(name: 'account_name', readValue: _readAccountName)  String? accountName, @JsonKey(name: 'staff_id')  int? staffId, @JsonKey(name: 'staff_name')  String? staffName)?  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsModel() when $default != null:
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.paymentMethod,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
   return null;
 
 }
@@ -236,7 +237,7 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 @JsonSerializable()
 
 class _SaleDetailsModel implements SaleDetailsModel {
-  const _SaleDetailsModel({required this.id, @JsonKey(name: 'client') this.client, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'address', defaultValue: '') required this.address, @JsonKey(name: 'description') required this.description, @JsonKey(name: 'sale_date') required this.saleDate, @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt, @JsonKey(name: 'total_amount') required this.totalAmount, @JsonKey(name: 'discount') required this.discountAmount, @JsonKey(name: 'paid_amount') required this.paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId, @JsonKey(name: 'balance_due') required this.balanceDueAmount, @JsonKey(name: 'items') required final  List<ProductSaleInfoModel> products, @JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue) this.paymentMethod = PaymentMethod.cash, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'staff_name') this.staffName}): _products = products;
+  const _SaleDetailsModel({required this.id, @JsonKey(name: 'client') this.client, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'address', defaultValue: '') required this.address, @JsonKey(name: 'description') required this.description, @JsonKey(name: 'sale_date') required this.saleDate, @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt, @JsonKey(name: 'total_amount') required this.totalAmount, @JsonKey(name: 'discount') required this.discountAmount, @JsonKey(name: 'paid_amount') required this.paidAmount, @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId, @JsonKey(name: 'balance_due') required this.balanceDueAmount, @JsonKey(name: 'items') required final  List<ProductSaleInfoModel> products, @JsonKey(name: 'account_id', readValue: _readAccountId) this.accountId, @JsonKey(name: 'account_name', readValue: _readAccountName) this.accountName, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'staff_name') this.staffName}): _products = products;
   factory _SaleDetailsModel.fromJson(Map<String, dynamic> json) => _$SaleDetailsModelFromJson(json);
 
 @override final  int id;
@@ -258,7 +259,8 @@ class _SaleDetailsModel implements SaleDetailsModel {
   return EqualUnmodifiableListView(_products);
 }
 
-@override@JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue) final  PaymentMethod paymentMethod;
+@override@JsonKey(name: 'account_id', readValue: _readAccountId) final  int? accountId;
+@override@JsonKey(name: 'account_name', readValue: _readAccountName) final  String? accountName;
 @override@JsonKey(name: 'staff_id') final  int? staffId;
 @override@JsonKey(name: 'staff_name') final  String? staffName;
 
@@ -275,16 +277,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),paymentMethod,staffId,staffName);
+int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),accountId,accountName,staffId,staffName);
 
 @override
 String toString() {
-  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, paymentMethod: $paymentMethod, staffId: $staffId, staffName: $staffName)';
+  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName)';
 }
 
 
@@ -295,7 +297,7 @@ abstract mixin class _$SaleDetailsModelCopyWith<$Res> implements $SaleDetailsMod
   factory _$SaleDetailsModelCopyWith(_SaleDetailsModel value, $Res Function(_SaleDetailsModel) _then) = __$SaleDetailsModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'client') ClientModel? client,@JsonKey(name: 'client_phone') dynamic clientPhone,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'description') String description,@JsonKey(name: 'sale_date') String saleDate,@JsonKey(name: 'created_at', defaultValue: '') String createdAt,@JsonKey(name: 'total_amount') int totalAmount,@JsonKey(name: 'discount') int discountAmount,@JsonKey(name: 'paid_amount') int paidAmount,@JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,@JsonKey(name: 'balance_due') int balanceDueAmount,@JsonKey(name: 'items') List<ProductSaleInfoModel> products,@JsonKey(name: 'method', fromJson: PaymentMethod.fromJson, readValue: _paymentMethodReadValue) PaymentMethod paymentMethod,@JsonKey(name: 'staff_id') int? staffId,@JsonKey(name: 'staff_name') String? staffName
+ int id,@JsonKey(name: 'client') ClientModel? client,@JsonKey(name: 'client_phone') dynamic clientPhone,@JsonKey(name: 'address', defaultValue: '') String address,@JsonKey(name: 'description') String description,@JsonKey(name: 'sale_date') String saleDate,@JsonKey(name: 'created_at', defaultValue: '') String createdAt,@JsonKey(name: 'total_amount') int totalAmount,@JsonKey(name: 'discount') int discountAmount,@JsonKey(name: 'paid_amount') int paidAmount,@JsonKey(name: 'shop_sale_id', defaultValue: '') String invoiceId,@JsonKey(name: 'balance_due') int balanceDueAmount,@JsonKey(name: 'items') List<ProductSaleInfoModel> products,@JsonKey(name: 'account_id', readValue: _readAccountId) int? accountId,@JsonKey(name: 'account_name', readValue: _readAccountName) String? accountName,@JsonKey(name: 'staff_id') int? staffId,@JsonKey(name: 'staff_name') String? staffName
 });
 
 
@@ -312,7 +314,7 @@ class __$SaleDetailsModelCopyWithImpl<$Res>
 
 /// Create a copy of SaleDetailsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? paymentMethod = null,Object? staffId = freezed,Object? staffName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,}) {
   return _then(_SaleDetailsModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,client: freezed == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
@@ -327,8 +329,9 @@ as int,paidAmount: null == paidAmount ? _self.paidAmount : paidAmount // ignore:
 as int,invoiceId: null == invoiceId ? _self.invoiceId : invoiceId // ignore: cast_nullable_to_non_nullable
 as String,balanceDueAmount: null == balanceDueAmount ? _self.balanceDueAmount : balanceDueAmount // ignore: cast_nullable_to_non_nullable
 as int,products: null == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
-as List<ProductSaleInfoModel>,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
+as List<ProductSaleInfoModel>,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
+as int?,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
+as String?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
