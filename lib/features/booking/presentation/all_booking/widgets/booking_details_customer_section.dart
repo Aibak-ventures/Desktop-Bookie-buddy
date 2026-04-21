@@ -1,7 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -58,10 +57,7 @@ class BookingDetailsCustomerSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildInfoCell(
-                      label: 'Name',
-                      value: booking.client.name,
-                    ),
+                    _buildInfoCell(label: 'Name', value: booking.client.name),
                     if (hasPlace) ...[
                       const SizedBox(height: 12),
                       _buildInfoCell(label: 'Place', value: place),

@@ -94,10 +94,14 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              if (isCompleted || isCancelled || status == DeliveryStatus.returned)
+              if (isCompleted ||
+                  isCancelled ||
+                  status == DeliveryStatus.returned)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: status.color.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(8),
@@ -135,17 +139,16 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                             context: context,
                             builder: (dialogContext) => CancelBookingDialog(
                               maxRefundAmount: booking.actualPaidAmount,
-                              onCancel: () =>
-                                  Navigator.of(dialogContext).pop(),
-                              onConfirm: (refundAmount, paymentMethod) {
+                              onCancel: () => Navigator.of(dialogContext).pop(),
+                              onConfirm: (refundAmount, accountId) {
                                 Navigator.of(dialogContext).pop();
                                 context.read<BookingDetailsBloc>().add(
-                                      BookingDetailsEvent.cancelBooking(
-                                        bookingId: booking.id,
-                                        refundAmount: refundAmount,
-                                        paymentMethod: paymentMethod,
-                                      ),
-                                    );
+                                  BookingDetailsEvent.cancelBooking(
+                                    bookingId: booking.id,
+                                    refundAmount: refundAmount,
+                                    accountId: accountId,
+                                  ),
+                                );
                               },
                             ),
                           );
@@ -176,17 +179,17 @@ class BookingDetailsHeaderSection extends StatelessWidget {
 
                     if (confirm == true && context.mounted) {
                       context.read<BookingDetailsBloc>().add(
-                            BookingDetailsEvent.updateDeliveryStatus(
-                              bookingId: booking.id,
-                              deliveryStatus: newStatus,
-                            ),
-                          );
+                        BookingDetailsEvent.updateDeliveryStatus(
+                          bookingId: booking.id,
+                          deliveryStatus: newStatus,
+                        ),
+                      );
                       context.read<AllBookingBloc>().add(
-                            AllBookingEvent.updateDeliveryStatus(
-                              bookingId: booking.id,
-                              deliveryStatus: newStatus,
-                            ),
-                          );
+                        AllBookingEvent.updateDeliveryStatus(
+                          bookingId: booking.id,
+                          deliveryStatus: newStatus,
+                        ),
+                      );
                     }
                   },
                   itemBuilder: (context) => DeliveryStatus.values.map((s) {
@@ -216,8 +219,10 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                     );
                   }).toList(),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: status.color.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(8),

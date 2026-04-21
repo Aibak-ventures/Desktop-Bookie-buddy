@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
@@ -124,7 +123,7 @@ class BookingDetailsBloc
       await _updatePayment(
         bookingId: event.bookingId,
         amount: event.amount,
-        paymentMethod: event.paymentMethod,
+        accountId: event.accountId,
       );
 
       log('✅ Payment updated, refetching booking details...');
@@ -171,7 +170,7 @@ class BookingDetailsBloc
       await _cancelBooking(
         bookingId: event.bookingId,
         refundAmount: event.refundAmount,
-        paymentMethod: event.paymentMethod,
+        accountId: event.accountId,
       );
       emit(const _Success('Booking cancelled successfully', needRefresh: true));
     } catch (e, stack) {

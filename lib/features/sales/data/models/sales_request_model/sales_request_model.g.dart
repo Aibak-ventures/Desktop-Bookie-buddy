@@ -20,9 +20,7 @@ _SalesRequestModel _$SalesRequestModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
       discountAmount: (json['discount'] as num?)?.toInt(),
       paidAmount: (json['paid_amount'] as num?)?.toInt(),
-      paymentMethod:
-          $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']) ??
-          PaymentMethod.cash,
+      accountId: (json['account_id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
@@ -36,11 +34,6 @@ Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
       'description': ?instance.description,
       'discount': ?instance.discountAmount,
       'paid_amount': ?instance.paidAmount,
-      'payment_method': ?_paymentMethodToJson(instance.paymentMethod),
+      'account_id': ?instance.accountId,
       'send_invoice': instance.sendPdfToWhatsApp,
     };
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.upi: 'upi',
-  PaymentMethod.cash: 'cash',
-};

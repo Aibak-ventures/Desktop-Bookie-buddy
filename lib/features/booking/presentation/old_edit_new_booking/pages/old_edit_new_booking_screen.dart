@@ -5,7 +5,8 @@ import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
@@ -102,8 +103,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
-  PaymentMethod paymentMethod = PaymentMethod.upi;
-  PaymentMethod securityPaymentMethod = PaymentMethod.cash;
+  AccountEntity? selectedSecurityAccount;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool isDiscountPercentage = false;
   BookingStatus? bookingStatus; // Track booking status
@@ -160,8 +160,10 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
 
-  // State variables for payment method
-  // PaymentMethod _selectedPaymentMethod = PaymentMethod.cash;
+  // Inline editing state
+  int? _editingVariantId;
+  final _inlinePriceController = TextEditingController();
+  final _inlinePriceFocusNode = FocusNode();
 
   // UI Constants
   static const double _fieldSpacing = 8.0;
@@ -399,9 +401,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     if (booking.securityAmount != null) {
       securityAmountController.text = booking.securityAmount.toString();
     }
-    if (booking.securityPaymentMethod != null) {
-      securityPaymentMethod = booking.securityPaymentMethod!;
-    }
+    // selectedSecurityAccount is auto-selected via initialAccountId in AccountSelectionField
     if (booking.discountAmount != null) {
       discountAmountController.text = booking.discountAmount.toString();
     }
@@ -838,9 +838,13 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
           ? (productBase * discountInput / 100).round()
           : discountInput;
     }
+    // final advAmt = advanceAmountController.text.trim().toIntOrNull();
+    // if (advAmt != null && advAmt > 0 && selectedAdvanceAccount?.id != null) {
+    //   updates['account_id'] = selectedAdvanceAccount!.id;
+    // }
     final secAmt = securityAmountController.text.trim().toIntOrNull();
-    if (secAmt != null && secAmt > 0) {
-      updates['security_payment_method'] = securityPaymentMethod.value;
+    if (secAmt != null && secAmt > 0 && selectedSecurityAccount?.id != null) {
+      updates['security_account_id'] = selectedSecurityAccount!.id;
     }
 
     // Always include products (variants) to ensure server state matches current selection.
@@ -961,7 +965,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     // Set payment details
     advanceAmountController.text = sale.paidAmount.toString();
     discountAmountController.text = sale.discountAmount.toString();
-    paymentMethod = sale.paymentMethod;
+    // selectedAdvanceAccount is auto-selected via initialAccountId in AccountSelectionField
 
     // Set description
     if (sale.description.isNotEmpty) {
@@ -2381,9 +2385,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF6132E4),
-            ),
+            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
           ),
           child: child!,
         );
@@ -3165,7 +3167,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                           const SizedBox(width: 8),
                           Text(
                             hasCustomizations
-                                ? 'Edit customisation'
+                                ? 'Edit customization'
                                 : 'Add customization (Optional)',
                             style: const TextStyle(
                               fontSize: 14,
@@ -3467,6 +3469,18 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       }
     }
 
+    // Validate account selection when amounts are present
+    final isSaleType = selectedBookingType == BookingType.sales;
+    // final advAmt = advanceAmountController.text.trim().toIntOrNull() ?? 0;
+    final secAmt = securityAmountController.text.trim().toIntOrNull() ?? 0;
+    if (!isSaleType && secAmt > 0 && selectedSecurityAccount == null) {
+      context.showSnackBar(
+        'Please select a payment option for security amount',
+        isError: true,
+      );
+      return;
+    }
+
     // Show loading
     GlobalLoadingOverlay.show(context);
 
@@ -3594,7 +3608,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       sendPdfToWhatsApp: sendPdfToWhatsApp,
       products: products,
       paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
-      paymentMethod: paymentMethod,
+      // accountId: selectedAdvanceAccount?.id,
       discountAmount: discountAmountController.text.trim().toIntOrNull() ?? 0,
       stockCountDecrease: false,
     );
@@ -3694,7 +3708,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     children: [
                       Row(
                         children: [
-                        
                           const SizedBox(width: 4),
                           Flexible(
                             child: Text(
@@ -3711,26 +3724,27 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                        TextButton(
-  onPressed: () {
-    setState(() {
-      coolingPeriodMode = coolingPeriodMode.isAfter
-          ? CoolingPeriodMode.before
-          : CoolingPeriodMode.after;
-    });
-    _updateCoolingPeriod();
-    _loadAvailableProducts();
-    _checkSelectedProductsAvailability();
-  },
-  child: Text(
-    coolingPeriodMode.isAfter ? "After" : "Before",
-    style: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: Colors.black, // change if background is dark
-    ),
-  ),
-),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                coolingPeriodMode = coolingPeriodMode.isAfter
+                                    ? CoolingPeriodMode.before
+                                    : CoolingPeriodMode.after;
+                              });
+                              _updateCoolingPeriod();
+                              _loadAvailableProducts();
+                              _checkSelectedProductsAvailability();
+                            },
+                            child: Text(
+                              coolingPeriodMode.isAfter ? "After" : "Before",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors
+                                    .black, // change if background is dark
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -4024,12 +4038,20 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                         readOnly: isClientSelected,
                         textInputAction: TextInputAction.next,
                         onChanged: (phone) {
-                          final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
-                          cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                          final digits = phone.nsn.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          cachePhoneE164(
+                            rawPhoneNumber: digits,
+                            e164: phoneNumberToE164(phone),
+                          );
                           if (clientPhone1Controller.text != digits) {
                             clientPhone1Controller.value = TextEditingValue(
                               text: digits,
-                              selection: TextSelection.collapsed(offset: digits.length),
+                              selection: TextSelection.collapsed(
+                                offset: digits.length,
+                              ),
                             );
                           }
                         },
@@ -4048,12 +4070,20 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                         isRequired: false,
                         textInputAction: TextInputAction.next,
                         onChanged: (phone) {
-                          final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
-                          cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                          final digits = phone.nsn.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          cachePhoneE164(
+                            rawPhoneNumber: digits,
+                            e164: phoneNumberToE164(phone),
+                          );
                           if (clientPhone2Controller.text != digits) {
                             clientPhone2Controller.value = TextEditingValue(
                               text: digits,
-                              selection: TextSelection.collapsed(offset: digits.length),
+                              selection: TextSelection.collapsed(
+                                offset: digits.length,
+                              ),
                             );
                           }
                         },
@@ -4322,17 +4352,9 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Security Payment Method',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF3E3E3E),
-                              ),
-                            ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 8),
                             _buildSecurityPaymentMethodSelector(),
-                            const SizedBox(height: 14),
+                            const SizedBox(height: 8),
                           ],
                         );
                       }
@@ -4457,9 +4479,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                   ),
 
                   const SizedBox(height: 14),
-                  // Payment Method Selection - Hidden in edit mode
-                  // _buildPaymentMethodSection(),
-                  // const SizedBox(height: 14),
 
                   // Additional Charges
                   Row(
@@ -4571,71 +4590,14 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   }
 
   Widget _buildSecurityPaymentMethodSelector() {
-    return Row(
-      children: [
-        _buildSecurityMethodOption(PaymentMethod.upi, Icons.qr_code),
-        const SizedBox(width: 8),
-        _buildSecurityMethodOption(PaymentMethod.cash, Icons.money),
-      ],
+    return AccountSelectionField(
+      selectedAccount: selectedSecurityAccount,
+      width: context.screenWidth * 0.25,
+      initialAccountId: widget.bookingDetails?.securityAccountId,
+      onChanged: (account) => setState(() => selectedSecurityAccount = account),
+      label: 'Security Payment Option',
     );
   }
-
-  Widget _buildSecurityMethodOption(PaymentMethod method, IconData icon) {
-    final isSelected = securityPaymentMethod == method;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => securityPaymentMethod = method),
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
-              width: isSelected ? 1.5 : 1,
-            ),
-            borderRadius: BorderRadius.circular(8),
-            color: isSelected
-                ? const Color(0xFF6132E4).withOpacity(0.05)
-                : Colors.white,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                method.name,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade700,
-                ),
-              ),
-              if (isSelected) ...[
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.check_circle,
-                  size: 14,
-                  color: Color(0xFF6132E4),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
 }
 
 // Stateful widget for overlay search item with variant selection
