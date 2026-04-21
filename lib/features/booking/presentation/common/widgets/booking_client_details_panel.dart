@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -83,11 +84,25 @@ class _BookingClientDetailsPanelState
                         if (state.selectedClient != null) {
                           final client = state.selectedClient!;
                           form.clientNameController.text = client.name;
-                          form.clientPhone1Controller.text = client.phone1
-                              .toString();
-                          if (client.phone2 != null) {
-                            form.clientPhone2Controller.text = client.phone2
-                                .toString();
+                          final phone1 =
+                              extractPhoneFromE164(client.phone1E164);
+                          if (phone1.isNotEmpty) {
+                            cachePhoneE164(
+                              rawPhoneNumber: phone1,
+                              e164: client.phone1E164,
+                            );
+                            form.clientPhone1Controller.text = phone1;
+                          }
+                          if (client.phone2E164 != null) {
+                            final phone2 =
+                                extractPhoneFromE164(client.phone2E164);
+                            if (phone2.isNotEmpty) {
+                              cachePhoneE164(
+                                rawPhoneNumber: phone2,
+                                e164: client.phone2E164,
+                              );
+                              form.clientPhone2Controller.text = phone2;
+                            }
                           }
                           form.selectedClientId = client.id;
                         }

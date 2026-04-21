@@ -9,6 +9,7 @@ abstract class BookingOtherDetailsEntity with _$BookingOtherDetailsEntity {
     String? locationFrom,
     String? locationTo,
     String? end,
+    String? coolingPeriodType,
   }) = _BookingOtherDetailsEntity;
 
   static BookingOtherDetailsEntity empty() => const BookingOtherDetailsEntity();

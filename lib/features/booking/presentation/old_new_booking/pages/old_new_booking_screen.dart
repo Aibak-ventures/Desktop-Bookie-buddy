@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
@@ -15,6 +16,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_reques
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/select_date_failure_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
@@ -42,11 +44,12 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_web.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 // Conditional import for web-specific code
 import '../helpers/web_helper_stub.dart'
@@ -67,6 +70,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   // Current selected tab
   BookingType selectedBookingType = BookingType.booking;
 
+  bool get _hasSalesFeature =>
+      context.read<UserCubit>().hasFeature(AppPremiumFeatures.sales);
+
   // Form key
   final _formKey = GlobalKey<FormState>();
 
@@ -82,6 +88,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final clientNameController = TextEditingController();
   final clientPhone1Controller = TextEditingController();
   final clientPhone2Controller = TextEditingController();
+  late final PhoneController _clientPhone1FieldController;
+  late final PhoneController _clientPhone2FieldController;
   final clientAddressController = TextEditingController();
   final staffNameController = TextEditingController();
   int? selectedStaffId;
@@ -92,9 +100,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
   PaymentMethod paymentMethod = PaymentMethod.cash;
+  PaymentMethod securityPaymentMethod = PaymentMethod.cash;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
-  bool sendPdfToWhatsApp = false; // Unchecked by default
-  bool decreaseStockForPastDate = false; // Checkbox for past dates in sales
+  bool sendPdfToWhatsApp = false;
+  bool decreaseStockForPastDate = false;
+  bool isDiscountPercentage = false;
 
   // Products/Services
   final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
@@ -172,6 +182,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // New Fields for Redesign
   int coolingPeriodDays = 0; // Default to None (0 = same as return date)
+  CoolingPeriodMode coolingPeriodMode =
+      CoolingPeriodMode.after; // User-selected cooling period mode
   DateTime? _bookedDate; // Optional for old booking entries
   int _manualExtraRentalDays = 0; // Optional extra days added by user
   final runningKilometersController = TextEditingController();
@@ -181,6 +193,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   String? _clientNameError;
   String? _staffNameError;
   String? _phoneError;
+  String? _phone2Error;
   final startLocationController = TextEditingController();
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
@@ -218,6 +231,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
+  final _loadProductsDebouncer = Debouncer(
+    delay: const Duration(milliseconds: 300),
+  );
 
   // Summary expansion state
   bool _isSummaryExpanded = false;
@@ -227,6 +243,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     super.initState();
     pickupDate = DateTime.now();
     returnDate = DateTime.now().add(const Duration(days: 1));
+    _clientPhone1FieldController = PhoneController(
+      initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
+    );
+    _clientPhone2FieldController = PhoneController(
+      initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
+    );
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -250,10 +272,19 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
       // Load staffs for staff search dropdown
+      context.read<StaffSearchCubit>().clearSelectedStaff();
+      staffNameController.clear();
       context.read<StaffSearchCubit>().getAllStaffs();
 
       // Initialize cooling period based on shop settings (TC-01-03)
       _initializeCoolingPeriod();
+
+      // Load available products after cooling period is set (use next frame to ensure state is updated)
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          _loadProductsForService(selectedServiceId);
+        }
+      });
     });
   }
 
@@ -271,6 +302,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     clientNameController.dispose();
     clientPhone1Controller.dispose();
     clientPhone2Controller.dispose();
+    _clientPhone1FieldController.dispose();
+    _clientPhone2FieldController.dispose();
     clientAddressController.dispose();
     startLocationController.dispose();
     pickupLocationController.dispose();
@@ -328,6 +361,56 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       _selectedPaymentMethods = [method];
       paymentMethod = method;
     });
+  }
+
+  void _setPhoneFieldValue(
+    PhoneController phoneController,
+    TextEditingController textController, {
+    String? phoneNumber,
+    String? e164,
+  }) {
+    final phone = phoneNumberFromData(phoneNumber: phoneNumber, e164: e164);
+    phoneController.value =
+        phone ?? PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: '');
+    final digits = normalizePhoneDigits(phone?.nsn ?? phoneNumber);
+    cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+    textController.value = TextEditingValue(
+      text: digits,
+      selection: TextSelection.collapsed(offset: digits.length),
+    );
+  }
+
+  void _populateClientPhones({
+    required String? phone1,
+    String? phone1E164,
+    String? phone2,
+    String? phone2E164,
+  }) {
+    _setPhoneFieldValue(
+      _clientPhone1FieldController,
+      clientPhone1Controller,
+      phoneNumber: phone1,
+      e164: phone1E164,
+    );
+    _setPhoneFieldValue(
+      _clientPhone2FieldController,
+      clientPhone2Controller,
+      phoneNumber: phone2,
+      e164: phone2E164,
+    );
+  }
+
+  String? _currentPhoneE164(
+    TextEditingController textController,
+    PhoneController phoneController,
+  ) {
+    final rawPhone = textController.text.trim();
+    if (rawPhone.isEmpty) return null;
+
+    return toPhone1E164(
+      rawPhone,
+      fallbackE164: phoneNumberToE164(phoneController.value),
+    );
   }
 
   String? _buildDescriptionWithPaymentSummary() {
@@ -393,10 +476,15 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   void _searchAllProductsForOverlay() {
     final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
     final serviceIdToUse =
         (selectedServiceId == null || selectedServiceId == -1)
         ? null
         : selectedServiceId;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
 
     _showAllProductsOnSearchFocus = true;
     _overlayIsLoading.value = true;
@@ -416,10 +504,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             ? _priceRange.value.end.round()
             : null,
         pickupDate: pickupDate.format(),
-        returnDate: returnDate.format(),
+        returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
-        useAvailableProductsApi: selectedBookingType == BookingType.booking,
+        useAvailableProductsApi: isBooking,
         isSales: isSales,
       ),
     );
@@ -553,12 +641,15 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   /// Listener for phone changes to detect manual editing
   void _onClientPhoneChanged() {
-    // Clear validation error when user types
-    if (_phoneError != null &&
-        (clientPhone1Controller.text.trim().isNotEmpty ||
-            clientPhone2Controller.text.trim().isNotEmpty)) {
+    // Clear validation errors when user types
+    if (_phoneError != null && clientPhone1Controller.text.trim().isNotEmpty) {
       setState(() {
         _phoneError = null;
+      });
+    }
+    if (_phone2Error != null) {
+      setState(() {
+        _phone2Error = null;
       });
     }
 
@@ -569,8 +660,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     if (selectedClient != null && selectedClientId != null) {
       final currentPhone1 = clientPhone1Controller.text.trim();
       final currentPhone2 = clientPhone2Controller.text.trim();
-      final selectedPhone1 = selectedClient.phone1.toString().trim();
-      final selectedPhone2 = selectedClient.phone2?.toString().trim() ?? '';
+      final selectedPhone1 = selectedClient.phone1 > 0
+          ? selectedClient.phone1.toString().trim()
+          : extractPhoneFromE164(selectedClient.phone1E164);
+      final selectedPhone2 = (selectedClient.phone2 ?? 0) > 0
+          ? selectedClient.phone2.toString().trim()
+          : extractPhoneFromE164(selectedClient.phone2E164);
 
       // If phones don't match, user has manually edited - treat as new client
       if (currentPhone1 != selectedPhone1 || currentPhone2 != selectedPhone2) {
@@ -591,17 +686,24 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       _staffNameError = null;
     });
 
-    // Validate at least one product has price > 0
+    // Validate at least one product is selected
     final selectedProducts = selectedProductsNotifier.value;
-    if (selectedProducts.isNotEmpty) {
-      final hasProductWithPrice = selectedProducts.any((p) => p.amount > 0);
-      if (!hasProductWithPrice) {
-        context.showSnackBar(
-          'At least one product must have a price greater than 0',
-          isError: true,
-        );
-        return;
-      }
+    if (selectedProducts.isEmpty) {
+      context.showSnackBar(
+        'Please select at least one product to continue',
+        isError: true,
+      );
+      return;
+    }
+
+    // Validate at least one product has price > 0
+    final hasProductWithPrice = selectedProducts.any((p) => p.amount > 0);
+    if (!hasProductWithPrice) {
+      context.showSnackBar(
+        'At least one product must have a price greater than 0',
+        isError: true,
+      );
+      return;
     }
 
     // Get the selected staff from cubit
@@ -625,13 +727,14 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       // Move to next step
       setState(() => _bookingStep = 1);
     } else {
-      // Show validation errors
       setState(() {
         _clientNameError = validationResult.fieldErrors['clientName'];
         _phoneError = validationResult.fieldErrors['phone1'];
+        _phone2Error = validationResult.fieldErrors['phone2'];
         _staffNameError = validationResult.fieldErrors['staff'];
       });
-      // Field errors are already shown via errorText parameters
+      // Show the first error as a snackbar so the user knows what to fix
+      BookingValidationHelper.showValidationErrors(context, validationResult);
     }
   }
 
@@ -1618,6 +1721,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     _isPriceFilterEnabled.value = isPriceEnabled;
     final searchTerm = serviceSearchController.text.trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
 
     // Determine search type
     String? searchType;
@@ -1661,7 +1769,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     final hasSearchQuery = searchTerm.isNotEmpty;
     final hasAnyFilter = hasSearchQuery || isPriceEnabled;
 
-    // Trigger search with filters
+// Trigger search with filters
     if (hasAnyFilter) {
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
@@ -1671,7 +1779,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           startPrice: isPriceEnabled ? priceRange.start.round() : null,
           endPrice: isPriceEnabled ? priceRange.end.round() : null,
           pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
+          returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
           useAvailableProductsApi: selectedBookingType == BookingType.booking,
@@ -1684,7 +1792,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         SelectProductEvent.loadProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
           pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
+          returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
           useAvailableProductsApi: selectedBookingType == BookingType.booking,
@@ -1700,6 +1808,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         .trim()
         .toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
     // If "All Services" is selected, serviceId will be -1, so we pass null to API
     final serviceIdToUse =
         (selectedServiceId == null || selectedServiceId == -1)
@@ -1708,7 +1817,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
     final hasSearchQuery = query.isNotEmpty;
     final hasPriceFilter = _isPriceFilterEnabled.value;
+
     final hasAnyFilter = hasSearchQuery || hasPriceFilter;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
 
     // Debug log to trace search behavior
     log(
@@ -1720,7 +1834,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
           pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
+          returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
           useAvailableProductsApi: selectedBookingType == BookingType.booking,
@@ -1775,7 +1889,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           startPrice: hasPriceFilter ? _priceRange.value.start.round() : null,
           endPrice: hasPriceFilter ? _priceRange.value.end.round() : null,
           pickupDate: pickupDate.format(),
-          returnDate: returnDate.format(),
+          returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
           useAvailableProductsApi: selectedBookingType == BookingType.booking,
@@ -1891,31 +2005,53 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   }
 
   void _loadProductsForService(int? serviceId) {
+    _loadProductsDebouncer.run(() {
+      _loadProductsInternal(serviceId);
+    });
+  }
+
+  void _loadProductsInternal(int? serviceId) {
     final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
     // If "All Services" is selected (-1), pass null to API
     final serviceIdToUse = (serviceId == null || serviceId == -1)
         ? null
         : serviceId;
 
-    // For booking mode only, add cooling period; sales and old booking use actual return date
-    final effectiveReturnDate = selectedBookingType == BookingType.booking
+    // When cooling period mode is "before", adjust the effective pickup date for availability check
+    final effectivePickupDate =
+        isBooking && coolingPeriodMode.isBefore && coolingPeriodDays > 0
+        ? pickupDate.subtract(Duration(days: coolingPeriodDays))
+        : pickupDate;
+
+    // For booking mode + after cooling: extend return date by cooling days.
+    // Before mode only adjusts pickup side — return date is unchanged.
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
+
+    log(
+      '📦 Loading products - pickupDate: ${pickupDate.format()}, effectivePickupDate: ${effectivePickupDate.format()}, returnDate: $effectiveReturnDate, coolingPeriodDays: $coolingPeriodDays, coolingMode: ${coolingPeriodMode.value}, isBooking: $isBooking',
+    );
+
+    // Include selected variant IDs so the single API call also checks their availability.
+    final currentVariantIds = selectedProductsNotifier.value
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
 
     _selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
-        pickupDate: pickupDate.format(),
+        pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
-        useAvailableProductsApi: selectedBookingType == BookingType.booking,
+        useAvailableProductsApi: isBooking,
         isSales: isSales,
+        variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null,
       ),
     );
-
-    // After reloading products, check if selected products are still available
-    _checkSelectedProductsAvailability();
   }
 
   /// Perform a quick local filter on the currently loaded products
@@ -1973,50 +2109,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     }
   }
 
-  /// Check if already-selected products are still available for the current
-  /// date range. If any are unavailable, show the [showUnavailableProductsDialog].
-  Future<void> _checkSelectedProductsAvailability() async {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-    // Only check availability for bookings, not sales
-    if (isSales || isOldBooking) return;
-
-    final selected = selectedProductsNotifier.value;
-    if (selected.isEmpty) return;
-
-    final variantIds = selected
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
-    if (variantIds.isEmpty) return;
-
-    final effectiveReturnDate = returnDate
-        .add(Duration(days: coolingPeriodDays))
-        .format();
-
-    try {
-      final notFoundIds = await getIt<ProductRepositoryImpl>()
-          .checkVariantAvailability(
-            pickupDate: pickupDate.format(),
-            returnDate: effectiveReturnDate,
-            variantIds: variantIds,
-            pickupTime: pickupTime,
-            returnTime: returnTime,
-          );
-
-      if (notFoundIds.isNotEmpty && mounted) {
-        await showUnavailableProductsDialog(
-          context: context,
-          unavailableDateFrom: pickupDate.format(),
-          unavailableDateTo: effectiveReturnDate,
-          unavailableProducts: notFoundIds,
-          selectedProductsNotifier: selectedProductsNotifier,
-        );
-      }
-    } catch (e) {
-      log('Error checking selected product availability: $e');
-    }
-  }
 
   /// Helper method to check if current pickup date (sale date) is in the past
   bool _isPastDate() {
@@ -2048,6 +2140,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   _handleTabSwitch(_convertTabTypeToBookingType(tabType));
                 },
                 onBack: _handleBackNavigation,
+                showSalesTab: _hasSalesFeature,
               ),
               // Main content - no scrolling
               Expanded(
@@ -2248,8 +2341,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           // (For now, assuming "after" mode - can add mode toggle later)
         });
 
-        // Reload products with new date
         _loadProductsForService(selectedServiceId);
+        if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
       }
     } else {
       // RETURN DATE PICKER
@@ -2283,6 +2376,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             returnDate = picked;
           });
           _loadProductsForService(selectedServiceId);
+          if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
         }
         return;
       }
@@ -2319,8 +2413,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           }
         });
 
-        // Reload products with new date
         _loadProductsForService(selectedServiceId);
+        if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
       }
     }
   }
@@ -2365,7 +2459,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             actions: <Type, Action<Intent>>{
               ActivateIntent: CallbackAction<ActivateIntent>(
                 onInvoke: (intent) {
-                  final focusContext = FocusManager.instance.primaryFocus?.context;
+                  final focusContext =
+                      FocusManager.instance.primaryFocus?.context;
                   if (focusContext != null) {
                     return Actions.maybeInvoke<ActivateIntent>(
                       focusContext,
@@ -2479,48 +2574,29 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         userCubit.state?.shopSettings.coolingPeriodMode ??
         CoolingPeriodMode.after;
 
-    if (coolingDuration > 0) {
-      setState(() {
-        // Set the cooling period days from user profile
-        coolingPeriodDays = coolingDuration;
-
-        if (coolingMode.isAfter) {
-          // TC-02: After mode - cooling starts after return
-          coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
-        } else {
-          // TC-03: Before mode - cooling ends before pickup
-          coolingPeriodDate = pickupDate.subtract(
-            Duration(days: coolingDuration),
-          );
-        }
-      });
-    }
+    setState(() {
+      coolingPeriodDays = coolingDuration;
+      coolingPeriodMode = coolingMode;
+      _updateCoolingPeriod();
+    });
   }
 
   /// Helper: Update cooling period based on pickup/return date changes
   /// Supports both "before" and "after" modes
   void _updateCoolingPeriod() {
-    final userCubit = context.read<UserCubit>();
-    final coolingDuration =
-        userCubit.state?.shopSettings.coolingPeriodDuration ?? 0;
-    final coolingMode =
-        userCubit.state?.shopSettings.coolingPeriodMode ??
-        CoolingPeriodMode.after;
+    if (coolingPeriodDays <= 0) {
+      coolingPeriodDate = null;
+      return;
+    }
 
-    if (coolingDuration > 0) {
-      setState(() {
-        if (coolingMode.isAfter) {
-          // TC-10: After mode (Maintenance) - cooling starts after return
-          // Formula: Cooling Date = Return Date + Duration
-          coolingPeriodDate = returnDate.add(Duration(days: coolingDuration));
-        } else {
-          // TC-15: Before mode (Preparation) - cooling ends before pickup
-          // Formula: Cooling Date = Pickup Date - Duration
-          coolingPeriodDate = pickupDate.subtract(
-            Duration(days: coolingDuration),
-          );
-        }
-      });
+    if (coolingPeriodMode.isAfter) {
+      // TC-10: After mode (Maintenance) - cooling starts after return
+      coolingPeriodDate = returnDate.add(Duration(days: coolingPeriodDays));
+    } else {
+      // TC-15: Before mode (Preparation) - cooling ends before pickup
+      coolingPeriodDate = pickupDate.subtract(
+        Duration(days: coolingPeriodDays),
+      );
     }
   }
 
@@ -2563,11 +2639,26 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
   }
 
-  Widget _buildPaymentMethodOption(PaymentMethod method, IconData icon) {
-    final isSelected = _selectedPaymentMethods.contains(method);
+  Widget _buildPaymentMethodOption(
+    PaymentMethod method,
+    IconData icon, {
+    bool isSecurity = false,
+  }) {
+    final isMultiSelect = !isSecurity;
+    final isSelected = isMultiSelect
+        ? _selectedPaymentMethods.contains(method)
+        : securityPaymentMethod == method;
+
+    void Function() onTap;
+    if (isSecurity) {
+      onTap = () => setState(() => securityPaymentMethod = method);
+    } else {
+      onTap = () => _togglePaymentMethodSelection(method);
+    }
+
     return Expanded(
       child: InkWell(
-        onTap: () => _togglePaymentMethodSelection(method),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(8),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -2622,7 +2713,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         const SizedBox(height: 4),
         Row(
           children: [
-            _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
+            _buildPaymentMethodOption(PaymentMethod.upi, Icons.qr_code),
             const SizedBox(width: 8),
             _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
           ],
@@ -2631,6 +2722,24 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         Text(
           'You can select both if the customer is splitting payment.',
           style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSecurityPaymentMethodSelector() {
+    return Row(
+      children: [
+        _buildPaymentMethodOption(
+          PaymentMethod.upi,
+          Icons.qr_code,
+          isSecurity: true,
+        ),
+        const SizedBox(width: 8),
+        _buildPaymentMethodOption(
+          PaymentMethod.cash,
+          Icons.money,
+          isSecurity: true,
         ),
       ],
     );
@@ -2828,11 +2937,16 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                     final isSales =
                                         selectedBookingType ==
                                         BookingType.sales;
+                                    final isBooking = selectedBookingType == BookingType.booking;
                                     final serviceIdToUse =
                                         (selectedServiceId == null ||
                                             selectedServiceId == -1)
                                         ? null
                                         : selectedServiceId;
+
+                                    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+                                        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+                                        : returnDate.format();
                                     String? searchType;
                                     switch (_selectedSearchTypeIndex.value) {
                                       case 0:
@@ -2881,7 +2995,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                             ? _priceRange.value.end.round()
                                             : null,
                                         pickupDate: pickupDate.format(),
-                                        returnDate: returnDate.format(),
+                                        returnDate: effectiveReturnDate,
                                         pickupTime: pickupTime,
                                         returnTime: returnTime,
                                         useAvailableProductsApi:
@@ -3116,11 +3230,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                       height: 1,
                                       color: Colors.grey.shade200,
                                     ),
-                                    itemBuilder: (_, i) => _buildOverlaySearchItem(
-                                      productList[i],
-                                      index: i,
-                                      itemCount: productList.length,
-                                    ),
+                                    itemBuilder: (_, i) =>
+                                        _buildOverlaySearchItem(
+                                          productList[i],
+                                          index: i,
+                                          itemCount: productList.length,
+                                        ),
                                   ),
                                 ),
                             ],
@@ -3377,8 +3492,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         }
         return ListView.builder(
           padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
           itemCount: products.length,
           itemBuilder: (context, index) => _buildProductRow(products[index]),
         );
@@ -3395,10 +3508,57 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         serviceType == MainServiceType.costume;
   }
 
+  int _getDiscountProductBase() {
+    final rentalDays = _getEffectiveRentalDays();
+    final isSales = selectedBookingType == BookingType.sales;
+    final productTotal = selectedProductsNotifier.value.fold<int>(0, (sum, p) {
+      final daysMultiplier =
+          (!isSales && _shouldMultiplyByDays(p.variant.mainServiceType))
+          ? (rentalDays > 0 ? rentalDays : 1)
+          : 1;
+      return sum + (p.amount * p.quantity * daysMultiplier);
+    });
+    final additionalTotal = additionalChargesNotifier.value.fold<int>(
+      0,
+      (sum, charge) => sum + (charge.amount ?? 0),
+    );
+    return productTotal + additionalTotal;
+  }
+
+  int _calculateBookingTotalPayable() {
+    final rentalDays = _getEffectiveRentalDays();
+    final isSales = selectedBookingType == BookingType.sales;
+    final productTotal = selectedProductsNotifier.value.fold<int>(0, (
+      sum,
+      product,
+    ) {
+      final effectiveDaysMultiplier =
+          (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
+          ? (rentalDays > 0 ? rentalDays : 1)
+          : 1;
+      return sum +
+          (product.amount * product.quantity * effectiveDaysMultiplier);
+    });
+    final additionalTotal = additionalChargesNotifier.value.fold<int>(
+      0,
+      (sum, charge) => sum + (charge.amount ?? 0),
+    );
+
+    final discountInput =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final discountAmount = isDiscountPercentage
+        ? ((productTotal + additionalTotal) * discountInput / 100).round()
+        : discountInput;
+
+    return productTotal + additionalTotal - discountAmount;
+  }
+
   Widget _buildProductRow(ProductSelectedEntity product) {
     final isSales = selectedBookingType == BookingType.sales;
     final isOldBooking = selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? _getEffectiveRentalDays() : 0;
+    final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // Only multiply price by days for qualifying service types
     final effectiveDaysMultiplier =
         (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
@@ -3420,31 +3580,56 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             child: Row(
               children: [
                 // Image
-                Container(
-                  width: 48,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.grey.shade100,
-                    border: Border.all(color: Colors.grey.shade200),
-                    image:
-                        (product.variant.thumbnailImage ?? product.variant.image) != null &&
-                            (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(product.variant.thumbnailImage ?? product.variant.image!),
-                            fit: BoxFit.cover,
+                MouseRegion(
+                  cursor: hasImage
+                      ? SystemMouseCursors.click
+                      : MouseCursor.defer,
+                  child: GestureDetector(
+                    onTap: hasImage
+                        ? () => ZoomableImageDialog.show(
+                            context,
+                            imageUrl: imageUrl,
+                            title: product.variant.name,
                           )
                         : null,
+                    child: Container(
+                      width: 48,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.grey.shade100,
+                        border: Border.all(color: Colors.grey.shade200),
+                        image: hasImage
+                            ? DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: !hasImage
+                          ? const Icon(
+                              Icons.image_not_supported,
+                              size: 20,
+                              color: Colors.grey,
+                            )
+                          : Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                margin: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.zoom_in,
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                    ),
                   ),
-                  child:
-                      (product.variant.thumbnailImage ?? product.variant.image) == null ||
-                              product.variant.image!.isEmpty
-                      ? const Icon(
-                          Icons.image_not_supported,
-                          size: 20,
-                          color: Colors.grey,
-                        )
-                      : null,
                 ),
                 const SizedBox(width: 16),
                 // Text
@@ -3734,8 +3919,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       onTap: isDisabled ? null : onTap,
       borderRadius: BorderRadius.circular(4),
       child: Container(
-        width: compact ? 20 : 27,
-        height: compact ? 20 : 22,
+        width: compact ? 20 : 18,
+        height: compact ? 20 : 18,
         decoration: BoxDecoration(
           color: isDisabled
               ? Colors.grey.shade300
@@ -3977,13 +4162,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               final advanceAmount = isSaleType
                   ? 0
                   : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
-              final discountAmount =
-                  discountAmountController.text.trim().toIntOrNull() ?? 0;
               final summaryRentalDays = !isSaleType
                   ? _getEffectiveRentalDays()
                   : 1;
               final productTotal = products.fold<int>(0, (sum, product) {
-                // Only multiply by days for qualifying service types
                 final daysMultiplier =
                     (!isSaleType &&
                         _shouldMultiplyByDays(product.variant.mainServiceType))
@@ -3996,6 +4178,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
               );
+              final discountInput =
+                  discountAmountController.text.trim().toIntOrNull() ?? 0;
+              final discountAmount = isDiscountPercentage
+                  ? ((productTotal + additionalTotal) * discountInput / 100)
+                        .round()
+                  : discountInput;
               final totalPayable =
                   productTotal + additionalTotal - discountAmount;
               final remainingAmount = totalPayable - advanceAmount;
@@ -4326,6 +4514,19 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       return;
     }
 
+    if (selectedBookingType != BookingType.sales) {
+      final advanceAmount =
+          advanceAmountController.text.trim().toIntOrNull() ?? 0;
+      final totalPayable = _calculateBookingTotalPayable();
+      if (advanceAmount > totalPayable) {
+        context.showSnackBar(
+          'Advance amount cannot be greater than total amount',
+          isError: true,
+        );
+        return;
+      }
+    }
+
     // Show loading indicator
     showDialog(
       context: context,
@@ -4408,20 +4609,30 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     final additionalCharges = additionalChargesNotifier.value;
     final runningKm = runningKilometersController.text.trim();
 
-    // Propagate running kilometers into each vehicle product so it is sent
+    // Propagate running kilometers into each product so it is sent
     // inside the variant's measurements JSON (not as a top-level field).
-    final requestProducts = products
-        .map((product) {
-          final adjusted = product.copyWith(
-            amount: product.amount * _getDaysMultiplierForProduct(product),
-          );
-          if ((product.variant.mainServiceType?.isVehicle ?? false) &&
-              runningKm.isNotEmpty) {
-            return adjusted.copyWith(runningKilometers: runningKm);
-          }
-          return adjusted;
-        })
-        .toList();
+    final requestProducts = products.map((product) {
+      final adjusted = product.copyWith(
+        amount: product.amount * _getDaysMultiplierForProduct(product),
+      );
+      if (runningKm.isNotEmpty) {
+        return adjusted.copyWith(runningKilometers: runningKm);
+      }
+      return adjusted;
+    }).toList();
+
+    final productTotal = products.fold<int>(0, (sum, product) {
+      return sum + (product.amount * product.quantity);
+    });
+    final additionalTotal = additionalCharges.fold<int>(
+      0,
+      (sum, charge) => sum + (charge.amount ?? 0),
+    );
+    final discountInput =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final actualDiscount = isDiscountPercentage
+        ? ((productTotal + additionalTotal) * discountInput / 100).round()
+        : discountInput;
 
     // Get staff ID from cubit
     final staffState = context.read<StaffSearchCubit>().state;
@@ -4430,16 +4641,16 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     // If there's no client ID, we need to send client data
     ClientRequestEntity? clientData;
     if (selectedClientId == null) {
-      final phone1 = clientPhone1Controller.text.trim().toIntOrNull();
-      final phone2 = clientPhone2Controller.text.trim().toIntOrNull();
+      final phone1Raw = clientPhone1Controller.text.trim();
+      final phone2Raw = clientPhone2Controller.text.trim();
 
       clientData = ClientRequestEntity(
         id: null,
         name: clientNameController.text.trim().isEmpty
             ? null
             : clientNameController.text.trim(),
-        phone1: phone1,
-        phone2: phone2,
+        phone1E164: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
+        phone2E164: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
       );
     }
 
@@ -4459,37 +4670,50 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           )
         : null;
 
-    // cooling_period_type is sent as a top-level field based on shop settings.
-    final coolingMode =
-        context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
-        CoolingPeriodMode.after;
-    final coolingPeriodType =
-        coolingPeriodDays > 0 ? coolingMode.value.toLowerCase() : null;
+    // cooling_period_type is sent based on user-selected cooling period mode.
+    final coolingPeriodType = coolingPeriodDays > 0
+        ? coolingPeriodMode.value.toLowerCase()
+        : null;
+
+    // Calculate return date and cooling period date based on user-selected mode
+    DateTime effectiveReturnDate;
+    DateTime? effectiveCoolingPeriodDate;
+
+    if (coolingPeriodDays > 0) {
+      if (coolingPeriodMode.isAfter) {
+        // After mode: return date stays as picked, cooling period starts after return
+        effectiveReturnDate = returnDate;
+        effectiveCoolingPeriodDate = returnDate.add(
+          Duration(days: coolingPeriodDays),
+        );
+      } else {
+        // Before mode: return date stays as-is, cooling period ends before pickup
+        effectiveReturnDate = returnDate;
+        effectiveCoolingPeriodDate = pickupDate.subtract(
+          Duration(days: coolingPeriodDays),
+        );
+      }
+    } else {
+      effectiveReturnDate = returnDate;
+      effectiveCoolingPeriodDate = null;
+    }
 
     return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: staffId,
       client: clientData,
       address: clientAddressController.text.trim(),
-      pickupDate: pickupDate.format().appendTimeToDate(time: pickupTime),
-      // If coolingPeriodDays is 0 (None), use exact return date; otherwise add cooling period days
-      returnDate: coolingPeriodDays == 0
-          ? returnDate.format().appendTimeToDate(time: returnTime)
-          : returnDate
-                .add(Duration(days: coolingPeriodDays))
-                .format()
-                .appendTimeToDate(time: returnTime),
-      // If cooling period is None (0), do not send cooling period end date
-      coolingPeriodDate: coolingPeriodDays == 0
-          ? null
-          : returnDate
-                .add(Duration(days: coolingPeriodDays))
-                .format()
-                .appendTimeToDate(time: returnTime),
+      pickupDate: pickupDate.format(),
+      returnDate: effectiveReturnDate.format(),
+      coolingPeriodDate: effectiveCoolingPeriodDate?.format(),
       coolingPeriodType: coolingPeriodType,
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
-      discountAmount: discountAmountController.text.trim().toIntOrNull(),
+      securityPaymentMethod:
+          securityAmountController.text.trim().toIntOrNull() != null
+          ? securityPaymentMethod
+          : null,
+      discountAmount: actualDiscount,
       purchaseMode: 'normal',
       paymentMethod: paymentMethod,
       deliveryStatus: deliveryStatus,
@@ -4499,6 +4723,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           ? additionalCharges
           : null,
       description: _buildDescriptionWithPaymentSummary(),
+      pickupTime: pickupTime,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
     );
@@ -4507,7 +4732,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   /// Build sales request for creating a sale
   RequestSalesModel _buildSalesRequest() {
     final products = selectedProductsNotifier.value;
-    final discount = discountAmountController.text.trim().toIntOrNull() ?? 0;
 
     // Build variants array with id, quantity, and amount (total = per-unit price × quantity)
     final variants = products.map((product) {
@@ -4521,6 +4745,14 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       0,
       (sum, item) => sum + (item['amount'] ?? 0),
     );
+
+    // Calculate actual discount amount (support percentage)
+    final discountInput =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final discount = isDiscountPercentage
+        ? (grossTotal * discountInput / 100).round()
+        : discountInput;
+
     final finalTotal = (grossTotal - discount) > 0
         ? (grossTotal - discount)
         : 0;
@@ -4696,14 +4928,55 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Cooling period',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Cooling period',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  coolingPeriodMode.isAfter
+                                      ? '(after)'
+                                      : '(before)',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade400,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                         TextButton(
+  onPressed: () {
+    setState(() {
+      coolingPeriodMode = coolingPeriodMode.isAfter
+          ? CoolingPeriodMode.before
+          : CoolingPeriodMode.after;
+    });
+    _updateCoolingPeriod();
+    _loadProductsForService(selectedServiceId);
+    if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
+  },
+  child: Text(
+    coolingPeriodMode.isAfter ? "After" : "Before",
+    style: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      color: Colors.black, // change if background is dark
+    ),
+  ),
+),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       Container(
@@ -4727,41 +5000,68 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                             return KeyEventResult.ignored;
                           },
                           child: DropdownButtonHideUnderline(
-                            child: DropdownButton<int>(
-                              value: coolingPeriodDays,
-                              isExpanded: true,
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down,
-                                size: 18,
-                              ),
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: Colors.black87,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                              ),
-                              items: [
-                                const DropdownMenuItem(
-                                  value: 0,
-                                  child: Text('None'),
-                                ),
-                                ...List.generate(10, (index) {
-                                  final days = index + 1;
-                                  return DropdownMenuItem(
-                                    value: days,
-                                    child: Text(
-                                      '$days day${days > 1 ? 's' : ''}',
+                            child: Builder(
+                              builder: (context) {
+                                final currentDays = coolingPeriodDays;
+                                final standardValues = {
+                                  0,
+                                  1,
+                                  2,
+                                  3,
+                                  4,
+                                  5,
+                                  6,
+                    7,
+                                  8,
+                                  9,
+                                  10,
+                                };
+                                final hasCustomValue = !standardValues.contains(
+                                  currentDays,
+                                );
+                                return DropdownButton<int>(
+                                  value: currentDays,
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 18,
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  items: [
+                                    const DropdownMenuItem(
+                                      value: 0,
+                                      child: Text('None'),
                                     ),
-                                  );
-                                }),
-                              ],
-                              onChanged: (val) {
-                                if (val != null) {
-                                  setState(() => coolingPeriodDays = val);
-                                  _loadProductsForService(selectedServiceId);
-                                  _searchAllProductsForOverlay();
-                                  _productSearchFocusNode.requestFocus();
-                                }
+                                    if (hasCustomValue)
+                                      DropdownMenuItem(
+                                        value: currentDays,
+                                        child: Text('$currentDays days'),
+                                      ),
+                                    ...List.generate(10, (index) {
+                                      final days = index + 1;
+                                      return DropdownMenuItem(
+                                        value: days,
+                                        child: Text(
+                                          '$days day${days > 1 ? 's' : ''}',
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                  onChanged: (val) {
+                                    if (val != null) {
+                                      setState(() => coolingPeriodDays = val);
+                                      _updateCoolingPeriod();
+                                      _loadProductsForService(selectedServiceId);
+                                      if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
+                                      _productSearchFocusNode.requestFocus();
+                                    }
+                                  },
+                                );
                               },
                             ),
                           ),
@@ -4773,6 +5073,35 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               ],
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCoolingModeOption({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: isSelected ? Colors.white : Colors.grey.shade600,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -5079,12 +5408,20 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Client Phone
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
-                    hint: 'Client Phone (WP)',
-                    isNumber: true,
-                    errorText: _phoneError,
-                    prefixIcon: Icons.phone,
+                  CustomPhoneNumberField(
+                    controller: _clientPhone1FieldController,
+                    hintText: 'Client Phone (WP)',
+                    textInputAction: TextInputAction.done,
+                    onChanged: (phone) {
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                      if (clientPhone1Controller.text != digits) {
+                        clientPhone1Controller.value = TextEditingValue(
+                          text: digits,
+                          selection: TextSelection.collapsed(offset: digits.length),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
 
@@ -5316,12 +5653,16 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                           final client = state.selectedClient!;
                           // Auto-fill fields
                           clientNameController.text = client.name;
-                          clientPhone1Controller.text = client.phone1
-                              .toString();
-                          if (client.phone2 != null) {
-                            clientPhone2Controller.text = client.phone2
-                                .toString();
-                          }
+                          _populateClientPhones(
+                            phone1: client.phone1 > 0
+                                ? client.phone1.toString()
+                                : null,
+                            phone1E164: client.phone1E164,
+                            phone2: (client.phone2 ?? 0) > 0
+                                ? client.phone2.toString()
+                                : null,
+                            phone2E164: client.phone2E164,
+                          );
                           // Store selected client ID
                           selectedClientId = client.id;
                         }
@@ -5333,8 +5674,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                         onClear: () {
                           // Clear all client fields when search is cleared
                           clientNameController.clear();
-                          clientPhone1Controller.clear();
-                          clientPhone2Controller.clear();
+                          _populateClientPhones(phone1: null, phone2: null);
                           clientAddressController.clear();
                           selectedClientId = null;
                         },
@@ -5344,25 +5684,39 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     const SizedBox(height: _fieldSpacing),
                   ], // End of name section for bookings only
                   // Phone 1 (WhatsApp) - Always enabled
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
-                    hint: 'Whatsapp number',
-                    isNumber: true,
-                    focusNode: _clientPhone1FocusNode,
-                    nextFocusNode: _clientPhone2FocusNode,
-                    errorText: _phoneError,
-                    prefixSvgAsset: AppAssets.whatsAppSvg,
+                  CustomPhoneNumberField(
+                    controller: _clientPhone1FieldController,
+                    hintText: 'Whatsapp number',
+                    textInputAction: TextInputAction.next,
+                    onChanged: (phone) {
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                      if (clientPhone1Controller.text != digits) {
+                        clientPhone1Controller.value = TextEditingValue(
+                          text: digits,
+                          selection: TextSelection.collapsed(offset: digits.length),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
                   // Phone 2 - Optional, only show for bookings, always enabled
                   if (selectedBookingType != BookingType.sales)
-                    BookingTextFieldBuilder.buildRightPanelTextField(
-                      controller: clientPhone2Controller,
-                      hint: 'Phone 2',
-                      isNumber: true,
-                      focusNode: _clientPhone2FocusNode,
-                      nextFocusNode: _clientAddressFocusNode,
-                      prefixIcon: Icons.phone,
+                    CustomPhoneNumberField(
+                      controller: _clientPhone2FieldController,
+                      hintText: 'Phone 2',
+                      isRequired: false,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (phone) {
+                        final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                        cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                        if (clientPhone2Controller.text != digits) {
+                          clientPhone2Controller.value = TextEditingValue(
+                            text: digits,
+                            selection: TextSelection.collapsed(offset: digits.length),
+                          );
+                        }
+                      },
                     ),
                   const SizedBox(height: _fieldSpacing),
                   // Place - Optional
@@ -5517,7 +5871,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               final advanceAmount = isSaleType
                   ? 0
                   : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
-              final discountAmount =
+              final discountInput =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
               final rentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
               final productTotal = products.fold<int>(0, (sum, product) {
@@ -5533,8 +5887,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
               );
+              final actualDiscount = isDiscountPercentage
+                  ? ((productTotal + additionalTotal) * discountInput / 100)
+                        .round()
+                  : discountInput;
               final totalPayable =
-                  productTotal + additionalTotal - discountAmount;
+                  productTotal + additionalTotal - actualDiscount;
               final remainingAmount = totalPayable - advanceAmount;
 
               return Padding(
@@ -5626,10 +5984,10 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                   'Additional charges',
                                   additionalTotal,
                                 ),
-                              if (discountAmount > 0)
+                              if (actualDiscount > 0)
                                 _buildSummaryRow(
                                   '- Discount',
-                                  discountAmount,
+                                  actualDiscount,
                                   isNegative: true,
                                 ),
                               const Divider(height: 12, thickness: 1),
@@ -5876,11 +6234,14 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                       ),
                       child: Text(
                         isSale ? 'View Sale' : 'View Invoice',
-                        style: const TextStyle(color: Colors.white,fontSize: 12
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ),
-              )],
+                ],
               ),
             ],
           ),
@@ -5986,12 +6347,164 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                     focusNode: _securityAmountFocusNode,
                     nextFocusNode: _discountAmountFocusNode,
                   ),
+                  const SizedBox(height: 8),
+                  // Security Payment Method - show when security amount has value
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: securityAmountController,
+                    builder: (context, value, child) {
+                      final hasSecurityAmount =
+                          value.text.trim().isNotEmpty &&
+                          (int.tryParse(value.text.trim()) ?? 0) > 0;
+                      if (hasSecurityAmount) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Security Payment Method',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF3E3E3E),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            _buildSecurityPaymentMethodSelector(),
+                            const SizedBox(height: 14),
+                          ],
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                   const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: discountAmountController,
-                    hint: 'Discount amount',
-                    isNumber: true,
-                    focusNode: _discountAmountFocusNode,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child:
+                                BookingTextFieldBuilder.buildRightPanelTextField(
+                                  controller: discountAmountController,
+                                  hint: isDiscountPercentage
+                                      ? 'Discount %'
+                                      : 'Discount amount',
+                                  isNumber: true,
+                                  focusNode: _discountAmountFocusNode,
+                                  suffix:
+                                      ValueListenableBuilder<TextEditingValue>(
+                                        valueListenable:
+                                            discountAmountController,
+                                        builder: (context, val, _) {
+                                          final input =
+                                              val.text.trim().toIntOrNull() ??
+                                              0;
+                                          final total =
+                                              _getDiscountProductBase();
+                                          if (input <= 0 || total <= 0) {
+                                            return const SizedBox.shrink();
+                                          }
+                                          final String equiv;
+                                          if (isDiscountPercentage) {
+                                            final amount = (total * input / 100)
+                                                .round();
+                                            equiv = '≈ ₹$amount';
+                                          } else {
+                                            final pct = input / total * 100;
+                                            final pctStr = pct % 1 == 0
+                                                ? '${pct.round()}'
+                                                : pct.toStringAsFixed(1);
+                                            equiv = '≈ $pctStr%';
+                                          }
+                                          return Text(
+                                            equiv,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade500,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                ),
+                          ),
+                          const SizedBox(width: 8),
+                          PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.grey.shade600,
+                            ),
+                            onSelected: (value) {
+                              setState(() {
+                                final switchToPercent = value == 'percentage';
+                                if (switchToPercent != isDiscountPercentage) {
+                                  final input =
+                                      discountAmountController.text
+                                          .trim()
+                                          .toIntOrNull() ??
+                                      0;
+                                  final total = _getDiscountProductBase();
+                                  if (input > 0 && total > 0) {
+                                    if (switchToPercent) {
+                                      // amount → percentage
+                                      final pct = (input / total * 100)
+                                          .round()
+                                          .clamp(0, 100);
+                                      discountAmountController.text = pct
+                                          .toString();
+                                    } else {
+                                      // percentage → amount
+                                      final amount = (total * input / 100)
+                                          .round();
+                                      discountAmountController.text = amount
+                                          .toString();
+                                    }
+                                  }
+                                  isDiscountPercentage = switchToPercent;
+                                }
+                              });
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'amount',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isDiscountPercentage
+                                          ? Icons.circle_outlined
+                                          : Icons.check_circle,
+                                      size: 18,
+                                      color: isDiscountPercentage
+                                          ? Colors.grey
+                                          : const Color(0xFF6132E4),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Amount (₹)'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'percentage',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isDiscountPercentage
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      size: 18,
+                                      color: isDiscountPercentage
+                                          ? const Color(0xFF6132E4)
+                                          : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Percentage (%)'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 14),
@@ -6225,11 +6738,16 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                       if (state.selectedClient != null) {
                         final client = state.selectedClient!;
                         clientNameController.text = client.name;
-                        clientPhone1Controller.text = client.phone1.toString();
-                        if (client.phone2 != null) {
-                          clientPhone2Controller.text = client.phone2
-                              .toString();
-                        }
+                        _populateClientPhones(
+                          phone1: client.phone1 > 0
+                              ? client.phone1.toString()
+                              : null,
+                          phone1E164: client.phone1E164,
+                          phone2: (client.phone2 ?? 0) > 0
+                              ? client.phone2.toString()
+                              : null,
+                          phone2E164: client.phone2E164,
+                        );
                         selectedClientId = client.id;
                       }
                     },
@@ -6242,20 +6760,39 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                   const SizedBox(height: _fieldSpacing),
 
                   // Client Phone
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone1Controller,
-                    hint: 'Client Phone',
-                    isNumber: true,
-                    prefixIcon: Icons.phone,
+                  CustomPhoneNumberField(
+                    controller: _clientPhone1FieldController,
+                    hintText: 'Client Phone',
+                    textInputAction: TextInputAction.next,
+                    onChanged: (phone) {
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                      if (clientPhone1Controller.text != digits) {
+                        clientPhone1Controller.value = TextEditingValue(
+                          text: digits,
+                          selection: TextSelection.collapsed(offset: digits.length),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
 
                   // Client Phone 2
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientPhone2Controller,
-                    hint: 'Client Phone 2 (Optional)',
-                    isNumber: true,
-                    prefixIcon: Icons.phone_android,
+                  CustomPhoneNumberField(
+                    controller: _clientPhone2FieldController,
+                    hintText: 'Client Phone 2 (Optional)',
+                    isRequired: false,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (phone) {
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
+                      if (clientPhone2Controller.text != digits) {
+                        clientPhone2Controller.value = TextEditingValue(
+                          text: digits,
+                          selection: TextSelection.collapsed(offset: digits.length),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
 
@@ -6449,8 +6986,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               name: clientNameController.text.trim().isEmpty
                   ? null
                   : clientNameController.text.trim(),
-              phone1: clientPhone1Controller.text.trim().toIntOrNull(),
-              phone2: clientPhone2Controller.text.trim().toIntOrNull(),
+              phone1E164: clientPhone1Controller.text.trim().isEmpty
+                  ? null
+                  : toPhone1E164(clientPhone1Controller.text.trim()),
+              phone2E164: clientPhone2Controller.text.trim().isEmpty
+                  ? null
+                  : toPhone1E164(clientPhone2Controller.text.trim()),
             )
           : null,
       address: clientAddressController.text.trim().isEmpty

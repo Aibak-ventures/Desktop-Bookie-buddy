@@ -22,7 +22,7 @@ void showBookingDetailsAddPaymentDialog({
   final TextEditingController textController = TextEditingController();
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
   final ValueNotifier<PaymentMethod> paymentMethodNotifier = ValueNotifier(
-    PaymentMethod.gPay,
+    PaymentMethod.upi,
   );
   showDialog(
     context: context,
@@ -115,7 +115,7 @@ void showBookingDetailsAddPaymentDialog({
                                   size: 18, color: AppColors.purple),
                               const SizedBox(width: 4),
                               Text(
-                                PaymentMethod.gPay.name,
+                                PaymentMethod.upi.name,
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500),
                               ),
@@ -125,7 +125,7 @@ void showBookingDetailsAddPaymentDialog({
                               const EdgeInsets.symmetric(horizontal: 8),
                           visualDensity: VisualDensity.compact,
                           controlAffinity: ListTileControlAffinity.leading,
-                          value: PaymentMethod.gPay,
+                          value: PaymentMethod.upi,
                           activeColor: AppColors.purple,
                         ),
                       ),

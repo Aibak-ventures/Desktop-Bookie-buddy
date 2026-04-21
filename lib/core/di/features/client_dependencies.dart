@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/features/client/data/repositories/client_reposi
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/add_client_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/delete_client_usecase.dart';
+import 'package:bookie_buddy_web/features/client/domain/usecases/get_client_by_id_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
@@ -16,6 +17,8 @@ class ClientDependencies {
         () => ClientRepositoryImpl(getIt()));
     getIt.registerLazySingleton(
         () => GetClientsUseCase(getIt<IClientRepository>()));
+    getIt.registerLazySingleton(
+        () => GetClientByIdUseCase(getIt<IClientRepository>()));
     getIt.registerLazySingleton(
         () => AddClientUseCase(getIt<IClientRepository>()));
     getIt.registerLazySingleton(

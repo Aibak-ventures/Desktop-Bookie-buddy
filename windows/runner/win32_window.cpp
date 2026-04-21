@@ -216,6 +216,23 @@ Win32Window::MessageHandler(HWND hwnd,
     case WM_DWMCOLORIZATIONCOLORCHANGED:
       UpdateTheme(hwnd);
       return 0;
+
+    case WM_GETMINMAXINFO: {
+      auto* info = reinterpret_cast<MINMAXINFO*>(lparam);
+      HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+      if (monitor != nullptr) {
+        MONITORINFO monitor_info;
+        monitor_info.cbSize = sizeof(MONITORINFO);
+        if (GetMonitorInfo(monitor, &monitor_info)) {
+          RECT work_area = monitor_info.rcWork;
+          info->ptMaxPosition.x = work_area.left;
+          info->ptMaxPosition.y = work_area.top;
+          info->ptMaxSize.x = work_area.right - work_area.left;
+          info->ptMaxSize.y = work_area.bottom - work_area.top;
+        }
+      }
+      return 0;
+    }
   }
 
   return DefWindowProc(window_handle_, message, wparam, lparam);

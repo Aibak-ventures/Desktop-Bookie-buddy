@@ -44,6 +44,24 @@ class ClientRepositoryImpl implements IClientRepository {
   }
 
   @override
+  Future<ClientEntity> getClientById(int clientId) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.getClientById(clientId),
+      );
+      if (response.status.isSuccess) {
+        return ClientModel.fromJson(response.data as Map<String, dynamic>)
+            .toEntity();
+      }
+      log('Failed to fetch client by id: ${response.devMessage}');
+      throw response.message ?? 'Failed to complete operation';
+    } catch (e, stackTrace) {
+      log('Error fetching client by id: $e', stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  @override
   Future<ClientEntity> addClient(
     ClientRequestEntity client, {
     bool allowExisting = true,

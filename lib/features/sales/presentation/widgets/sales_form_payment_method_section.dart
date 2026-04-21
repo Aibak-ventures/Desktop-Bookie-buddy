@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:flutter/material.dart';
 
-/// Payment method toggle (GPay / Cash) for [EditSalesScreen].
+/// Payment method toggle ( Cash) for [EditSalesScreen].
 class SalesFormPaymentMethodSection extends StatelessWidget {
   final ValueNotifier<PaymentMethod> paymentMethodNotifier;
 
@@ -24,7 +24,7 @@ class SalesFormPaymentMethodSection extends StatelessWidget {
           valueListenable: paymentMethodNotifier,
           builder: (context, selected, _) => Row(
             children: [
-              _buildOption(PaymentMethod.gPay, Icons.qr_code, selected),
+              _buildOption(PaymentMethod.upi, Icons.qr_code, selected),
               const SizedBox(width: 8),
               _buildOption(PaymentMethod.cash, Icons.money, selected),
             ],

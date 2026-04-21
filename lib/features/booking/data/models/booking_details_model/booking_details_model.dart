@@ -20,7 +20,10 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'shop_booking_id') required String invoiceId,
     required String? pickupDate,
     required String returnDate,
+    @JsonKey(name: 'pickup_time') String? pickupTime,
+    @JsonKey(name: 'return_time') String? returnTime,
     @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
+    @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
     required int totalAmount,
     int? discountAmount,
     @JsonKey(name: 'advance_amount') required int paidAmount,
@@ -71,6 +74,11 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'security_summary')
     @Default(SecuritySummaryModel.empty)
     SecuritySummaryModel securitySummary,
+    @JsonKey(
+      name: 'security_payment_method',
+      fromJson: PaymentMethod.tryFromJson,
+    )
+    PaymentMethod? securityPaymentMethod,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -113,7 +121,10 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     invoiceId: invoiceId,
     pickupDate: pickupDate,
     returnDate: returnDate,
+    pickupTime: pickupTime,
+    returnTime: returnTime,
     coolingPeriodDate: coolingPeriodDate,
+    coolingPeriodType: otherDetails.coolingPeriodType,
     totalAmount: totalAmount,
     discountAmount: discountAmount,
     paidAmount: paidAmount,
@@ -138,5 +149,6 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     totalRefunded: totalRefunded,
     refundableBalance: refundableBalance,
     securitySummary: securitySummary.toEntity(),
+    securityPaymentMethod: securityPaymentMethod,
   );
 }

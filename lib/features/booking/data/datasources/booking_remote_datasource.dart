@@ -37,7 +37,7 @@ class BookingRemoteDatasource {
     BookingRequestModel bookingData,
   ) async {
     try {
-      final data = bookingData.toJson();
+      final data = bookingData.toBookingJson();
 
       log(data.toString());
       final response = await _dio.post(
@@ -156,7 +156,7 @@ class BookingRemoteDatasource {
     try {
       final response = await _dio.patch(
         '${ApiEndpoints.bookings.updateDetails}$bookingId/',
-        data: updatedBooking.toJson(),
+        data: updatedBooking.toBookingJson(),
       );
 
       log(
@@ -416,7 +416,7 @@ class BookingRemoteDatasource {
     BookingRequestModel bookingData,
   ) async {
     try {
-      final data = bookingData.toJson();
+      final data = bookingData.toBookingJson();
       log('request old booking data: $data');
       final response = await _dio.post(
         ApiEndpoints.bookings.oldBookings,
@@ -498,22 +498,29 @@ class BookingRemoteDatasource {
       final response = await _dio.get(
         url,
         queryParameters: {'send_whatsapp': sendWhatsApp},
+        options: Options(responseType: ResponseType.bytes),
       );
       log('Send invoice response: ${response.realUri.toString()}');
 
-      // Handle potential HTML response (404 error)
-      if (response.data is String) {
-        log('Received HTML/text response instead of JSON');
+      final contentType =
+          response.headers.value(Headers.contentTypeHeader) ?? '';
+
+      // When send_whatsapp=false the API streams back a PDF — treat as success.
+      if (contentType.contains('application/pdf')) {
+        log('Received PDF response (${response.data.length} bytes) — invoice ready');
         return CustomResponseModel(
           status: CustomResponseStatus.success,
           message: 'Invoice sent successfully',
-          devMessage: 'Received non-JSON response',
+          devMessage: 'PDF response received',
           meta: null,
           data: null,
         );
       }
 
-      return CustomResponseModel.fromJson(response.data);
+      // JSON response — decode bytes then parse.
+      final jsonStr = utf8.decode(response.data as List<int>);
+      final decoded = jsonDecode(jsonStr) as Map<String, dynamic>;
+      return CustomResponseModel.fromJson(decoded);
     } catch (e, stack) {
       log('Error sending booking invoice: $e', stackTrace: stack);
       // Don't rethrow - just log and return success to prevent blocking

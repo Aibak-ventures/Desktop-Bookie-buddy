@@ -49,32 +49,34 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             showSearchOverlay();
           }
         },
-        loaded: (
-          products,
-          _nextPageUrl,
-          _serviceId,
-          _pickupDate,
-          _returnDate,
-          _isPaginating,
-          isSearching,
-          _searchQuery,
-          _searchType,
-          _startPrice,
-          _endPrice,
-          _pickupTime,
-          _returnTime,
-          _useAvailableProductsApi,
-          _isSales,
-        ) {
-          final hasSearchText = form.serviceSearchController.text.isNotEmpty;
-          if (hasSearchText && isSearching) {
-            form.overlayProducts.value = products;
-            form.overlayIsLoading.value = false;
-            if (form.searchOverlayEntry == null) showSearchOverlay();
-          } else {
-            form.overlayIsLoading.value = false;
-          }
-        },
+        loaded:
+            (
+              products,
+              _nextPageUrl,
+              _serviceId,
+              _pickupDate,
+              _returnDate,
+              _isPaginating,
+              isSearching,
+              _searchQuery,
+              _searchType,
+              _startPrice,
+              _endPrice,
+              _pickupTime,
+              _returnTime,
+              _useAvailableProductsApi,
+              _isSales,
+            ) {
+              final hasSearchText =
+                  form.serviceSearchController.text.isNotEmpty;
+              if (hasSearchText && isSearching) {
+                form.overlayProducts.value = products;
+                form.overlayIsLoading.value = false;
+                if (form.searchOverlayEntry == null) showSearchOverlay();
+              } else {
+                form.overlayIsLoading.value = false;
+              }
+            },
         orElse: () {
           if (form.serviceSearchController.text.isEmpty) {
             form.removeSearchOverlay();
@@ -443,25 +445,28 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       }
       searchType ??= 'name';
 
-      form.selectProductBloc.add(
-        SelectProductEvent.searchProducts(
-          serviceId: serviceIdToUse,
-          query: hasSearchQuery ? query : null,
-          type: hasSearchQuery ? searchType : null,
-          startPrice: hasPriceFilter
-              ? form.priceRange.value.start.round()
-              : null,
-          endPrice: hasPriceFilter ? form.priceRange.value.end.round() : null,
-          pickupDate: form.pickupDate.format(),
-          returnDate: form.returnDate.format(),
-          pickupTime: form.pickupTime,
-          returnTime: form.returnTime,
-          useAvailableProductsApi: bookingType == BookingType.booking,
-          isSales: isSales,
-        ),
-      );
-    }
-  }
+    final effectiveReturnDate = bookingType == BookingType.booking
+        ? form.returnDate.add(Duration(days: form.coolingPeriodDays)).format()
+        : form.returnDate.format();
+
+    form.selectProductBloc.add(
+      SelectProductEvent.searchProducts(
+        serviceId: serviceIdToUse,
+        query: hasSearchQuery ? query : null,
+        type: hasSearchQuery ? searchType : null,
+        startPrice: hasPriceFilter
+            ? form.priceRange.value.start.round()
+            : null,
+        endPrice: hasPriceFilter ? form.priceRange.value.end.round() : null,
+        pickupDate: form.pickupDate.format(),
+        returnDate: effectiveReturnDate,
+        pickupTime: form.pickupTime,
+        returnTime: form.returnTime,
+        useAvailableProductsApi: bookingType == BookingType.booking,
+        isSales: isSales,
+      ),
+    );
+  }}
 
   void showLocalFilteredResults(BookingType bookingType, String rawQuery) {
     if (!mounted) return;
@@ -575,10 +580,10 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       ),
     );
 
-    checkSelectedProductsAvailability();
+    checkSelectedProductsAvailability(bookingType);
   }
 
-  void checkSelectedProductsAvailability() async {
+  void checkSelectedProductsAvailability(BookingType bookingType, {int? bookingId}) async {
     final selectedProducts = form.selectedProductsNotifier.value;
     if (selectedProducts.isEmpty) return;
 
@@ -589,12 +594,17 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     if (variantIds.isEmpty) return;
 
     try {
+      final effectiveReturnDate = bookingType == BookingType.booking
+          ? form.returnDate.add(Duration(days: form.coolingPeriodDays)).format()
+          : form.returnDate.format();
+
       final notFoundIds = await getIt<CheckVariantAvailabilityUseCase>()(
         variantIds: variantIds,
         pickupDate: form.pickupDate.format(),
-        returnDate: form.returnDate.format(),
+        returnDate: effectiveReturnDate,
         pickupTime: form.pickupTime,
         returnTime: form.returnTime,
+        bookingId: bookingId,
       );
 
       if (notFoundIds.isNotEmpty && mounted) {
@@ -891,8 +901,12 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     final isSales = bookingType == BookingType.sales;
     final serviceIdToUse =
         (form.selectedServiceId == null || form.selectedServiceId == -1)
-            ? null
-            : form.selectedServiceId;
+        ? null
+        : form.selectedServiceId;
+
+    final effectiveReturnDate = bookingType == BookingType.booking
+        ? returnDate.add(Duration(days: form.coolingPeriodDays)).format()
+        : returnDate.format();
 
     form.overlayIsLoading.value = true;
     if (form.searchOverlayEntry == null) {
@@ -911,7 +925,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             ? form.priceRange.value.end.round()
             : null,
         pickupDate: pickupDate.format(),
-        returnDate: returnDate.format(),
+        returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
         useAvailableProductsApi: bookingType == BookingType.booking,
@@ -940,22 +954,23 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
           updateSearchTypesForService(serviceId);
           return form.searchTypes;
         },
-        onApply: ({
-          required serviceId,
-          required searchTypeIndex,
-          required priceRange,
-          required maxPrice,
-          required isPriceFilterEnabled,
-        }) {
-          onServiceIdChanged(serviceId);
-          form.selectedSearchTypeIndex.value = searchTypeIndex;
-          applyProductFilters(
-            bookingType,
-            searchTypeIndex,
-            priceRange,
-            isPriceFilterEnabled,
-          );
-        },
+        onApply:
+            ({
+              required serviceId,
+              required searchTypeIndex,
+              required priceRange,
+              required maxPrice,
+              required isPriceFilterEnabled,
+            }) {
+              onServiceIdChanged(serviceId);
+              form.selectedSearchTypeIndex.value = searchTypeIndex;
+              applyProductFilters(
+                bookingType,
+                searchTypeIndex,
+                priceRange,
+                isPriceFilterEnabled,
+              );
+            },
       ),
     );
   }
@@ -987,13 +1002,15 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
   }) {
     final coolingMode =
         context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
-            CoolingPeriodMode.after;
+        CoolingPeriodMode.after;
     if (coolingMode.isAfter) {
-      form.coolingPeriodDate =
-          returnDate.add(Duration(days: coolingPeriodDays));
+      form.coolingPeriodDate = returnDate.add(
+        Duration(days: coolingPeriodDays),
+      );
     } else {
-      form.coolingPeriodDate =
-          pickupDate.subtract(Duration(days: coolingPeriodDays));
+      form.coolingPeriodDate = pickupDate.subtract(
+        Duration(days: coolingPeriodDays),
+      );
     }
   }
 

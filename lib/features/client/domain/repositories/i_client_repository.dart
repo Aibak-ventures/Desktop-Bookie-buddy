@@ -9,6 +9,8 @@ abstract interface class IClientRepository {
     String? searchPhone,
   });
 
+  Future<ClientEntity> getClientById(int clientId);
+
   Future<ClientEntity> addClient(
     ClientRequestEntity client, {
     bool allowExisting = true,

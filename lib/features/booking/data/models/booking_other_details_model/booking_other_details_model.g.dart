@@ -13,6 +13,7 @@ _BookingOtherDetailsModel _$BookingOtherDetailsModelFromJson(
   locationFrom: json['location_from'] as String?,
   locationTo: json['location_to'] as String?,
   end: json['end'] as String?,
+  coolingPeriodType: json['cooling_period_type'] as String?,
 );
 
 Map<String, dynamic> _$BookingOtherDetailsModelToJson(
@@ -22,4 +23,5 @@ Map<String, dynamic> _$BookingOtherDetailsModelToJson(
   'location_from': ?instance.locationFrom,
   'location_to': ?instance.locationTo,
   'end': ?instance.end,
+  'cooling_period_type': ?instance.coolingPeriodType,
 };

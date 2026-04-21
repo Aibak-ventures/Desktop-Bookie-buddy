@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class EditBookingAppBar extends StatelessWidget {
   final String bookingType;
-  final int bookingId;
+  final String displayId;
   final VoidCallback onBack;
   final VoidCallback onSave;
 
   const EditBookingAppBar({
     super.key,
     required this.bookingType,
-    required this.bookingId,
+    required this.displayId,
     required this.onBack,
     required this.onSave,
   });
@@ -96,7 +96,7 @@ class EditBookingAppBar extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        '#$bookingId',
+                        '#$displayId',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,

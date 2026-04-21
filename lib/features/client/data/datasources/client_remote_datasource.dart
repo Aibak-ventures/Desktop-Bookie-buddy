@@ -36,10 +36,7 @@ class ClientRemoteDatasource {
 
   Future<CustomResponseModel> addClient(ClientRequestModel client) async {
     try {
-      final response = await _dio.post(
-        clientUrl,
-        data: client.toJson(),
-      );
+      final response = await _dio.post(clientUrl, data: client.toJson());
 
       log(
         'add client response: ${response.realUri.toString()}, data: ${response.data}',
@@ -53,9 +50,11 @@ class ClientRemoteDatasource {
 
   Future<CustomResponseModel> updateClient(ClientRequestModel client) async {
     try {
+      // Use toUpdateJson() to include correct API field names (name, phone_1, phone_2)
+      // alongside E.164-formatted phone fields (phone_1_e164, phone_2_e164).
       final response = await _dio.patch(
         '$clientUrl${client.id}/',
-        data: client.toJson(),
+        data: client.toUpdateJson(),
       );
       log(
         'update client response: ${response.realUri.toString()}, data: ${response.data}',
@@ -63,6 +62,19 @@ class ClientRemoteDatasource {
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error updating client: ${e.toString()}', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  Future<CustomResponseModel> getClientById(int clientId) async {
+    try {
+      final response = await _dio.get(
+        ApiEndpoints.bookings.clientById(clientId),
+      );
+      log('get client by id response: ${response.realUri}');
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error fetching client by id: ${e.toString()}', stackTrace: stack);
       rethrow;
     }
   }

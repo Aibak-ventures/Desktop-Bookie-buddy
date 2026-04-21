@@ -49,6 +49,10 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
           )
           .toList(),
       coolingPeriodType: json['cooling_period_type'] as String?,
+      securityPaymentMethod: $enumDecodeNullable(
+        _$PaymentMethodEnumMap,
+        json['security_payment_method'],
+      ),
     );
 
 Map<String, dynamic> _$BookingRequestModelToJson(
@@ -75,10 +79,11 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'additional_charges': ?instance.additionalCharges,
   'send_invoice': instance.sendPdfToWhatsApp,
   'cooling_period_type': ?instance.coolingPeriodType,
+  'security_payment_method': ?instance.securityPaymentMethod,
 };
 
 const _$PaymentMethodEnumMap = {
-  PaymentMethod.gPay: 'gPay',
+  PaymentMethod.upi: 'upi',
   PaymentMethod.cash: 'cash',
 };
 

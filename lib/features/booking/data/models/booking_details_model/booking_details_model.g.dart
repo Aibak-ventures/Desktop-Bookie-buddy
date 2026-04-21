@@ -13,7 +13,10 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
   invoiceId: json['shop_booking_id'] as String,
   pickupDate: json['pickup_date'] as String?,
   returnDate: json['return_date'] as String,
+  pickupTime: json['pickup_time'] as String?,
+  returnTime: json['return_time'] as String?,
   coolingPeriodDate: json['cooling_period_end'] as String?,
+  coolingPeriodType: json['cooling_period_type'] as String?,
   totalAmount: (json['total_amount'] as num).toInt(),
   discountAmount: (json['discount_amount'] as num?)?.toInt(),
   paidAmount: (json['advance_amount'] as num).toInt(),
@@ -70,6 +73,9 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
       : SecuritySummaryModel.fromJson(
           json['security_summary'] as Map<String, dynamic>,
         ),
+  securityPaymentMethod: PaymentMethod.tryFromJson(
+    json['security_payment_method'] as String?,
+  ),
 );
 
 Map<String, dynamic> _$BookingDetailsModelToJson(
@@ -79,7 +85,10 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'shop_booking_id': instance.invoiceId,
   'pickup_date': instance.pickupDate,
   'return_date': instance.returnDate,
+  'pickup_time': instance.pickupTime,
+  'return_time': instance.returnTime,
   'cooling_period_end': instance.coolingPeriodDate,
+  'cooling_period_type': instance.coolingPeriodType,
   'total_amount': instance.totalAmount,
   'discount_amount': instance.discountAmount,
   'advance_amount': instance.paidAmount,
@@ -104,6 +113,7 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'total_refunded': instance.totalRefunded,
   'refundable_balance': instance.refundableBalance,
   'security_summary': instance.securitySummary,
+  'security_payment_method': instance.securityPaymentMethod,
 };
 
 const _$PurchaseModeEnumMap = {

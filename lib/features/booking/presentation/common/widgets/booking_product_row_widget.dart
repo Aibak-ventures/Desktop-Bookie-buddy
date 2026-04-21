@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,9 @@ class BookingProductRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -57,31 +61,56 @@ class BookingProductRowWidget extends StatelessWidget {
             child: Row(
               children: [
                 // Image
-                Container(
-                  width: 48,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Colors.grey.shade100,
-                    border: Border.all(color: Colors.grey.shade200),
-                    image:
-                        (product.variant.thumbnailImage ?? product.variant.image) != null &&
-                            (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(product.variant.thumbnailImage ?? product.variant.image!),
-                            fit: BoxFit.cover,
-                          )
+                MouseRegion(
+                  cursor: hasImage
+                      ? SystemMouseCursors.click
+                      : MouseCursor.defer,
+                  child: GestureDetector(
+                    onTap: hasImage
+                        ? () => ZoomableImageDialog.show(
+                              context,
+                              imageUrl: imageUrl,
+                              title: product.variant.name,
+                            )
                         : null,
+                    child: Container(
+                      width: 48,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.grey.shade100,
+                        border: Border.all(color: Colors.grey.shade200),
+                        image: hasImage
+                            ? DecorationImage(
+                                image: NetworkImage(imageUrl),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: !hasImage
+                          ? const Icon(
+                              Icons.image_not_supported,
+                              size: 20,
+                              color: Colors.grey,
+                            )
+                          : Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                margin: const EdgeInsets.all(3),
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(
+                                  Icons.zoom_in,
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                    ),
                   ),
-                  child:
-                      (product.variant.thumbnailImage ?? product.variant.image) == null ||
-                          product.variant.image!.isEmpty
-                      ? const Icon(
-                          Icons.image_not_supported,
-                          size: 20,
-                          color: Colors.grey,
-                        )
-                      : null,
                 ),
                 const SizedBox(width: 16),
                 // Text

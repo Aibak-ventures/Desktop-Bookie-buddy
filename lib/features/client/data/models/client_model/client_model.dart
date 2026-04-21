@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'client_model.freezed.dart';
@@ -7,10 +8,27 @@ part 'client_model.g.dart';
 String _readName(Map json, String key) =>
     json[key] ?? json['client_name'] ?? 'Unknown';
 
-int _readPhone1(Map json, String key) =>
-    json[key] ?? json['client_phone_1'] ?? 0000000000;
+int _readPhone1(Map json, String key) {
+  final phone1E164 = json['phone_1_e164'] as String?;
+  if (phone1E164 != null && phone1E164.isNotEmpty) {
+    final extracted = extractPhoneFromE164(phone1E164);
+    if (extracted.isNotEmpty) {
+      return int.tryParse(extracted) ?? 0;
+    }
+  }
+  return json[key] ?? json['client_phone_1'] ?? 0;
+}
 
-int? _readPhone2(Map json, String key) => json[key] ?? json['client_phone_2'];
+int? _readPhone2(Map json, String key) {
+  final phone2E164 = json['phone_2_e164'] as String?;
+  if (phone2E164 != null && phone2E164.isNotEmpty) {
+    final extracted = extractPhoneFromE164(phone2E164);
+    if (extracted.isNotEmpty) {
+      return int.tryParse(extracted);
+    }
+  }
+  return json[key] ?? json['client_phone_2'];
+}
 
 String? _readPhone1E164(Map json, String key) => json[key];
 

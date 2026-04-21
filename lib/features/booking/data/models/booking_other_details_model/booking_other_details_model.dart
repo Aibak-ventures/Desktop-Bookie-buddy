@@ -16,6 +16,7 @@ abstract class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
     @JsonKey(name: 'location_from') String? locationFrom,
     @JsonKey(name: 'location_to') String? locationTo,
     @JsonKey(name: 'end') String? end,
+    @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
   }) = _BookingOtherDetailsModel;
 
   factory BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +31,7 @@ extension BookingOtherDetailsModelMapper on BookingOtherDetailsModel {
     locationFrom: locationFrom,
     locationTo: locationTo,
     end: end,
+    coolingPeriodType: coolingPeriodType,
   );
 }
 
@@ -39,5 +41,6 @@ extension BookingOtherDetailsEntityMapper on BookingOtherDetailsEntity {
     locationFrom: locationFrom,
     locationTo: locationTo,
     end: end,
+    coolingPeriodType: coolingPeriodType,
   );
 }

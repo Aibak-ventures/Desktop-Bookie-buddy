@@ -122,11 +122,117 @@ class _BookingPaymentSummaryPanelState
                     hint: 'Security amount',
                     isNumber: true,
                   ),
+                  const SizedBox(height: 8),
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: form.securityAmountController,
+                    builder: (context, value, _) {
+                      final hasAmount =
+                          value.text.trim().isNotEmpty &&
+                          (int.tryParse(value.text.trim()) ?? 0) > 0;
+                      if (!hasAmount) return const SizedBox.shrink();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Security Payment Method',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          ValueListenableBuilder<PaymentMethod>(
+                            valueListenable: form.securityPaymentMethod,
+                            builder: (context, selected, _) {
+                              return Row(
+                                children: [
+                                  _buildSecurityMethodOption(
+                                    method: PaymentMethod.upi,
+                                    icon: Icons.qr_code,
+                                    selected: selected,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildSecurityMethodOption(
+                                    method: PaymentMethod.cash,
+                                    icon: Icons.money,
+                                    selected: selected,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      );
+                    },
+                  ),
                   const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: form.discountAmountController,
-                    hint: 'Discount amount',
-                    isNumber: true,
+                  ValueListenableBuilder<bool>(
+                    valueListenable: form.isDiscountPercentage,
+                    builder: (context, isPercent, _) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: BookingTextFieldBuilder.buildRightPanelTextField(
+                              controller: form.discountAmountController,
+                              hint: isPercent ? 'Discount %' : 'Discount amount',
+                              isNumber: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.grey.shade600,
+                            ),
+                            onSelected: (value) {
+                              form.isDiscountPercentage.value =
+                                  value == 'percentage';
+                              form.discountAmountController.clear();
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'amount',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isPercent
+                                          ? Icons.circle_outlined
+                                          : Icons.check_circle,
+                                      size: 18,
+                                      color: isPercent
+                                          ? Colors.grey
+                                          : const Color(0xFF6132E4),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Amount (₹)'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'percentage',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isPercent
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      size: 18,
+                                      color: isPercent
+                                          ? const Color(0xFF6132E4)
+                                          : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Percentage (%)'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
                   const SizedBox(height: 14),
@@ -331,7 +437,7 @@ class _BookingPaymentSummaryPanelState
             return Row(
               children: [
                 _buildPaymentMethodOption(
-                  PaymentMethod.gPay,
+                  PaymentMethod.upi,
                   Icons.qr_code,
                   selectedMethods,
                 ),
@@ -411,6 +517,56 @@ class _BookingPaymentSummaryPanelState
                   size: 18,
                   color: Color(0xFF6132E4),
                 ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSecurityMethodOption({
+    required PaymentMethod method,
+    required IconData icon,
+    required PaymentMethod selected,
+  }) {
+    final isSelected = selected == method;
+    return Expanded(
+      child: InkWell(
+        onTap: () => form.securityPaymentMethod.value = method,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+              width: isSelected ? 1.5 : 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            color: isSelected
+                ? const Color(0xFF6132E4).withOpacity(0.05)
+                : Colors.white,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 18,
+                color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                method.name,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                ),
+              ),
+              if (isSelected) ...[
+                const SizedBox(width: 4),
+                const Icon(Icons.check_circle, size: 14, color: Color(0xFF6132E4)),
               ],
             ],
           ),

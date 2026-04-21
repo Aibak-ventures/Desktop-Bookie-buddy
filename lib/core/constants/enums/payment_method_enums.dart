@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 
 enum PaymentMethod {
-  gPay('gpay', 'UPI', 'upi'),
+  upi('upi', 'UPI', 'upi'),
   cash('cash', 'Cash', 'cash');
 
   const PaymentMethod(this.value, this.name, this.upiValue);
@@ -51,13 +51,13 @@ enum PaymentMethod {
   String toJson() => value;
   static String? toUpiJson(PaymentMethod? method) => method?.upiValue;
 
-  bool get isUpi => this == PaymentMethod.gPay;
+  bool get isUpi => this == PaymentMethod.upi;
   bool get isCash => this == PaymentMethod.cash;
 }
 
 /// Extension methods for nullable PaymentMethod enum
 // extension PaymentMethodX on PaymentMethod? {
-//   bool get isUpi => this == PaymentMethod.gPay;
+//   bool get isUpi => this == PaymentMethod.upi;
 //   bool get isCash => this == PaymentMethod.cash;
 // }
 
