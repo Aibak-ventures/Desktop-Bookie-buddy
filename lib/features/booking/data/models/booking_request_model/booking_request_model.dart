@@ -141,7 +141,10 @@ extension BookingRequestModelX on BookingRequestModel {
     }
 
     if (coolingPeriodDate != null) {
-      if (returnTime != null) {
+      final isBefore = coolingPeriodType == 'BEFORE';
+      if (isBefore) {
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time24HourAsString: '00:00:00');
+      } else if (returnTime != null) {
         json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time: returnTime);
       } else {
         json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time24HourAsString: '23:59:00');
