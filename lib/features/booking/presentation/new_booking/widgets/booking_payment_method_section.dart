@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:flutter/material.dart';
 
-/// Displays the two payment method options (gPay / cash) with selection state.
+/// Displays the two payment method options ( / cash) with selection state.
 /// Extracted from NewBookingScreen to keep the screen file lean.
 class BookingPaymentMethodSection extends StatelessWidget {
   const BookingPaymentMethodSection({
@@ -25,7 +25,7 @@ class BookingPaymentMethodSection extends StatelessWidget {
         const SizedBox(height: 4),
         Row(
           children: [
-            _option(PaymentMethod.gPay, Icons.qr_code),
+            _option(PaymentMethod.upi, Icons.qr_code),
             const SizedBox(width: 8),
             _option(PaymentMethod.cash, Icons.money),
           ],

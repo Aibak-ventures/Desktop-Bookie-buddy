@@ -41,6 +41,6 @@ Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
     };
 
 const _$PaymentMethodEnumMap = {
-  PaymentMethod.gPay: 'gPay',
+  PaymentMethod.upi: 'upi',
   PaymentMethod.cash: 'cash',
 };

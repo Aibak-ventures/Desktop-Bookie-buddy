@@ -17,7 +17,10 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     required String invoiceId,
     required String? pickupDate,
     required String returnDate,
+    String? pickupTime,
+    String? returnTime,
     String? coolingPeriodDate,
+    String? coolingPeriodType,
     required int totalAmount,
     int? discountAmount,
     required int paidAmount,
@@ -42,6 +45,7 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     @Default(0.0) double totalRefunded,
     @Default(0.0) double refundableBalance,
     @Default(SecuritySummaryEntity.empty) SecuritySummaryEntity securitySummary,
+    PaymentMethod? securityPaymentMethod,
   }) = _BookingDetailsEntity;
 }
 

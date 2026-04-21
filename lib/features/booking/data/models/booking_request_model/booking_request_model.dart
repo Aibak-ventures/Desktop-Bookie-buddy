@@ -5,6 +5,8 @@ import 'package:bookie_buddy_web/features/booking/data/models/booking_other_deta
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -17,6 +19,10 @@ Map<String, dynamic>? _clientToJson(ClientRequestModel? client) =>
 List<Map<String, dynamic>>? _productsToJson(
   List<ProductSelectedModel>? products,
 ) => products?.map((e) => e.toCustomJson()).toList();
+
+String? _pickupTimeToJson(TimeOfDay? time) => time?.formatToTime();
+
+String? _returnTimeToJson(TimeOfDay? time) => time?.formatToTime();
 
 @freezed
 abstract class BookingRequestModel with _$BookingRequestModel {
@@ -48,14 +54,24 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     List<AdditionalChargesModel>? additionalCharges,
     @JsonKey(name: 'service_id', includeToJson: false, includeFromJson: false)
     int? serviceId,
-    @JsonKey(name: 'pickup_time', includeToJson: false, includeFromJson: false)
+    @JsonKey(
+      name: 'pickup_time',
+      toJson: _pickupTimeToJson,
+      includeFromJson: false,
+    )
     TimeOfDay? pickupTime,
-    @JsonKey(name: 'return_time', includeToJson: false, includeFromJson: false)
+    @JsonKey(
+      name: 'return_time',
+      toJson: _returnTimeToJson,
+      includeFromJson: false,
+    )
     TimeOfDay? returnTime,
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
     @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
+    @JsonKey(name: 'security_payment_method')
+    PaymentMethod? securityPaymentMethod,
   }) = _BookingRequestModel;
 
   factory BookingRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -91,10 +107,50 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         returnTime: entity.returnTime,
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
         coolingPeriodType: entity.coolingPeriodType,
+        securityPaymentMethod: entity.securityPaymentMethod,
       );
 }
 
 extension BookingRequestModelX on BookingRequestModel {
+  /// Returns the full booking JSON with time embedded in date fields.
+  /// - pickup_date default: 00:00, return_date default: 23:59 when no time selected
+  /// - pickup_time / return_time sent as separate fields ONLY when user selected them
+  ///
+  /// Use this instead of `toJson()` when POSTing/PATCHing to the booking API.
+  Map<String, dynamic> toBookingJson() {
+    final json = toJson();
+
+    if (pickupDate != null) {
+      if (pickupTime != null) {
+        json['pickup_date'] = pickupDate!.appendTimeToDate(time: pickupTime);
+        json['pickup_time'] = _pickupTimeToJson(pickupTime);
+      } else {
+        json['pickup_date'] = pickupDate!.appendTimeToDate(time24HourAsString: '00:00:00');
+        json.remove('pickup_time');
+      }
+    }
+
+    if (returnDate != null) {
+      if (returnTime != null) {
+        json['return_date'] = returnDate!.appendTimeToDate(time: returnTime);
+        json['return_time'] = _returnTimeToJson(returnTime);
+      } else {
+        json['return_date'] = returnDate!.appendTimeToDate(time24HourAsString: '23:59:00');
+        json.remove('return_time');
+      }
+    }
+
+    if (coolingPeriodDate != null) {
+      if (returnTime != null) {
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time: returnTime);
+      } else {
+        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(time24HourAsString: '23:59:00');
+      }
+    }
+
+    return json;
+  }
+
   bool get hasChanges =>
       clientId != null ||
       staffId != null ||

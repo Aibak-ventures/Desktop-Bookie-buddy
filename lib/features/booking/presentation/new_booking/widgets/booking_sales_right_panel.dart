@@ -78,10 +78,71 @@ class BookingSalesRightPanel extends StatelessWidget {
                   const SizedBox(height: _fieldSpacing),
                   _buildNotesField(),
                   const SizedBox(height: _fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: form.discountAmountController,
-                    hint: 'Discount amount',
-                    isNumber: true,
+                  ValueListenableBuilder<bool>(
+                    valueListenable: form.isDiscountPercentage,
+                    builder: (context, isPercent, _) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: BookingTextFieldBuilder.buildRightPanelTextField(
+                              controller: form.discountAmountController,
+                              hint: isPercent ? 'Discount %' : 'Discount amount',
+                              isNumber: true,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Colors.grey.shade600,
+                            ),
+                            onSelected: (value) {
+                              form.isDiscountPercentage.value =
+                                  value == 'percentage';
+                              form.discountAmountController.clear();
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                value: 'amount',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isPercent
+                                          ? Icons.circle_outlined
+                                          : Icons.check_circle,
+                                      size: 18,
+                                      color: isPercent
+                                          ? Colors.grey
+                                          : const Color(0xFF6132E4),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Amount (₹)'),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem(
+                                value: 'percentage',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isPercent
+                                          ? Icons.check_circle
+                                          : Icons.circle_outlined,
+                                      size: 18,
+                                      color: isPercent
+                                          ? const Color(0xFF6132E4)
+                                          : Colors.grey,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Text('Percentage (%)'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingPaymentMethodSection(

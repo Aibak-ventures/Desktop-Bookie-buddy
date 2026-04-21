@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 /// Helper class for building common text field widgets in new booking screen
 class BookingTextFieldBuilder {
@@ -15,6 +17,7 @@ class BookingTextFieldBuilder {
     String? errorText,
     IconData? prefixIcon,
     String? prefixSvgAsset,
+    Widget? suffix,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,12 +64,11 @@ class BookingTextFieldBuilder {
                   controller: controller,
                   focusNode: focusNode,
                   enabled: enabled,
-                  keyboardType:
-                      isNumber ? TextInputType.phone : TextInputType.text,
+                  keyboardType: isNumber
+                      ? TextInputType.phone
+                      : TextInputType.text,
                   inputFormatters: isNumber
-                      ? [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
-                        ]
+                      ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9+]'))]
                       : null,
                   textInputAction: nextFocusNode != null
                       ? TextInputAction.next
@@ -85,13 +87,16 @@ class BookingTextFieldBuilder {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hint,
-                    hintStyle:
-                        TextStyle(fontSize: 13, color: Colors.grey.shade400),
+                    hintStyle: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade400,
+                    ),
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ),
+              if (suffix != null) ...[const SizedBox(width: 4), suffix],
             ],
           ),
         ),
@@ -109,6 +114,110 @@ class BookingTextFieldBuilder {
             ),
           ),
         ],
+      ],
+    );
+  }
+
+  static Widget buildRightPanelPhoneField({
+    required TextEditingController controller,
+    required PhoneController phoneController,
+    required String hint,
+    bool enabled = true,
+    FocusNode? focusNode,
+    FocusNode? nextFocusNode,
+    String? errorText,
+    ValueChanged<PhoneNumber>? onChanged,
+    String? Function(PhoneNumber?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PhoneFormField(
+          controller: phoneController,
+          enabled: enabled,
+          focusNode: focusNode,
+          // defaultCountry: IsoCode.IN,
+          countrySelectorNavigator: const CountrySelectorNavigator.dialog(),
+          isCountryButtonPersistent: true,
+          countryButtonStyle: const CountryButtonStyle(
+            showDialCode: true,
+            showFlag: true,
+            showIsoCode: false,
+          ),
+          textInputAction: nextFocusNode != null
+              ? TextInputAction.next
+              : TextInputAction.done,
+          validator:
+              validator ??
+              (phone) => phone != null && phone.isValid()
+                  ? null
+                  : 'Invalid phone number',
+          onEditingComplete: () {
+            if (nextFocusNode != null) {
+              nextFocusNode.requestFocus();
+            } else {
+              focusNode?.unfocus();
+            }
+          },
+          onChanged: (value) {
+            final digits = value.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+            cachePhoneE164(
+              rawPhoneNumber: digits,
+              e164: phoneNumberToE164(value),
+            );
+            if (controller.text != digits) {
+              controller.value = TextEditingValue(
+                text: digits,
+                selection: TextSelection.collapsed(offset: digits.length),
+              );
+            }
+            onChanged?.call(value);
+          },
+          style: TextStyle(
+            fontSize: 13,
+            color: enabled ? Colors.black87 : Colors.grey.shade500,
+          ),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+            isDense: true,
+            filled: true,
+            fillColor: enabled ? Colors.white : Colors.grey.shade100,
+            errorText: errorText,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: errorText != null
+                    ? Colors.red.shade400
+                    : Colors.grey.shade300,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: errorText != null
+                    ? Colors.red.shade400
+                    : const Color(0xFF6132E4),
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red.shade400),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red.shade400),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -183,7 +292,8 @@ class BookingTextFieldBuilder {
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.allow(
-                  RegExp(r'[0-9]')), // Strict regex for digits
+                RegExp(r'[0-9]'),
+              ), // Strict regex for digits
             ],
             onChanged: (value) {
               // Extra layer of protection
@@ -229,8 +339,10 @@ class BookingTextFieldBuilder {
                 borderRadius: BorderRadius.circular(8),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide:
-                    const BorderSide(color: Color(0xFF6132E4), width: 1),
+                borderSide: const BorderSide(
+                  color: Color(0xFF6132E4),
+                  width: 1,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBorder: OutlineInputBorder(
@@ -241,8 +353,10 @@ class BookingTextFieldBuilder {
                 borderSide: const BorderSide(color: Colors.red, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
             ),
           ),
         ),

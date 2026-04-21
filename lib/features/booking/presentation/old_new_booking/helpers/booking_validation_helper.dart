@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 
 /// Validation result model that holds validation status and error messages
@@ -91,6 +92,9 @@ class BookingValidationHelper {
     } else if (!_isValidPhoneNumber(phone1)) {
       fieldErrors['phone1'] = 'Invalid phone';
     }
+    if (phone2.trim().isNotEmpty && !_isValidPhoneNumber(phone2)) {
+      fieldErrors['phone2'] = 'Invalid phone 2';
+    }
     if (selectedStaffId == null && staffName.trim().isEmpty) {
       fieldErrors['staff'] = 'Staff is required';
     }
@@ -103,29 +107,33 @@ class BookingValidationHelper {
   }
 
   static String? phoneNumber(String? value, {bool isRequired = true}) {
-    // If not required and empty, return null
     if (!isRequired && (value == null || value.trim().isEmpty)) {
       return null;
     }
-
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
     }
-    // Allow optional leading '+' and digits only, any length
-    final phoneRegex = RegExp(r'^\+?\d+$');
-
-    if (!phoneRegex.hasMatch(value.trim())) {
+    if (!_isValidPhoneNumber(value)) {
       return 'Enter a valid phone number';
     }
-
     return null;
   }
 
-  /// Validates phone number format
+  /// Validates phone number format using phone_form_field.
+  /// Checks cache first so non-India numbers selected from client search
+  /// (stored as national digits) are validated against their real country.
   static bool _isValidPhoneNumber(String phone) {
-    // Allow optional leading '+' and digits only, any length
-    final phoneRegex = RegExp(r'^\+?\d+$');
-    return phoneRegex.hasMatch(phone.trim());
+    try {
+      final trimmed = phone.trim();
+      if (trimmed.isEmpty) return false;
+      // toPhone1E164 checks the E.164 cache (populated when a client is
+      // selected) so UAE/other numbers validate correctly.
+      final e164 = toPhone1E164(trimmed);
+      final number = phoneNumberFromData(phoneNumber: trimmed, e164: e164);
+      return number?.isValid() ?? false;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Shows a validation error using the same toast as confirm button

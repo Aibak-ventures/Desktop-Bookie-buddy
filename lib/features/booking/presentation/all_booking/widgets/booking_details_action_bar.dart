@@ -125,14 +125,20 @@ class BookingDetailsActionBar extends StatelessWidget {
                                 ServiceBloc(getShopServices: getIt()),
                           ),
                           BlocProvider(
-                            create: (_) => ClientCubit(getClients: getIt()),
+                            create: (_) => ClientCubit(
+                              getClients: getIt(),
+                              getClientById: getIt(),
+                            ),
                           ),
                           BlocProvider(
                             create: (_) => StaffSearchCubit(getStaffs: getIt()),
                           ),
                           BlocProvider(create: (_) => SelectedProductsCubit()),
                         ],
-                        child: OldEditNewBookingScreen(bookingDetails: booking),
+                        child: OldEditNewBookingScreen(
+                          bookingDetails: booking,
+                          bookingId: booking.id,
+                        ),
                       ),
                     ),
                   );
@@ -212,7 +218,7 @@ class BookingDetailsActionBar extends StatelessWidget {
             },
           ),
         if (isCompleted) const SizedBox(width: 12),
-        if (isCompleted || isCancelled)
+        if (isCompleted)
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -271,7 +277,7 @@ class BookingDetailsActionBar extends StatelessWidget {
               ),
             ),
           ),
-        if (!isCompleted && !isCancelled) const Spacer(),
+        if (!isCompleted) const Spacer(),
         // Mark as Completed / Complete cancelled work
         if (!isCompleted)
           ElevatedButton(

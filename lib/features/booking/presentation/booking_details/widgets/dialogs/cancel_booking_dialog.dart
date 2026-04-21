@@ -202,7 +202,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                       children: [
                         Expanded(
                           child: _buildRadioButton(
-                            method: PaymentMethod.gPay,
+                            method: PaymentMethod.upi,
                             label: 'UPI',
                             icon: Icons.account_balance_wallet,
                           ),

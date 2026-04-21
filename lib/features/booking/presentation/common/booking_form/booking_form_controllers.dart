@@ -29,10 +29,12 @@ class BookingFormControllers {
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
-  PaymentMethod paymentMethod = PaymentMethod.gPay;
+  final isDiscountPercentage = ValueNotifier<bool>(false);
+  PaymentMethod paymentMethod = PaymentMethod.upi;
   final selectedPaymentMethods = ValueNotifier<List<PaymentMethod>>([
-    PaymentMethod.gPay,
+    PaymentMethod.upi,
   ]);
+  final securityPaymentMethod = ValueNotifier<PaymentMethod>(PaymentMethod.cash);
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
 
   // ── Description / service / location ────────────────────────────────────────
@@ -55,8 +57,11 @@ class BookingFormControllers {
   final clientAddressFocusNode = FocusNode();
 
   // ── Notifiers ────────────────────────────────────────────────────────────────
-  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>([]);
-  final additionalChargesNotifier = ValueNotifier<List<AdditionalChargesEntity>>([]);
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
+    [],
+  );
+  final additionalChargesNotifier =
+      ValueNotifier<List<AdditionalChargesEntity>>([]);
   final documentsNotifier = ValueNotifier<List<DocumentFileEntity>>([]);
 
   // ── Search overlay notifiers ─────────────────────────────────────────────────
@@ -114,6 +119,8 @@ class BookingFormControllers {
     advanceAmountController.dispose();
     securityAmountController.dispose();
     discountAmountController.dispose();
+    isDiscountPercentage.dispose();
+    securityPaymentMethod.dispose();
     descriptionController.dispose();
     serviceSearchController.dispose();
     startLocationController.dispose();

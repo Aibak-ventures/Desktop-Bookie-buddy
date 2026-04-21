@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ClientRequestModel {
 
-@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? get id;@JsonKey(name: 'name', includeIfNull: false) String? get name;@JsonKey(name: 'phone_1', includeIfNull: false) int? get phone1;@JsonKey(name: 'phone_2', includeIfNull: false) int? get phone2;
+@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? get id;@JsonKey(name: 'name', includeIfNull: false) String? get name;@JsonKey(name: 'phone_1_e164', includeIfNull: false) String? get phone1E164;@JsonKey(name: 'phone_2_e164', includeIfNull: false) String? get phone2E164;
 /// Create a copy of ClientRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ClientRequestModelCopyWith<ClientRequestModel> get copyWith => _$ClientRequestM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+int get hashCode => Object.hash(runtimeType,id,name,phone1E164,phone2E164);
 
 @override
 String toString() {
-  return 'ClientRequestModel(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+  return 'ClientRequestModel(id: $id, name: $name, phone1E164: $phone1E164, phone2E164: $phone2E164)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ClientRequestModelCopyWith<$Res>  {
   factory $ClientRequestModelCopyWith(ClientRequestModel value, $Res Function(ClientRequestModel) _then) = _$ClientRequestModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,@JsonKey(name: 'name', includeIfNull: false) String? name,@JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,@JsonKey(name: 'phone_2', includeIfNull: false) int? phone2
+@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,@JsonKey(name: 'name', includeIfNull: false) String? name,@JsonKey(name: 'phone_1_e164', includeIfNull: false) String? phone1E164,@JsonKey(name: 'phone_2_e164', includeIfNull: false) String? phone2E164
 });
 
 
@@ -65,13 +65,13 @@ class _$ClientRequestModelCopyWithImpl<$Res>
 
 /// Create a copy of ClientRequestModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? phone1 = freezed,Object? phone2 = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? phone1E164 = freezed,Object? phone2E164 = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,phone1: freezed == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
-as int?,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
-as int?,
+as String?,phone1E164: freezed == phone1E164 ? _self.phone1E164 : phone1E164 // ignore: cast_nullable_to_non_nullable
+as String?,phone2E164: freezed == phone2E164 ? _self.phone2E164 : phone2E164 // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -156,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1', includeIfNull: false)  int? phone1, @JsonKey(name: 'phone_2', includeIfNull: false)  int? phone2)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1_e164', includeIfNull: false)  String? phone1E164, @JsonKey(name: 'phone_2_e164', includeIfNull: false)  String? phone2E164)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClientRequestModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1E164,_that.phone2E164);case _:
   return orElse();
 
 }
@@ -177,10 +177,10 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1', includeIfNull: false)  int? phone1, @JsonKey(name: 'phone_2', includeIfNull: false)  int? phone2)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1_e164', includeIfNull: false)  String? phone1E164, @JsonKey(name: 'phone_2_e164', includeIfNull: false)  String? phone2E164)  $default,) {final _that = this;
 switch (_that) {
 case _ClientRequestModel():
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1E164,_that.phone2E164);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +197,10 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1', includeIfNull: false)  int? phone1, @JsonKey(name: 'phone_2', includeIfNull: false)  int? phone2)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id', includeToJson: false, includeIfNull: false)  int? id, @JsonKey(name: 'name', includeIfNull: false)  String? name, @JsonKey(name: 'phone_1_e164', includeIfNull: false)  String? phone1E164, @JsonKey(name: 'phone_2_e164', includeIfNull: false)  String? phone2E164)?  $default,) {final _that = this;
 switch (_that) {
 case _ClientRequestModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
+return $default(_that.id,_that.name,_that.phone1E164,_that.phone2E164);case _:
   return null;
 
 }
@@ -212,13 +212,13 @@ return $default(_that.id,_that.name,_that.phone1,_that.phone2);case _:
 @JsonSerializable()
 
 class _ClientRequestModel implements ClientRequestModel {
-  const _ClientRequestModel({@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) required this.id, @JsonKey(name: 'name', includeIfNull: false) this.name, @JsonKey(name: 'phone_1', includeIfNull: false) this.phone1, @JsonKey(name: 'phone_2', includeIfNull: false) this.phone2});
+  const _ClientRequestModel({@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) required this.id, @JsonKey(name: 'name', includeIfNull: false) this.name, @JsonKey(name: 'phone_1_e164', includeIfNull: false) this.phone1E164, @JsonKey(name: 'phone_2_e164', includeIfNull: false) this.phone2E164});
   factory _ClientRequestModel.fromJson(Map<String, dynamic> json) => _$ClientRequestModelFromJson(json);
 
 @override@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) final  int? id;
 @override@JsonKey(name: 'name', includeIfNull: false) final  String? name;
-@override@JsonKey(name: 'phone_1', includeIfNull: false) final  int? phone1;
-@override@JsonKey(name: 'phone_2', includeIfNull: false) final  int? phone2;
+@override@JsonKey(name: 'phone_1_e164', includeIfNull: false) final  String? phone1E164;
+@override@JsonKey(name: 'phone_2_e164', includeIfNull: false) final  String? phone2E164;
 
 /// Create a copy of ClientRequestModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2);
+int get hashCode => Object.hash(runtimeType,id,name,phone1E164,phone2E164);
 
 @override
 String toString() {
-  return 'ClientRequestModel(id: $id, name: $name, phone1: $phone1, phone2: $phone2)';
+  return 'ClientRequestModel(id: $id, name: $name, phone1E164: $phone1E164, phone2E164: $phone2E164)';
 }
 
 
@@ -253,7 +253,7 @@ abstract mixin class _$ClientRequestModelCopyWith<$Res> implements $ClientReques
   factory _$ClientRequestModelCopyWith(_ClientRequestModel value, $Res Function(_ClientRequestModel) _then) = __$ClientRequestModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,@JsonKey(name: 'name', includeIfNull: false) String? name,@JsonKey(name: 'phone_1', includeIfNull: false) int? phone1,@JsonKey(name: 'phone_2', includeIfNull: false) int? phone2
+@JsonKey(name: 'id', includeToJson: false, includeIfNull: false) int? id,@JsonKey(name: 'name', includeIfNull: false) String? name,@JsonKey(name: 'phone_1_e164', includeIfNull: false) String? phone1E164,@JsonKey(name: 'phone_2_e164', includeIfNull: false) String? phone2E164
 });
 
 
@@ -270,13 +270,13 @@ class __$ClientRequestModelCopyWithImpl<$Res>
 
 /// Create a copy of ClientRequestModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? phone1 = freezed,Object? phone2 = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? phone1E164 = freezed,Object? phone2E164 = freezed,}) {
   return _then(_ClientRequestModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,phone1: freezed == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
-as int?,phone2: freezed == phone2 ? _self.phone2 : phone2 // ignore: cast_nullable_to_non_nullable
-as int?,
+as String?,phone1E164: freezed == phone1E164 ? _self.phone1E164 : phone1E164 // ignore: cast_nullable_to_non_nullable
+as String?,phone2E164: freezed == phone2E164 ? _self.phone2E164 : phone2E164 // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

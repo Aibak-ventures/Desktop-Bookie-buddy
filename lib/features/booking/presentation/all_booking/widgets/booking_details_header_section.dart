@@ -20,8 +20,6 @@ class BookingDetailsHeaderSection extends StatelessWidget {
     final status = booking.deliveryStatus;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
-    final hasRefundAmounts =
-        booking.totalRefunded > 0 || booking.refunds.isNotEmpty;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +94,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              if (isCompleted || (isCancelled && hasRefundAmounts))
+              if (isCompleted || isCancelled || status == DeliveryStatus.returned)
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

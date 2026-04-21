@@ -79,8 +79,6 @@ class BookingSelectedProductsListWidget extends StatelessWidget {
         }
         return ListView.builder(
           padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
           itemCount: products.length,
           itemBuilder: (context, index) {
             final product = products[index];

@@ -37,6 +37,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     @Default(false) bool sendPdfToWhatsApp,
     String? runningKilometers,
     String? coolingPeriodType,
+    PaymentMethod? securityPaymentMethod,
   }) = _BookingRequestEntity;
 }
 

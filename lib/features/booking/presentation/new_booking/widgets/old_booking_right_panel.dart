@@ -289,7 +289,7 @@ class OldBookingRightPanel extends StatelessWidget {
         const SizedBox(height: 4),
         Row(
           children: [
-            _buildPaymentMethodOption(PaymentMethod.gPay, Icons.qr_code),
+            _buildPaymentMethodOption(PaymentMethod.upi, Icons.qr_code),
             const SizedBox(width: 8),
             _buildPaymentMethodOption(PaymentMethod.cash, Icons.money),
           ],

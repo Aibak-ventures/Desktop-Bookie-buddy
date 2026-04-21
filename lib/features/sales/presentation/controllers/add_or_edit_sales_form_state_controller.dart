@@ -37,7 +37,7 @@ class AddOrEditSalesFormStateController {
 
   final stockCountDecreaseNotifier = ValueNotifier<bool>(true);
 
-  final paymentMethodNotifier = ValueNotifier(PaymentMethod.gPay);
+  final paymentMethodNotifier = ValueNotifier(PaymentMethod.upi);
 
   final isSharingPdfToWhatsAppNotifier = ValueNotifier<bool>(false);
 

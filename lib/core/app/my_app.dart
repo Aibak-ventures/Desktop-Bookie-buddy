@@ -20,6 +20,7 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -96,7 +97,10 @@ class MyApp extends StatelessWidget {
               ShopListBloc(getShops: getIt.get(), userRepo: getIt.get()),
         ),
         BlocProvider(
-          create: (context) => ClientCubit(getClients: getIt.get()),
+          create: (context) => ClientCubit(
+            getClients: getIt.get(),
+            getClientById: getIt.get(),
+          ),
         ),
         // BlocProvider(
         //   create: (context) => ClientSaveBloc(addClient: getIt.get()),
@@ -114,11 +118,13 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         locale: const Locale('en', 'US'), // 12-hour format
         localizationsDelegates: [
+          ...PhoneFieldLocalization.delegates,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: const [
+          Locale('en'),
           Locale('en', 'US'), // English (12-hour format)
         ],
         builder: (context, child) {

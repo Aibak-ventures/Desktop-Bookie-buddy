@@ -19,6 +19,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
@@ -42,7 +43,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
 
-  final List<String> _actionTabs = ['Booking', 'Sales'];
+  bool _hasSalesFeature(UserEntity? userState) =>
+      userState?.subscription?.features.contains(AppPremiumFeatures.sales) ??
+      false;
 
   // Map display labels to API status values
   final Map<String, String> _statusApiMap = {
@@ -234,55 +237,71 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   Widget _buildActionTabs() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFE7E4FF).withOpacity(0.5),
-        //  color: ,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: Row(
-        children: List.generate(_actionTabs.length, (index) {
-          final isActive = _activeActionTab == index;
-          return GestureDetector(
-            onTap: () {
-              setState(() => _activeActionTab = index);
-              _loadData();
-              // Close the booking details drawer when switching tabs
-              context.read<BookingDetailsDrawerCubit>().closeDrawer();
-              context.read<SalesDetailsDrawerCubit>().closeDrawer();
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              decoration: BoxDecoration(
-                color: isActive ? const Color(0xFF8A63FE) : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    index == 0
-                        ? Icons.calendar_today_outlined
-                        : index == 1
-                        ? Icons.shopping_cart_outlined
-                        : Icons.architecture_outlined,
-                    size: 18,
-                    color: isActive ? Colors.white : Colors.grey.shade700,
+    return BlocBuilder<UserCubit, UserEntity?>(
+      builder: (context, userState) {
+        final hasSales = _hasSalesFeature(userState);
+        final tabs = ['Booking', if (hasSales) 'Sales'];
+
+        // If Sales tab was selected but is no longer available, reset to Booking.
+        if (_activeActionTab >= tabs.length) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) setState(() => _activeActionTab = 0);
+          });
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFE7E4FF).withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(4),
+          child: Row(
+            children: List.generate(tabs.length, (index) {
+              final isActive = _activeActionTab == index;
+              return GestureDetector(
+                onTap: () {
+                  setState(() => _activeActionTab = index);
+                  _loadData();
+                  // Close the booking details drawer when switching tabs
+                  context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                  context.read<SalesDetailsDrawerCubit>().closeDrawer();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _actionTabs[index],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: isActive ? Colors.white : Colors.grey.shade700,
-                    ),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? const Color(0xFF8A63FE)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ],
-              ),
-            ),
-          );
-        }),
-      ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        index == 0
+                            ? Icons.calendar_today_outlined
+                            : Icons.shopping_cart_outlined,
+                        size: 18,
+                        color: isActive ? Colors.white : Colors.grey.shade700,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        tabs[index],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: isActive ? Colors.white : Colors.grey.shade700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 

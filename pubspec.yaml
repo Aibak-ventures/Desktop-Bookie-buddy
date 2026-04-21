@@ -81,6 +81,7 @@ dependencies:
   open_file: ^3.3.2
   feedback: ^3.1.0
   vector_graphics: ^1.1.7
+  phone_form_field: ^10.0.17
 dev_dependencies:
   flutter_test:
     sdk: flutter

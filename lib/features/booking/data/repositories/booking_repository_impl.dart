@@ -205,8 +205,17 @@ class BookingRepositoryImpl implements IBookingRepository {
           removedDocumentUrls: removedDocumentUrls,
         ),
       );
-      if (response.status.isSuccess || response.status.isInsufficientStock) {
+      if (response.status.isSuccess) {
         return response;
+      }
+      if (response.status.isInsufficientStock) {
+        final data = response.data as Map<String, dynamic>?;
+        final productName = data?['product_name'] ?? 'Unknown Product';
+        final attribute = data?['attribute'] ?? '';
+        final fromDate = data?['out_of_stock_between']?['from'] ?? '';
+        final toDate = data?['out_of_stock_between']?['to'] ?? '';
+        throw 'Insufficient stock for "$productName${attribute.isNotEmpty ? " ($attribute)" : ""}". '
+            'Not available from $fromDate to $toDate.';
       }
       log('Error updating booking partial: ${response.devMessage}');
       throw response.message ?? 'Failed to update booking';
@@ -257,7 +266,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           () => _datasource.addRefund(
             bookingId: bookingId,
             amount: refundAmount,
-            paymentMethod: paymentMethod == PaymentMethod.gPay
+            paymentMethod: paymentMethod == PaymentMethod.upi
                 ? 'upi'
                 : paymentMethod.value,
             refundReason: 'Booking cancelled',
@@ -330,8 +339,9 @@ class BookingRepositoryImpl implements IBookingRepository {
     String? startDate,
     String? endDate,
     String? searchQuery,
-    int page = 1
-    ,  String? nextPageUrl,  }) async {
+    int page = 1,
+    String? nextPageUrl,
+  }) async {
     try {
       final response = await safeApiCall(
         () => _datasource.fetchBookingsPagination(
@@ -339,7 +349,8 @@ class BookingRepositoryImpl implements IBookingRepository {
           page: page,
           startDate: startDate,
           endDate: endDate,
-          searchQuery: searchQuery,               ),
+          searchQuery: searchQuery,
+        ),
       );
       if (response.status.isSuccess) {
         return PaginationModel.fromJson(
@@ -421,6 +432,7 @@ class BookingRepositoryImpl implements IBookingRepository {
       rethrow;
     }
   }
+
   @override
   Future<String> downloadBookingInvoice({
     required int bookingId,

@@ -6,12 +6,14 @@ class NewBookingAppBar extends StatefulWidget {
   final BookingTabType selectedTab;
   final Function(BookingTabType) onTabChanged;
   final VoidCallback? onBack;
+  final bool showSalesTab;
 
   const NewBookingAppBar({
     super.key,
     required this.selectedTab,
     required this.onTabChanged,
     this.onBack,
+    this.showSalesTab = true,
   });
 
   @override
@@ -73,7 +75,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildTab('Booking', BookingTabType.booking),
-          _buildTab('Sales', BookingTabType.sales),
+          if (widget.showSalesTab) _buildTab('Sales', BookingTabType.sales),
           _buildTab('Old Booking', BookingTabType.oldBooking),
           // _buildTab('Custom work', BookingTabType.customWork),
         ],

@@ -14,7 +14,8 @@ class BookingsEndpoints {
   static const updateDeliveryStatus = '${bookingsV5}update-delivery-status/';
   static const updateBookingStatus = '${bookingsV5}update-booking-status/';
   static const oldBookings = '${bookingsV3}old-bookings/';
-  static const clients = '${_rootV3}clients/';
+  static const clients = '${_rootV4}clients/';
+  static const clientsV4 = '${_rootV4}clients/';
   static const availableProducts = '${bookingsV3}desktop-available-products/';
   static const dashboard = '${_rootV4}dashboard/';
   static const cancelBooking = '${bookingsV5}cancel-booking/';
@@ -26,5 +27,5 @@ class BookingsEndpoints {
       '${bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)
   static String downloadBookingInvoice(int bookingId) =>
       '${bookingsV5}send-invoice/$bookingId/'; // Same endpoint for download
-  static String clientById(int id) => '${clients}$id/'; // Added missing method
+  static String clientById(int id) => '${clientsV4}$id/';
 }

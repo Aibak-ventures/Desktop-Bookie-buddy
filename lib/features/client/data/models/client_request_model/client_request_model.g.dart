@@ -10,13 +10,13 @@ _ClientRequestModel _$ClientRequestModelFromJson(Map<String, dynamic> json) =>
     _ClientRequestModel(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
-      phone1: (json['phone_1'] as num?)?.toInt(),
-      phone2: (json['phone_2'] as num?)?.toInt(),
+      phone1E164: json['phone_1_e164'] as String?,
+      phone2E164: json['phone_2_e164'] as String?,
     );
 
 Map<String, dynamic> _$ClientRequestModelToJson(_ClientRequestModel instance) =>
     <String, dynamic>{
       'name': ?instance.name,
-      'phone_1': ?instance.phone1,
-      'phone_2': ?instance.phone2,
+      'phone_1_e164': ?instance.phone1E164,
+      'phone_2_e164': ?instance.phone2E164,
     };

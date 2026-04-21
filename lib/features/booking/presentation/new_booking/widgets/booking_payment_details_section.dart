@@ -123,7 +123,7 @@ class BookingPaymentDetailsSection extends StatelessWidget {
             Expanded(
               child: _buildPaymentMethodOption(
                 label: 'UPI',
-                value: PaymentMethod.gPay,
+                value: PaymentMethod.upi,
                 icon: Icons.account_balance_wallet_outlined,
               ),
             ),

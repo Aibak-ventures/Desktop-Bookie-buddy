@@ -54,10 +54,13 @@ extension ProductSelectedModelToJsonExtension on ProductSelectedModel {
     final measurementMap = <String, dynamic>{};
     if (includeMeasurement)
       for (final m in measurements) {
-        measurementMap[m.name] = m.value;
+        // Use m.key (snake_case backend key) not m.name (display label)
+        if (m.key != 'running_kilometers') {
+          measurementMap[m.key] = m.value;
+        }
       }
 
-    // Add running kilometers for vehicles inside measurements
+    // Add running kilometers inside measurements — always include if present
     if (includeMeasurement &&
         runningKilometers != null &&
         runningKilometers!.isNotEmpty) {

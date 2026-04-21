@@ -151,7 +151,41 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               ],
               if (securityAmount > 0) ...[
                 _buildPaymentRow('Security amount', '₹$securityAmount'),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
+                if (booking.securityPaymentMethod != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Security payment',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            booking.securityPaymentMethod!.name,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  const SizedBox(height: 4),
               ],
               if (additionalTotal > 0) ...[
                 Theme(

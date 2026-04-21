@@ -66,6 +66,7 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
               form.additionalChargesNotifier,
               form.advanceAmountController,
               form.discountAmountController,
+              form.isDiscountPercentage,
             ]),
             builder: (context, _) {
               final products = form.selectedProductsNotifier.value;
@@ -74,11 +75,10 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                   ? 0
                   : (form.advanceAmountController.text.trim().toIntOrNull() ??
                         0);
-              final discountAmount =
-                  form.discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final summaryRentalDays =
-                  !widget.isSales ? widget.calculateRentalDays() : 1;
+              final summaryRentalDays = !widget.isSales
+                  ? widget.calculateRentalDays()
+                  : 1;
               final productTotal = products.fold<int>(0, (sum, product) {
                 final daysMultiplier =
                     (!widget.isSales &&
@@ -92,6 +92,16 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                 0,
                 (sum, charge) => sum + (charge.amount ?? 0),
               );
+
+              final discountInput =
+                  form.discountAmountController.text.trim().toIntOrNull() ?? 0;
+              int discountAmount;
+              if (form.isDiscountPercentage.value) {
+                discountAmount = (productTotal * discountInput / 100).round();
+              } else {
+                discountAmount = discountInput;
+              }
+
               final totalPayable =
                   productTotal + additionalTotal - discountAmount;
               final remainingAmount = totalPayable - advanceAmount;

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 
@@ -104,7 +105,6 @@ class BookingValidationHelper {
   }
 
   static String? phoneNumber(String? value, {bool isRequired = true}) {
-    // If not required and empty, return null
     if (!isRequired && (value == null || value.trim().isEmpty)) {
       return null;
     }
@@ -112,21 +112,23 @@ class BookingValidationHelper {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
     }
-    // Allow optional leading '+' and digits only, any length
-    final phoneRegex = RegExp(r'^\+?\d+$');
 
-    if (!phoneRegex.hasMatch(value.trim())) {
+    if (!_isValidPhoneNumber(value)) {
       return 'Enter a valid phone number';
     }
 
     return null;
   }
 
-  /// Validates phone number format
+  /// Validates phone number using phone_form_field — checks country code,
+  /// length, and format for the detected or default (IN) country.
   static bool _isValidPhoneNumber(String phone) {
-    // Allow optional leading '+' and digits only, any length
-    final phoneRegex = RegExp(r'^\+?\d+$');
-    return phoneRegex.hasMatch(phone.trim());
+    try {
+      final number = phoneNumberFromData(phoneNumber: phone.trim());
+      return number?.isValid() ?? false;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Shows a validation error using the same toast as confirm button
