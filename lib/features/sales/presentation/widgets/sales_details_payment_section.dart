@@ -46,7 +46,7 @@ class SalesDetailsPaymentSection extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  sale.accountName?.toUpperCase() ?? '—',
+                  sale.accountName ?? '—',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black87,

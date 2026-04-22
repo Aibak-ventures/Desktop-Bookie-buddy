@@ -87,9 +87,8 @@ void showBookingDetailsAddPaymentDialog({
               valueListenable: selectedAccountNotifier,
               builder: (context, selectedAccount, _) => AccountSelectionField(
                 selectedAccount: selectedAccount,
-                width: context.screenWidth * 0.32,
                 onChanged: (account) => selectedAccountNotifier.value = account,
-                label: 'Payment Account',
+                label: 'Payment Option',
               ),
             ),
           ],

@@ -5340,7 +5340,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   Widget _buildSecurityPaymentMethodSelector() {
     return AccountSelectionField(
       selectedAccount: selectedSecurityAccount,
-      width: context.screenWidth * 0.25,
       initialAccountId: widget.bookingDetails?.securityAccountId,
       onChanged: (account) => setState(() => selectedSecurityAccount = account),
       label: 'Security Payment Option',

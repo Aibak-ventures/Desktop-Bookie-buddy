@@ -469,7 +469,6 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                     builder: (context, selectedAccount, _) =>
                         AccountSelectionField(
                           selectedAccount: selectedAccount,
-                          width: context.screenWidth * 0.25,
                           onChanged: (account) {
                             _formController.selectedAccountNotifier.value =
                                 account;
