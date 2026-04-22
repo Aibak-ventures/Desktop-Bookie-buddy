@@ -52,6 +52,7 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       coolingPeriodType: json['cooling_period_type'] as String?,
       securityPaymentAccountId: (json['security_account_id'] as num?)?.toInt(),
+      oldBookingAccountId: (json['account_id'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$BookingRequestModelToJson(
@@ -79,6 +80,7 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'send_invoice': instance.sendPdfToWhatsApp,
   'cooling_period_type': ?instance.coolingPeriodType,
   'security_account_id': ?instance.securityPaymentAccountId,
+  'account_id': ?instance.oldBookingAccountId,
 };
 
 const _$DeliveryStatusEnumMap = {

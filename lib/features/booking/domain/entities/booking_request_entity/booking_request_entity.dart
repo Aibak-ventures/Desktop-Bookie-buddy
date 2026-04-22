@@ -38,6 +38,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     String? coolingPeriodType,
     int? securityPaymentAccountId,
     List<BookingPaymentRequestEntity>? payments,
+    int? oldBookingAccountId,
   }) = _BookingRequestEntity;
 }
 
@@ -56,7 +57,6 @@ extension BookingRequestEntityX on BookingRequestEntity {
       purchaseMode != null ||
       description != null ||
       securityPaymentAccountId != null ||
-      // paymentMethod != null ||
       deliveryStatus != null ||
       bookingStatus != null ||
       (products != null && products!.isNotEmpty) ||

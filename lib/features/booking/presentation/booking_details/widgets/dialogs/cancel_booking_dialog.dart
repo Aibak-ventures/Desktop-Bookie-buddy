@@ -191,10 +191,9 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                   if (!_noRefund) ...[
                     AccountSelectionField(
                       selectedAccount: _selectedAccount,
-                      width: context.screenWidth * 0.32,
                       onChanged: (account) =>
                           setState(() => _selectedAccount = account),
-                      label: 'Refund Account',
+                      label: 'Refund Option',
                     ),
                     const SizedBox(height: 16),
                   ],
