@@ -2596,7 +2596,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   Widget _buildPaymentMethodSection({String label = 'Payment Option'}) {
     return AccountSelectionField(
       selectedAccount: selectedAdvanceAccount,
-      width: getAccountSelectionFieldWidth,
       onChanged: (account) => setState(() => selectedAdvanceAccount = account),
       label: label,
     );
@@ -2605,7 +2604,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   Widget _buildSecurityPaymentMethodSelector() {
     return AccountSelectionField(
       selectedAccount: selectedSecurityAccount,
-      width: getAccountSelectionFieldWidth,
       onChanged: (account) => setState(() => selectedSecurityAccount = account),
       label: 'Security Payment Option',
     );
@@ -5900,6 +5898,15 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
+                  const SizedBox(height: _fieldSpacing + _fieldSpacing),
+
+                  // Payment Account
+                  AccountSelectionField(
+                    selectedAccount: selectedAdvanceAccount,
+                    onChanged: (account) =>
+                        setState(() => selectedAdvanceAccount = account),
+                    label: 'Payment Option',
+                  ),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -5997,6 +6004,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       return;
     }
 
+    if (selectedAdvanceAccount == null) {
+      context.showSnackBar('Please select a payment option', isError: true);
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -6076,6 +6088,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       bookingStatus: BookingStatus.completed,
       description: _buildDescriptionWithPaymentSummary(),
       products: requestProducts,
+      oldBookingAccountId: selectedAdvanceAccount?.id,
     );
   }
 }
