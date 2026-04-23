@@ -17,6 +17,10 @@ class OverlaySearchItem extends StatefulWidget {
   final bool isSales;
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
+  final VoidCallback? onArrowDown;
+  final VoidCallback? onArrowUp;
+  final VoidCallback? onEscape;
+  final bool isSelected;
 
   const OverlaySearchItem({
     required this.product,
@@ -25,6 +29,10 @@ class OverlaySearchItem extends StatefulWidget {
     this.isSales = false,
     this.focusNode,
     this.nextFocusNode,
+    this.onArrowDown,
+    this.onArrowUp,
+    this.onEscape,
+    this.isSelected = false,
   });
 
   @override
@@ -90,10 +98,44 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
           _handleKeyboardActivate();
           return KeyEventResult.handled;
         }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+                event.logicalKey == LogicalKeyboardKey.numpad2)) {
+          widget.onArrowDown?.call();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                event.logicalKey == LogicalKeyboardKey.numpad8)) {
+          widget.onArrowUp?.call();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          widget.onEscape?.call();
+          return KeyEventResult.handled;
+        }
         return KeyEventResult.ignored;
       },
-      child: Container(
+      child: Builder(
+        builder: (context) {
+          final hasFocus = Focus.of(context).hasFocus;
+          final showFocus = hasFocus || widget.isSelected;
+          return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: showFocus
+              ? const Color(0xFF6132E4).withOpacity(0.08)
+              : Colors.transparent,
+          border: Border(
+            left: BorderSide(
+              color: showFocus
+                  ? const Color(0xFF6132E4)
+                  : Colors.transparent,
+              width: 3,
+            ),
+          ),
+        ),
         child: LayoutBuilder(
           builder: (context, constraints) {
             final isOverflowing = constraints.maxWidth < minRowWidth;
@@ -419,8 +461,9 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
             );
           },
         ),
-      ),
-    );
+        );
+      },
+    ));
   }
 }
 
