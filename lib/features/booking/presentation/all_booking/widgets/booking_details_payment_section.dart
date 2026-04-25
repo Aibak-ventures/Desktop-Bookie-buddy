@@ -27,8 +27,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
       0,
       (sum, charge) => sum + (charge.amount ?? 0),
     );
-    final totalAmount = booking.totalAmount;
-    final paid = booking.actualPaidAmount;
+    final totalAmount = booking.totalAmountWithSecurity ?? booking.totalAmount;
+    final paid = booking.paidAmountWithSecurity ?? booking.actualPaidAmount;
     final discount = booking.discountAmount ?? 0;
     final balance = totalAmount - paid - discount;
     final securityAmount = booking.securityAmount ?? 0;

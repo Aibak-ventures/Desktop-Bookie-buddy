@@ -24,9 +24,11 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'return_time') String? returnTime,
     @JsonKey(name: 'cooling_period_end') String? coolingPeriodDate,
     @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
-    required int totalAmount,
+    @JsonKey(name: 'total_amount') required int totalAmount,
     int? discountAmount,
     @JsonKey(name: 'advance_amount') required int paidAmount,
+    @JsonKey(name: 'total_amount_with_security') int? totalAmountWithSecurity,
+    @JsonKey(name: 'advance_amount_with_security') int? paidAmountWithSecurity,
     int? securityAmount,
     @JsonKey(
       fromJson: PurchaseMode.fromString,
@@ -82,36 +84,6 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
       _$BookingDetailsModelFromJson(json);
 }
 
-extension BookingDetailsModelX on BookingDetailsModel {
-  /// Calculate the actual paid amount from the payments array
-  /// This is more accurate than the paidAmount field which is the old advance_amount
-  int get actualPaidAmount {
-    if (payments.isEmpty) return paidAmount;
-    return payments.fold<int>(0, (sum, payment) => sum + payment.amount);
-  }
-
-  /// Get the remaining balance after partial refunds from security summary
-  /// This shows the deducted amount if not fully refunded
-  double get remainingSecurityBalance => securitySummary.remainingBalance;
-
-  /// Get the total amount deducted from security
-  double get totalSecurityDeducted => securitySummary.totalDeducted;
-
-  /// Get the total amount refunded from security
-  double get totalSecurityRefunded => securitySummary.totalRefunded;
-
-  /// Check if security was partially refunded (deducted amount exists)
-  bool get hasPartialSecurityRefund => securitySummary.totalDeducted > 0;
-
-  /// Calculate the net balance considering refunds and deductions
-  /// This is used to show the actual balance after cancellations
-  int get netBalance {
-    final baseBalance = totalAmount - actualPaidAmount - (discountAmount ?? 0);
-    // If there's a security deduction, it affects the balance
-    return baseBalance;
-  }
-}
-
 extension BookingDetailsModelMapper on BookingDetailsModel {
   BookingDetailsEntity toEntity() => BookingDetailsEntity(
     id: id,
@@ -129,6 +101,8 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     purchaseMode: purchaseMode,
     bookingStatus: bookingStatus,
     paymentStatus: paymentStatus,
+    paidAmountWithSecurity: paidAmountWithSecurity,
+    totalAmountWithSecurity: totalAmountWithSecurity,
     deliveryStatus: deliveryStatus,
     staffName: staffName,
     staffId: staffId,
