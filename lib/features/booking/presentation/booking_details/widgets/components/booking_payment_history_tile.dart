@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -17,6 +18,7 @@ class TransactionEntry {
   final int? accountId;
   final String dateTime;
   final bool isRefund;
+  final BookingPaymentHistoryPaymentType paymentType;
 
   TransactionEntry({
     required this.id,
@@ -25,6 +27,7 @@ class TransactionEntry {
     required this.accountId,
     required this.dateTime,
     required this.isRefund,
+    this.paymentType = BookingPaymentHistoryPaymentType.payment,
   });
 }
 
@@ -57,6 +60,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
           accountId: payment.accountId,
           dateTime: payment.createdAt,
           isRefund: false,
+          paymentType: payment.paymentType,
         ),
       );
     }
@@ -212,6 +216,15 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                             ),
                             onSelected: (value) {
                               if (value == 'delete') {
+                                if (transaction.paymentType ==
+                                    BookingPaymentHistoryPaymentType.security) {
+                                  context.showSnackBar(
+                                    'Security deposit payments cannot be deleted',
+                                    title: 'Action not allowed',
+                                    isError: true,
+                                  );
+                                  return;
+                                }
                                 _onDeletePaymentPressed(context, transaction);
                               }
                             },
