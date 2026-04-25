@@ -20,6 +20,10 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
   totalAmount: (json['total_amount'] as num).toInt(),
   discountAmount: (json['discount_amount'] as num?)?.toInt(),
   paidAmount: (json['advance_amount'] as num).toInt(),
+  totalAmountWithSecurity: (json['total_amount_with_security'] as num?)
+      ?.toInt(),
+  paidAmountWithSecurity: (json['advance_amount_with_security'] as num?)
+      ?.toInt(),
   securityAmount: (json['security_amount'] as num?)?.toInt(),
   purchaseMode: json['purchase_mode'] == null
       ? PurchaseMode.normal
@@ -91,6 +95,8 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'total_amount': instance.totalAmount,
   'discount_amount': instance.discountAmount,
   'advance_amount': instance.paidAmount,
+  'total_amount_with_security': instance.totalAmountWithSecurity,
+  'advance_amount_with_security': instance.paidAmountWithSecurity,
   'security_amount': instance.securityAmount,
   'purchase_mode': _$PurchaseModeEnumMap[instance.purchaseMode]!,
   'booking_status': BookingStatus.toJson(instance.bookingStatus),

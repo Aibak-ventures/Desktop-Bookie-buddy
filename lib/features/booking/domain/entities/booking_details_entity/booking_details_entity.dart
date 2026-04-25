@@ -25,6 +25,8 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     int? discountAmount,
     required int paidAmount,
     int? securityAmount,
+    int? totalAmountWithSecurity,
+    int? paidAmountWithSecurity,
     String? securityAccountName,
     int? securityAccountId,
     required PurchaseMode purchaseMode,
