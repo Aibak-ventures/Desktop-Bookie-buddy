@@ -13,6 +13,13 @@ abstract class BookingDetailsPaymentHistoryModel
     @JsonKey(name: 'account_name') String? accountName,
     @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'created_at') required String createdAt,
+    @JsonKey(
+      name: 'type',
+      fromJson: BookingPaymentHistoryPaymentType.fromJson,
+      toJson: BookingPaymentHistoryPaymentType.toJson,
+    )
+    @Default(BookingPaymentHistoryPaymentType.payment)
+    BookingPaymentHistoryPaymentType paymentType,
   }) = _BookingDetailsPaymentHistoryModel;
 
   factory BookingDetailsPaymentHistoryModel.fromJson(
@@ -28,5 +35,6 @@ extension BookingPaymentHistoryModelMapper
     accountName: accountName,
     accountId: accountId,
     createdAt: createdAt,
+    paymentType: paymentType,
   );
 }
