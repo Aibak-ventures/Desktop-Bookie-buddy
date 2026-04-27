@@ -63,6 +63,30 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
     }
   }
 
+  void _selectNextVariant() {
+    final variants = widget.product.variants;
+    if (variants.isEmpty) return;
+    if (selectedVariant == null) {
+      setState(() => selectedVariant = variants.first);
+      return;
+    }
+    final i = variants.indexWhere((v) => v.id == selectedVariant!.id);
+    setState(() => selectedVariant = variants[(i + 1) % variants.length]);
+  }
+
+  void _selectPrevVariant() {
+    final variants = widget.product.variants;
+    if (variants.isEmpty) return;
+    if (selectedVariant == null) {
+      setState(() => selectedVariant = variants.last);
+      return;
+    }
+    final i = variants.indexWhere((v) => v.id == selectedVariant!.id);
+    setState(
+      () => selectedVariant = variants[(i - 1 + variants.length) % variants.length],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +132,18 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
             (event.logicalKey == LogicalKeyboardKey.arrowUp ||
                 event.logicalKey == LogicalKeyboardKey.numpad8)) {
           widget.onArrowUp?.call();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+                event.logicalKey == LogicalKeyboardKey.numpad6)) {
+          _selectNextVariant();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+                event.logicalKey == LogicalKeyboardKey.numpad4)) {
+          _selectPrevVariant();
           return KeyEventResult.handled;
         }
         if (event is KeyDownEvent &&

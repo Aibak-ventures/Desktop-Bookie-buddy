@@ -2858,7 +2858,23 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                 }
                               }
 
-                              return TextField(
+                              return Focus(
+                                skipTraversal: true,
+                                canRequestFocus: false,
+                                onKeyEvent: (_, event) {
+                                  if (event is KeyDownEvent &&
+                                      (event.logicalKey ==
+                                              LogicalKeyboardKey.arrowDown ||
+                                          event.logicalKey ==
+                                              LogicalKeyboardKey.numpad2)) {
+                                    if (_overlayProducts.value.isNotEmpty) {
+                                      _getOverlayItemFocusNode(0).requestFocus();
+                                      return KeyEventResult.handled;
+                                    }
+                                  }
+                                  return KeyEventResult.ignored;
+                                },
+                                child: TextField(
                                 controller: serviceSearchController,
                                 focusNode: _productSearchFocusNode,
                                 onTap: () {
@@ -3013,6 +3029,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                     _clientNameFocusNode.requestFocus();
                                   }
                                 },
+                              ),
                               );
                             },
                           );
@@ -3273,6 +3290,23 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         _removeSearchOverlay();
         serviceSearchController.clear();
         _clientNameFocusNode.requestFocus();
+      },
+      onArrowDown: () {
+        if (index + 1 < itemCount) {
+          _getOverlayItemFocusNode(index + 1).requestFocus();
+        }
+      },
+      onArrowUp: () {
+        if (index > 0) {
+          _getOverlayItemFocusNode(index - 1).requestFocus();
+        } else {
+          _productSearchFocusNode.requestFocus();
+        }
+      },
+      onEscape: () {
+        _removeSearchOverlay();
+        serviceSearchController.clear();
+        _productSearchFocusNode.requestFocus();
       },
       onImageTap: (imageUrl, title) async {
         final cachedProducts = List<ProductEntity>.from(_overlayProducts.value);
