@@ -2303,11 +2303,39 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
             ? DateTime.now()
             : DateTime.now().add(const Duration(days: 365)),
         builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+          return Shortcuts(
+            shortcuts: <ShortcutActivator, Intent>{
+              const SingleActivator(LogicalKeyboardKey.enter):
+                  const ActivateIntent(),
+              const SingleActivator(LogicalKeyboardKey.numpadEnter):
+                  const ActivateIntent(),
+            },
+            child: Actions(
+              actions: <Type, Action<Intent>>{
+                ActivateIntent: CallbackAction<ActivateIntent>(
+                  onInvoke: (intent) {
+                    final fc = FocusManager.instance.primaryFocus?.context;
+                    if (fc != null) {
+                      return Actions.maybeInvoke<ActivateIntent>(
+                        fc,
+                        const ActivateIntent(),
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              },
+              child: Focus(
+                autofocus: true,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme:
+                        const ColorScheme.light(primary: Color(0xFF6132E4)),
+                  ),
+                  child: child!,
+                ),
+              ),
             ),
-            child: child!,
           );
         },
       );
@@ -2394,11 +2422,39 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         firstDate: minReturnDate, // Cannot be before max(today, pickup)
         lastDate: DateTime.now().add(const Duration(days: 365)),
         builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+          return Shortcuts(
+            shortcuts: <ShortcutActivator, Intent>{
+              const SingleActivator(LogicalKeyboardKey.enter):
+                  const ActivateIntent(),
+              const SingleActivator(LogicalKeyboardKey.numpadEnter):
+                  const ActivateIntent(),
+            },
+            child: Actions(
+              actions: <Type, Action<Intent>>{
+                ActivateIntent: CallbackAction<ActivateIntent>(
+                  onInvoke: (intent) {
+                    final fc = FocusManager.instance.primaryFocus?.context;
+                    if (fc != null) {
+                      return Actions.maybeInvoke<ActivateIntent>(
+                        fc,
+                        const ActivateIntent(),
+                      );
+                    }
+                    return null;
+                  },
+                ),
+              },
+              child: Focus(
+                autofocus: true,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme:
+                        const ColorScheme.light(primary: Color(0xFF6132E4)),
+                  ),
+                  child: child!,
+                ),
+              ),
             ),
-            child: child!,
           );
         },
       );
