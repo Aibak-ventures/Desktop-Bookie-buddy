@@ -57,23 +57,30 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
       Focus(
         skipTraversal: true,
         canRequestFocus: false,
-        onKeyEvent: (_, event) {
-          if (event is! KeyDownEvent) return KeyEventResult.ignored;
-          if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
-              event.logicalKey == LogicalKeyboardKey.numpad2) {
-            if (_suggestionsController.isOpen) {
-              _suggestionsController.focusBox();
-            } else {
-              _suggestionsController.open();
+          onKeyEvent: (_, event) {
+            if (event is! KeyDownEvent) return KeyEventResult.ignored;
+            if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+                event.logicalKey == LogicalKeyboardKey.numpad2) {
+              if (_suggestionsController.isOpen) {
+                _suggestionsController.focusBox();
+              } else {
+                _suggestionsController.open();
+              }
+              return KeyEventResult.handled;
             }
-            return KeyEventResult.handled;
-          }
-          if (event.logicalKey == LogicalKeyboardKey.escape) {
-            _suggestionsController.close();
-            return KeyEventResult.handled;
-          }
-          return KeyEventResult.ignored;
-        },
+            if (event.logicalKey == LogicalKeyboardKey.enter ||
+                event.logicalKey == LogicalKeyboardKey.numpadEnter) {
+              if (_suggestionsController.isOpen) {
+                _suggestionsController.focusBox();
+                return KeyEventResult.handled;
+              }
+            }
+            if (event.logicalKey == LogicalKeyboardKey.escape) {
+              _suggestionsController.close();
+              return KeyEventResult.handled;
+            }
+            return KeyEventResult.ignored;
+          },
         child: TypeAheadField<ClientEntity>(
           controller: widget.nameController,
           focusNode: widget.focusNode,
@@ -264,7 +271,7 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                   CustomShimmerBox(width: 0.11.widthR, height: 20)
                 ],
               ),
-              subtitle: Row(
+              subtitle: Row(   
                 children: [
                   CustomShimmerBox(width: 0.12.widthR, height: 15)
                 ],

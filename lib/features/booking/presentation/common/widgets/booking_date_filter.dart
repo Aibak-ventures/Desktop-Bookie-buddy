@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/common/widgets/show_custom_bottom_sheet.da
 import 'package:bookie_buddy_web/utils/app_date_utils.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show LogicalKeyboardKey, SingleActivator;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ///Bottom Sheet for Filter (Dialog on Web)
@@ -566,6 +567,24 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            SingleActivator(LogicalKeyboardKey.arrowRight):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowDown):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowLeft):
+                PreviousFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowUp):
+                PreviousFocusIntent(),
+          },
+          child: Focus(
+            autofocus: true,
+            child: child!,
+          ),
+        );
+      },
     );
     if (date != null) {
       setState(() {
@@ -582,6 +601,24 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: _endDate ?? DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            SingleActivator(LogicalKeyboardKey.arrowRight):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowDown):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowLeft):
+                PreviousFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowUp):
+                PreviousFocusIntent(),
+          },
+          child: Focus(
+            autofocus: true,
+            child: child!,
+          ),
+        );
+      },
     );
     if (date != null) {
       setState(() => _startDate = date);
@@ -597,6 +634,24 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
       initialDate: _endDate ?? _startDate ?? DateTime.now(),
       firstDate: _startDate ?? DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context, child) {
+        return Shortcuts(
+          shortcuts: <ShortcutActivator, Intent>{
+            SingleActivator(LogicalKeyboardKey.arrowRight):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowDown):
+                NextFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowLeft):
+                PreviousFocusIntent(),
+            SingleActivator(LogicalKeyboardKey.arrowUp):
+                PreviousFocusIntent(),
+          },
+          child: Focus(
+            autofocus: true,
+            child: child!,
+          ),
+        );
+      },
     );
     if (date != null) {
       setState(() => _endDate = date);
