@@ -28,6 +28,8 @@ class StaffSearchNameField extends StatefulWidget {
 
 class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
   late final SuggestionsController<StaffEntity> _suggestionsController;
+  int _highlightedIndex = -1;
+  List<StaffEntity> _currentSuggestions = [];
 
   @override
   void initState() {
@@ -41,6 +43,50 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
     super.dispose();
   }
 
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is! KeyDownEvent) return;
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+        event.logicalKey == LogicalKeyboardKey.numpad2) {
+      if (_suggestionsController.isOpen) {
+        setState(() {
+          if (_highlightedIndex < _currentSuggestions.length - 1) {
+            _highlightedIndex++;
+          }
+        });
+      } else {
+        _suggestionsController.open();
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+        event.logicalKey == LogicalKeyboardKey.numpad8) {
+      if (_suggestionsController.isOpen) {
+        setState(() {
+          if (_highlightedIndex > 0) {
+            _highlightedIndex--;
+          }
+        });
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.numpadEnter) {
+      if (_suggestionsController.isOpen &&
+          _highlightedIndex >= 0 &&
+          _highlightedIndex < _currentSuggestions.length) {
+        final staff = _currentSuggestions[_highlightedIndex];
+        context.read<StaffSearchCubit>().selectStaff(staff);
+        widget.nameController.text = staff.name;
+        _suggestionsController.close();
+        setState(() {
+          _highlightedIndex = -1;
+        });
+      }
+    } else if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _suggestionsController.close();
+      setState(() {
+        _highlightedIndex = -1;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<StaffSearchCubit, StaffSearchState>(
@@ -49,21 +95,8 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
           skipTraversal: true,
           canRequestFocus: false,
           onKeyEvent: (_, event) {
-            if (event is! KeyDownEvent) return KeyEventResult.ignored;
-            if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
-                event.logicalKey == LogicalKeyboardKey.numpad2) {
-              if (_suggestionsController.isOpen) {
-                _suggestionsController.focusBox();
-              } else {
-                _suggestionsController.open();
-              }
-              return KeyEventResult.handled;
-            }
-            if (event.logicalKey == LogicalKeyboardKey.escape) {
-              _suggestionsController.close();
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
+            _handleKeyEvent(event);
+            return KeyEventResult.handled;
           },
           child: TypeAheadField<StaffEntity>(
             controller: widget.nameController,
@@ -75,13 +108,19 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
             hideOnSelect: true,
             suggestionsCallback: (search) {
               final staffs = state.staffs;
-              if (search.isEmpty) return staffs;
-              return staffs
-                  .where((s) =>
-                      s.name.toLowerCase().contains(search.toLowerCase()))
-                  .toList();
+              _currentSuggestions = search.isEmpty
+                  ? staffs
+                  : staffs
+                      .where((s) => s.name
+                          .toLowerCase()
+                          .contains(search.toLowerCase()))
+                      .toList();
+              return _currentSuggestions;
             },
             onSelected: (staff) {
+              setState(() {
+                _highlightedIndex = -1;
+              });
               context.read<StaffSearchCubit>().selectStaff(staff);
               widget.nameController.text = staff.name;
             },
@@ -148,16 +187,24 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
               ),
               validator: AppInputValidators.name,
             ),
-            itemBuilder: (context, staff) => ListTile(
-              dense: true,
-              title: Text(staff.name,
-                  style: const TextStyle(fontSize: 14)),
-              subtitle: Text(
-                staff.phoneNumber,
-                style:
-                    TextStyle(fontSize: 14, color: Colors.grey.shade600),
-              ),
-            ),
+            itemBuilder: (context, staff) {
+              final index = _currentSuggestions.indexOf(staff);
+              return Container(
+                color: _highlightedIndex == index
+                    ? AppColors.purple.withValues(alpha: 0.1)
+                    : null,
+                child: ListTile(
+                  dense: true,
+                  title: Text(staff.name,
+                      style: const TextStyle(fontSize: 14)),
+                  subtitle: Text(
+                    staff.phoneNumber,
+                    style: TextStyle(
+                        fontSize: 14, color: Colors.grey.shade600),
+                  ),
+                ),
+              );
+            },
             decorationBuilder: (context, child) => DecoratedBox(
               decoration: BoxDecoration(
                 color: AppColors.white,

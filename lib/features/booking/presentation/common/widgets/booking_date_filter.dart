@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/constants/enums/ledger_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/show_custom_bottom_sheet.dart';
 import 'package:bookie_buddy_web/utils/app_date_utils.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -562,29 +563,11 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
       );
 
   Future<void> _selectSingleDate(BuildContext context) async {
-    final date = await showDatePicker(
+    final date = await showKeyboardDatePicker(
       context: context,
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.arrowRight):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowDown):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowLeft):
-                PreviousFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowUp):
-                PreviousFocusIntent(),
-          },
-          child: Focus(
-            autofocus: true,
-            child: child!,
-          ),
-        );
-      },
     );
     if (date != null) {
       setState(() {
@@ -596,29 +579,11 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
   }
 
   Future<void> _selectStartDate(BuildContext context) async {
-    final date = await showDatePicker(
+    final date = await showKeyboardDatePicker(
       context: context,
       initialDate: _startDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: _endDate ?? DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.arrowRight):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowDown):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowLeft):
-                PreviousFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowUp):
-                PreviousFocusIntent(),
-          },
-          child: Focus(
-            autofocus: true,
-            child: child!,
-          ),
-        );
-      },
     );
     if (date != null) {
       setState(() => _startDate = date);
@@ -629,29 +594,11 @@ class _BookingDateFilterState extends State<BookingDateFilter> {
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
-    final date = await showDatePicker(
+    final date = await showKeyboardDatePicker(
       context: context,
       initialDate: _endDate ?? _startDate ?? DateTime.now(),
       firstDate: _startDate ?? DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.arrowRight):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowDown):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowLeft):
-                PreviousFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowUp):
-                PreviousFocusIntent(),
-          },
-          child: Focus(
-            autofocus: true,
-            child: child!,
-          ),
-        );
-      },
     );
     if (date != null) {
       setState(() => _endDate = date);
