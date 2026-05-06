@@ -2342,26 +2342,11 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       firstDate: isPickup ? DateTime(now.year - 5) : pickupDate,
       lastDate: now.add(const Duration(days: 365 * 2)),
       builder: (context, child) {
-        return Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.arrowRight):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowDown):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowLeft):
-                PreviousFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowUp):
-                PreviousFocusIntent(),
-          },
-          child: Focus(
-            autofocus: true,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-              ),
-              child: child!,
-            ),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
           ),
+          child: child!,
         );
       },
     );
@@ -2389,28 +2374,13 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       context: context,
       initialTime: initialTime,
       builder: (context, child) {
-        return Shortcuts(
-          shortcuts: <ShortcutActivator, Intent>{
-            SingleActivator(LogicalKeyboardKey.arrowRight):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowDown):
-                NextFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowLeft):
-                PreviousFocusIntent(),
-            SingleActivator(LogicalKeyboardKey.arrowUp):
-                PreviousFocusIntent(),
-          },
-          child: Focus(
-            autofocus: true,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: Color(0xFF6132E4),
-                ),
-              ),
-              child: child!,
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF6132E4),
             ),
           ),
+          child: child!,
         );
       },
     );
@@ -4823,7 +4793,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                   ),
 
                   const SizedBox(height: _fieldSpacing),
-                  const SizedBox(height: 16),
+                  // const SizedBox(height: 16),
                   // WhatsApp Checkbox - Hidden in edit mode
                   // Row(
                   //   children: [
