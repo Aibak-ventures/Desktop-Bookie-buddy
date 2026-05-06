@@ -1114,6 +1114,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       documentsCount: documentsNotifier.value.length,
       selectedStaffId: selectedStaff?.id,
       staffName: staffNameController.text,
+      isSalesMode: selectedBookingType == BookingType.sales,
     );
 
     if (validationResult.isValid) {
