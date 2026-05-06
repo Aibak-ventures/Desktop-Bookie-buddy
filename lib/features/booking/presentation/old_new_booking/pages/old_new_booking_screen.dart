@@ -20,7 +20,10 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.d
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_search_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_table_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_customization_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -198,13 +201,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
 
-  // Inline editing state
-  int? _editingVariantId;
-  final _inlinePriceController = TextEditingController();
-  final _inlinePriceFocusNode = FocusNode();
-  final Map<int, TextEditingController> _quantityControllers = {};
-  final Map<int, FocusNode> _quantityFocusNodes = {};
+  // Inline editing state (managed by ProductListTableWidget)
   final Map<int, FocusNode> _overlayItemFocusNodes = {};
+  // final Map<int, FocusNode> _overlayItemFocusNodes = {};
 
   // State variables for payment methods
   List<PaymentMethod> _selectedPaymentMethods = [PaymentMethod.cash];
@@ -308,17 +307,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     startLocationController.dispose();
     pickupLocationController.dispose();
     destinationLocationController.dispose();
-    _inlinePriceController.dispose();
-    for (final controller in _quantityControllers.values) {
-      controller.dispose();
-    }
-    for (final focusNode in _quantityFocusNodes.values) {
-      focusNode.dispose();
-    }
     for (final focusNode in _overlayItemFocusNodes.values) {
       focusNode.dispose();
     }
-    _inlinePriceFocusNode.dispose();
     _clientNameFocusNode.dispose();
     _productSearchFocusNode.dispose();
     _pickupDateFocusNode.dispose();
@@ -2608,7 +2599,17 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           const SizedBox(height: 5),
           _buildProductSearchBar(),
           const SizedBox(height: 5),
-          Expanded(child: _buildSelectedProductsTable()),
+          Expanded(
+            child: ProductListTableWidget(
+              selectedProductsNotifier: selectedProductsNotifier,
+              selectedBookingType: selectedBookingType,
+              effectiveRentalDays: _getEffectiveRentalDays(),
+              manualExtraRentalDays: _manualExtraRentalDays,
+              clientNameFocusNode: _clientNameFocusNode,
+              onIncrementRentalDays: _incrementRentalDays,
+              onDecrementRentalDays: _decrementRentalDays,
+            ),
+          ),
         ],
       ),
     );
@@ -2720,15 +2721,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
   }
 
-  Widget _buildSelectedProductsTable() {
-    return Column(
-      children: [
-        _buildProductListHeader(),
-        Expanded(child: _buildSelectedProductsList()),
-      ],
-    );
-  }
-
   Widget _buildProductSearchBar() {
     return BlocBuilder<ServiceBloc, ServiceState>(
       builder: (context, serviceState) {
@@ -2799,242 +2791,99 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               },
             );
           },
-          child: CompositedTransformTarget(
-            link: _searchLayerLink,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                children: [
-                  // Search TextField
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: ValueListenableBuilder(
-                        valueListenable: _selectedSearchTypeIndex,
-                        builder: (context, searchTypeIndex, _) {
-                          return ValueListenableBuilder(
-                            valueListenable: _isPriceFilterEnabled,
-                            builder: (context, isPriceEnabled, _) {
-                              // Build active filter text
-                              String? filterText;
-                              if (searchTypeIndex != 0) {
-                                filterText = _searchTypes[searchTypeIndex];
-                              }
-                              if (isPriceEnabled) {
-                                if (filterText != null) {
-                                  filterText += ' | Price';
-                                } else {
-                                  filterText = 'Price';
-                                }
-                              }
-
-                              return Focus(
-                                skipTraversal: true,
-                                canRequestFocus: false,
-                                onKeyEvent: (_, event) {
-                                  if (event is KeyDownEvent &&
-                                      (event.logicalKey ==
-                                              LogicalKeyboardKey.arrowDown ||
-                                          event.logicalKey ==
-                                              LogicalKeyboardKey.numpad2)) {
-                                    if (_overlayProducts.value.isNotEmpty) {
-                                      _getOverlayItemFocusNode(0).requestFocus();
-                                      return KeyEventResult.handled;
-                                    }
-                                  }
-                                  return KeyEventResult.ignored;
-                                },
-                                child: TextField(
-                                controller: serviceSearchController,
-                                focusNode: _productSearchFocusNode,
-                                onTap: () {
-                                  if (serviceSearchController.text
-                                      .trim()
-                                      .isEmpty) {
-                                    _searchAllProductsForOverlay();
-                                  }
-                                },
-                                textInputAction: TextInputAction.next,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: 'Search products',
-                                  hintStyle: const TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF8C8C8C),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                    size: 18,
-                                  ),
-                                  suffixIcon: filterText != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 8,
-                                          ),
-                                          child: Chip(
-                                            label: Text(
-                                              filterText,
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                                color: Color(0xFF6132E4),
-                                              ),
-                                            ),
-                                            backgroundColor: const Color(
-                                              0xFF6132E4,
-                                            ).withOpacity(0.1),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 4,
-                                            ),
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                          ),
-                                        )
-                                      : null,
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 14,
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  if (value.trim().isNotEmpty &&
-                                      _showAllProductsOnSearchFocus) {
-                                    _showAllProductsOnSearchFocus = false;
-                                  }
-                                  _onSearchChanged(value);
-                                  if (value.isEmpty) {
-                                    _removeSearchOverlay();
-                                  } else {
-                                    // Show quick local results for single-char input
-                                    if (value.trim().length == 1) {
-                                      _showLocalFilteredResults(value.trim());
-                                    }
-                                    // Immediate dispatch to ensure backend receives search_value
-                                    final queryValue = value
-                                        .trim()
-                                        .toLowerCase();
-                                    final isSales =
-                                        selectedBookingType ==
-                                        BookingType.sales;
-                                    final isBooking = selectedBookingType == BookingType.booking;
-                                    final serviceIdToUse =
-                                        (selectedServiceId == null ||
-                                            selectedServiceId == -1)
-                                        ? null
-                                        : selectedServiceId;
-
-                                    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
-                                        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
-                                        : returnDate.format();
-                                    String? searchType;
-                                    switch (_selectedSearchTypeIndex.value) {
-                                      case 0:
-                                        searchType = 'name';
-                                        break;
-                                      case 1:
-                                        searchType = 'category';
-                                        break;
-                                      case 2:
-                                        searchType = 'model';
-                                        break;
-                                      case 3:
-                                        if (_currentServiceType != null) {
-                                          if (_currentServiceType
-                                              .isMultiVariantProductType) {
-                                            if (_currentServiceType ==
-                                                    MainServiceType.dress ||
-                                                _currentServiceType ==
-                                                    MainServiceType.costume) {
-                                              searchType = 'size';
-                                            } else if (_currentServiceType ==
-                                                MainServiceType.gadgets) {
-                                              searchType = 'serial_number';
-                                            } else {
-                                              searchType = 'variant';
-                                            }
-                                          } else {
-                                            searchType = 'color';
-                                          }
-                                        } else {
-                                          searchType = 'color';
-                                        }
-                                        break;
-                                    }
-                                    searchType ??= 'name';
-
-                                    _selectProductBloc.add(
-                                      SelectProductEvent.searchProducts(
-                                        serviceId: serviceIdToUse,
-                                        query: queryValue,
-                                        type: searchType,
-                                        startPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.start.round()
-                                            : null,
-                                        endPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.end.round()
-                                            : null,
-                                        pickupDate: pickupDate.format(),
-                                        returnDate: effectiveReturnDate,
-                                        pickupTime: pickupTime,
-                                        returnTime: returnTime,
-                                        useAvailableProductsApi:
-                                            selectedBookingType ==
-                                            BookingType.booking,
-                                        isSales: isSales,
-                                      ),
-                                    );
-                                  }
-                                },
-                                onSubmitted: (_) {
-                                  if (_overlayProducts.value.isNotEmpty) {
-                                    _getOverlayItemFocusNode(0).requestFocus();
-                                  } else {
-                                    _clientNameFocusNode.requestFocus();
-                                  }
-                                },
-                              ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
+          child: ProductListSearchBarWidget(
+            controller: serviceSearchController,
+            layerLink: _searchLayerLink,
+            focusNode: _productSearchFocusNode,
+            selectedSearchTypeIndex: _selectedSearchTypeIndex,
+            isPriceFilterEnabled: _isPriceFilterEnabled,
+            searchTypes: _searchTypes,
+            overlayProducts: _overlayProducts,
+            getOverlayItemFocusNode: _getOverlayItemFocusNode,
+            clientNameFocusNode: _clientNameFocusNode,
+            onTap: () {
+              if (serviceSearchController.text.trim().isEmpty) {
+                _searchAllProductsForOverlay();
+              }
+            },
+            onChanged: (value) {
+              if (value.trim().isNotEmpty && _showAllProductsOnSearchFocus) {
+                _showAllProductsOnSearchFocus = false;
+              }
+              _onSearchChanged(value);
+              if (value.isEmpty) {
+                _removeSearchOverlay();
+              } else {
+                if (value.trim().length == 1) {
+                  _showLocalFilteredResults(value.trim());
+                }
+                final queryValue = value.trim().toLowerCase();
+                final isSales = selectedBookingType == BookingType.sales;
+                final isBooking = selectedBookingType == BookingType.booking;
+                final serviceIdToUse =
+                    (selectedServiceId == null || selectedServiceId == -1)
+                    ? null
+                    : selectedServiceId;
+                final effectiveReturnDate =
+                    isBooking && coolingPeriodMode.isAfter
+                    ? returnDate
+                          .add(Duration(days: coolingPeriodDays))
+                          .format()
+                    : returnDate.format();
+                String? searchType;
+                switch (_selectedSearchTypeIndex.value) {
+                  case 0:
+                    searchType = 'name';
+                  case 1:
+                    searchType = 'category';
+                  case 2:
+                    searchType = 'model';
+                  case 3:
+                    if (_currentServiceType != null) {
+                      if (_currentServiceType.isMultiVariantProductType) {
+                        if (_currentServiceType == MainServiceType.dress ||
+                            _currentServiceType == MainServiceType.costume) {
+                          searchType = 'size';
+                        } else if (_currentServiceType ==
+                            MainServiceType.gadgets) {
+                          searchType = 'serial_number';
+                        } else {
+                          searchType = 'variant';
+                        }
+                      } else {
+                        searchType = 'color';
+                      }
+                    } else {
+                      searchType = 'color';
+                    }
+                }
+                searchType ??= 'name';
+                _selectProductBloc.add(
+                  SelectProductEvent.searchProducts(
+                    serviceId: serviceIdToUse,
+                    query: queryValue,
+                    type: searchType,
+                    startPrice: _isPriceFilterEnabled.value
+                        ? _priceRange.value.start.round()
+                        : null,
+                    endPrice: _isPriceFilterEnabled.value
+                        ? _priceRange.value.end.round()
+                        : null,
+                    pickupDate: pickupDate.format(),
+                    returnDate: effectiveReturnDate,
+                    pickupTime: pickupTime,
+                    returnTime: returnTime,
+                    useAvailableProductsApi:
+                        selectedBookingType == BookingType.booking,
+                    isSales: isSales,
                   ),
-                  const SizedBox(width: 8),
-                  // Filter Button
-                  Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        _removeSearchOverlay();
-                        _showProductFilterBottomSheet();
-                      },
-                      icon: const Icon(Icons.tune, size: 20),
-                      color: const Color(0xFF6132E4),
-                      tooltip: 'Filter products',
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                );
+              }
+            },
+            onFilterTap: () {
+              _removeSearchOverlay();
+              _showProductFilterBottomSheet();
+            },
           ),
         );
       },
@@ -3042,205 +2891,23 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   }
 
   void _showSearchOverlay() {
-    // Guard: only insert once; subsequent updates go through the ValueNotifiers
     if (_searchOverlayEntry != null) return;
 
     _searchOverlayEntry = OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          // Transparent barrier — tap outside to dismiss
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                serviceSearchController.clear();
-                _removeSearchOverlay();
-              },
-              behavior: HitTestBehavior.opaque,
-              child: const SizedBox.expand(),
-            ),
-          ),
-          // The actual search overlay
-          Positioned(
-            width: 1000,
-            child: CompositedTransformFollower(
-              link: _searchLayerLink,
-              showWhenUnlinked: false,
-              offset: const Offset(0, 44),
-              child: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(10),
-                // Wrap both notifiers so the overlay rebuilds reactively
-                child: ValueListenableBuilder<bool>(
-                  valueListenable: _overlayIsLoading,
-                  builder: (context, isLoading, _) {
-                    return ValueListenableBuilder<List<ProductEntity>>(
-                      valueListenable: _overlayProducts,
-                      builder: (context, productList, _) {
-                        return Container(
-                          constraints: const BoxConstraints(maxHeight: 450),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade200),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // ── Header ──────────────────────────────────
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade50,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    if (isLoading)
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 12,
-                                            height: 12,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 1.5,
-                                              color: Colors.grey.shade500,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            'Searching...',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.grey.shade700,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    else
-                                      Text(
-                                        'Search Results (${productList.length})',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade700,
-                                        ),
-                                      ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        serviceSearchController.clear();
-                                        _removeSearchOverlay();
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 18,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // ── Body ────────────────────────────────────
-                              if (isLoading)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 36,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: Color(0xFF6132E4),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        'Loading products...',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else if (productList.isEmpty)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 32,
-                                    horizontal: 16,
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.search_off_rounded,
-                                        size: 48,
-                                        color: Colors.grey.shade300,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'No results found',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Try adjusting your search or filters',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else
-                                Flexible(
-                                  child: ListView.separated(
-                                    controller: _searchResultsScrollController,
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 4,
-                                    ),
-                                    itemCount: productList.length,
-                                    separatorBuilder: (_, __) => Divider(
-                                      height: 1,
-                                      color: Colors.grey.shade200,
-                                    ),
-                                    itemBuilder: (_, i) =>
-                                        _buildOverlaySearchItem(
-                                          productList[i],
-                                          index: i,
-                                          itemCount: productList.length,
-                                        ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
+      builder: (context) => ProductSearchOverlayPopup(
+        layerLink: _searchLayerLink,
+        isLoading: _overlayIsLoading,
+        products: _overlayProducts,
+        scrollController: _searchResultsScrollController,
+        onDismiss: () {
+          serviceSearchController.clear();
+          _removeSearchOverlay();
+        },
+        itemBuilder: (product, index, itemCount) => _buildOverlaySearchItem(
+          product,
+          index: index,
+          itemCount: itemCount,
+        ),
       ),
     );
 
@@ -3390,124 +3057,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     setState(() {}); // Refresh to update UI
   }
 
-  Widget _buildProductListHeader() {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-    final hasVariants = _hasAnyProductWithVariants();
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
-          const SizedBox(width: 10),
-          Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
-          const SizedBox(width: 4),
-          if (hasVariants) ...[
-            Expanded(child: _buildHeaderCell('Variants')),
-            const SizedBox(width: 4),
-          ],
-          if (!isOldBooking) ...[
-            Expanded(child: _buildHeaderCell('Available')),
-            const SizedBox(width: 4),
-          ],
-          Expanded(child: _buildHeaderCell('Quantity')),
-          const SizedBox(width: 4),
-          if (!isSales) ...[
-            Expanded(child: _buildHeaderCell('Days')),
-            const SizedBox(width: 4),
-          ],
-          Expanded(child: _buildHeaderCell('Price / item')),
-          const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Total')),
-          const SizedBox(width: 50), // Matches row close button area
-        ],
-      ),
-    );
-  }
-
-  /// Check if any selected product has variant attributes to display
-  bool _hasAnyProductWithVariants() {
-    final products = selectedProductsNotifier.value;
-    return products.any((product) {
-      final mainServiceType = product.variant.mainServiceType;
-      // Only show variants column if product is multi-variant type and has variant attribute
-      return mainServiceType.isMultiVariantProductType &&
-          (product.variant.variantAttribute?.isNotEmpty ?? false);
-    });
-  }
-
-  Widget _buildHeaderCell(String title, {bool alignLeft = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F9F9), // Very light grey from image
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      alignment: alignLeft ? Alignment.centerLeft : Alignment.center,
-      child: Padding(
-        padding: alignLeft
-            ? const EdgeInsets.only(left: 12)
-            : const EdgeInsets.symmetric(horizontal: 4),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 13,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSelectedProductsList() {
-    return ValueListenableBuilder<List<ProductSelectedEntity>>(
-      valueListenable: selectedProductsNotifier,
-      builder: (context, products, _) {
-        if (products.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 48,
-                    color: Colors.grey.shade200,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No items selected',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Select a service and click on products to add them',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-        return ListView.builder(
-          padding: EdgeInsets.zero,
-          itemCount: products.length,
-          itemBuilder: (context, index) => _buildProductRow(products[index]),
-        );
-      },
-    );
-  }
-
   /// Returns true only for service types where the total price
   /// should be multiplied by rental days (vehicle, gadgets, equipment, costume).
   bool _shouldMultiplyByDays(MainServiceType? serviceType) {
@@ -3562,588 +3111,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     return productTotal + additionalTotal - discountAmount;
   }
 
-  Widget _buildProductRow(ProductSelectedEntity product) {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-    final rentalDays = !isSales ? _getEffectiveRentalDays() : 0;
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
-    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
-    // Only multiply price by days for qualifying service types
-    final effectiveDaysMultiplier =
-        (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
-        ? (rentalDays > 0 ? rentalDays : 1)
-        : 1;
-    final hasVariants = _hasAnyProductWithVariants();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-      ),
-      child: Row(
-        children: [
-          // Item Name & Image
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                // Image
-                MouseRegion(
-                  cursor: hasImage
-                      ? SystemMouseCursors.click
-                      : MouseCursor.defer,
-                  child: GestureDetector(
-                    onTap: hasImage
-                        ? () => ZoomableImageDialog.show(
-                            context,
-                            imageUrl: imageUrl,
-                            title: product.variant.name,
-                          )
-                        : null,
-                    child: Container(
-                      width: 48,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.grey.shade100,
-                        border: Border.all(color: Colors.grey.shade200),
-                        image: hasImage
-                            ? DecorationImage(
-                                image: NetworkImage(imageUrl),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: !hasImage
-                          ? const Icon(
-                              Icons.image_not_supported,
-                              size: 20,
-                              color: Colors.grey,
-                            )
-                          : Align(
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                margin: const EdgeInsets.all(3),
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.black45,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.zoom_in,
-                                  size: 12,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                // Text
-                Expanded(
-                  child: Text(
-                    product.variant.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF2D3436),
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Specifications (service-specific)
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                _getProductSpecifications(product),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Variant (only for multi-variant products)
-          if (hasVariants) ...[
-            Expanded(
-              child: Center(
-                child: Text(
-                  _getVariantDisplayText(product),
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Available Badge
-          if (!isOldBooking) ...[
-            Expanded(
-              child: Center(
-                child: Container(
-                  //  width: 58,
-                  // height: 21,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 11,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0x1C1FD300), // Light green bg
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF27AE60), // Green dot
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${product.variant.remainingStock ?? product.variant.stock} left',
-                        style: const TextStyle(
-                          fontSize: 12, // Slightly larger font 12
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Quantity Buttons
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildQuantityBtn(
-                  icon: Icons.remove,
-                  onTap: () => _decrementQuantity(product),
-                  compact: true,
-                ),
-                const SizedBox(width: 3),
-                SizedBox(
-                  width: 25,
-                  height: 20,
-                  child: TextField(
-                    controller: _getQuantityController(product),
-                    focusNode: _getQuantityFocusNode(_quantityKey(product)),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 0,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(color: Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF6132E4)),
-                      ),
-                    ),
-                    onSubmitted: (value) => _saveTypedQuantity(product, value),
-                    onTapOutside: (_) => _saveTypedQuantity(
-                      product,
-                      _getQuantityController(product).text,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 3),
-                _buildQuantityBtn(
-                  icon: Icons.add,
-                  onTap: () => _incrementQuantity(product),
-                  compact: true,
-                  isDisabled:
-                      !isOldBooking &&
-                      product.quantity >=
-                          (product.variant.remainingStock ??
-                              product.variant.stock ??
-                              999),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          // Days controls (only for bookings/custom/old booking)
-          if (!isSales) ...[
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildQuantityBtn(
-                    icon: Icons.remove,
-                    onTap: _decrementRentalDays,
-                    isDisabled: _manualExtraRentalDays == 0,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '$rentalDays',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  _buildQuantityBtn(
-                    icon: Icons.add,
-                    onTap: _incrementRentalDays,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Price / item
-          Expanded(
-            child: _editingVariantId == product.variant.variantId
-                ? Center(
-                    child: Container(
-                      width: 80,
-                      height: 32,
-                      child: TextField(
-                        controller: _inlinePriceController,
-                        focusNode: _inlinePriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 0,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: const BorderSide(
-                              color: Color(0xFF6132E4),
-                            ),
-                          ),
-                        ),
-                        onSubmitted: (_) => _saveEditingPrice(product),
-                      ),
-                    ),
-                  )
-                : GestureDetector(
-                    onTap: () => _startEditingPrice(product),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${product.amount}', // format currency if needed
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2D3436),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.edit_outlined,
-                          size: 16,
-                          color: const Color(0xFF6132E4),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
-          const SizedBox(width: 4),
-          // Total
-          Expanded(
-            child: Center(
-              child: Text(
-                '${product.amount * product.quantity * effectiveDaysMultiplier}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700, // Bold
-                  color: Color(0xFF2D3436),
-                ),
-              ),
-            ),
-          ),
-          // Remove
-          SizedBox(
-            width: 50,
-            child: IconButton(
-              icon: const Icon(Icons.close, size: 20, color: Colors.black87),
-              onPressed: () => _removeProduct(product),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantityBtn({
-    required IconData icon,
-    required VoidCallback onTap,
-    bool isDisabled = false,
-    bool compact = false,
-  }) {
-    return InkWell(
-      onTap: isDisabled ? null : onTap,
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        width: compact ? 20 : 18,
-        height: compact ? 20 : 18,
-        decoration: BoxDecoration(
-          color: isDisabled
-              ? Colors.grey.shade300
-              : const Color(0xFFF3F0FF), // Light purple bg
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(
-          icon,
-          size: compact ? 12 : 14,
-          color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
-        ),
-      ),
-    );
-  }
-
-  TextEditingController _getQuantityController(ProductSelectedEntity product) {
-    final quantityKey = _quantityKey(product);
-    final focusNode = _getQuantityFocusNode(quantityKey);
-    final controller = _quantityControllers.putIfAbsent(
-      quantityKey,
-      () => TextEditingController(text: product.quantity.toString()),
-    );
-    if (!focusNode.hasFocus && controller.text != product.quantity.toString()) {
-      controller.text = product.quantity.toString();
-    }
-    return controller;
-  }
-
-  int _quantityKey(ProductSelectedEntity product) {
-    return product.variant.variantId ?? product.variant.id;
-  }
-
-  FocusNode _getQuantityFocusNode(int quantityKey) {
-    return _quantityFocusNodes.putIfAbsent(quantityKey, FocusNode.new);
-  }
-
   FocusNode _getOverlayItemFocusNode(int index) {
     return _overlayItemFocusNodes.putIfAbsent(index, FocusNode.new);
-  }
-
-  void _focusNextProductRowOrClient(ProductSelectedEntity product) {
-    final products = selectedProductsNotifier.value;
-    final currentIndex = products.indexWhere(
-      (item) => item.variant.variantId == product.variant.variantId,
-    );
-    if (currentIndex != -1 && currentIndex + 1 < products.length) {
-      final nextProduct = products[currentIndex + 1];
-      _getQuantityFocusNode(_quantityKey(nextProduct)).requestFocus();
-      return;
-    }
-
-    _clientNameFocusNode.requestFocus();
-  }
-
-  /// Increment quantity of a product with stock validation
-  void _incrementQuantity(ProductSelectedEntity product) {
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-
-    if (!isOldBooking) {
-      // Check available stock using remainingStock with fallback to stock
-      final availableStock =
-          product.variant.remainingStock ?? product.variant.stock ?? 999;
-      final currentQuantity = product.quantity;
-
-      // Silently prevent increment if at max - button should already be disabled
-      if (currentQuantity >= availableStock) {
-        return;
-      }
-    }
-
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      products[index] = products[index].copyWith(
-        quantity: products[index].quantity + 1,
-      );
-      _quantityControllers[_quantityKey(product)]?.text = products[index]
-          .quantity
-          .toString();
-      selectedProductsNotifier.value = products;
-    }
-  }
-
-  /// Decrement quantity of a product
-  void _decrementQuantity(ProductSelectedEntity product) {
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      if (products[index].quantity > 1) {
-        products[index] = products[index].copyWith(
-          quantity: products[index].quantity - 1,
-        );
-        _quantityControllers[_quantityKey(product)]?.text = products[index]
-            .quantity
-            .toString();
-      } else {
-        _quantityControllers.remove(_quantityKey(product))?.dispose();
-        _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
-        products.removeAt(index);
-      }
-      selectedProductsNotifier.value = products;
-    }
-  }
-
-  void _saveTypedQuantity(ProductSelectedEntity product, String value) {
-    final parsedQuantity = int.tryParse(value.trim());
-
-    if (parsedQuantity == null || parsedQuantity <= 0) {
-      _quantityControllers[_quantityKey(product)]?.text = product.quantity
-          .toString();
-      context.showSnackBar('Quantity must be greater than 0', isError: true);
-      return;
-    }
-
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-    final availableStock =
-        product.variant.remainingStock ?? product.variant.stock ?? 999;
-
-    if (!isOldBooking && parsedQuantity > availableStock) {
-      _quantityControllers[_quantityKey(product)]?.text = product.quantity
-          .toString();
-      context.showSnackBar(
-        'Quantity cannot be greater than available stock ($availableStock)',
-        isError: true,
-      );
-      return;
-    }
-
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-
-    if (index == -1) return;
-
-    products[index] = products[index].copyWith(quantity: parsedQuantity);
-    _quantityControllers[_quantityKey(product)]?.text = parsedQuantity
-        .toString();
-    selectedProductsNotifier.value = products;
-    _quantityFocusNodes[_quantityKey(product)]?.unfocus();
-    _focusNextProductRowOrClient(products[index]);
-  }
-
-  void _startEditingPrice(ProductSelectedEntity product) {
-    setState(() {
-      _editingVariantId = product.variant.variantId;
-      _inlinePriceController.text = product.amount.toString();
-      // Schedule focus request for next frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _inlinePriceFocusNode.requestFocus();
-      });
-    });
-  }
-
-  void _saveEditingPrice(ProductSelectedEntity product) {
-    if (_editingVariantId == null) return;
-
-    final newPrice = int.tryParse(_inlinePriceController.text);
-
-    // Validate that price is not zero
-    if (newPrice == null || newPrice <= 0) {
-      context.showSnackBar(
-        'Product price cannot be zero or empty',
-        isError: true,
-      );
-      // Keep the field in edit mode
-      return;
-    }
-
-    _updateProductPrice(product, newPrice);
-
-    setState(() {
-      _editingVariantId = null;
-      _inlinePriceController.clear();
-      _inlinePriceFocusNode.unfocus();
-    });
-    _focusNextProductRowOrClient(product);
-  }
-
-  /// Remove a product from the selected list
-  void _removeProduct(ProductSelectedEntity product) {
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    _quantityControllers.remove(_quantityKey(product))?.dispose();
-    _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
-    products.removeWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    selectedProductsNotifier.value = products;
-  }
-
-  /// Update the price of a product
-  void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      products[index] = products[index].copyWith(amount: newPrice);
-      selectedProductsNotifier.value = products;
-    }
   }
 
   Widget _buildSummarySection() {
