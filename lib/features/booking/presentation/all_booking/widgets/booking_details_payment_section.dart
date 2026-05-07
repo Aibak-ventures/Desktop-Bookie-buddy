@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/b
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/show_booking_details_add_payment_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -158,19 +159,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              _buildPaymentRow('Product total', '₹$productTotal'),
-              const SizedBox(height: 8),
-              if (discount > 0) ...[
-                _buildPaymentRow(
-                  'Discount',
-                  '- ₹$discount',
-                  valueColor: Colors.black87,
-                ),
-                const SizedBox(height: 8),
-              ],
               if (securityAmount > 0) ...[
-                _buildPaymentRow('Security amount', '₹$securityAmount'),
-                const SizedBox(height: 4),
                 if (booking.securityAccountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -206,8 +195,17 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                     ),
                   )
                 else
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
+
+                _buildPaymentRow(
+                  'Security amount',
+                  securityAmount.toCurrency(),
+                ),
+                const SizedBox(height: 8),
               ],
+              _buildPaymentRow('Product total', '₹$productTotal'),
+              const SizedBox(height: 8),
+
               if (additionalTotal > 0) ...[
                 Theme(
                   data: ThemeData(dividerColor: Colors.transparent),
@@ -226,7 +224,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹$additionalTotal',
+                          additionalTotal.toCurrency(),
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -249,7 +247,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '₹${charge.amount ?? 0}',
+                              (charge.amount ?? 0).toCurrency(),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey.shade700,
@@ -261,19 +259,25 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                     }).toList(),
                   ),
                 ),
-                const SizedBox(height: 8),
+              ],
+              if (discount > 0) ...[
+                _buildPaymentRow(
+                  'Discount',
+                  '- ${discount.toCurrency()}',
+                  valueColor: Colors.black87,
+                ),
               ],
               const Divider(height: 24),
               _buildPaymentRow(
-                'Total amount',
-                '₹$totalAmount',
+                'Total Payable',
+                (totalAmount - discount).toCurrency(),
                 isBold: true,
                 fontSize: 15,
               ),
               const SizedBox(height: 8),
               _buildPaymentRow(
                 'Paid',
-                '₹$paid',
+                paid.toCurrency(),
                 valueColor: Colors.green.shade600,
                 isBold: true,
                 fontSize: 14,
@@ -281,7 +285,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               const SizedBox(height: 8),
               _buildPaymentRow(
                 'Balance',
-                '₹$balance',
+                balance.toCurrency(),
                 valueColor: balance > 0
                     ? Colors.red.shade600
                     : Colors.green.shade600,
@@ -295,7 +299,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 if (booking.totalRefunded > 0)
                   _buildPaymentRow(
                     'Refunded',
-                    '₹${booking.totalRefunded.toInt()}',
+                    booking.totalRefunded.toInt().toCurrency(),
                     valueColor: Colors.green.shade600,
                     fontSize: 13,
                   ),
@@ -303,7 +307,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                   if (booking.totalRefunded > 0) const SizedBox(height: 6),
                   _buildPaymentRow(
                     'Deducted',
-                    '₹${(paid - booking.totalRefunded.toInt())}',
+                    (paid - booking.totalRefunded.toInt()).toCurrency(),
                     valueColor: Colors.red.shade600,
                     fontSize: 13,
                   ),
