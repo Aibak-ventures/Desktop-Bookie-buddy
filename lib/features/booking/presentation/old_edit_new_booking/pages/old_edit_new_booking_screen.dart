@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
@@ -106,6 +107,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   AccountEntity? selectedSecurityAccount;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool isDiscountPercentage = false;
+  final _discountTypeNotifier = ValueNotifier<bool>(false);
   BookingStatus? bookingStatus; // Track booking status
   String? bookingCompletedDate; // Store completed date
   bool sendPdfToWhatsApp = true;
@@ -454,32 +456,19 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         '📦 Product: ${item.name}, Measurements: ${item.measurements.length}',
       );
       return ProductSelectedEntity(
-        variant: ProductInfoEntity(
-          id: item.id,
-          variantId: item.variantId,
-          productId: item.productId,
-          name: item.name,
-          image: item.image,
-          amount: item.amount,
-          category: item.category,
-          color: item.color,
-          model: item.model,
-          mainServiceType: item.mainServiceType,
-          variantAttribute: item.variantAttribute,
-          measurements: item.measurements,
-          quantity: item.quantity,
-          stock: null,
-          remainingStock: null,
-        ),
-        measurements: item
-            .measurements, // CRITICAL: Copy measurements to ProductSelectedEntity
+        variant: item
+            .copyWith(), // Create a copy to avoid mutating original booking data
+        measurements: item.measurements,
         quantity: item.quantity,
-        amount: item.amount,
+        amount:
+            item.amount ~/
+            item.quantity, // Store per-unit price, because total product amount is calculated as per-unit price * quantity.
       );
     }).toList();
     log(
       '✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}',
     );
+    log('Selected products After setting notifier: ${products}');
     selectedProductsNotifier.value = products;
 
     // Set additional charges
@@ -1036,6 +1025,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     runningKilometersController.dispose();
     _overlayProducts.dispose();
     _overlayIsLoading.dispose();
+    _discountTypeNotifier.dispose();
     super.dispose();
   }
 
@@ -2215,7 +2205,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         await _handleBackNavigation();
       },
@@ -2904,45 +2894,44 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
   /// Considers the actual time component for accurate 24-hour period calculation
   int _calculateRentalDays() {
-    if (pickupDate == returnDate && pickupTime == returnTime) return 1;
-
-    // Create DateTime objects with time component
+    // Default pickup time: 23:59 if not selected
     final pickupDateTime = DateTime(
       pickupDate.year,
       pickupDate.month,
       pickupDate.day,
-      pickupTime?.hour ?? 0,
-      pickupTime?.minute ?? 0,
+      pickupTime?.hour ?? 23,
+      pickupTime?.minute ?? 59,
     );
 
+    // Default return time: 00:00 if not selected
     final returnDateTime = DateTime(
       returnDate.year,
       returnDate.month,
       returnDate.day,
-      returnTime?.hour ?? 23,
-      returnTime?.minute ?? 59,
+      returnTime?.hour ?? 0,
+      returnTime?.minute ?? 0,
     );
 
-    final difference = returnDateTime.difference(pickupDateTime);
-    final hours = difference.inHours;
-
-    // Below 24 hours = 1 day, above = days based on hours
-    if (hours < 24) {
+    // Safety: return date must be after pickup
+    if (!returnDateTime.isAfter(pickupDateTime)) {
       return 1;
-    } else {
-      // Calculate days based on hours: 24-48 hours = 2 days, etc.
-      // Use ceil to count partial days as full days
-      return (hours / 24).ceil();
     }
+
+    final difference = returnDateTime.difference(pickupDateTime);
+
+    // Convert to hours (include minutes precision)
+    final hours = difference.inMinutes / 60;
+
+    // Business rule:
+    // Below 24 hours = 1 day
+    // Every started 24h block = +1 day
+    return hours <= 24 ? 1 : (hours / 24).ceil();
   }
 
   /// Returns true only for service types where the total price
   /// should be multiplied by rental days (vehicle, gadgets, equipment, costume).
   bool _shouldMultiplyByDays(MainServiceType? serviceType) {
-    return serviceType == MainServiceType.vehicle ||
-        serviceType == MainServiceType.gadgets ||
-        serviceType == MainServiceType.equipment ||
-        serviceType == MainServiceType.costume;
+    return serviceType?.requiresDateRange ?? false;
   }
 
   TimeOfDay? _extractSelectedTime(String? rawDateTime) {
@@ -3015,276 +3004,119 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   }
 
   Widget _buildSummaryBreakdownCard() {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 245, 242, 254),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white),
-      ),
-      child: ListenableBuilder(
-        listenable: Listenable.merge([
-          selectedProductsNotifier,
-          additionalChargesNotifier,
-          advanceAmountController,
-          discountAmountController,
-        ]),
-        builder: (context, _) {
-          final products = selectedProductsNotifier.value;
-          final additionalCharges = additionalChargesNotifier.value;
-          final advanceAmount =
-              advanceAmountController.text.trim().toIntOrNull() ?? 0;
-          final discountAmount =
-              discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-          final isSaleType = selectedBookingType == BookingType.sales;
-          final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
-          final productTotal = products.fold<int>(0, (sum, product) {
-            final daysMultiplier =
-                (!isSaleType &&
-                    _shouldMultiplyByDays(product.variant.mainServiceType))
-                ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                : 1;
-            return sum + (product.amount * product.quantity * daysMultiplier);
-          });
-          final additionalTotal = additionalCharges.fold<int>(
-            0,
-            (sum, charge) => sum + (charge.amount ?? 0),
-          );
-          final actualDiscount = isDiscountPercentage
-              ? ((productTotal + additionalTotal) * discountAmount / 100)
-                    .round()
-              : discountAmount;
-          final totalPayable = productTotal + additionalTotal - actualDiscount;
-          final remainingAmount = totalPayable - advanceAmount;
-
-          return Column(
-            children: [
-              if (isSaleType)
-                _buildSummaryRow(
-                  'Total amount',
-                  remainingAmount > 0 ? remainingAmount : 0,
-                  valueColor: const Color(0xFF6132E4),
-                  isBold: true,
-                )
-              else ...[
-                _buildSummaryRow('Product total', productTotal),
-                if (additionalTotal > 0)
-                  _buildSummaryRow('Additional charges', additionalTotal),
-                if (actualDiscount > 0)
-                  _buildSummaryRow(
-                    '- Discount',
-                    actualDiscount,
-                    isNegative: true,
-                  ),
-                const Divider(height: 6),
-                _buildSummaryRow(
-                  'Paid',
-                  advanceAmount,
-                  valueColor: const Color(0xFF1AB000),
-                ),
-                _buildSummaryRow(
-                  'Total payable',
-                  remainingAmount > 0 ? remainingAmount : 0,
-                  valueColor: const Color(0xFFD30000),
-                  isBold: true,
-                ),
-              ],
-            ],
-          );
-        },
-      ),
+    return BookingAmountSummary(
+      selectedProductsNotifier: selectedProductsNotifier,
+      additionalChargesNotifier: additionalChargesNotifier,
+      advanceAmountController: advanceAmountController,
+      discountAmountController: discountAmountController,
+      isDiscountPercentage: _discountTypeNotifier,
+      securityAmountController: securityAmountController,
+      securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSales: selectedBookingType == BookingType.sales,
+      calculateRentalDays: _calculateRentalDays,
+      advanceLabel: 'Paid',
+      totalRemainingLabel: 'Balance Amount',
     );
+    // return Container(
+    //   padding: const EdgeInsets.all(6),
+    //   decoration: BoxDecoration(
+    //     color: const Color.fromARGB(255, 245, 242, 254),
+    //     borderRadius: BorderRadius.circular(10),
+    //     border: Border.all(color: Colors.white),
+    //   ),
+    //   child: ListenableBuilder(
+    //     listenable: Listenable.merge([
+    //       selectedProductsNotifier,
+    //       additionalChargesNotifier,
+    //       advanceAmountController,
+    //       discountAmountController,
+    //     ]),
+    //     builder: (context, _) {
+    //       final products = selectedProductsNotifier.value;
+    //       final additionalCharges = additionalChargesNotifier.value;
+    //       final advanceAmount =
+    //           advanceAmountController.text.trim().toIntOrNull() ?? 0;
+    //       final discountAmount =
+    //           discountAmountController.text.trim().toIntOrNull() ?? 0;
+
+    //       final isSaleType = selectedBookingType == BookingType.sales;
+    //       final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
+    //       final productTotal = products.fold<int>(0, (sum, product) {
+    //         final daysMultiplier =
+    //             (!isSaleType &&
+    //                 _shouldMultiplyByDays(product.variant.mainServiceType))
+    //             ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+    //             : 1;
+    //         return sum + (product.amount * product.quantity * daysMultiplier);
+    //       });
+    //       final additionalTotal = additionalCharges.fold<int>(
+    //         0,
+    //         (sum, charge) => sum + (charge.amount ?? 0),
+    //       );
+    //       final actualDiscount = isDiscountPercentage
+    //           ? ((productTotal + additionalTotal) * discountAmount / 100)
+    //                 .round()
+    //           : discountAmount;
+    //       final totalPayable = productTotal + additionalTotal - actualDiscount;
+    //       final remainingAmount = totalPayable - advanceAmount;
+
+    //       return Column(
+    //         children: [
+    //           if (isSaleType)
+    //             _buildSummaryRow(
+    //               'Total amount',
+    //               remainingAmount > 0 ? remainingAmount : 0,
+    //               valueColor: const Color(0xFF6132E4),
+    //               isBold: true,
+    //             )
+    //           else ...[
+    //             _buildSummaryRow('Product total', productTotal),
+    //             if (additionalTotal > 0)
+    //               _buildSummaryRow('Additional charges', additionalTotal),
+    //             if (actualDiscount > 0)
+    //               _buildSummaryRow(
+    //                 '- Discount',
+    //                 actualDiscount,
+    //                 isNegative: true,
+    //               ),
+    //             const Divider(height: 6),
+    //             _buildSummaryRow(
+    //               'Paid',
+    //               advanceAmount,
+    //               valueColor: const Color(0xFF1AB000),
+    //             ),
+    //             _buildSummaryRow(
+    //               'Total payable',
+    //               remainingAmount > 0 ? remainingAmount : 0,
+    //               valueColor: const Color(0xFFD30000),
+    //               isBold: true,
+    //             ),
+    //           ],
+    //         ],
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   Widget _buildSummarySection() {
-    return Column(
-      children: [
-        _buildSummaryBreakdownCard(),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 245, 242, 254),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.white),
-          ),
-          child: Column(
-            children: [
-              // const SizedBox(height: 3),
-
-              // const SizedBox(height: 3),
-              // Add/Edit customization button - Only for Dresses
-              ValueListenableBuilder<List<ProductSelectedEntity>>(
-                valueListenable: selectedProductsNotifier,
-                builder: (context, products, _) {
-                  final hasDresses = products.any(
-                    (p) => p.variant.mainServiceType?.isDress ?? false,
-                  );
-                  if (!hasDresses) return const SizedBox.shrink();
-
-                  // Check if any dress product already has measurements (customizations)
-                  final hasCustomizations = products.any(
-                    (p) =>
-                        (p.variant.mainServiceType?.isDress ?? false) &&
-                        p.measurements.isNotEmpty,
-                  );
-
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 39,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          showCustomization = true;
-                        });
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: hasCustomizations
-                            ? const Color(0xFFF3F0FF)
-                            : Colors.transparent,
-                        foregroundColor: hasCustomizations
-                            ? const Color(0xFF6132E4)
-                            : Colors.grey.shade700,
-                        side: BorderSide(
-                          color: hasCustomizations
-                              ? const Color(0xFF6132E4)
-                              : Colors.grey.shade600,
-                          width: 1,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            hasCustomizations ? Icons.edit_outlined : Icons.add,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            hasCustomizations
-                                ? 'Edit customization'
-                                : 'Add customization (Optional)',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              // Show completed/cancelled status info
-              if (bookingStatus == BookingStatus.completed &&
-                  bookingCompletedDate != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8F5E9),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFF4CAF50)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle,
-                        color: Color(0xFF4CAF50),
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Booking Completed',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2E7D32),
-                              ),
-                            ),
-                            Text(
-                              'Completed on: $bookingCompletedDate',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else if (bookingStatus == BookingStatus.cancelled)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFEBEE),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFF44336)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.cancel,
-                        color: Color(0xFFF44336),
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      const Expanded(
-                        child: Text(
-                          'Booking Cancelled',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFFC62828),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                // Confirm button - Only show for non-completed/cancelled bookings
-                SizedBox(
-                  width: double.infinity,
-                  height: 39,
-                  child: ElevatedButton(
-                    onPressed: _handleSaveBooking,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Save Change',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
+    return BookingSummarySection(
+      selectedProductsNotifier: selectedProductsNotifier,
+      additionalChargesNotifier: additionalChargesNotifier,
+      advanceAmountController: advanceAmountController,
+      discountAmountController: discountAmountController,
+      isDiscountPercentage: _discountTypeNotifier,
+      securityAmountController: securityAmountController,
+      securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSales: selectedBookingType == BookingType.sales,
+      calculateRentalDays: _calculateRentalDays,
+      advanceLabel: 'Paid',
+      totalRemainingLabel: 'Balance Amount',
+      onShowCustomization: () => setState(() => showCustomization = true),
+      bookingStatus: bookingStatus,
+      bookingCompletedDate: bookingCompletedDate,
+      onConfirm: _handleSaveBooking,
+      confirmLabel: 'Save Change',
     );
   }
 
@@ -4433,6 +4265,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                                 }
                               }
                               isDiscountPercentage = switchToPercent;
+                              _discountTypeNotifier.value = switchToPercent;
                             }
                           });
                         },
