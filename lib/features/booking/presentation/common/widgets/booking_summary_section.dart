@@ -1,27 +1,262 @@
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
-/// Shared summary section used in the right-side panel of both
-/// [NewBookingScreen] and [EditNewBookingScreen].
-///
-/// Displays product total, additional charges, discount, paid, and total
-/// payable. Also includes an optional customization button and confirm button.
-class BookingSummarySection extends StatefulWidget {
-  final BookingFormControllers form;
+/// Standalone reactive summary tile — shows the amount breakdown without any
+/// action buttons. Use this when you only need to display the summary (e.g.
+/// in a read-only panel or a details drawer).
+class BookingAmountSummary extends StatelessWidget {
+  final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
+  final ValueNotifier<List<AdditionalChargesEntity>> additionalChargesNotifier;
+  final TextEditingController advanceAmountController;
+  final TextEditingController discountAmountController;
+  final ValueNotifier<bool> isDiscountPercentage;
+  final TextEditingController securityAmountController;
+
+  /// Display name for the security payment method.
+  final String securityMethodLabel;
+
+  final bool isSales;
+  final int Function() calculateRentalDays;
+
+  /// Label for the advance/paid row (e.g. 'Advance' for add, 'Paid' for edit).
+  final String advanceLabel;
+
+  /// Header label on the expandable tile.
+  final String totalRemainingLabel;
+
+  const BookingAmountSummary({
+    super.key,
+    required this.selectedProductsNotifier,
+    required this.additionalChargesNotifier,
+    required this.advanceAmountController,
+    required this.discountAmountController,
+    required this.isDiscountPercentage,
+    required this.securityAmountController,
+    required this.securityMethodLabel,
+    required this.isSales,
+    required this.calculateRentalDays,
+    this.advanceLabel = 'Paid',
+    this.totalRemainingLabel = 'Total Payable Amount',
+  });
+
+  bool _shouldMultiplyByDays(MainServiceType? type) =>
+      type?.requiresDateRange ?? false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        selectedProductsNotifier,
+        additionalChargesNotifier,
+        advanceAmountController,
+        discountAmountController,
+        isDiscountPercentage,
+        securityAmountController,
+      ]),
+      builder: (context, _) {
+        final products = selectedProductsNotifier.value;
+        final additionalCharges = additionalChargesNotifier.value;
+        final advanceAmount = isSales
+            ? 0
+            : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
+        final securityAmount = isSales
+            ? 0
+            : (int.tryParse(securityAmountController.text.trim()) ?? 0);
+
+        final summaryRentalDays = !isSales ? calculateRentalDays() : 1;
+        final productTotal = products.fold<int>(0, (sum, product) {
+          final daysMultiplier =
+              (!isSales &&
+                  _shouldMultiplyByDays(product.variant.mainServiceType))
+              ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
+              : 1;
+          return sum + (product.amount * product.quantity * daysMultiplier);
+        });
+        final additionalTotal = additionalCharges.fold<int>(
+          0,
+          (sum, charge) => sum + (charge.amount ?? 0),
+        );
+
+        final discountInput =
+            discountAmountController.text.trim().toIntOrNull() ?? 0;
+        final discountAmount = isDiscountPercentage.value
+            ? ((productTotal + additionalTotal) * discountInput / 100).round()
+            : discountInput;
+
+        final totalPayable = productTotal + additionalTotal - discountAmount;
+
+        if (isSales) {
+          final clampedTotal = totalPayable > 0 ? totalPayable : 0;
+          final salesFields = <SummaryField>[
+            SummaryField(
+              label: 'Product total',
+              value: productTotal.toCurrency(),
+            ),
+            if (additionalTotal > 0)
+              SummaryField(
+                label: 'Additional charges',
+                value: additionalTotal.toCurrency(),
+              ),
+            if (discountAmount > 0)
+              SummaryField(
+                label: 'Discount',
+                value: '- ${discountAmount.toCurrency()}',
+                color: const Color(0xFFD30000),
+              ),
+            SummaryField(
+              label: 'Total',
+              value: clampedTotal.toCurrency(),
+              labelStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+              valueStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+          ];
+          return ExpandableSummaryTile(
+            totalLabel: totalRemainingLabel,
+            totalValue: clampedTotal.toCurrency(),
+            fields: salesFields,
+          );
+        }
+
+        final netRemaining = (totalPayable - advanceAmount)
+            .clamp(0, 999999999)
+            .toInt();
+        final pendingTotal =
+            productTotal + securityAmount + additionalTotal - discountAmount;
+        final receivedTotal = advanceAmount + securityAmount;
+
+        final summaryPayableFields = <SummaryField>[
+          SummaryField(
+            label: 'Product total',
+            value: productTotal.toCurrency(),
+          ),
+          if (securityAmount > 0)
+            SummaryField(
+              label: 'Security Deposit',
+              value: securityAmount.toCurrency(),
+            ),
+          if (additionalTotal > 0)
+            SummaryField(
+              label: 'Additional charges',
+              value: additionalTotal.toCurrency(),
+            ),
+          if (discountAmount > 0)
+            SummaryField(
+              label: 'Discount',
+              value: '- ${discountAmount.toCurrency()}',
+              color: const Color(0xFFD30000),
+            ),
+        ];
+
+        final summaryReceivedFields = <SummaryField>[
+          if (advanceAmount > 0)
+            SummaryField(
+              label: advanceLabel,
+              value: advanceAmount.toCurrency(),
+              valueStyle: const TextStyle(fontSize: 13),
+            ),
+          if (securityAmount > 0)
+            SummaryField(
+              label: 'Security Deposit ($securityMethodLabel)',
+              value: securityAmount.toCurrency(),
+            ),
+        ];
+
+        final allFields = <SummaryField>[
+          ...summaryPayableFields,
+          if (pendingTotal > 0)
+            SummaryField(
+              label: 'Total',
+              value: pendingTotal.toCurrency(),
+              labelStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+              valueStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+          if (summaryReceivedFields.isNotEmpty)
+            const SummaryField(label: '', value: '', showDivider: true),
+          ...summaryReceivedFields,
+          if (receivedTotal > 0)
+            SummaryField(
+              label: 'Total',
+              value: receivedTotal.toCurrency(),
+              labelStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+              valueStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+        ];
+
+        return ExpandableSummaryTile(
+          totalLabel: totalRemainingLabel,
+          totalValue: netRemaining.toCurrency(),
+          subLabel: advanceAmount > 0
+              ? 'paid ${receivedTotal.toCurrency()}'
+              : null,
+          fields: allFields,
+        );
+      },
+    );
+  }
+}
+
+/// Full summary panel used in booking and sales form screens. Wraps
+/// [BookingAmountSummary] and adds the customization button, status banners,
+/// and confirm/save action button.
+class BookingSummarySection extends StatelessWidget {
+  final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
+  final ValueNotifier<List<AdditionalChargesEntity>> additionalChargesNotifier;
+  final TextEditingController advanceAmountController;
+  final TextEditingController discountAmountController;
+  final ValueNotifier<bool> isDiscountPercentage;
+  final TextEditingController securityAmountController;
+
+  /// Display name for the security payment method (e.g. account name or
+  /// payment method label). Evaluated at widget-creation time via parent
+  /// setState — updates are reflected on the next listenable rebuild.
+  final String securityMethodLabel;
+
   final bool isSales;
   final int Function() calculateRentalDays;
 
   /// Optional: customization button (only for dress/costume products)
   final VoidCallback? onShowCustomization;
 
-  /// Optional: Booking status (for edit mode)
+  /// Optional: booking status (for edit mode banners)
   final BookingStatus? bookingStatus;
   final String? bookingCompletedDate;
+
+  /// Label for the advance/paid field in the received section.
+  /// Use 'Advance' for add booking, 'Paid' for edit booking.
+  final String advanceLabel;
+
+  /// Header label on the expandable tile.
+  /// Use 'Total Payable Amount' for add, 'Balance Amount' for edit.
+  final String totalRemainingLabel;
 
   /// Confirm button
   final VoidCallback onConfirm;
@@ -29,24 +264,23 @@ class BookingSummarySection extends StatefulWidget {
 
   const BookingSummarySection({
     super.key,
-    required this.form,
+    required this.selectedProductsNotifier,
+    required this.additionalChargesNotifier,
+    required this.advanceAmountController,
+    required this.discountAmountController,
+    required this.isDiscountPercentage,
+    required this.securityAmountController,
+    required this.securityMethodLabel,
     required this.isSales,
     required this.calculateRentalDays,
+    this.advanceLabel = 'Paid',
+    this.totalRemainingLabel = 'Total Payable Amount',
     this.onShowCustomization,
     this.bookingStatus,
     this.bookingCompletedDate,
     required this.onConfirm,
     required this.confirmLabel,
   });
-
-  @override
-  State<BookingSummarySection> createState() => _BookingSummarySectionState();
-}
-
-class _BookingSummarySectionState extends State<BookingSummarySection>
-    with BookingFormMixin<BookingSummarySection> {
-  @override
-  BookingFormControllers get form => widget.form;
 
   @override
   Widget build(BuildContext context) {
@@ -59,97 +293,26 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
       ),
       child: Column(
         children: [
-          // Summary rows
-          ListenableBuilder(
-            listenable: Listenable.merge([
-              form.selectedProductsNotifier,
-              form.additionalChargesNotifier,
-              form.advanceAmountController,
-              form.discountAmountController,
-              form.isDiscountPercentage,
-            ]),
-            builder: (context, _) {
-              final products = form.selectedProductsNotifier.value;
-              final additionalCharges = form.additionalChargesNotifier.value;
-              final advanceAmount = widget.isSales
-                  ? 0
-                  : (form.advanceAmountController.text.trim().toIntOrNull() ??
-                        0);
-
-              final summaryRentalDays = !widget.isSales
-                  ? widget.calculateRentalDays()
-                  : 1;
-              final productTotal = products.fold<int>(0, (sum, product) {
-                final daysMultiplier =
-                    (!widget.isSales &&
-                        shouldMultiplyByDays(product.variant.mainServiceType))
-                    ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-                    : 1;
-                return sum +
-                    (product.amount * product.quantity * daysMultiplier);
-              });
-              final additionalTotal = additionalCharges.fold<int>(
-                0,
-                (sum, charge) => sum + (charge.amount ?? 0),
-              );
-
-              final discountInput =
-                  form.discountAmountController.text.trim().toIntOrNull() ?? 0;
-              int discountAmount;
-              if (form.isDiscountPercentage.value) {
-                discountAmount = (productTotal * discountInput / 100).round();
-              } else {
-                discountAmount = discountInput;
-              }
-
-              final totalPayable =
-                  productTotal + additionalTotal - discountAmount;
-              final remainingAmount = totalPayable - advanceAmount;
-
-              return Column(
-                children: [
-                  if (widget.isSales)
-                    buildSummaryRow(
-                      'Total amount',
-                      remainingAmount > 0 ? remainingAmount : 0,
-                      valueColor: const Color(0xFF6132E4),
-                      isBold: true,
-                    )
-                  else ...[
-                    buildSummaryRow('Product total', productTotal),
-                    if (additionalTotal > 0)
-                      buildSummaryRow('Additional charges', additionalTotal),
-                    if (discountAmount > 0)
-                      buildSummaryRow(
-                        '- Discount',
-                        discountAmount,
-                        isNegative: true,
-                      ),
-                    const Divider(height: 6),
-                    buildSummaryRow(
-                      'Paid',
-                      advanceAmount,
-                      valueColor: const Color(0xFF1AB000),
-                    ),
-                    buildSummaryRow(
-                      'Total payable',
-                      remainingAmount > 0 ? remainingAmount : 0,
-                      valueColor: const Color(0xFFD30000),
-                      isBold: true,
-                    ),
-                  ],
-                ],
-              );
-            },
+          BookingAmountSummary(
+            selectedProductsNotifier: selectedProductsNotifier,
+            additionalChargesNotifier: additionalChargesNotifier,
+            advanceAmountController: advanceAmountController,
+            discountAmountController: discountAmountController,
+            isDiscountPercentage: isDiscountPercentage,
+            securityAmountController: securityAmountController,
+            securityMethodLabel: securityMethodLabel,
+            isSales: isSales,
+            calculateRentalDays: calculateRentalDays,
+            advanceLabel: advanceLabel,
+            totalRemainingLabel: totalRemainingLabel,
           ),
 
           // Customization button — only for dresses/costumes
-          if (widget.onShowCustomization != null)
+          if (onShowCustomization != null)
             ValueListenableBuilder<List<ProductSelectedEntity>>(
-              valueListenable: form.selectedProductsNotifier,
+              valueListenable: selectedProductsNotifier,
               builder: (context, products, _) {
-                // Hide customization button for sales mode
-                if (widget.isSales) return const SizedBox.shrink();
+                if (isSales) return const SizedBox.shrink();
 
                 final hasDressesOrCostumes = products.any(
                   (p) =>
@@ -158,7 +321,6 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                 );
                 if (!hasDressesOrCostumes) return const SizedBox.shrink();
 
-                // Check if any dress/costume product has measurements
                 final hasCustomizations = products.any(
                   (p) =>
                       ((p.variant.mainServiceType?.isDress ?? false) ||
@@ -173,7 +335,7 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                       width: double.infinity,
                       height: 36,
                       child: OutlinedButton(
-                        onPressed: widget.onShowCustomization,
+                        onPressed: onShowCustomization,
                         style: OutlinedButton.styleFrom(
                           backgroundColor: hasCustomizations
                               ? const Color(0xFFF3F0FF)
@@ -224,8 +386,8 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
           const SizedBox(height: 8),
 
           // Show completed/cancelled status info
-          if (widget.bookingStatus == BookingStatus.completed &&
-              widget.bookingCompletedDate != null)
+          if (bookingStatus == BookingStatus.completed &&
+              bookingCompletedDate != null)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -255,7 +417,7 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                           ),
                         ),
                         Text(
-                          'Completed on: ${widget.bookingCompletedDate}',
+                          'Completed on: $bookingCompletedDate',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade700,
@@ -267,7 +429,7 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                 ],
               ),
             )
-          else if (widget.bookingStatus == BookingStatus.cancelled)
+          else if (bookingStatus == BookingStatus.cancelled)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(12),
@@ -294,12 +456,11 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
               ),
             )
           else
-            // Confirm button
             SizedBox(
               width: double.infinity,
               height: 39,
               child: ElevatedButton(
-                onPressed: widget.onConfirm,
+                onPressed: onConfirm,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6132E4),
                   foregroundColor: Colors.white,
@@ -309,7 +470,7 @@ class _BookingSummarySectionState extends State<BookingSummarySection>
                   elevation: 0,
                 ),
                 child: Text(
-                  widget.confirmLabel,
+                  confirmLabel,
                   style: const TextStyle(
                     fontSize: 14,
                     fontFamily: 'Inter',

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -43,19 +44,39 @@ class SalesFormSummarySection extends StatelessWidget {
               );
               final totalPayable = productTotal - discountAmount;
 
-              return Column(
-                children: [
-                  _buildRow('Product total', productTotal),
-                  if (discountAmount > 0)
-                    _buildRow('- Discount', discountAmount, isNegative: true),
-                  const Divider(height: 6),
-                  _buildRow(
-                    'Total payable',
-                    totalPayable > 0 ? totalPayable : 0,
-                    valueColor: const Color(0xFFD30000),
-                    isBold: true,
+              final fields = <SummaryField>[
+                SummaryField(
+                  label: 'Product total',
+                  value: productTotal.toCurrency(),
+                ),
+                if (discountAmount > 0)
+                  SummaryField(
+                    label: 'Discount',
+                    value: '- ${discountAmount.toCurrency()}',
+                    color: const Color(0xFFD30000),
                   ),
-                ],
+                SummaryField(
+                  label: 'Total',
+                  value: (totalPayable > 0 ? totalPayable : 0).toCurrency(),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                    color: Color(0xFF3E3E3E),
+                  ),
+                  valueStyle: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: Color(0xFF3E3E3E),
+                  ),
+                ),
+              ];
+
+              return ExpandableSummaryTile(
+                totalLabel: 'Total Payable Amount',
+                totalValue: (totalPayable > 0 ? totalPayable : 0).toCurrency(),
+                fields: fields,
               );
             },
           ),
@@ -75,15 +96,18 @@ class SalesFormSummarySection extends StatelessWidget {
                 );
               },
               builder: (context, state) {
-                final isSaving =
-                    state.maybeMap(orElse: () => false, saving: (_) => true);
+                final isSaving = state.maybeMap(
+                  orElse: () => false,
+                  saving: (_) => true,
+                );
                 return ElevatedButton(
                   onPressed: isSaving ? null : onSave,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6132E4),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     elevation: 0,
                     disabledBackgroundColor: Colors.grey.shade400,
                   ),
@@ -93,66 +117,21 @@ class SalesFormSummarySection extends StatelessWidget {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text(
                           'Update Sale',
                           style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w600),
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                 );
               },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRow(
-    String label,
-    int amount, {
-    Color? valueColor,
-    bool isBold = false,
-    bool isNegative = false,
-  }) {
-    final isTotalPayable = label == 'Total payable';
-
-    final double labelSize = isTotalPayable ? 15 : 13;
-    final double valueSize = isTotalPayable ? 15 : 13;
-    final FontWeight labelWeight =
-        isTotalPayable ? FontWeight.w600 : FontWeight.w400;
-    final FontWeight valueWeight =
-        isTotalPayable ? FontWeight.w700 : FontWeight.w500;
-    final Color resolvedValueColor = isTotalPayable
-        ? const Color(0xFFD30000)
-        : (valueColor ?? Colors.black87);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: labelSize,
-              fontFamily: 'Inter',
-              fontWeight: labelWeight,
-              color: const Color(0xFF3E3E3E),
-            ),
-          ),
-          Text(
-            '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
-            style: TextStyle(
-              fontSize: valueSize,
-              fontFamily: 'Inter',
-              fontWeight: valueWeight,
-              color: resolvedValueColor,
             ),
           ),
         ],
