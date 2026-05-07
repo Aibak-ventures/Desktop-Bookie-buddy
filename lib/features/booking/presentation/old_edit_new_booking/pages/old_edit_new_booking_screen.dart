@@ -714,8 +714,10 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         time: returnTime,
         time24HourAsString: returnTime == null ? '23:59:00' : null,
       );
-      updates['pickup_time'] = _bookingTimeValue(pickupTime);
-      updates['return_time'] = _bookingTimeValue(returnTime);
+      if (pickupTime != null)
+        updates['pickup_time'] = pickupTime!.formatToTime();
+      if (returnTime != null)
+        updates['return_time'] = returnTime!.formatToTime();
 
       // Calculate dates based on user-selected cooling period mode
       if (coolingPeriodDays > 0) {
@@ -750,8 +752,10 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         time: returnTime,
         time24HourAsString: returnTime == null ? '23:59:00' : null,
       );
-      updates['pickup_time'] = _bookingTimeValue(pickupTime);
-      updates['return_time'] = _bookingTimeValue(returnTime);
+      if (pickupTime != null)
+        updates['pickup_time'] = pickupTime!.formatToTime();
+      if (returnTime != null)
+        updates['return_time'] = returnTime!.formatToTime();
 
       // Calculate dates based on user-selected cooling period mode
       if (coolingPeriodDays > 0) {
@@ -2965,9 +2969,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
 
     return TimeOfDay(hour: hour, minute: minute);
   }
-
-  String _bookingTimeValue(TimeOfDay? time) =>
-      time?.formatToTime() ?? _defaultUnselectedTime.formatToTime();
 
   String _extractPhoneFromE164(String e164) => extractPhoneFromE164(e164);
 
