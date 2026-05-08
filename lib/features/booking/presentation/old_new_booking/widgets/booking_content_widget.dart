@@ -750,7 +750,12 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                                           .trim()
                                           .toIntOrNull() ??
                                       0;
-                                  final total = _getDiscountProductBase();
+                                  final total = PaymentCalculator.getDiscountProductBase(
+                                    selectedProducts: selectedProductsNotifier.value,
+                                    additionalCharges: additionalChargesNotifier.value,
+                                    bookingType: selectedBookingType,
+                                    effectiveRentalDays: _getEffectiveRentalDays(),
+                                  );
                                   if (input > 0 && total > 0) {
                                     if (switchToPercent) {
                                       // amount → percentage
