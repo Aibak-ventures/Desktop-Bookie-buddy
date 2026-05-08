@@ -23,6 +23,7 @@ class OverlaySearchItem extends StatefulWidget {
   final bool isSelected;
 
   const OverlaySearchItem({
+    super.key,
     required this.product,
     required this.onAddProduct,
     this.onImageTap,
@@ -99,6 +100,32 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
     } else {
       selectedVariant = null;
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant OverlaySearchItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.product.id == widget.product.id) {
+      return;
+    }
+
+    if (!widget.product.mainServiceType.isMultiVariantProductType &&
+        widget.product.variants.isNotEmpty) {
+      selectedVariant = widget.product.variants.first;
+      return;
+    }
+
+    if (selectedVariant == null) {
+      return;
+    }
+
+    final matchingIndex = widget.product.variants.indexWhere(
+      (variant) => variant.id == selectedVariant!.id,
+    );
+    selectedVariant = matchingIndex >= 0
+        ? widget.product.variants[matchingIndex]
+        : null;
   }
 
   @override
