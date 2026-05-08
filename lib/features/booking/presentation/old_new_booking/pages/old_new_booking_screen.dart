@@ -21,6 +21,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/booking_fo
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_search_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_table_widget.dart';
@@ -1405,9 +1406,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
                                       builder:
                                           (context, currentMaxPrice, child) {
                                             final quickFilters =
-                                                _generateQuickFilters(
-                                                  0,
-                                                  currentMaxPrice,
+                                                PaymentCalculator.generateQuickFilters(
+                                                  minPrice: 0, maxPrice: currentMaxPrice,
                                                 );
 
                                             return Wrap(
@@ -1555,102 +1555,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
   }
 
-  // Helper function to round numbers to meaningful values
-  double _roundToMeaningfulNumber(double value) {
-    if (value < 100) {
-      return (value / 10).round() * 10.0;
-    } else if (value < 1000) {
-      return (value / 100).round() * 100.0;
-    } else if (value < 10000) {
-      return (value / 1000).round() * 1000.0;
-    } else {
-      return (value / 5000).round() * 5000.0;
-    }
-  }
-
-  // Helper function to generate dynamic quick filters based on max price
-  List<Map<String, dynamic>> _generateQuickFilters(
-    double minPrice,
-    double maxPrice,
-  ) {
-    final List<Map<String, dynamic>> filters = [];
-
-    // Calculate dynamic ranges based on maxPrice
-    double range1 = maxPrice * 0.1; // 10% of max
-    double range2 = maxPrice * 0.25; // 25% of max
-    double range3 = maxPrice * 0.5; // 50% of max
-    double range4 = maxPrice * 0.75; // 75% of max
-
-    // Round to nearest meaningful number
-    range1 = _roundToMeaningfulNumber(range1);
-    range2 = _roundToMeaningfulNumber(range2);
-    range3 = _roundToMeaningfulNumber(range3);
-    range4 = _roundToMeaningfulNumber(range4);
-
-    // Ensure ranges are distinct and meaningful
-    if (range1 > minPrice && range1 < maxPrice) {
-      filters.add({
-        'label': 'Under ${range1.toCurrency()}',
-        'range': RangeValues(minPrice, range1),
-      });
-    }
-
-    if (range2 > range1 && range2 < maxPrice) {
-      filters.add({
-        'label': '${range1.toCurrency()} - ${range2.toCurrency()}',
-        'range': RangeValues(range1, range2),
-      });
-    }
-
-    if (range3 > range2 && range3 < maxPrice) {
-      filters.add({
-        'label': '${range2.toCurrency()} - ${range3.toCurrency()}',
-        'range': RangeValues(range2, range3),
-      });
-    }
-
-    if (range4 > range3 && range4 < maxPrice) {
-      filters.add({
-        'label': '${range3.toCurrency()} - ${range4.toCurrency()}',
-        'range': RangeValues(range3, range4),
-      });
-    }
-
-    // Always add "Above X" filter
-    if (range4 < maxPrice) {
-      filters.add({
-        'label': 'Above ${range4.toCurrency()}',
-        'range': RangeValues(range4, maxPrice),
-      });
-    }
-
-    // Fallback: if no meaningful ranges, create simple divisions
-    if (filters.isEmpty) {
-      final quarter = (maxPrice - minPrice) / 4;
-      filters.addAll([
-        {
-          'label': 'Under ${(minPrice + quarter).toCurrency()}',
-          'range': RangeValues(minPrice, minPrice + quarter),
-        },
-        {
-          'label':
-              '${(minPrice + quarter).toCurrency()} - ${(minPrice + 2 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + quarter, minPrice + 2 * quarter),
-        },
-        {
-          'label':
-              '${(minPrice + 2 * quarter).toCurrency()} - ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 2 * quarter, minPrice + 3 * quarter),
-        },
-        {
-          'label': 'Above ${(minPrice + 3 * quarter).toCurrency()}',
-          'range': RangeValues(minPrice + 3 * quarter, maxPrice),
-        },
-      ]);
-    }
-
-    return filters;
-  }
 
   Widget _buildQuickFilterChip(
     String label,
@@ -1879,21 +1783,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     }
   }
 
-  /// Get variant display text for product in table
-  String _getVariantDisplayText(ProductSelectedEntity product) {
-    final mainServiceType = product.variant.mainServiceType;
 
-    // For multi-variant product types (dress, costume, gadgets),
-    // show the variant attribute (size/serial number)
-    if (mainServiceType.isMultiVariantProductType) {
-      return product.variant.variantAttribute?.isNotEmpty ?? false
-          ? product.variant.variantAttribute!
-          : '-';
-    }
-
-    // For non-multi-variant products, keep it blank
-    return '';
-  }
 
   /// Calculate number of days between pickup and return dates
   /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
@@ -1958,31 +1848,27 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     });
   }
 
-  /// Get service-specific specification text for product
-  String _getProductSpecifications(ProductSelectedEntity product) {
-    // final mainServiceType = product.variant.mainServiceType;
-    final List<String> specs = [];
-
-    // Add category (with service-specific label)
-    if (product.variant.category != null &&
-        product.variant.category!.isNotEmpty) {
-      specs.add(product.variant.category!);
-    }
-
-    // Add model/secondary attribute if available
-    if (product.variant.model != null && product.variant.model!.isNotEmpty) {
-      specs.add(product.variant.model!);
-    }
-
-    // Add color if not already shown
-    if (product.variant.color != null && product.variant.color!.isNotEmpty) {
-      if (!specs.contains(product.variant.color)) {
-        specs.add(product.variant.color!);
-      }
-    }
-
-    return specs.isNotEmpty ? specs.join(' • ') : '-';
+  int _calculateBookingTotalPayable() {
+    final discountInput = discountAmountController.text.trim().toIntOrNull() ?? 0;
+    return PaymentCalculator.calculateBookingTotalPayable(
+      selectedProducts: selectedProductsNotifier.value,
+      additionalCharges: additionalChargesNotifier.value,
+      discountAmount: discountInput,
+      isDiscountPercentage: isDiscountPercentage,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: _getEffectiveRentalDays(),
+    );
   }
+
+  int _getDiscountProductBase() {
+    return PaymentCalculator.getDiscountProductBase(
+      selectedProducts: selectedProductsNotifier.value,
+      additionalCharges: additionalChargesNotifier.value,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: _getEffectiveRentalDays(),
+    );
+  }
+
 
   void _loadProductsForService(int? serviceId) {
     _loadProductsDebouncer.run(() {
@@ -2596,214 +2482,36 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               },
             );
           },
-          child: CompositedTransformTarget(
-            link: _searchLayerLink,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                children: [
-                  // Search TextField
-                  Expanded(
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.shade300),
-                      ),
-                      child: ValueListenableBuilder(
-                        valueListenable: _selectedSearchTypeIndex,
-                        builder: (context, searchTypeIndex, _) {
-                          return ValueListenableBuilder(
-                            valueListenable: _isPriceFilterEnabled,
-                            builder: (context, isPriceEnabled, _) {
-                              // Build active filter text
-                              String? filterText;
-                              if (searchTypeIndex != 0) {
-                                filterText = _searchTypes[searchTypeIndex];
-                              }
-                              if (isPriceEnabled) {
-                                if (filterText != null) {
-                                  filterText += ' | Price';
-                                } else {
-                                  filterText = 'Price';
-                                }
-                              }
-
-                              return TextField(
-                                controller: serviceSearchController,
-                                focusNode: _productSearchFocusNode,
-                                onTap: () {
-                                  if (serviceSearchController.text
-                                      .trim()
-                                      .isEmpty) {
-                                    _searchAllProductsForOverlay();
-                                  }
-                                },
-                                textInputAction: TextInputAction.next,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText: 'Search products',
-                                  hintStyle: const TextStyle(
-                                    fontSize: 13,
-                                    fontFamily: 'Inter',
-                                    color: Color(0xFF8C8C8C),
-                                  ),
-                                  prefixIcon: const Icon(
-                                    Icons.search,
-                                    size: 18,
-                                  ),
-                                  suffixIcon: filterText != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: 8,
-                                          ),
-                                          child: Chip(
-                                            label: Text(
-                                              filterText,
-                                              style: const TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w600,
-                                                color: Color(0xFF6132E4),
-                                              ),
-                                            ),
-                                            backgroundColor: const Color(
-                                              0xFF6132E4,
-                                            ).withOpacity(0.1),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 4,
-                                            ),
-                                            materialTapTargetSize:
-                                                MaterialTapTargetSize
-                                                    .shrinkWrap,
-                                          ),
-                                        )
-                                      : null,
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 14,
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  if (value.trim().isNotEmpty &&
-                                      _showAllProductsOnSearchFocus) {
-                                    _showAllProductsOnSearchFocus = false;
-                                  }
-                                  _onSearchChanged(value);
-                                  if (value.isEmpty) {
-                                    _removeSearchOverlay();
-                                  } else {
-                                    // Show quick local results for single-char input
-                                    if (value.trim().length == 1) {
-                                      _showLocalFilteredResults(value.trim());
-                                    }
-                                    // Immediate dispatch to ensure backend receives search_value
-                                    final queryValue = value
-                                        .trim()
-                                        .toLowerCase();
-                                    final isSales =
-                                        selectedBookingType ==
-                                        BookingType.sales;
-                                    final isBooking =
-                                        selectedBookingType ==
-                                        BookingType.booking;
-                                    final serviceIdToUse =
-                                        (selectedServiceId == null ||
-                                            selectedServiceId == -1)
-                                        ? null
-                                        : selectedServiceId;
-
-                                    final effectiveReturnDate =
-                                        isBooking && coolingPeriodMode.isAfter
-                                        ? returnDate
-                                              .add(
-                                                Duration(
-                                                  days: coolingPeriodDays,
-                                                ),
-                                              )
-                                              .format()
-                                        : returnDate.format();
-                                    String? searchType;
-                                    switch (_selectedSearchTypeIndex.value) {
-                                      case 0:
-                                        searchType = 'name';
-                                        break;
-                                      case 1:
-                                        searchType = 'category';
-                                        break;
-                                      case 2:
-                                        searchType = 'model';
-                                        break;
-                                      case 3:
-                                        if (_currentServiceType != null) {
-                                          if (_currentServiceType
-                                              .isMultiVariantProductType) {
-                                            if (_currentServiceType ==
-                                                    MainServiceType.dress ||
-                                                _currentServiceType ==
-                                                    MainServiceType.costume) {
-                                              searchType = 'size';
-                                            } else if (_currentServiceType ==
-                                                MainServiceType.gadgets) {
-                                              searchType = 'serial_number';
-                                            } else {
-                                              searchType = 'variant';
-                                            }
-                                          } else {
-                                            searchType = 'color';
-                                          }
-                                        } else {
-                                          searchType = 'color';
-                                        }
-                                        break;
-                                    }
-                                    searchType ??= 'name';
-
-                                    _selectProductBloc.add(
-                                      SelectProductEvent.searchProducts(
-                                        serviceId: serviceIdToUse,
-                                        query: queryValue,
-                                        type: searchType,
-                                        startPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.start.round()
-                                            : null,
-                                        endPrice: _isPriceFilterEnabled.value
-                                            ? _priceRange.value.end.round()
-                                            : null,
-                                        pickupDate: pickupDate.format(),
-                                        returnDate: effectiveReturnDate,
-                                        pickupTime: pickupTime,
-                                        returnTime: returnTime,
-                                        useAvailableProductsApi:
-                                            selectedBookingType ==
-                                            BookingType.booking,
-                                        isSales: isSales,
-                                      ),
-                                    );
-                                  }
-                                },
-                                onSubmitted: (_) {
-                                  if (_overlayProducts.value.isNotEmpty) {
-                                    _getOverlayItemFocusNode(0).requestFocus();
-                                  } else {
-                                    _clientNameFocusNode.requestFocus();
-                                  }
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          child: ProductListSearchBarWidget(
+            controller: serviceSearchController,
+            layerLink: _searchLayerLink,
+            focusNode: _productSearchFocusNode,
+            overlayProducts: _overlayProducts,
+            getOverlayItemFocusNode: _getOverlayItemFocusNode,
+            clientNameFocusNode: _clientNameFocusNode,
+            selectedSearchTypeIndex: _selectedSearchTypeIndex,
+            isPriceFilterEnabled: _isPriceFilterEnabled,
+            searchTypes: _searchTypes,
+            onTap: () {
+              if (serviceSearchController.text.trim().isEmpty) {
+                _searchAllProductsForOverlay();
+              }
+            },
+            onChanged: (value) {
+              if (value.trim().isNotEmpty && _showAllProductsOnSearchFocus) {
+                _showAllProductsOnSearchFocus = false;
+              }
+              _onSearchChanged(value);
+              if (value.isEmpty) {
+                _removeSearchOverlay();
+              } else if (value.trim().length == 1) {
+                _showLocalFilteredResults(value.trim());
+              }
+            },
+            onFilterTap: () {
+              _removeSearchOverlay();
+              _showProductFilterBottomSheet();
+            },
           ),
         );
       },
@@ -2983,50 +2691,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     return serviceType?.requiresDateRange ?? false;
   }
 
-  int _getDiscountProductBase() {
-    final rentalDays = _getEffectiveRentalDays();
-    final isSales = selectedBookingType == BookingType.sales;
-    final productTotal = selectedProductsNotifier.value.fold<int>(0, (sum, p) {
-      final daysMultiplier =
-          (!isSales && _shouldMultiplyByDays(p.variant.mainServiceType))
-          ? (rentalDays > 0 ? rentalDays : 1)
-          : 1;
-      return sum + (p.amount * p.quantity * daysMultiplier);
-    });
-    final additionalTotal = additionalChargesNotifier.value.fold<int>(
-      0,
-      (sum, charge) => sum + (charge.amount ?? 0),
-    );
-    return productTotal + additionalTotal;
-  }
-
-  int _calculateBookingTotalPayable() {
-    final rentalDays = _getEffectiveRentalDays();
-    final isSales = selectedBookingType == BookingType.sales;
-    final productTotal = selectedProductsNotifier.value.fold<int>(0, (
-      sum,
-      product,
-    ) {
-      final effectiveDaysMultiplier =
-          (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
-          ? (rentalDays > 0 ? rentalDays : 1)
-          : 1;
-      return sum +
-          (product.amount * product.quantity * effectiveDaysMultiplier);
-    });
-    final additionalTotal = additionalChargesNotifier.value.fold<int>(
-      0,
-      (sum, charge) => sum + (charge.amount ?? 0),
-    );
-
-    final discountInput =
-        discountAmountController.text.trim().toIntOrNull() ?? 0;
-    final discountAmount = isDiscountPercentage
-        ? ((productTotal + additionalTotal) * discountInput / 100).round()
-        : discountInput;
-
-    return productTotal + additionalTotal - discountAmount;
-  }
 
   FocusNode _getOverlayItemFocusNode(int index) {
     return _overlayItemFocusNodes.putIfAbsent(index, FocusNode.new);
