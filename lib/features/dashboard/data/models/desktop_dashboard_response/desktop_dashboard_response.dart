@@ -96,8 +96,8 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
   /// Converts to carousel data for overview cards
   DesktopDashboardCarouselModel get carouselData =>
       DesktopDashboardCarouselModel(
-        upcomingCount: upcomingCount,
-        alterationBookingCount: alterationBookingCount,
+        upcomingCount: pagination.upcoming.count,
+        alterationBookingCount: pagination.ongoing.count,
         completedCount: completedCount,
         expiredCount: expiredCount,
       );

@@ -1,14 +1,8 @@
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_payment_history_model.freezed.dart';
 part 'booking_details_payment_history_model.g.dart';
-
-// Custom reader to support both 'datetime' and 'created_at' field names
-String _readDateTime(Map json, String key) {
-  return json['datetime'] ?? json['created_at'] ?? '';
-}
 
 @freezed
 abstract class BookingDetailsPaymentHistoryModel
@@ -16,14 +10,16 @@ abstract class BookingDetailsPaymentHistoryModel
   const factory BookingDetailsPaymentHistoryModel({
     @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'amount') required int amount,
+    @JsonKey(name: 'account_name') String? accountName,
+    @JsonKey(name: 'account_id') int? accountId,
+    @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(
-      name: 'payment_method',
-      defaultValue: PaymentMethod.cash,
-      fromJson: PaymentMethod.fromJson,
+      name: 'type',
+      fromJson: BookingPaymentHistoryPaymentType.fromJson,
+      toJson: BookingPaymentHistoryPaymentType.toJson,
     )
-    required PaymentMethod paymentMethod,
-    @JsonKey(name: 'datetime', readValue: _readDateTime)
-    required String dateTime,
+    @Default(BookingPaymentHistoryPaymentType.payment)
+    BookingPaymentHistoryPaymentType paymentType,
   }) = _BookingDetailsPaymentHistoryModel;
 
   factory BookingDetailsPaymentHistoryModel.fromJson(
@@ -36,7 +32,9 @@ extension BookingPaymentHistoryModelMapper
   BookingPaymentHistoryEntity toEntity() => BookingPaymentHistoryEntity(
     id: id,
     amount: amount,
-    paymentMethod: paymentMethod,
-    dateTime: dateTime,
+    accountName: accountName,
+    accountId: accountId,
+    createdAt: createdAt,
+    paymentType: paymentType,
   );
 }

@@ -25,6 +25,10 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     int? discountAmount,
     required int paidAmount,
     int? securityAmount,
+    int? totalAmountWithSecurity,
+    int? paidAmountWithSecurity,
+    String? securityAccountName,
+    int? securityAccountId,
     required PurchaseMode purchaseMode,
     required BookingStatus bookingStatus,
     required PaymentStatus paymentStatus,
@@ -45,7 +49,6 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     @Default(0.0) double totalRefunded,
     @Default(0.0) double refundableBalance,
     @Default(SecuritySummaryEntity.empty) SecuritySummaryEntity securitySummary,
-    PaymentMethod? securityPaymentMethod,
   }) = _BookingDetailsEntity;
 }
 

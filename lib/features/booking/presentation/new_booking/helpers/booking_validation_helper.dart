@@ -56,11 +56,13 @@ class BookingValidationHelper {
       firstErrorField ??= 'clientName';
     }
 
+    final requiresPrimaryPhone = !isSalesMode;
+
     // Validate phone 1
-    if (phone1.trim().isEmpty) {
+    if (requiresPrimaryPhone && phone1.trim().isEmpty) {
       errors.add('Phone number is required');
       firstErrorField ??= 'phone1';
-    } else if (!_isValidPhoneNumber(phone1)) {
+    } else if (phone1.trim().isNotEmpty && !_isValidPhoneNumber(phone1)) {
       errors.add('Please enter a valid phone number');
       firstErrorField ??= 'phone1';
     }
@@ -88,9 +90,9 @@ class BookingValidationHelper {
     if (!isSalesMode && clientName.trim().isEmpty) {
       fieldErrors['clientName'] = 'Name is required';
     }
-    if (phone1.trim().isEmpty) {
+    if (requiresPrimaryPhone && phone1.trim().isEmpty) {
       fieldErrors['phone1'] = 'Phone is required';
-    } else if (!_isValidPhoneNumber(phone1)) {
+    } else if (phone1.trim().isNotEmpty && !_isValidPhoneNumber(phone1)) {
       fieldErrors['phone1'] = 'Invalid phone';
     }
     if (selectedStaffId == null && staffName.trim().isEmpty) {

@@ -129,10 +129,7 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
               isPaginating,
             ) {
               final upcomingCount = carouselData.upcomingCount;
-              final returnsCount = returnsGrouped.values.fold<int>(
-                0,
-                (sum, list) => sum + list.length,
-              );
+              final returnsCount = carouselData.alterationBookingCount;
 
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

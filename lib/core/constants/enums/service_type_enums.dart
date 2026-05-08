@@ -178,5 +178,7 @@ extension MainServiceTypeX on MainServiceType? {
   /// Check if this service type requires date range for bookings
   ///
   /// Required for: vehicle, equipment, gadget, costume, room
-  /// Not required for: material (custom work
+  /// Not required for: material (custom work may not need dates)
+  bool get requiresDateRange =>
+      isVehicle || isEquipment || isGadget || isCostume || isRoom;
 }
