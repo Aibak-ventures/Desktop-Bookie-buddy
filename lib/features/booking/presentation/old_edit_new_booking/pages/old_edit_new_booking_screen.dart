@@ -202,6 +202,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
   int _originalCoolingPeriodDays = 0; // Track original cooling period
+  CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
   bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
   final _loadProductsDebouncer = Debouncer(
     delay: const Duration(milliseconds: 300),
@@ -587,6 +588,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     _originalRunningKm = originalKm ?? booking.otherDetails.end;
     _originalDeliveryStatus = booking.deliveryStatus;
     _originalCoolingPeriodDays = coolingPeriodDays;
+    _originalCoolingPeriodMode = coolingPeriodMode;
 
     log('✅ Original values stored for incremental update tracking');
   }
@@ -703,6 +705,9 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   /// Build partial update request with only changed fields
   Map<String, dynamic> _buildPartialUpdateRequest() {
     final updates = <String, dynamic>{};
+    final hasCoolingSettingsChanged =
+      coolingPeriodDays != _originalCoolingPeriodDays ||
+      coolingPeriodMode != _originalCoolingPeriodMode;
 
     // Only include dates if changed
     if (_haveDatesChanged()) {
@@ -746,7 +751,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
           time24HourAsString: returnTime == null ? '23:59:00' : null,
         );
       }
-    } else if (coolingPeriodDays != _originalCoolingPeriodDays) {
+    } else if (hasCoolingSettingsChanged) {
       // Cooling period changed but dates didn't — send return_date + cooling_period_date
       updates['return_date'] = returnDate.format().appendTimeToDate(
         time: returnTime,
@@ -3543,17 +3548,29 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                         children: [
                           const SizedBox(width: 4),
                           Flexible(
-                            child: Text(
-                              coolingPeriodMode.isAfter
-                                  ? 'After cooling'
-                                  : 'Before cooling',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade600,
-                                fontFamily: 'Inter',
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Cooling period',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  coolingPeriodMode.isAfter
+                                      ? '(after)'
+                                      : '(before)',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey.shade500,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(width: 4),
@@ -3570,11 +3587,10 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                             },
                             child: Text(
                               coolingPeriodMode.isAfter ? "After" : "Before",
-                              style: TextStyle(
-                                fontSize: 14,
+                              style: const TextStyle(
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: Colors
-                                    .black, // change if background is dark
+                                color: Colors.black,
                               ),
                             ),
                           ),

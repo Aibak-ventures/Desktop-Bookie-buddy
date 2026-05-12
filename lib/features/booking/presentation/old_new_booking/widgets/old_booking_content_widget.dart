@@ -302,52 +302,20 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
   }
 
   BookingRequestEntity _buildOldBookingRequest() {
-    final products = selectedProductsNotifier.value;
-    final totalAmount = products.fold<int>(
-      0,
-      (sum, product) =>
-          sum +
-          (product.amount *
-              product.quantity *
-              _getDaysMultiplierForProduct(product)),
-    );
-    final requestProducts = products
-        .map(
-          (product) => product.copyWith(
-            amount: product.amount * _getDaysMultiplierForProduct(product),
-          ),
-        )
-        .toList();
-
-    return BookingRequestEntity(
-      clientId: selectedClientId,
-      staffId: null,
-      client: selectedClientId == null
-          ? ClientRequestEntity(
-              id: null,
-              name: clientNameController.text.trim().isEmpty
-                  ? null
-                  : clientNameController.text.trim(),
-              phone1E164: clientPhone1Controller.text.trim().isEmpty
-                  ? null
-                  : toPhone1E164(clientPhone1Controller.text.trim()),
-              phone2E164: clientPhone2Controller.text.trim().isEmpty
-                  ? null
-                  : toPhone1E164(clientPhone2Controller.text.trim()),
-            )
-          : null,
-      address: clientAddressController.text.trim().isEmpty
-          ? null
-          : clientAddressController.text.trim(),
-      bookedDate: _bookedDate?.format(),
-      pickupDate: pickupDate.format(),
-      returnDate: returnDate.format(),
-      advanceAmount: totalAmount,
-      deliveryStatus: DeliveryStatus.returned,
-      bookingStatus: BookingStatus.completed,
+    return BookingRequestBuilder.buildOldBookingRequest(
+      products: selectedProductsNotifier.value,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: _getEffectiveRentalDays(),
+      selectedClientId: selectedClientId,
+      clientName: clientNameController.text.trim(),
+      phone1Raw: clientPhone1Controller.text.trim(),
+      phone2Raw: clientPhone2Controller.text.trim(),
+      address: clientAddressController.text.trim(),
+      bookedDate: _bookedDate,
+      pickupDate: pickupDate,
+      returnDate: returnDate,
       description: _buildDescriptionWithPaymentSummary(),
-      products: requestProducts,
-      oldBookingAccountId: selectedAdvanceAccount?.id,
+      advanceAccountId: selectedAdvanceAccount?.id,
     );
   }
 }
