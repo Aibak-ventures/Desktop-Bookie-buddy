@@ -17,6 +17,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                   CustomPhoneNumberField(
                     controller: _clientPhone1FieldController,
                     hintText: 'Client Phone (WP)',
+                    isRequired: false,
                     textInputAction: TextInputAction.done,
                     onChanged: (phone) {
                       final digits = phone.nsn.replaceAll(

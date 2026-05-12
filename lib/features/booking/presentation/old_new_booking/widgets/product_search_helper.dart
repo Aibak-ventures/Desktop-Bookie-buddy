@@ -1,0 +1,523 @@
+part of '../pages/old_new_booking_screen.dart';
+
+extension ProductSearchBuilders on OldNewBookingScreenState {
+  // Update search type labels when the active service changes
+  void _updateSearchTypesForService(int? serviceId) {
+    final servicesState = context.read<ServiceBloc>().state;
+    List<ServiceEntity> services = [];
+    servicesState.whenOrNull(loaded: (s) => services = s);
+
+    if (serviceId == null || serviceId == -1) {
+      _currentServiceType = null;
+      _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+    } else {
+      final service = services.firstWhere(
+        (s) => s.id == serviceId,
+        orElse: () => services.first,
+      );
+      _currentServiceType = MainServiceType.fromString(service.mainServiceName);
+
+      final categoryLabel = _currentServiceType.categoryFieldLabel;
+      final secondaryLabel =
+          _currentServiceType.secondaryAttributeLabel ?? 'Color';
+
+      if (_currentServiceType.isMultiVariantProductType) {
+        final variantLabel = _currentServiceType.variantAttributeLabel;
+        _searchTypes = ['Name', categoryLabel, secondaryLabel, variantLabel];
+      } else {
+        _searchTypes = ['Name', categoryLabel, secondaryLabel, 'Color'];
+      }
+    }
+  }
+
+  void _removeSearchOverlay() {
+    _searchOverlayEntry?.remove();
+    _searchOverlayEntry = null;
+    _showAllProductsOnSearchFocus = false;
+    _overlayProducts.value = [];
+    _overlayIsLoading.value = false;
+  }
+
+  void _handleSearchOverlayScroll() {
+    if (!_searchResultsScrollController.hasClients) return;
+    final position = _searchResultsScrollController.position;
+    if (position.pixels < position.maxScrollExtent - 180) return;
+    _selectProductBloc.state.maybeWhen(
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) {
+            if (isPaginating || nextPageUrl == null) return;
+            if (isSearching) {
+              _selectProductBloc.add(
+                const SelectProductEvent.loadNextSearchResults(),
+              );
+            } else {
+              _selectProductBloc.add(
+                const SelectProductEvent.loadNextPageProducts(),
+              );
+            }
+          },
+      orElse: () {},
+    );
+  }
+
+  void _searchAllProductsForOverlay() {
+    final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
+    final serviceIdToUse =
+        (selectedServiceId == null || selectedServiceId == -1)
+        ? null
+        : selectedServiceId;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
+
+    _showAllProductsOnSearchFocus = true;
+    _overlayIsLoading.value = true;
+    if (_searchOverlayEntry == null) {
+      _showSearchOverlay();
+    }
+
+    _selectProductBloc.add(
+      SelectProductEvent.searchProducts(
+        serviceId: serviceIdToUse,
+        query: '',
+        type: 'name',
+        startPrice: _isPriceFilterEnabled.value
+            ? _priceRange.value.start.round()
+            : null,
+        endPrice: _isPriceFilterEnabled.value
+            ? _priceRange.value.end.round()
+            : null,
+        pickupDate: pickupDate.format(),
+        returnDate: effectiveReturnDate,
+        pickupTime: pickupTime,
+        returnTime: returnTime,
+        useAvailableProductsApi: isBooking,
+        isSales: isSales,
+      ),
+    );
+  }
+
+  void _onSearchChanged([String? newValue]) {
+    final query = (newValue ?? serviceSearchController.text)
+        .trim()
+        .toLowerCase();
+    final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
+    final serviceIdToUse =
+        (selectedServiceId == null || selectedServiceId == -1)
+        ? null
+        : selectedServiceId;
+
+    final hasSearchQuery = query.isNotEmpty;
+    final hasPriceFilter = _isPriceFilterEnabled.value;
+    final hasAnyFilter = hasSearchQuery || hasPriceFilter;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
+
+    log(
+      '_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter',
+    );
+
+    if (!hasAnyFilter) {
+      _selectProductBloc.add(
+        SelectProductEvent.loadProducts(
+          serviceId: serviceIdToUse,
+          pickupDate: pickupDate.format(),
+          returnDate: effectiveReturnDate,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
+          isSales: isSales,
+        ),
+      );
+    } else {
+      String? searchType;
+      switch (_selectedSearchTypeIndex.value) {
+        case 0:
+          searchType = 'name';
+          break;
+        case 1:
+          searchType = 'category';
+          break;
+        case 2:
+          searchType = 'model';
+          break;
+        case 3:
+          if (_currentServiceType != null) {
+            if (_currentServiceType.isMultiVariantProductType) {
+              if (_currentServiceType == MainServiceType.dress ||
+                  _currentServiceType == MainServiceType.costume) {
+                searchType = 'size';
+              } else if (_currentServiceType == MainServiceType.gadgets) {
+                searchType = 'serial_number';
+              } else {
+                searchType = 'variant';
+              }
+            } else {
+              searchType = 'color';
+            }
+          } else {
+            searchType = 'color';
+          }
+          break;
+      }
+
+      searchType ??= 'name';
+
+      log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
+      _selectProductBloc.add(
+        SelectProductEvent.searchProducts(
+          serviceId: serviceIdToUse,
+          query: hasSearchQuery ? query : null,
+          type: hasSearchQuery ? searchType : null,
+          startPrice: hasPriceFilter ? _priceRange.value.start.round() : null,
+          endPrice: hasPriceFilter ? _priceRange.value.end.round() : null,
+          pickupDate: pickupDate.format(),
+          returnDate: effectiveReturnDate,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
+          isSales: isSales,
+        ),
+      );
+    }
+  }
+
+  /// Perform a quick local filter on the currently loaded products
+  /// and show results immediately in the overlay.
+  void _showLocalFilteredResults(String rawQuery) {
+    final q = rawQuery.toLowerCase();
+
+    final currentProducts = _selectProductBloc.state.maybeWhen(
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) => products,
+      orElse: () => <ProductEntity>[],
+    );
+
+    if (currentProducts.isEmpty) return;
+
+    final filtered = currentProducts.where((p) {
+      final name = p.name.toLowerCase();
+      final color = p.color?.toLowerCase() ?? '';
+      final category = p.category?.toLowerCase() ?? '';
+      final model = p.model?.toLowerCase() ?? '';
+      final variantMatch = p.variants.any(
+        (v) => v.attribute.toLowerCase().contains(q),
+      );
+
+      return name.contains(q) ||
+          color.contains(q) ||
+          category.contains(q) ||
+          model.contains(q) ||
+          variantMatch;
+    }).toList();
+
+    _overlayIsLoading.value = false;
+    _overlayProducts.value = filtered;
+    if (_searchOverlayEntry == null) {
+      _showSearchOverlay();
+    }
+  }
+
+  Widget _buildProductSearchBar() {
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      builder: (context, serviceState) {
+        return BlocListener<SelectProductBloc, SelectProductState>(
+          bloc: _selectProductBloc,
+          listener: (context, state) {
+            final hasQuery =
+                serviceSearchController.text.isNotEmpty ||
+                _showAllProductsOnSearchFocus;
+            final hasFilters =
+                _isPriceFilterEnabled.value ||
+                _selectedSearchTypeIndex.value != 0;
+            final hasAnyFilter = hasQuery || hasFilters;
+
+            state.maybeWhen(
+              loading: () {
+                if (hasAnyFilter) {
+                  _overlayIsLoading.value = true;
+                  if (_searchOverlayEntry == null) {
+                    _showSearchOverlay();
+                  }
+                }
+              },
+              loaded:
+                  (
+                    products,
+                    p1,
+                    p2,
+                    p3,
+                    p4,
+                    p5,
+                    isSearching,
+                    p7,
+                    p8,
+                    p9,
+                    p10,
+                    p11,
+                    p12,
+                    p13,
+                    p14,
+                  ) {
+                    if (hasAnyFilter || (products.isNotEmpty && isSearching)) {
+                      _overlayIsLoading.value = false;
+                      _overlayProducts.value = products;
+                      if (_searchOverlayEntry == null) {
+                        _showSearchOverlay();
+                      }
+                    } else {
+                      _removeSearchOverlay();
+                    }
+                  },
+              error: (_) {
+                _overlayIsLoading.value = false;
+                _overlayProducts.value = [];
+                if (hasAnyFilter) {
+                  if (_searchOverlayEntry == null) {
+                    _showSearchOverlay();
+                  }
+                } else {
+                  _removeSearchOverlay();
+                }
+              },
+              orElse: () {
+                if (!hasAnyFilter) _removeSearchOverlay();
+              },
+            );
+          },
+          child: ProductListSearchBarWidget(
+            controller: serviceSearchController,
+            layerLink: _searchLayerLink,
+            focusNode: _productSearchFocusNode,
+            overlayProducts: _overlayProducts,
+            getOverlayItemFocusNode: _getOverlayItemFocusNode,
+            clientNameFocusNode: _clientNameFocusNode,
+            selectedSearchTypeIndex: _selectedSearchTypeIndex,
+            isPriceFilterEnabled: _isPriceFilterEnabled,
+            searchTypes: _searchTypes,
+            onTap: () {
+              if (serviceSearchController.text.trim().isEmpty) {
+                _searchAllProductsForOverlay();
+              }
+            },
+            onChanged: (value) {
+              if (value.trim().isNotEmpty && _showAllProductsOnSearchFocus) {
+                _showAllProductsOnSearchFocus = false;
+              }
+              _onSearchChanged(value);
+              if (value.isEmpty) {
+                _removeSearchOverlay();
+              } else if (value.trim().length == 1) {
+                _showLocalFilteredResults(value.trim());
+              }
+            },
+            onFilterTap: () {
+              _removeSearchOverlay();
+              _showProductFilterBottomSheet();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSearchOverlay() {
+    if (_searchOverlayEntry != null) return;
+
+    _searchOverlayEntry = OverlayEntry(
+      builder: (context) => ProductSearchOverlayPopup(
+        layerLink: _searchLayerLink,
+        isLoading: _overlayIsLoading,
+        products: _overlayProducts,
+        scrollController: _searchResultsScrollController,
+        onDismiss: () {
+          serviceSearchController.clear();
+          _removeSearchOverlay();
+        },
+        itemBuilder: (product, index, itemCount) => _buildOverlaySearchItem(
+          product,
+          index: index,
+          itemCount: itemCount,
+        ),
+      ),
+    );
+
+    Overlay.of(context).insert(_searchOverlayEntry!);
+  }
+
+  Widget _buildOverlaySearchItem(
+    ProductEntity product, {
+    required int index,
+    required int itemCount,
+  }) {
+    return OverlaySearchItem(
+      product: product,
+      isSales: selectedBookingType == BookingType.sales,
+      focusNode: _getOverlayItemFocusNode(index),
+      nextFocusNode: index + 1 < itemCount
+          ? _getOverlayItemFocusNode(index + 1)
+          : _clientNameFocusNode,
+      onAddProduct: (selectedVariant) {
+        _addProductFromSearchWithVariant(product, selectedVariant);
+        _removeSearchOverlay();
+        serviceSearchController.clear();
+        _clientNameFocusNode.requestFocus();
+      },
+      onArrowDown: () {
+        if (index + 1 < itemCount) {
+          _getOverlayItemFocusNode(index + 1).requestFocus();
+        }
+      },
+      onArrowUp: () {
+        if (index > 0) {
+          _getOverlayItemFocusNode(index - 1).requestFocus();
+        } else {
+          _productSearchFocusNode.requestFocus();
+        }
+      },
+      onEscape: () {
+        _removeSearchOverlay();
+        serviceSearchController.clear();
+        _productSearchFocusNode.requestFocus();
+      },
+      onImageTap: (imageUrl, title) async {
+        final cachedProducts = List<ProductEntity>.from(_overlayProducts.value);
+        _removeSearchOverlay();
+        await ZoomableImageDialog.show(
+          context,
+          imageUrl: imageUrl,
+          title: title,
+        );
+        if (mounted && cachedProducts.isNotEmpty) {
+          _overlayProducts.value = cachedProducts;
+          _showSearchOverlay();
+        }
+      },
+    );
+  }
+
+  void _addProductFromSearchWithVariant(
+    ProductEntity product,
+    ProductVariantEntity variant,
+  ) {
+    log(
+      '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
+    );
+
+    final isSales = selectedBookingType == BookingType.sales;
+    final isOldBooking = selectedBookingType == BookingType.oldBooking;
+    final productSalePriceInt = isSales && product.salePrice != null
+        ? (double.tryParse(product.salePrice!)?.toInt())
+        : null;
+    final price = isSales
+        ? (variant.salePrice ??
+              productSalePriceInt ??
+              variant.price ??
+              product.price ??
+              0)
+        : (variant.price ?? product.price ?? 0);
+    log(
+      'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
+    );
+
+    final products = List<ProductSelectedEntity>.from(
+      selectedProductsNotifier.value,
+    );
+
+    final existingIndex = products.indexWhere(
+      (p) => p.variant.variantId == variant.id,
+    );
+
+    if (existingIndex != -1) {
+      final existing = products[existingIndex];
+      final newQuantity = existing.quantity + 1;
+
+      if (!isOldBooking) {
+        final availableStock = variant.remainingStock ?? variant.stock;
+
+        if (newQuantity > availableStock) {
+          context.showSnackBar(
+            'Cannot add more. Available stock: $availableStock',
+            isError: true,
+          );
+          return;
+        }
+      }
+
+      products[existingIndex] = existing.copyWith(quantity: newQuantity);
+    } else {
+      final attribute = variant.attribute.isEmpty
+          ? (product.model ?? '')
+          : variant.attribute;
+
+      products.add(
+        ProductSelectedEntity(
+          variant: ProductInfoEntity(
+            id: variant.id,
+            variantId: variant.id,
+            productId: product.id,
+            name: product.name,
+            image: product.image,
+            amount: price,
+            category: product.category,
+            color: product.color,
+            model: product.model,
+            mainServiceType: product.mainServiceType,
+            variantAttribute: attribute,
+            measurements: [],
+            quantity: 1,
+            stock: variant.stock,
+            remainingStock: variant.remainingStock,
+          ),
+          quantity: 1,
+          amount: price,
+        ),
+      );
+    }
+
+    selectedProductsNotifier.value = products;
+    log('Product added. Total selected: ${products.length}');
+    setState(() {});
+  }
+
+  FocusNode _getOverlayItemFocusNode(int index) {
+    return _overlayItemFocusNodes.putIfAbsent(index, FocusNode.new);
+  }
+}
