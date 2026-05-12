@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_search_bar.dart';
@@ -667,31 +667,18 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       _staffNameError = null;
     });
 
-    // Validate at least one product is selected
-    final selectedProducts = selectedProductsNotifier.value;
-    if (selectedProducts.isEmpty) {
-      context.showSnackBar(
-        'Please select at least one product to continue',
-        isError: true,
-      );
+    final productResult = BookingFormValidator.validateProductSelection(
+      selectedProductsNotifier.value,
+    );
+    if (!productResult.isValid) {
+      context.showSnackBar(productResult.errors.first, isError: true);
       return;
     }
 
-    // Validate at least one product has price > 0
-    final hasProductWithPrice = selectedProducts.any((p) => p.amount > 0);
-    if (!hasProductWithPrice) {
-      context.showSnackBar(
-        'At least one product must have a price greater than 0',
-        isError: true,
-      );
-      return;
-    }
-
-    // Get the selected staff from cubit
     final staffState = context.read<StaffSearchCubit>().state;
     final selectedStaff = staffState.selectedStaff;
 
-    final validationResult = BookingValidationHelper.validateClientDetailsPanel(
+    final clientResult = BookingFormValidator.validateClientDetails(
       clientName: clientNameController.text,
       phone1: clientPhone1Controller.text,
       phone2: clientPhone2Controller.text,
@@ -702,20 +689,21 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       isSalesMode: selectedBookingType == BookingType.sales,
     );
 
-    if (validationResult.isValid) {
-      // Close search overlay before changing steps to prevent UI conflict
+    if (clientResult.isValid) {
       _removeSearchOverlay();
-      // Move to next step
       setState(() => _bookingStep = 1);
     } else {
       setState(() {
-        _clientNameError = validationResult.fieldErrors['clientName'];
-        _phoneError = validationResult.fieldErrors['phone1'];
-        _phone2Error = validationResult.fieldErrors['phone2'];
-        _staffNameError = validationResult.fieldErrors['staff'];
+        _clientNameError = clientResult.fieldErrors['clientName'];
+        _phoneError = clientResult.fieldErrors['phone1'];
+        _phone2Error = clientResult.fieldErrors['phone2'];
+        _staffNameError = clientResult.fieldErrors['staff'];
       });
-      // Show the first error as a snackbar so the user knows what to fix
-      BookingValidationHelper.showValidationErrors(context, validationResult);
+      context.showSnackBar(
+        clientResult.errors.join(', '),
+        isError: true,
+        title: 'Validation Error',
+      );
     }
   }
 
@@ -1601,7 +1589,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     int searchTypeIndex,
     RangeValues priceRange,
     bool isPriceEnabled,
-  ) {
+  ) { 
     _isPriceFilterEnabled.value = isPriceEnabled;
     final searchTerm = serviceSearchController.text.trim().toLowerCase();
     final isSales = selectedBookingType == BookingType.sales;
@@ -2233,10 +2221,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
 
     if (picked != null) {
-      // VALIDATION: Check if time is in the past for today's date
       if (isPickup) {
-        // Pickup time validation
-        if (pickupDate.isDateToday && _isTimeInPast(picked)) {
+        if (pickupDate.isDateToday && BookingFormValidator.isTimeInPast(picked)) {
           _showTimeError('Pickup time cannot be in the past');
           return;
         }
@@ -2245,12 +2231,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           pickupTime = picked;
         });
 
-        // VALIDATION: If same day booking, validate return time
+        // If same day booking and return time is now invalid, clear it
         if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
             returnTime != null) {
-          if (!_isReturnTimeAfterPickupTime(picked, returnTime!)) {
+          if (!BookingFormValidator.isReturnAfterPickup(picked, returnTime!)) {
             setState(() {
-              returnTime = null; // Clear invalid return time
+              returnTime = null;
             });
             _showTimeError(
               'Return time has been cleared as it was before the new pickup time',
@@ -2258,19 +2244,17 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           }
         }
 
-        // Reload products with new time
         _loadProductsForService(selectedServiceId);
       } else {
-        // Return time validation
-        if (returnDate.isDateToday && _isTimeInPast(picked)) {
+        if (returnDate.isDateToday && BookingFormValidator.isTimeInPast(picked)) {
           _showTimeError('Return time cannot be in the past');
           return;
         }
 
-        // VALIDATION: If same day booking, return must be after pickup
+        // Same-day booking: return must be after pickup
         if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
             pickupTime != null) {
-          if (!_isReturnTimeAfterPickupTime(pickupTime!, picked)) {
+          if (!BookingFormValidator.isReturnAfterPickup(pickupTime!, picked)) {
             _showTimeError('Return time must be after pickup time');
             return;
           }
@@ -2280,31 +2264,11 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
           returnTime = picked;
         });
 
-        // Reload products with new time
         _loadProductsForService(selectedServiceId);
       }
     }
   }
 
-  /// Helper: Check if a time is in the past for today
-  bool _isTimeInPast(TimeOfDay time) {
-    final now = TimeOfDay.now();
-    final nowMinutes = now.hour * 60 + now.minute;
-    final timeMinutes = time.hour * 60 + time.minute;
-    return timeMinutes < nowMinutes;
-  }
-
-  /// Helper: Check if return time is after pickup time
-  bool _isReturnTimeAfterPickupTime(
-    TimeOfDay pickupTime,
-    TimeOfDay returnTime,
-  ) {
-    final pickupMinutes = pickupTime.hour * 60 + pickupTime.minute;
-    final returnMinutes = returnTime.hour * 60 + returnTime.minute;
-    return returnMinutes > pickupMinutes;
-  }
-
-  /// Helper: Show time validation error
   void _showTimeError(String message) {
     context.showSnackBar(message, isError: true);
   }
@@ -2824,24 +2788,18 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
               final name = nameController.text.trim();
               final amount = int.tryParse(amountController.text);
 
-              // Validate name
-              if (name.isEmpty) {
-                context.showSnackBar('Please enter charge name', isError: true);
-                return;
-              }
-
-              // Validate amount
-              if (amount == null || amount <= 0) {
-                context.showSnackBar(
-                  'Please enter a valid amount greater than 0',
-                  isError: true,
-                );
+              final chargeResult = BookingFormValidator.validateAdditionalCharge(
+                name: name,
+                amount: amount,
+              );
+              if (!chargeResult.isValid) {
+                context.showSnackBar(chargeResult.errors.first, isError: true);
                 return;
               }
 
               Navigator.pop(
                 context,
-                AdditionalChargesEntity(name: name, amount: amount),
+                AdditionalChargesEntity(name: name, amount: amount!),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -2877,57 +2835,24 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     }
 
     final products = selectedProductsNotifier.value;
-    if (products.isEmpty) {
-      context.showSnackBar('Please select at least one item', isError: true);
+
+    final productResult = BookingFormValidator.validateProductSelection(products);
+    if (!productResult.isValid) {
+      context.showSnackBar(productResult.errors.first, isError: true);
       return;
     }
 
-    // Validate that at least one product has a price greater than zero
-    final hasProductWithPrice = products.any((product) => product.amount > 0);
-    if (!hasProductWithPrice) {
-      context.showSnackBar(
-        'Product price cant be zero. At least one product should have a price.',
-        isError: true,
-      );
+    final paymentResult = BookingFormValidator.validatePayment(
+      bookingType: selectedBookingType,
+      advanceAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+      securityAmount: securityAmountController.text.trim().toIntOrNull() ?? 0,
+      totalPayable: _calculateBookingTotalPayable(),
+      advanceAccount: selectedAdvanceAccount,
+      securityAccount: selectedSecurityAccount,
+    );
+    if (!paymentResult.isValid) {
+      context.showSnackBar(paymentResult.errors.first, isError: true);
       return;
-    }
-
-    if (selectedBookingType != BookingType.sales) {
-      final advanceAmount =
-          advanceAmountController.text.trim().toIntOrNull() ?? 0;
-      final totalPayable = _calculateBookingTotalPayable();
-      if (advanceAmount > totalPayable) {
-        context.showSnackBar(
-          'Advance amount cannot be greater than total amount',
-          isError: true,
-        );
-        return;
-      }
-    }
-
-    // Validate account selection when amounts are entered
-    final advAmt = advanceAmountController.text.trim().toIntOrNull() ?? 0;
-    final secAmt = securityAmountController.text.trim().toIntOrNull() ?? 0;
-    if (selectedBookingType == BookingType.sales) {
-      if (selectedAdvanceAccount == null) {
-        context.showSnackBar('Please select a payment option', isError: true);
-        return;
-      }
-    } else {
-      if (advAmt > 0 && selectedAdvanceAccount == null) {
-        context.showSnackBar(
-          'Please select a payment option for advance amount',
-          isError: true,
-        );
-        return;
-      }
-      if (secAmt > 0 && selectedSecurityAccount == null) {
-        context.showSnackBar(
-          'Please select a payment option for security amount',
-          isError: true,
-        );
-        return;
-      }
     }
 
     // Show loading indicator
