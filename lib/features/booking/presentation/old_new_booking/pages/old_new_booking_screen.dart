@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -20,6 +21,7 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.d
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_request_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_search_bar.dart';
@@ -68,6 +70,10 @@ part '../widgets/product_search_helper.dart';
 part '../widgets/product_filter_dialog.dart';
 part '../widgets/booking_date_section_widget.dart';
 part '../widgets/booking_success_dialog.dart';
+// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
+// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_mapper.dart';
+// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_stock_validator.dart';
+// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 
 class OldNewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -543,43 +549,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
 
 
-  /// Calculate number of days between pickup and return dates
-  /// Below 24 hours = 1 day, Above 24 hours = 2 days, etc.
-  /// Considers the actual time component for accurate 24-hour period calculation
-  int _calculateRentalDays() {
-    // Default pickup time: 23:59 if not selected
-    final pickupDateTime = DateTime(
-      pickupDate.year,
-      pickupDate.month,
-      pickupDate.day,
-      pickupTime?.hour ?? 23,
-      pickupTime?.minute ?? 59,
-    );
-
-    // Default return time: 00:00 if not selected
-    final returnDateTime = DateTime(
-      returnDate.year,
-      returnDate.month,
-      returnDate.day,
-      returnTime?.hour ?? 0,
-      returnTime?.minute ?? 0,
-    );
-
-    // Safety: return date must be after pickup
-    if (!returnDateTime.isAfter(pickupDateTime)) {
-      return 1;
-    }
-
-    final difference = returnDateTime.difference(pickupDateTime);
-
-    // Convert to hours (include minutes precision)
-    final hours = difference.inMinutes / 60;
-
-    // Business rule:
-    // Below 24 hours = 1 day
-    // Every started 24h block = +1 day
-    return hours <= 24 ? 1 : (hours / 24).ceil();
-  }
+  int _calculateRentalDays() => PaymentCalculator.calculateRentalDays(
+    pickupDate: pickupDate,
+    returnDate: returnDate,
+    pickupTime: pickupTime,
+    returnTime: returnTime,
+  );
 
   int _getEffectiveRentalDays() {
     final baseDays = _calculateRentalDays();
@@ -642,17 +617,18 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         ? null
         : serviceId;
 
-    // When cooling period mode is "before", adjust the effective pickup date for availability check
-    final effectivePickupDate =
-        isBooking && coolingPeriodMode.isBefore && coolingPeriodDays > 0
-        ? pickupDate.subtract(Duration(days: coolingPeriodDays))
-        : pickupDate;
-
-    // For booking mode + after cooling: extend return date by cooling days.
-    // Before mode only adjusts pickup side — return date is unchanged.
-    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
-        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
-        : returnDate.format();
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+      pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+      returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     log(
       '📦 Loading products - pickupDate: ${pickupDate.format()}, effectivePickupDate: ${effectivePickupDate.format()}, returnDate: $effectiveReturnDate, coolingPeriodDays: $coolingPeriodDays, coolingMode: ${coolingPeriodMode.value}, isBooking: $isBooking',
@@ -782,23 +758,13 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     });
   }
 
-  /// Helper: Update cooling period based on pickup/return date changes
-  /// Supports both "before" and "after" modes
   void _updateCoolingPeriod() {
-    if (coolingPeriodDays <= 0) {
-      coolingPeriodDate = null;
-      return;
-    }
-
-    if (coolingPeriodMode.isAfter) {
-      // TC-10: After mode (Maintenance) - cooling starts after return
-      coolingPeriodDate = returnDate.add(Duration(days: coolingPeriodDays));
-    } else {
-      // TC-15: Before mode (Preparation) - cooling ends before pickup
-      coolingPeriodDate = pickupDate.subtract(
-        Duration(days: coolingPeriodDays),
-      );
-    }
+    coolingPeriodDate = BookingDateCalculator.coolingPeriodDate(
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+    );
   }
 
   Widget _buildServiceSelectionSection() {
@@ -868,9 +834,8 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     );
   }
 
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) {
-    return serviceType?.requiresDateRange ?? false;
-  }
+  bool _shouldMultiplyByDays(MainServiceType? serviceType) =>
+      PaymentCalculator.shouldMultiplyByDays(serviceType);
 
   Widget _buildSummarySection() {
     return BookingSummarySection(
@@ -1196,6 +1161,5 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       isPastDate: _isPastDate(),
     );
   }
-
 
 }

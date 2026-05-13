@@ -441,79 +441,20 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
       '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
     );
 
-    final isSales = selectedBookingType == BookingType.sales;
-    final isOldBooking = selectedBookingType == BookingType.oldBooking;
-    final productSalePriceInt = isSales && product.salePrice != null
-        ? (double.tryParse(product.salePrice!)?.toInt())
-        : null;
-    final price = isSales
-        ? (variant.salePrice ??
-              productSalePriceInt ??
-              variant.price ??
-              product.price ??
-              0)
-        : (variant.price ?? product.price ?? 0);
-    log(
-      'Adding variant: ${variant.attribute}, price: $price (isSales: $isSales)',
+    final result = SelectedProductsManager.addOrIncrementFromVariant(
+      currentProducts: selectedProductsNotifier.value,
+      product: product,
+      variant: variant,
+      bookingType: selectedBookingType,
     );
 
-    final products = List<ProductSelectedEntity>.from(
-      selectedProductsNotifier.value,
-    );
-
-    final existingIndex = products.indexWhere(
-      (p) => p.variant.variantId == variant.id,
-    );
-
-    if (existingIndex != -1) {
-      final existing = products[existingIndex];
-      final newQuantity = existing.quantity + 1;
-
-      if (!isOldBooking) {
-        final availableStock = variant.remainingStock ?? variant.stock;
-
-        if (newQuantity > availableStock) {
-          context.showSnackBar(
-            'Cannot add more. Available stock: $availableStock',
-            isError: true,
-          );
-          return;
-        }
-      }
-
-      products[existingIndex] = existing.copyWith(quantity: newQuantity);
-    } else {
-      final attribute = variant.attribute.isEmpty
-          ? (product.model ?? '')
-          : variant.attribute;
-
-      products.add(
-        ProductSelectedEntity(
-          variant: ProductInfoEntity(
-            id: variant.id,
-            variantId: variant.id,
-            productId: product.id,
-            name: product.name,
-            image: product.image,
-            amount: price,
-            category: product.category,
-            color: product.color,
-            model: product.model,
-            mainServiceType: product.mainServiceType,
-            variantAttribute: attribute,
-            measurements: [],
-            quantity: 1,
-            stock: variant.stock,
-            remainingStock: variant.remainingStock,
-          ),
-          quantity: 1,
-          amount: price,
-        ),
-      );
+    if (result.hasError) {
+      context.showSnackBar(result.errorMessage!, isError: true);
+      return;
     }
 
-    selectedProductsNotifier.value = products;
-    log('Product added. Total selected: ${products.length}');
+    selectedProductsNotifier.value = result.products;
+    log('Product added. Total selected: ${result.products.length}');
     setState(() {});
   }
 

@@ -44,24 +44,13 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                           },
                           onSaveForProduct: (product, measurements) {
                             setState(() {
-                              // Find and update the specific product with measurements
-                              final index = selectedProductsNotifier.value
-                                  .indexWhere(
-                                    (p) =>
-                                        p.variant.variantId ==
-                                        product.variant.variantId,
+                              selectedProductsNotifier.value =
+                                  SelectedProductsManager.updateMeasurements(
+                                    currentProducts:
+                                        selectedProductsNotifier.value,
+                                    updatedProduct: product,
+                                    measurements: measurements,
                                   );
-                              if (index != -1) {
-                                final updatedProducts =
-                                    List<ProductSelectedEntity>.from(
-                                      selectedProductsNotifier.value,
-                                    );
-                                updatedProducts[index] = product.copyWith(
-                                  measurements: measurements,
-                                );
-                                selectedProductsNotifier.value =
-                                    updatedProducts;
-                              }
                             });
                           },
                           selectedProducts: selectedProductsNotifier.value

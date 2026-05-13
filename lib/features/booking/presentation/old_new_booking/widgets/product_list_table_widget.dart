@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -600,7 +602,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   void _focusNextProductRowOrClient(ProductSelectedEntity product) {
     final products = widget.selectedProductsNotifier.value;
     final currentIndex = products.indexWhere(
-      (item) => item.variant.variantId == product.variant.variantId,
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     if (currentIndex != -1 && currentIndex + 1 < products.length) {
       final nextProduct = products[currentIndex + 1];
@@ -611,52 +615,56 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _incrementQuantity(ProductSelectedEntity product) {
-    final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
-
-    if (!isOldBooking) {
-      final availableStock =
-          product.variant.remainingStock ?? product.variant.stock ?? 999;
-      final currentQuantity = product.quantity;
-      if (currentQuantity >= availableStock) return;
+    final updatedProducts = SelectedProductsManager.incrementQuantity(
+      currentProducts: widget.selectedProductsNotifier.value,
+      product: product,
+      bookingType: widget.selectedBookingType,
+    );
+    if (identical(updatedProducts, widget.selectedProductsNotifier.value)) {
+      return;
     }
 
-    final products = List<ProductSelectedEntity>.from(
-      widget.selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
+    widget.selectedProductsNotifier.value = updatedProducts;
+    final index = updatedProducts.indexWhere(
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     if (index != -1) {
-      products[index] = products[index].copyWith(
-        quantity: products[index].quantity + 1,
-      );
       _quantityControllers[_quantityKey(product)]?.text =
-          products[index].quantity.toString();
-      widget.selectedProductsNotifier.value = products;
+          updatedProducts[index].quantity.toString();
     }
   }
 
   void _decrementQuantity(ProductSelectedEntity product) {
-    final products = List<ProductSelectedEntity>.from(
-      widget.selectedProductsNotifier.value,
+    final currentProducts = widget.selectedProductsNotifier.value;
+    final updatedProducts = SelectedProductsManager.decrementQuantity(
+      currentProducts: currentProducts,
+      product: product,
     );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      if (products[index].quantity > 1) {
-        products[index] = products[index].copyWith(
-          quantity: products[index].quantity - 1,
+    if (identical(updatedProducts, currentProducts)) return;
+
+    final removedItem = updatedProducts.length < currentProducts.length &&
+        !updatedProducts.any(
+          (item) =>
+              BookingProductHelpers.productKey(item) ==
+              BookingProductHelpers.productKey(product),
         );
+    if (removedItem) {
+      _quantityControllers.remove(_quantityKey(product))?.dispose();
+      _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
+    } else {
+      final index = updatedProducts.indexWhere(
+        (item) =>
+            BookingProductHelpers.productKey(item) ==
+            BookingProductHelpers.productKey(product),
+      );
+      if (index != -1) {
         _quantityControllers[_quantityKey(product)]?.text =
-            products[index].quantity.toString();
-      } else {
-        _quantityControllers.remove(_quantityKey(product))?.dispose();
-        _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
-        products.removeAt(index);
+            updatedProducts[index].quantity.toString();
       }
-      widget.selectedProductsNotifier.value = products;
     }
+    widget.selectedProductsNotifier.value = updatedProducts;
   }
 
   void _saveTypedQuantity(ProductSelectedEntity product, String value) {
@@ -669,35 +677,32 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       return;
     }
 
-    final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
-    final availableStock =
-        product.variant.remainingStock ?? product.variant.stock ?? 999;
+    final result = SelectedProductsManager.setQuantity(
+      currentProducts: widget.selectedProductsNotifier.value,
+      product: product,
+      quantity: parsedQuantity,
+      bookingType: widget.selectedBookingType,
+    );
 
-    if (!isOldBooking && parsedQuantity > availableStock) {
+    if (result.hasError) {
       _quantityControllers[_quantityKey(product)]?.text =
           product.quantity.toString();
-      context.showSnackBar(
-        'Quantity cannot be greater than available stock ($availableStock)',
-        isError: true,
-      );
+      context.showSnackBar(result.errorMessage!, isError: true);
       return;
     }
 
-    final products = List<ProductSelectedEntity>.from(
-      widget.selectedProductsNotifier.value,
-    );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-
-    if (index == -1) return;
-
-    products[index] = products[index].copyWith(quantity: parsedQuantity);
     _quantityControllers[_quantityKey(product)]?.text =
         parsedQuantity.toString();
-    widget.selectedProductsNotifier.value = products;
+    widget.selectedProductsNotifier.value = result.products;
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
-    _focusNextProductRowOrClient(products[index]);
+    final updatedIndex = result.products.indexWhere(
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
+    );
+    if (updatedIndex != -1) {
+      _focusNextProductRowOrClient(result.products[updatedIndex]);
+    }
   }
 
   void _startEditingPrice(ProductSelectedEntity product) {
@@ -734,28 +739,22 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _removeProduct(ProductSelectedEntity product) {
-    final products = List<ProductSelectedEntity>.from(
-      widget.selectedProductsNotifier.value,
-    );
+    final products = widget.selectedProductsNotifier.value;
     _quantityControllers.remove(_quantityKey(product))?.dispose();
     _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
-    products.removeWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
+    widget.selectedProductsNotifier.value = SelectedProductsManager.removeProduct(
+      currentProducts: products,
+      product: product,
     );
-    widget.selectedProductsNotifier.value = products;
   }
 
   void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
-    final products = List<ProductSelectedEntity>.from(
-      widget.selectedProductsNotifier.value,
+    widget.selectedProductsNotifier.value =
+        SelectedProductsManager.updateProductPrice(
+      currentProducts: widget.selectedProductsNotifier.value,
+      product: product,
+      newPrice: newPrice,
     );
-    final index = products.indexWhere(
-      (p) => p.variant.variantId == product.variant.variantId,
-    );
-    if (index != -1) {
-      products[index] = products[index].copyWith(amount: newPrice);
-      widget.selectedProductsNotifier.value = products;
-    }
   }
 
   String _getVariantDisplayText(ProductSelectedEntity product) {
