@@ -21,6 +21,8 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.d
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_request_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/new_booking_app_bar.dart';
@@ -923,87 +925,12 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // Actions
 
-  void _addAdditionalCharge() async {
-    final nameController = TextEditingController();
-    final amountController = TextEditingController();
+  void _addAdditionalCharge() =>
+      AdditionalChargesManager.showAddChargeDialog(
+          context, additionalChargesNotifier);
 
-    final result = await showDialog<AdditionalChargesEntity>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Charge', style: TextStyle(fontSize: 16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'e.g., Delivery',
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-              ],
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                prefixText: '₹ ',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final name = nameController.text.trim();
-              final amount = int.tryParse(amountController.text);
-
-              final chargeResult = BookingFormValidator.validateAdditionalCharge(
-                name: name,
-                amount: amount,
-              );
-              if (!chargeResult.isValid) {
-                context.showSnackBar(chargeResult.errors.first, isError: true);
-                return;
-              }
-
-              Navigator.pop(
-                context,
-                AdditionalChargesEntity(name: name, amount: amount!),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
-            child: const Text('Add', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-
-    if (result != null) {
-      final charges = List<AdditionalChargesEntity>.from(
-        additionalChargesNotifier.value,
-      );
-      charges.add(result);
-      additionalChargesNotifier.value = charges;
-    }
-  }
-
-  void _removeCharge(AdditionalChargesEntity charge) {
-    final charges = List<AdditionalChargesEntity>.from(
-      additionalChargesNotifier.value,
-    );
-    charges.remove(charge);
-    additionalChargesNotifier.value = charges;
-  }
+  void _removeCharge(AdditionalChargesEntity charge) =>
+      AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
 
   void _handleConfirmBooking() async {
     if (!_formKey.currentState!.validate()) {

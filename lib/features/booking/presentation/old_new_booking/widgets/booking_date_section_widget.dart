@@ -39,10 +39,12 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
             returnDate = isOldBooking
                 ? picked
                 : picked.add(const Duration(days: 1));
+          }
 
-            if (coolingPeriodDate != null) {
-              _updateCoolingPeriod();
-            }
+          // Keep coolingPeriodDate in sync whenever pickup date changes.
+          // Must run after both pickupDate and returnDate are finalized above.
+          if (coolingPeriodDate != null) {
+            _updateCoolingPeriod();
           }
         });
 

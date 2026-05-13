@@ -151,38 +151,11 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
         ),
       );
     } else {
-      String? searchType;
-      switch (_selectedSearchTypeIndex.value) {
-        case 0:
-          searchType = 'name';
-          break;
-        case 1:
-          searchType = 'category';
-          break;
-        case 2:
-          searchType = 'model';
-          break;
-        case 3:
-          if (_currentServiceType != null) {
-            if (_currentServiceType.isMultiVariantProductType) {
-              if (_currentServiceType == MainServiceType.dress ||
-                  _currentServiceType == MainServiceType.costume) {
-                searchType = 'size';
-              } else if (_currentServiceType == MainServiceType.gadgets) {
-                searchType = 'serial_number';
-              } else {
-                searchType = 'variant';
-              }
-            } else {
-              searchType = 'color';
-            }
-          } else {
-            searchType = 'color';
-          }
-          break;
-      }
-
-      searchType ??= 'name';
+      final searchType = BookingSearchRules.resolveSearchType(
+            _selectedSearchTypeIndex.value,
+            serviceType: _currentServiceType,
+          ) ??
+          'name';
 
       log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
       _selectProductBloc.add(
