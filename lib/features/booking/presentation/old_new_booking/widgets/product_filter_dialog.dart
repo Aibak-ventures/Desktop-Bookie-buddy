@@ -874,38 +874,11 @@ extension ProductFilterDialogBuilders on OldNewBookingScreenState {
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
 
-    String? searchType;
-    switch (searchTypeIndex) {
-      case 0:
-        searchType = 'name';
-        break;
-      case 1:
-        searchType = 'category';
-        break;
-      case 2:
-        searchType = 'model';
-        break;
-      case 3:
-        if (_currentServiceType != null) {
-          if (_currentServiceType.isMultiVariantProductType) {
-            if (_currentServiceType == MainServiceType.dress ||
-                _currentServiceType == MainServiceType.costume) {
-              searchType = 'size';
-            } else if (_currentServiceType == MainServiceType.gadgets) {
-              searchType = 'serial_number';
-            } else {
-              searchType = 'variant';
-            }
-          } else {
-            searchType = 'color';
-          }
-        } else {
-          searchType = 'color';
-        }
-        break;
-    }
-
-    searchType ??= 'name';
+    final searchType = BookingSearchRules.resolveSearchType(
+          searchTypeIndex,
+          serviceType: _currentServiceType,
+        ) ??
+        'name';
 
     final hasSearchQuery = searchTerm.isNotEmpty;
     final hasAnyFilter = hasSearchQuery || isPriceEnabled;

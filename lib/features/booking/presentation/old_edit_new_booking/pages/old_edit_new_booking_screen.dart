@@ -1,6 +1,7 @@
 ﻿import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/utils/debouncer.dart';
@@ -926,76 +927,12 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     );
   }
 
-  void _addAdditionalCharge() async {
-    final nameController = TextEditingController();
-    final amountController = TextEditingController();
+  void _addAdditionalCharge() =>
+      AdditionalChargesManager.showAddChargeDialog(
+          context, additionalChargesNotifier);
 
-    final result = await showDialog<AdditionalChargesEntity>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Charge', style: TextStyle(fontSize: 16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'e.g., Delivery',
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                prefixText: 'â‚¹ ',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final name = nameController.text.trim();
-              final amount = int.tryParse(amountController.text);
-              if (name.isNotEmpty && amount != null && amount > 0) {
-                Navigator.pop(
-                  context,
-                  AdditionalChargesEntity(name: name, amount: amount),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
-            child: const Text('Add', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-
-    if (result != null) {
-      final charges = List<AdditionalChargesEntity>.from(
-        additionalChargesNotifier.value,
-      );
-      charges.add(result);
-      additionalChargesNotifier.value = charges;
-    }
-  }
-
-  void _removeCharge(AdditionalChargesEntity charge) {
-    final charges = List<AdditionalChargesEntity>.from(
-      additionalChargesNotifier.value,
-    );
-    charges.remove(charge);
-    additionalChargesNotifier.value = charges;
-  }
+  void _removeCharge(AdditionalChargesEntity charge) =>
+      AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
 
 
   Widget _buildDateSelectionSection() {
