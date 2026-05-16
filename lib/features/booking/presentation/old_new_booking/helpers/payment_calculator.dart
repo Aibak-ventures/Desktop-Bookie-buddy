@@ -74,10 +74,8 @@ class PaymentCalculator {
   }
 
   /// Check if a service type requires date-range-based pricing.
-  /// 
-  /// Returns true for: Vehicle, Gadgets, Equipment, Costume (rental items)
-  /// Returns false for: Jewellery, Dress, etc. (non-rental or flat-rate items)
-  /// Returns false for null (safe default)
+  /// Delegates to [MainServiceType.requiresDateRange] — true for Vehicle, Gadgets, Equipment, Costume, Room.
+  /// Returns false for null (safe default).
   static bool shouldMultiplyByDays(MainServiceType? serviceType) {
     return serviceType?.requiresDateRange ?? false;
   }

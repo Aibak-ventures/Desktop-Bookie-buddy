@@ -308,30 +308,9 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                   const SizedBox(height: 7),
 
                   // Notes - Optional
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      controller: descriptionController,
-                      focusNode: _notesFocusNode,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      expands: true,
-                      textInputAction: TextInputAction.newline,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Notes',
-                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                  BookingNotesField(
+                    controller: descriptionController,
+                    focusNode: _notesFocusNode,
                   ),
 
                   const SizedBox(height: 7),

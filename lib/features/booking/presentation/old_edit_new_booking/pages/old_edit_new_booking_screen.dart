@@ -1,10 +1,14 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
-import 'package:bookie_buddy_web/utils/debouncer.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
@@ -18,22 +22,19 @@ import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repo
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
-// import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/select_date_failure_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_edit_new_booking/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_date_calculator.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_search_rules.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_mapper.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_stock_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_search_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_list_table_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/widgets/product_customization_widget.dart';
@@ -148,6 +149,9 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   // SelectProductBloc for inline search
   late SelectProductBloc _selectProductBloc;
 
+  // Product loading coordinator — owns debouncer; replaces _loadProductsDebouncer
+  late BookingProductLoader _productLoader;
+
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
@@ -176,11 +180,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   final startLocationController = TextEditingController();
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
-
-  // Inline editing state
-  int? _editingVariantId;
-  final _inlinePriceController = TextEditingController();
-  final _inlinePriceFocusNode = FocusNode();
 
   // UI Constants
   static const double _fieldSpacing = 8.0;
@@ -219,9 +218,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   int _originalCoolingPeriodDays = 0; // Track original cooling period
   CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
   bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
-  final _loadProductsDebouncer = Debouncer(
-    delay: const Duration(milliseconds: 300),
-  );
 
   // Customization state
   bool showCustomization = false;
@@ -245,6 +241,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       getProducts: getIt(),
       searchAndFilterProducts: getIt(),
     );
+    _productLoader = BookingProductLoader(selectProductBloc: _selectProductBloc);
 
     // Pre-fill data if editing
     if (widget.bookingDetails != null) {
@@ -348,7 +345,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     final staffState = context.read<StaffSearchCubit>().state;
     final selectedStaff = staffState.selectedStaff;
 
-    final validationResult = BookingValidationHelper.validateClientDetailsPanel(
+    final validationResult = BookingFormValidator.validateClientDetails(
       clientName: clientNameController.text,
       phone1: clientPhone1Controller.text,
       phone2: clientPhone2Controller.text,
@@ -373,7 +370,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     }
   }
 
-  /// Show product filter bottom sheet
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -523,6 +519,8 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
         } else {
           returnDate = picked;
         }
+        // Keep coolingPeriodDate in sync whenever dates change.
+        _updateCoolingPeriod();
       });
       // ðŸ”„ Reload available products for the new date range
       _loadAvailableProducts();
@@ -561,58 +559,27 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
   /// Load available products using the check-availability API.
   /// Called on screen entry and whenever pickup/return date or time changes.
   void _loadAvailableProducts() {
-    _loadProductsDebouncer.run(() {
-      _loadAvailableProductsInternal();
-    });
+    _productLoader.load(
+      bookingType: selectedBookingType,
+      selectedServiceId: selectedServiceId,
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      pickupTime: pickupTime,
+      returnTime: returnTime,
+      coolingPeriodDays: coolingPeriodDays,
+      coolingPeriodMode: coolingPeriodMode,
+      selectedProducts: selectedProductsNotifier.value,
+      bookingId: widget.bookingId,
+    );
   }
 
-  void _loadAvailableProductsInternal() {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isBooking = selectedBookingType == BookingType.booking;
-    final serviceIdToUse =
-        (selectedServiceId == null || selectedServiceId == -1)
-        ? null
-        : selectedServiceId;
-
-    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
-      pickupDate: pickupDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
-      returnDate: returnDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-
-    log(
-      '📦 Loading products - pickupDate: ${pickupDate.format()}, effectivePickupDate: ${effectivePickupDate.format()}, returnDate: $effectiveReturnDate, coolingPeriodDays: $coolingPeriodDays, coolingMode: ${coolingPeriodMode.value}, isBooking: $isBooking',
-    );
-
-    // Extract variant IDs from currently selected products for edit mode
-    final currentVariantIds = selectedProductsNotifier.value
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
-
-    _selectProductBloc.add(
-      SelectProductEvent.loadProducts(
-        serviceId: serviceIdToUse,
-        pickupDate: effectivePickupDate.format(),
-        returnDate: effectiveReturnDate,
-        pickupTime: pickupTime,
-        returnTime: returnTime,
-        useAvailableProductsApi: !isSales,
-        isSales: isSales,
-        bookingId: widget.bookingId,
-        variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null,
-      ),
-    );
-
-    // Note: Removed duplicate _checkSelectedProductsAvailability() call
-    // The loadProducts API already checks availability when bookingId is provided
+  /// Handles the full cooling-settings change cascade:
+  /// recalculates cooling period → reloads products → checks selected availability.
+  /// Called from both the cooling-mode toggle and the cooling-days dropdown.
+  void _onCoolingSettingsChanged() {
+    _updateCoolingPeriod();
+    _loadAvailableProducts();
+    _checkSelectedProductsAvailability();
   }
 
   /// Check if already-selected products are still available for the current
@@ -727,9 +694,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
     returnTime: returnTime,
   );
 
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) =>
-      PaymentCalculator.shouldMultiplyByDays(serviceType);
-
   void _updateCoolingPeriod() {
     coolingPeriodDate = BookingDateCalculator.coolingPeriodDate(
       pickupDate: pickupDate,
@@ -760,86 +724,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       advanceLabel: 'Paid',
       totalRemainingLabel: 'Balance Amount',
     );
-    // return Container(
-    //   padding: const EdgeInsets.all(6),
-    //   decoration: BoxDecoration(
-    //     color: const Color.fromARGB(255, 245, 242, 254),
-    //     borderRadius: BorderRadius.circular(10),
-    //     border: Border.all(color: Colors.white),
-    //   ),
-    //   child: ListenableBuilder(
-    //     listenable: Listenable.merge([
-    //       selectedProductsNotifier,
-    //       additionalChargesNotifier,
-    //       advanceAmountController,
-    //       discountAmountController,
-    //     ]),
-    //     builder: (context, _) {
-    //       final products = selectedProductsNotifier.value;
-    //       final additionalCharges = additionalChargesNotifier.value;
-    //       final advanceAmount =
-    //           advanceAmountController.text.trim().toIntOrNull() ?? 0;
-    //       final discountAmount =
-    //           discountAmountController.text.trim().toIntOrNull() ?? 0;
-
-    //       final isSaleType = selectedBookingType == BookingType.sales;
-    //       final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
-    //       final productTotal = products.fold<int>(0, (sum, product) {
-    //         final daysMultiplier =
-    //             (!isSaleType &&
-    //                 _shouldMultiplyByDays(product.variant.mainServiceType))
-    //             ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-    //             : 1;
-    //         return sum + (product.amount * product.quantity * daysMultiplier);
-    //       });
-    //       final additionalTotal = additionalCharges.fold<int>(
-    //         0,
-    //         (sum, charge) => sum + (charge.amount ?? 0),
-    //       );
-    //       final actualDiscount = isDiscountPercentage
-    //           ? ((productTotal + additionalTotal) * discountAmount / 100)
-    //                 .round()
-    //           : discountAmount;
-    //       final totalPayable = productTotal + additionalTotal - actualDiscount;
-    //       final remainingAmount = totalPayable - advanceAmount;
-
-    //       return Column(
-    //         children: [
-    //           if (isSaleType)
-    //             _buildSummaryRow(
-    //               'Total amount',
-    //               remainingAmount > 0 ? remainingAmount : 0,
-    //               valueColor: const Color(0xFF6132E4),
-    //               isBold: true,
-    //             )
-    //           else ...[
-    //             _buildSummaryRow('Product total', productTotal),
-    //             if (additionalTotal > 0)
-    //               _buildSummaryRow('Additional charges', additionalTotal),
-    //             if (actualDiscount > 0)
-    //               _buildSummaryRow(
-    //                 '- Discount',
-    //                 actualDiscount,
-    //                 isNegative: true,
-    //               ),
-    //             const Divider(height: 6),
-    //             _buildSummaryRow(
-    //               'Paid',
-    //               advanceAmount,
-    //               valueColor: const Color(0xFF1AB000),
-    //             ),
-    //             _buildSummaryRow(
-    //               'Total payable',
-    //               remainingAmount > 0 ? remainingAmount : 0,
-    //               valueColor: const Color(0xFFD30000),
-    //               isBold: true,
-    //             ),
-    //           ],
-    //         ],
-    //       );
-    //     },
-    //   ),
-    // );
   }
 
   Widget _buildSummarySection() {
@@ -860,70 +744,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       bookingCompletedDate: bookingCompletedDate,
       onConfirm: _handleSaveBooking,
       confirmLabel: 'Save Change',
-    );
-  }
-
-  Widget _buildSummaryRow(
-    String label,
-    int amount, {
-    Color? valueColor,
-    bool isBold = false,
-    bool isNegative = false,
-  }) {
-    final isTotalPayable = label == 'Total payable';
-    final isPaid = label == 'Paid';
-    final isProductTotal = label == 'Product total';
-
-    double labelSize = 15;
-    double valueSize = 13;
-    FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
-    FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
-    Color labelColor = const Color(0xFF3E3E3E);
-
-    if (isTotalPayable) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w600;
-      valueWeight = FontWeight.w700;
-      valueColor = const Color(0xFFD30000);
-    } else if (isPaid) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w500;
-      valueWeight = FontWeight.w600;
-      valueColor = const Color(0xFF1AB000);
-    } else if (isProductTotal) {
-      labelSize = 13;
-      valueSize = 13;
-      labelWeight = FontWeight.w400;
-      valueWeight = FontWeight.w500;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: labelSize,
-              fontFamily: 'Inter',
-              fontWeight: labelWeight,
-              color: labelColor,
-            ),
-          ),
-          Text(
-            '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
-            style: TextStyle(
-              fontSize: valueSize,
-              fontFamily: 'Inter',
-              fontWeight: valueWeight,
-              color: valueColor ?? Colors.black87,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -967,7 +787,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
             // Sales mode - single date only
             SizedBox(
               width: 400,
-              child: _buildNewDateField(
+              child: BookingDatePickerField(
                 label: 'Sale date',
                 value: pickupDate.format(),
                 onTap: () => _selectDate(isPickup: true),
@@ -981,7 +801,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                 // Pickup Date
                 Expanded(
                   flex: 3,
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Pickup date',
                     value: pickupDate.format(),
                     onTap: () => _selectDate(isPickup: true),
@@ -991,7 +811,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                 // Pickup Time
                 Expanded(
                   flex: 2,
-                  child: _buildNewTimeField(
+                  child: BookingTimePickerField(
                     label: 'time',
                     value: pickupTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: true),
@@ -1002,7 +822,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                 // Return Date
                 Expanded(
                   flex: 3,
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Return date',
                     value: returnDate.format(),
                     onTap: () => _selectDate(isPickup: false),
@@ -1012,7 +832,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                 // Return Time
                 Expanded(
                   flex: 2,
-                  child: _buildNewTimeField(
+                  child: BookingTimePickerField(
                     label: 'time',
                     value: returnTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: false),
@@ -1064,9 +884,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                                     ? CoolingPeriodMode.before
                                     : CoolingPeriodMode.after;
                               });
-                              _updateCoolingPeriod();
-                              _loadAvailableProducts();
-                              _checkSelectedProductsAvailability();
+                              _onCoolingSettingsChanged();
                             },
                             child: Text(
                               coolingPeriodMode.isAfter ? "After" : "Before",
@@ -1143,9 +961,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                                 onChanged: (val) {
                                   if (val != null) {
                                     setState(() => coolingPeriodDays = val);
-                                    _updateCoolingPeriod();
-                                    _loadAvailableProducts();
-                                    _checkSelectedProductsAvailability();
+                                    _onCoolingSettingsChanged();
                                   }
                                 },
                               );
@@ -1160,122 +976,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
             ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNewDateField({
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 42,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9F9FC),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.calendar_today_outlined,
-                  size: 16,
-                  color: const Color(0xFF9A76E8),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 18,
-                  color: Colors.grey.shade500,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNewTimeField({
-    required String label,
-    required String value,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            height: 42,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF9F9FC),
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.black87,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 18,
-                  color: Colors.grey.shade500,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -1490,30 +1190,7 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                   const SizedBox(height: 7),
 
                   // Notes
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: TextField(
-                      controller: descriptionController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      expands: true,
-                      textInputAction: TextInputAction.newline,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Notes',
-                        hintStyle: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                  ),
+                  BookingNotesField(controller: descriptionController),
 
                   const SizedBox(height: 7),
 
@@ -1928,398 +1605,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
       initialAccountId: widget.bookingDetails?.securityAccountId,
       onChanged: (account) => setState(() => selectedSecurityAccount = account),
       label: 'Security Payment Option',
-    );
-  }
-}
-
-// Stateful widget for overlay search item with variant selection
-class _OverlaySearchItem extends StatefulWidget {
-  final ProductEntity product;
-  final Function(ProductVariantEntity) onAddProduct;
-  final Function(String imageUrl, String? title)? onImageTap;
-
-  const _OverlaySearchItem({
-    required this.product,
-    required this.onAddProduct,
-    this.onImageTap,
-  });
-
-  @override
-  State<_OverlaySearchItem> createState() => _OverlaySearchItemState();
-}
-
-class _OverlaySearchItemState extends State<_OverlaySearchItem> {
-  ProductVariantEntity? selectedVariant;
-  bool _isImageHovered = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Auto-select first variant for non-multi-variant products (vehicle, equipment, etc.)
-    // Multi-variant products (dress, costume, gadgets) require explicit user selection
-    if (!widget.product.mainServiceType.isMultiVariantProductType &&
-        widget.product.variants.isNotEmpty) {
-      selectedVariant = widget.product.variants.first;
-    } else {
-      // Also auto-select when all variants have empty attribute (single unnamed variant)
-      // â€” no chip will render so we must pre-select to allow adding
-      final hasVisibleChip = widget.product.variants.any(
-        (v) => v.attribute.isNotEmpty,
-      );
-      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
-        selectedVariant = widget.product.variants.first;
-      } else {
-        selectedVariant = null;
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final price = widget.product.price ?? 0;
-    final variants = widget.product.variants;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        children: [
-          // Product Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: MouseRegion(
-              cursor:
-                  widget.product.image != null &&
-                      widget.product.image!.isNotEmpty
-                  ? SystemMouseCursors.click
-                  : MouseCursor.defer,
-              onEnter: (_) {
-                if (widget.product.image != null &&
-                    widget.product.image!.isNotEmpty) {
-                  setState(() => _isImageHovered = true);
-                }
-              },
-              onExit: (_) => setState(() => _isImageHovered = false),
-              child: GestureDetector(
-                onTap:
-                    widget.product.image != null &&
-                        widget.product.image!.isNotEmpty
-                    ? () => widget.onImageTap?.call(
-                        widget.product.image!,
-                        widget.product.name,
-                      )
-                    : null,
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 40,
-                      color: Colors.grey.shade100,
-                      child: (() {
-                        final thumb = widget.product.thumbnailImage;
-                        final full = widget.product.image;
-                        final url = (thumb != null && thumb.isNotEmpty)
-                            ? thumb
-                            : (full != null && full.isNotEmpty ? full : null);
-                        return url != null
-                            ? Image.network(
-                                url,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Icon(
-                                  Icons.image_outlined,
-                                  size: 20,
-                                  color: Colors.grey.shade400,
-                                ),
-                              )
-                            : Icon(
-                                Icons.image_outlined,
-                                size: 20,
-                                color: Colors.grey.shade400,
-                              );
-                      })(),
-                    ),
-                    if (_isImageHovered)
-                      Positioned.fill(
-                        child: Container(
-                          color: Colors.black45,
-                          child: const Icon(
-                            Icons.zoom_in,
-                            color: Colors.white,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-
-          // Product Info - Fixed width
-          SizedBox(
-            width: 240,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Tooltip(
-                  message: widget.product.name,
-                  waitDuration: const Duration(milliseconds: 250),
-                  child: Text(
-                    widget.product.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF111827),
-                      height: 1.2,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  widget.product.color ?? 'color',
-                  style: const TextStyle(
-                    color: Color(0xFF707070),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-
-          // Variants or Details Section
-          if (widget.product.mainServiceType.isMultiVariantProductType)
-            Expanded(
-              child: SizedBox(
-                height: 40,
-                child: variants.isNotEmpty
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          // Skip chips for variants with empty attribute
-                          children: variants
-                              .where((v) => v.attribute.isNotEmpty)
-                              .map((variant) {
-                                final isSelected =
-                                    selectedVariant?.id == variant.id;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 4),
-                                  child: _SelectableVariantChip(
-                                    text: variant.attribute,
-                                    isSelected: isSelected,
-                                    onTap: () {
-                                      setState(() {
-                                        selectedVariant = variant;
-                                      });
-                                    },
-                                  ),
-                                );
-                              })
-                              .toList(),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ),
-            )
-          else
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (widget.product.category != null &&
-                      widget.product.category!.isNotEmpty)
-                    Text(
-                      '${widget.product.mainServiceType.categoryFieldLabel}: ${widget.product.category}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if (widget.product.model != null &&
-                      widget.product.model!.isNotEmpty)
-                    Text(
-                      '${widget.product.mainServiceType.secondaryAttributeLabel ?? "Model"}: ${widget.product.model}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  if ((widget.product.category == null ||
-                          widget.product.category!.isEmpty) &&
-                      (widget.product.model == null ||
-                          widget.product.model!.isEmpty))
-                    Text(
-                      widget.product.color ?? '-',
-                      style: const TextStyle(fontSize: 12),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
-            ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-
-          // Price section - Fixed width (equal to button)
-          SizedBox(
-            width: 90,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'rent price',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                Text(
-                  'â‚¹$price',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(width: 12),
-          // Divider
-          Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-          const SizedBox(width: 12),
-          // Available Quantity section
-          SizedBox(
-            width: 80,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'avl qty',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                Text(
-                  selectedVariant != null
-                      ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
-                      : (variants.isNotEmpty
-                            ? '${variants.first.remainingStock ?? variants.first.stock}'
-                            : '0'),
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          // Add button - Fixed width (equal to price)
-          GestureDetector(
-            onTap: selectedVariant != null
-                ? () => widget.onAddProduct(selectedVariant!)
-                : null,
-            child: Container(
-              width: 90,
-              height: 36,
-              decoration: BoxDecoration(
-                color: selectedVariant != null
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add, size: 18, color: Colors.white),
-                  SizedBox(width: 4),
-                  Text(
-                    'Add',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Selectable variant chip widget
-class _SelectableVariantChip extends StatelessWidget {
-  final String text;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _SelectableVariantChip({
-    required this.text,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isShortText = text.length <= 3;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: isShortText ? 33 : null,
-        height: 33,
-        padding: isShortText
-            ? null
-            : const EdgeInsets.symmetric(horizontal: 12),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
-          borderRadius: isShortText ? null : BorderRadius.circular(8),
-          color: isSelected ? AppColors.purpleLight : const Color(0xFFF8F7FF),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-      ),
     );
   }
 }

@@ -240,7 +240,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
           if (isSales)
             SizedBox(
               width: 400,
-              child: _buildNewDateField(
+              child: BookingDatePickerField(
                 label: 'Sale date',
                 value: pickupDate.format(),
                 onTap: () => _selectDate(isPickup: true),
@@ -254,7 +254,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
                 Expanded(child: _buildOldBookedDateField()),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Pickup date',
                     value: pickupDate.format(),
                     onTap: () => _selectDate(isPickup: true),
@@ -263,7 +263,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Return date',
                     value: returnDate.format(),
                     onTap: () => _selectDate(isPickup: false),
@@ -277,7 +277,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
               children: [
                 Expanded(
                   flex: 3,
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Pickup date',
                     value: pickupDate.format(),
                     onTap: () => _selectDate(isPickup: true),
@@ -289,7 +289,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
                 const SizedBox(width: 12),
                 Expanded(
                   flex: 2,
-                  child: _buildNewTimeField(
+                  child: BookingTimePickerField(
                     label: 'time',
                     value: pickupTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: true),
@@ -309,7 +309,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
 
                 Expanded(
                   flex: 3,
-                  child: _buildNewDateField(
+                  child: BookingDatePickerField(
                     label: 'Return date',
                     value: returnDate.format(),
                     onTap: () => _selectDate(isPickup: false),
@@ -320,7 +320,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
                 const SizedBox(width: 12),
                 Expanded(
                   flex: 2,
-                  child: _buildNewTimeField(
+                  child: BookingTimePickerField(
                     label: 'time',
                     value: returnTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: false),
@@ -500,98 +500,6 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
     );
   }
 
-  Widget _buildNewDateField({
-    required String label,
-    required String value,
-    required Future<void> Function() onTap,
-    FocusNode? focusNode,
-    FocusNode? nextFocusNode,
-    bool autofocus = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Focus(
-          focusNode: focusNode,
-          autofocus: autofocus,
-          onKeyEvent: (_, event) {
-            if (event is KeyDownEvent &&
-                (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) {
-                if (nextFocusNode != null) {
-                  nextFocusNode.requestFocus();
-                } else {
-                  FocusScope.of(context).nextFocus();
-                }
-              });
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          child: InkWell(
-            onTap: () {
-              focusNode?.requestFocus();
-              onTap().then((_) {
-                if (nextFocusNode != null) {
-                  nextFocusNode.requestFocus();
-                } else {
-                  FocusScope.of(context).nextFocus();
-                }
-              });
-            },
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              height: 42,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9FC),
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today_outlined,
-                    size: 16,
-                    color: const Color(0xFF9A76E8),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildOldBookedDateField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -676,89 +584,4 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
     );
   }
 
-  Widget _buildNewTimeField({
-    required String label,
-    required String value,
-    required Future<void> Function() onTap,
-    FocusNode? focusNode,
-    FocusNode? nextFocusNode,
-    bool autofocus = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey.shade600,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Focus(
-          focusNode: focusNode,
-          autofocus: autofocus,
-          onKeyEvent: (_, event) {
-            if (event is KeyDownEvent &&
-                (event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
-              onTap().then((_) {
-                if (nextFocusNode != null) {
-                  nextFocusNode.requestFocus();
-                } else {
-                  FocusScope.of(context).nextFocus();
-                }
-              });
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          child: InkWell(
-            onTap: () {
-              focusNode?.requestFocus();
-              onTap().then((_) {
-                if (nextFocusNode != null) {
-                  nextFocusNode.requestFocus();
-                } else {
-                  FocusScope.of(context).nextFocus();
-                }
-              });
-            },
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              height: 42,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F9FC),
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 18,
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

@@ -176,9 +176,6 @@ extension EditBookingSearchHandler on OldEditNewBookingScreenState {
 
   // ===== Filter Dialog & Helpers =====
 
-  double _roundToMeaningfulNumber(double value) =>
-      PaymentCalculator.roundToMeaningfulNumber(value);
-
   List<Map<String, dynamic>> _generateQuickFilters(
     double minPrice,
     double maxPrice,

@@ -1,4 +1,4 @@
-part of '../pages/old_edit_new_booking_screen.dart';
+﻿part of '../pages/old_edit_new_booking_screen.dart';
 
 extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
   // ---------------------------------------------------------------------------
@@ -44,27 +44,14 @@ extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
     // Validate paid amount doesn't exceed total payable
     {
       final paidAmount = advanceAmountController.text.trim().toIntOrNull() ?? 0;
-      final discountInput =
-          discountAmountController.text.trim().toIntOrNull() ?? 0;
-      final additionalCharges = additionalChargesNotifier.value;
-      final additionalTotal = additionalCharges.fold<int>(
-        0,
-        (sum, charge) => sum + (charge.amount ?? 0),
+      final totalPayable = PaymentCalculator.calculateBookingTotalPayable(
+        selectedProducts: products,
+        additionalCharges: additionalChargesNotifier.value,
+        discountAmount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+        isDiscountPercentage: isDiscountPercentage,
+        bookingType: selectedBookingType,
+        effectiveRentalDays: _calculateRentalDays(),
       );
-      final isSaleType = selectedBookingType == BookingType.sales;
-      final summaryRentalDays = !isSaleType ? _calculateRentalDays() : 1;
-      final productTotal = products.fold<int>(0, (sum, product) {
-        final daysMultiplier =
-            (!isSaleType &&
-                _shouldMultiplyByDays(product.variant.mainServiceType))
-            ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-            : 1;
-        return sum + (product.amount * product.quantity * daysMultiplier);
-      });
-      final actualDiscount = isDiscountPercentage
-          ? ((productTotal + additionalTotal) * discountInput / 100).round()
-          : discountInput;
-      final totalPayable = productTotal + additionalTotal - actualDiscount;
       if (paidAmount > totalPayable) {
         context.showSnackBar(
           'Paid amount ($paidAmount) cannot be greater than total payable amount ($totalPayable)',
