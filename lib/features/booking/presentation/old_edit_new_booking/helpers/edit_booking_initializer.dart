@@ -5,36 +5,19 @@ extension EditBookingInitializer on OldEditNewBookingScreenState {
   // Phone field population
   // ---------------------------------------------------------------------------
 
-  void _setPhoneFieldValue(
-    PhoneController phoneController,
-    TextEditingController textController, {
-    String? phoneNumber,
-    String? e164,
-  }) {
-    final phone = phoneNumberFromData(phoneNumber: phoneNumber, e164: e164);
-    phoneController.value =
-        phone ?? PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: '');
-    final digits = normalizePhoneDigits(phone?.nsn ?? phoneNumber);
-    cachePhoneE164(rawPhoneNumber: digits, e164: phoneNumberToE164(phone));
-    textController.value = TextEditingValue(
-      text: digits,
-      selection: TextSelection.collapsed(offset: digits.length),
-    );
-  }
-
   void _populateClientPhones({
     required String? phone1,
     String? phone1E164,
     String? phone2,
     String? phone2E164,
   }) {
-    _setPhoneFieldValue(
+    BookingPhonePopulator.setPhoneFieldValue(
       _clientPhone1FieldController,
       clientPhone1Controller,
       phoneNumber: phone1,
       e164: phone1E164,
     );
-    _setPhoneFieldValue(
+    BookingPhonePopulator.setPhoneFieldValue(
       _clientPhone2FieldController,
       clientPhone2Controller,
       phoneNumber: phone2,
@@ -398,27 +381,6 @@ extension EditBookingInitializer on OldEditNewBookingScreenState {
     if (hour == null || minute == null) return null;
 
     return TimeOfDay(hour: hour, minute: minute);
-  }
-
-  /// Extracts a [TimeOfDay] from a raw date-time string (e.g. "DD-MM-YYYY HH:mm:ss").
-  /// Returns null when no explicit time component is present or when the time
-  /// matches the sentinel 23:59 (treated as "no time selected").
-  TimeOfDay? _extractSelectedTime(String? rawDateTime) {
-    if (rawDateTime == null || rawDateTime.trim().isEmpty) return null;
-
-    final normalized = rawDateTime.trim();
-    final hasExplicitTime =
-        normalized.contains('T') ||
-        normalized.contains(RegExp(r'\s\d{1,2}:\d{2}'));
-    if (!hasExplicitTime) return null;
-
-    final parsedTime = normalized.parseToDateTime().toTimeOfDay;
-    if (parsedTime.hour == OldEditNewBookingScreenState._defaultUnselectedTime.hour &&
-        parsedTime.minute == OldEditNewBookingScreenState._defaultUnselectedTime.minute) {
-      return null;
-    }
-
-    return parsedTime;
   }
 
   /// Extracts the filename from a URL path segment.

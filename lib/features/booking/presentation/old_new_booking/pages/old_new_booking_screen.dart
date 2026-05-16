@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
-import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
@@ -20,8 +22,11 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/booking_fo
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_request_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
@@ -72,10 +77,6 @@ part '../widgets/product_search_helper.dart';
 part '../widgets/product_filter_dialog.dart';
 part '../widgets/booking_date_section_widget.dart';
 part '../widgets/booking_success_dialog.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_mapper.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_stock_validator.dart';
-// import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 
 class OldNewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -148,6 +149,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
   // SelectProductBloc for inline search
   late SelectProductBloc _selectProductBloc;
 
+  // Product loading coordinator — owns debouncer; replaces _loadProductsDebouncer
+  late BookingProductLoader _productLoader;
+
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
@@ -212,9 +216,6 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
   // Customization state
   bool showCustomization = false;
-  final _loadProductsDebouncer = Debouncer(
-    delay: const Duration(milliseconds: 300),
-  );
 
   // Summary expansion state
   bool _isSummaryExpanded = false;
@@ -237,6 +238,7 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       getProducts: getIt(),
       searchAndFilterProducts: getIt(),
     );
+    _productLoader = BookingProductLoader(selectProductBloc: _selectProductBloc);
 
     // Add listener to client name controller to detect manual changes
     clientNameController.addListener(_onClientNameChanged);
@@ -540,14 +542,9 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
         _phone2Error = clientResult.fieldErrors['phone2'];
         _staffNameError = clientResult.fieldErrors['staff'];
       });
-      context.showSnackBar(
-        clientResult.errors.join(', '),
-        isError: true,
-        title: 'Validation Error',
-      );
+      BookingValidationHelper.showValidationErrors(context, clientResult);
     }
   }
-
 
 
 
@@ -558,17 +555,17 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
     returnTime: returnTime,
   );
 
-  int _getEffectiveRentalDays() {
-    final baseDays = _calculateRentalDays();
-    final totalDays = baseDays + _manualExtraRentalDays;
-    return totalDays > 0 ? totalDays : 1;
-  }
+  int _getEffectiveRentalDays() => PaymentCalculator.getEffectiveRentalDays(
+    baseDays: _calculateRentalDays(),
+    manualExtraRentalDays: _manualExtraRentalDays,
+  );
 
-  int _getDaysMultiplierForProduct(ProductSelectedEntity product) {
-    if (selectedBookingType == BookingType.sales) return 1;
-    if (!_shouldMultiplyByDays(product.variant.mainServiceType)) return 1;
-    return _getEffectiveRentalDays();
-  }
+  int _getDaysMultiplierForProduct(ProductSelectedEntity product) =>
+      PaymentCalculator.getDaysMultiplierForProduct(
+        product: product,
+        bookingType: selectedBookingType,
+        effectiveRentalDays: _getEffectiveRentalDays(),
+      );
 
   void _incrementRentalDays() {
     setState(() {
@@ -606,53 +603,16 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
 
 
   void _loadProductsForService(int? serviceId) {
-    _loadProductsDebouncer.run(() {
-      _loadProductsInternal(serviceId);
-    });
-  }
-
-  void _loadProductsInternal(int? serviceId) {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isBooking = selectedBookingType == BookingType.booking;
-    // If "All Services" is selected (-1), pass null to API
-    final serviceIdToUse = (serviceId == null || serviceId == -1)
-        ? null
-        : serviceId;
-
-    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+    _productLoader.load(
+      bookingType: selectedBookingType,
+      selectedServiceId: serviceId,
       pickupDate: pickupDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
       returnDate: returnDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-
-    log(
-      '📦 Loading products - pickupDate: ${pickupDate.format()}, effectivePickupDate: ${effectivePickupDate.format()}, returnDate: $effectiveReturnDate, coolingPeriodDays: $coolingPeriodDays, coolingMode: ${coolingPeriodMode.value}, isBooking: $isBooking',
-    );
-
-    // Include selected variant IDs so the single API call also checks their availability.
-    final currentVariantIds = selectedProductsNotifier.value
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
-
-    _selectProductBloc.add(
-      SelectProductEvent.loadProducts(
-        serviceId: serviceIdToUse,
-        pickupDate: effectivePickupDate.format(),
-        returnDate: effectiveReturnDate,
-        pickupTime: pickupTime,
-        returnTime: returnTime,
-        useAvailableProductsApi: isBooking,
-        isSales: isSales,
-        variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null,
-      ),
+      pickupTime: pickupTime,
+      returnTime: returnTime,
+      coolingPeriodDays: coolingPeriodDays,
+      coolingPeriodMode: coolingPeriodMode,
+      selectedProducts: selectedProductsNotifier.value,
     );
   }
 
@@ -1088,5 +1048,4 @@ class OldNewBookingScreenState extends State<OldNewBookingScreen> {
       isPastDate: _isPastDate(),
     );
   }
-
 }

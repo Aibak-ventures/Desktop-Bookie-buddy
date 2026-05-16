@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart'
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -183,10 +184,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   bool _shouldMultiplyByDays(MainServiceType? serviceType) {
-    return serviceType == MainServiceType.vehicle ||
-        serviceType == MainServiceType.gadgets ||
-        serviceType == MainServiceType.equipment ||
-        serviceType == MainServiceType.costume;
+    return PaymentCalculator.shouldMultiplyByDays(serviceType);
   }
 
   Widget _buildProductRow(ProductSelectedEntity product) {
