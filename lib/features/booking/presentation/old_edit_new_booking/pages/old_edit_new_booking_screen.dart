@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿﻿import 'dart:developer';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
@@ -59,7 +59,6 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
@@ -89,8 +88,6 @@ class OldEditNewBookingScreen extends StatefulWidget {
 }
 
 class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
-  static const _defaultUnselectedTime = TimeOfDay(hour: 23, minute: 59);
-
   // Current selected tab
   BookingType selectedBookingType = BookingType.booking;
 
@@ -1123,45 +1120,13 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     },
                   ),
                   const SizedBox(height: _fieldSpacing),
-                  // Place
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'place',
                     focusNode: _clientAddressFocusNode,
                     nextFocusNode: null, // Last field
                   ),
-
                   const SizedBox(height: _fieldSpacing),
-                  // const SizedBox(height: 16),
-                  // WhatsApp Checkbox - Hidden in edit mode
-                  // Row(
-                  //   children: [
-                  //     SizedBox(
-                  //       width: 24,
-                  //       height: 24,
-                  //       child: Checkbox(
-                  //         value: sendPdfToWhatsApp,
-                  //         onChanged: (v) =>
-                  //             setState(() => sendPdfToWhatsApp = v ?? false),
-                  //         activeColor: Colors.black87,
-                  //         shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(4)),
-                  //       ),
-                  //     ),
-                  //     const SizedBox(width: 8),
-                  //     Text(
-                  //       'Send invoice to whatsapp',
-                  //       style: TextStyle(
-                  //         fontSize: 13,
-                  //         color: Colors.grey.shade600,
-                  //         fontFamily: 'Inter',
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-
-                  // const SizedBox(height: 7),
-
                   // Upload documents - Only for Booking mode
                   if (selectedBookingType == BookingType.booking) ...[
                     const SizedBox(height: 8),
@@ -1170,8 +1135,6 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     ),
                     const SizedBox(height: 7),
                   ],
-
-                  // Staff Details
                   const Text(
                     'Staff details',
                     style: TextStyle(
@@ -1181,19 +1144,13 @@ class OldEditNewBookingScreenState extends State<OldEditNewBookingScreen> {
                     ),
                   ),
                   const SizedBox(height: 7),
-
                   StaffSearchNameField(
                     nameController: staffNameController,
                     errorText: _staffNameError,
                   ),
-
                   const SizedBox(height: 7),
-
-                  // Notes
                   BookingNotesField(controller: descriptionController),
-
-                  const SizedBox(height: 7),
-
+    const SizedBox(height: 7),
                   // Running Kilometers - Only for Vehicles
                   ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
