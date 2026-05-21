@@ -27,9 +27,9 @@ class AllBookingsSalesTableRow extends StatelessWidget {
               SalesDetailsEvent.fetchSaleDetails(sale.id),
             );
           },
-          hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
-          splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
-          highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
+          hoverColor: const Color(0xFF8A63FE).withValues(alpha: 0.08),
+          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.12),
+          highlightColor: const Color(0xFF8A63FE).withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(

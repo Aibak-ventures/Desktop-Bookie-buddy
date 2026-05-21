@@ -31,7 +31,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -51,8 +50,10 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_success_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
@@ -64,12 +65,10 @@ import 'package:phone_form_field/phone_form_field.dart';
 import '../helpers/web_helper_stub.dart'
     if (dart.library.html) '../helpers/web_helper_web.dart'
     as web_helper;
-part '../helpers/booking_phone_helper.dart';
 part '../widgets/booking_content_widget.dart';
 part '../widgets/sales_content_widget.dart';
 part '../widgets/old_booking_content_widget.dart';
 part '../widgets/product_search_helper.dart';
-part '../widgets/product_filter_dialog.dart';
 part '../widgets/booking_date_section_widget.dart';
 
 class NewBookingScreen extends StatefulWidget {
@@ -658,14 +657,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       selectedAccount: selectedAdvanceAccount,
       onChanged: (account) => setState(() => selectedAdvanceAccount = account),
       label: label,
-    );
-  }
-
-  Widget _buildSecurityPaymentMethodSelector() {
-    return AccountSelectionField(
-      selectedAccount: selectedSecurityAccount,
-      onChanged: (account) => setState(() => selectedSecurityAccount = account),
-      label: 'Security Payment Option',
     );
   }
 

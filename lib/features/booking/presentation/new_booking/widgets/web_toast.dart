@@ -31,7 +31,7 @@ class WebToast extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               blurRadius: 12,
-              color: Colors.black.withOpacity(.12),
+              color: Colors.black.withValues(alpha: .12),
             ),
           ],
         ),

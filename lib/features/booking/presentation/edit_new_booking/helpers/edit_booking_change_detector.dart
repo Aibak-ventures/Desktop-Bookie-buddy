@@ -1,4 +1,4 @@
-part of '../pages/edit_new_booking_screen.dart';
+﻿part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingChangeDetector on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
@@ -35,15 +35,15 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     final currentReturnDate = returnDate.format().appendTimeToDate(
       time: returnTime,
     );
-    final originalPickupDateStr = _originalPickupDate
+    final _originalPickupDateStr = _originalPickupDate
         ?.format()
         .appendTimeToDate(time: _originalPickupTime);
-    final originalReturnDateStr = _originalReturnDate
+    final _originalReturnDateStr = _originalReturnDate
         ?.format()
         .appendTimeToDate(time: _originalReturnTime);
 
-    return currentPickupDate != originalPickupDateStr ||
-        currentReturnDate != originalReturnDateStr;
+    return currentPickupDate != _originalPickupDateStr ||
+        currentReturnDate != _originalReturnDateStr;
   }
 
   bool _hasClientChanged() {
@@ -65,8 +65,8 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
         currentClientPhone1 != (_originalClientPhone1 ?? '') ||
         (currentClientPhone2.isNotEmpty &&
             currentClientPhone2 != (_originalClientPhone2 ?? '')) ||
-        currentPhone1E164 != _originalClientPhone1E164 ||
-        currentPhone2E164 != _originalClientPhone2E164 ||
+        currentPhone1E164 != __originalClientPhone1E164 ||
+        currentPhone2E164 != __originalClientPhone2E164 ||
         currentClientAddress != (_originalClientAddress ?? '');
   }
 

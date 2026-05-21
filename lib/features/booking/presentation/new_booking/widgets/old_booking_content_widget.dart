@@ -50,15 +50,21 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                       if (state.selectedClient != null) {
                         final client = state.selectedClient!;
                         clientNameController.text = client.name;
-                        _populateClientPhones(
-                          phone1: client.phone1 > 0
+                        BookingPhonePopulator.setPhoneFieldValue(
+                          _clientPhone1FieldController,
+                          clientPhone1Controller,
+                          phoneNumber: client.phone1 > 0
                               ? client.phone1.toString()
                               : null,
-                          phone1E164: client.phone1E164,
-                          phone2: (client.phone2 ?? 0) > 0
+                          e164: client.phone1E164,
+                        );
+                        BookingPhonePopulator.setPhoneFieldValue(
+                          _clientPhone2FieldController,
+                          clientPhone2Controller,
+                          phoneNumber: (client.phone2 ?? 0) > 0
                               ? client.phone2.toString()
                               : null,
-                          phone2E164: client.phone2E164,
+                          e164: client.phone2E164,
                         );
                         selectedClientId = client.id;
                       }
@@ -179,7 +185,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),

@@ -46,13 +46,13 @@ class BookingDetailsDrawer extends StatelessWidget {
               onTap: () {},
               child: Material(
                 elevation: 16,
-                shadowColor: Colors.black.withOpacity(0.3),
+                shadowColor: Colors.black.withValues(alpha: 0.3),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 20,
                         offset: const Offset(-4, 0),
                       ),

@@ -1,4 +1,4 @@
-
+﻿
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
@@ -34,13 +35,13 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
@@ -203,8 +204,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? _originalClientName;
   String? _originalClientPhone1;
   String? _originalClientPhone2;
-  String? _originalClientPhone1E164;
-  String? _originalClientPhone2E164;
+  String? __originalClientPhone1E164;
+  String? __originalClientPhone2E164;
   String? _originalClientAddress;
   int? _originalStaffId;
   int? _originalAdvanceAmount;
@@ -390,48 +391,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   // BOOKING & SALES - Same UI with conditional fields
   Widget _buildBookingContent() {
     return BookingTwoPanelLayout(
-      left: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDateSelectionSection(),
-          const SizedBox(height: 16),
-          Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                final offsetAnimation = Tween<Offset>(
-                  begin: child.key == const ValueKey('customization')
-                      ? const Offset(1.0, 0.0)
-                      : const Offset(-1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(animation);
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-              child: showCustomization
-                  ? ProductCustomizationWidget(
-                      key: const ValueKey('customization'),
-                      onBack: () => rebuild(() => showCustomization = false),
-                      onSaveForProduct: (product, measurements) {
-                        rebuild(() {
-                          selectedProductsNotifier.value =
-                              SelectedProductsManager.updateMeasurements(
-                                currentProducts: selectedProductsNotifier.value,
-                                updatedProduct: product,
-                                measurements: measurements,
-                              );
-                        });
-                      },
-                      selectedProducts: selectedProductsNotifier.value,
-                    )
-                  : Container(
-                      key: const ValueKey('products'),
-                      child: _buildServiceSelectionSection(),
-                    ),
-            ),
-          ),
-        ],
+      left: BookingLeftPanel(
+        dateSection: _buildDateSelectionSection(),
+        serviceSection: _buildServiceSelectionSection(),
+        showCustomization: showCustomization,
+        customizationProducts: selectedProductsNotifier.value,
+        onBackFromCustomization: () => rebuild(() => showCustomization = false),
+        onSaveCustomization: (product, measurements) {
+          rebuild(() {
+            selectedProductsNotifier.value =
+                SelectedProductsManager.updateMeasurements(
+                  currentProducts: selectedProductsNotifier.value,
+                  updatedProduct: product,
+                  measurements: measurements,
+                );
+          });
+        },
       ),
       right: _buildRightSidePanel(),
     );
@@ -985,11 +960,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         if (state.selectedClient != null) {
           final client = state.selectedClient!;
           clientNameController.text = client.name;
-          _populateClientPhones(
-            phone1: client.phone1 > 0 ? client.phone1.toString() : null,
-            phone1E164: client.phone1E164,
-            phone2: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
-            phone2E164: client.phone2E164,
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone1FieldController,
+            clientPhone1Controller,
+            phoneNumber: client.phone1 > 0 ? client.phone1.toString() : null,
+            e164: client.phone1E164,
+          );
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone2FieldController,
+            clientPhone2Controller,
+            phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
+            e164: client.phone2E164,
           );
           selectedClientId = client.id;
         }
@@ -1000,7 +981,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         hitText: 'Search client by name',
         onClear: () {
           clientNameController.clear();
-          _populateClientPhones(phone1: null, phone2: null);
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone1FieldController,
+            clientPhone1Controller,
+            phoneNumber: null,
+            e164: null,
+          );
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone2FieldController,
+            clientPhone2Controller,
+            phoneNumber: null,
+            e164: null,
+          );
           clientAddressController.clear();
           selectedClientId = null;
         },
@@ -1200,7 +1192,12 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  _buildSecurityPaymentMethodSelector(),
+                  AccountSelectionField(
+                    selectedAccount: selectedSecurityAccount,
+                    initialAccountId: widget.bookingDetails?.securityAccountId,
+                    onChanged: (account) => rebuild(() => selectedSecurityAccount = account),
+                    label: 'Security Payment Option',
+                  ),
                   const SizedBox(height: 8),
                 ],
               );
@@ -1413,15 +1410,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           _buildSummarySection(),
         ],
       ),
-    );
-  }
-
-  Widget _buildSecurityPaymentMethodSelector() {
-    return AccountSelectionField(
-      selectedAccount: selectedSecurityAccount,
-      initialAccountId: widget.bookingDetails?.securityAccountId,
-      onChanged: (account) => setState(() => selectedSecurityAccount = account),
-      label: 'Security Payment Option',
     );
   }
 }

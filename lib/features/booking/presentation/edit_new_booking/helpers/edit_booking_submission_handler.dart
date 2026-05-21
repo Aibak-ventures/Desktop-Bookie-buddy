@@ -1,4 +1,4 @@
-part of '../pages/edit_new_booking_screen.dart';
+﻿part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
