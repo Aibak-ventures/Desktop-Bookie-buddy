@@ -135,7 +135,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                       color: transaction.isRefund
                           ? Colors
                                 .transparent // No background for refunds
-                          : AppColors.purple.withOpacity(
+                          : AppColors.purple.withValues(alpha: 
                               0.05,
                             ), // Light purple for payments
                     ),

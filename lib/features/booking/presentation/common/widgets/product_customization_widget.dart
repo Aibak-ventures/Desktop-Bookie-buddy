@@ -363,7 +363,7 @@ class _ProductCustomizationWidgetState
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C5CE7).withOpacity(0.1),
+                        color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Icon(
@@ -831,7 +831,7 @@ class _ProductCustomizationWidgetState
                                         : product.measurements.isNotEmpty
                                         ? const Color(
                                             0xFF6C5CE7,
-                                          ).withOpacity(0.7)
+                                          ).withValues(alpha: 0.7)
                                         : const Color(0xFF636E72),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(

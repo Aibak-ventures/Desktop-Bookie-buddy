@@ -174,7 +174,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
+                    color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(

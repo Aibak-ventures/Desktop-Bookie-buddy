@@ -36,9 +36,9 @@ class AllBookingsBookingTableRow extends StatelessWidget {
               BookingDetailsEvent.fetchBookingDetails(booking.id),
             );
           },
-          hoverColor: const Color(0xFF8A63FE).withOpacity(0.08),
-          splashColor: const Color(0xFF8A63FE).withOpacity(0.12),
-          highlightColor: const Color(0xFF8A63FE).withOpacity(0.1),
+          hoverColor: const Color(0xFF8A63FE).withValues(alpha: 0.08),
+          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.12),
+          highlightColor: const Color(0xFF8A63FE).withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -65,7 +65,7 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: status.color.withOpacity(0.1),
+                      color: status.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -120,8 +120,8 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
                       color: booking.paymentStatus
-                          ? const Color(0xFF20D400).withOpacity(0.1)
-                          : const Color(0xFFD4B800).withOpacity(0.1),
+                          ? const Color(0xFF20D400).withValues(alpha: 0.1)
+                          : const Color(0xFFD4B800).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(

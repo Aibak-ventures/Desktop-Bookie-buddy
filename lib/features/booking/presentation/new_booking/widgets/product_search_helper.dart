@@ -318,7 +318,93 @@ extension ProductSearchBuilders on NewBookingScreenState {
             },
             onFilterTap: () {
               _removeSearchOverlay();
-              _showProductFilterBottomSheet();
+              final currentProducts = _selectProductBloc.state.maybeWhen(
+                loaded: (
+                  products,
+                  nextPageUrl,
+                  serviceId,
+                  pickupDate,
+                  returnDate,
+                  isPaginating,
+                  isSearching,
+                  searchQuery,
+                  searchType,
+                  startPrice,
+                  endPrice,
+                  pickupTime,
+                  returnTime,
+                  useAvailableProductsApi,
+                  isSales,
+                ) => products,
+                orElse: () => <ProductEntity>[],
+              );
+              if (currentProducts.isNotEmpty) {
+                double maxProductPrice = 0;
+                for (final product in currentProducts) {
+                  final productPrice = product.price ?? 0;
+                  if (productPrice > maxProductPrice) {
+                    maxProductPrice = productPrice.toDouble();
+                  }
+                  for (final variant in product.variants) {
+                    final variantPrice = variant.price ?? 0;
+                    if (variantPrice > maxProductPrice) {
+                      maxProductPrice = variantPrice.toDouble();
+                    }
+                  }
+                }
+                if (maxProductPrice > _maxPriceNotifier.value) {
+                  _maxPriceNotifier.value = maxProductPrice;
+                  _priceRange.value = RangeValues(0, maxProductPrice);
+                }
+              }
+              final servicesState = context.read<ServiceBloc>().state;
+              List<ServiceEntity> services = [];
+              servicesState.whenOrNull(loaded: (s) => services = s);
+              services = services
+                  .where(
+                    (s) => !s.mainServiceName.toLowerCase().contains(
+                      'material',
+                    ),
+                  )
+                  .toList();
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_) => ProductFilterDialog(
+                  services: services,
+                  searchTypes: _searchTypes,
+                  initialServiceId: selectedServiceId,
+                  initialSearchTypeIndex: _selectedSearchTypeIndex.value,
+                  initialPriceRange: _priceRange.value,
+                  initialMaxPrice: _maxPriceNotifier.value,
+                  initialIsPriceFilterEnabled: _isPriceFilterEnabled.value,
+                  computeSearchTypes: (serviceId) {
+                    _updateSearchTypesForService(serviceId);
+                    return _searchTypes;
+                  },
+                  onApply: ({
+                    required serviceId,
+                    required searchTypeIndex,
+                    required priceRange,
+                    required maxPrice,
+                    required isPriceFilterEnabled,
+                  }) {
+                    rebuild(() {
+                      selectedServiceId = serviceId;
+                      _selectedSearchTypeIndex.value = searchTypeIndex;
+                      _priceRange.value = priceRange;
+                      _maxPriceNotifier.value = maxPrice;
+                      _isPriceFilterEnabled.value = isPriceFilterEnabled;
+                      _updateSearchTypesForService(serviceId);
+                    });
+                    _applyProductFilters(
+                      searchTypeIndex,
+                      priceRange,
+                      isPriceFilterEnabled,
+                    );
+                  },
+                ),
+              );
             },
           ),
         );
@@ -423,5 +509,60 @@ extension ProductSearchBuilders on NewBookingScreenState {
 
   FocusNode _getOverlayItemFocusNode(int index) {
     return _overlayItemFocusNodes.putIfAbsent(index, FocusNode.new);
+  }
+
+  void _applyProductFilters(
+    int searchTypeIndex,
+    RangeValues priceRange,
+    bool isPriceEnabled,
+  ) {
+    _isPriceFilterEnabled.value = isPriceEnabled;
+    final searchTerm = serviceSearchController.text.trim().toLowerCase();
+    final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
+
+    final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
+        ? returnDate.add(Duration(days: coolingPeriodDays)).format()
+        : returnDate.format();
+
+    final searchType =
+        BookingSearchRules.resolveSearchType(
+          searchTypeIndex,
+          serviceType: _currentServiceType,
+        ) ??
+        'name';
+
+    final hasSearchQuery = searchTerm.isNotEmpty;
+    final hasAnyFilter = hasSearchQuery || isPriceEnabled;
+
+    if (hasAnyFilter) {
+      _selectProductBloc.add(
+        SelectProductEvent.searchProducts(
+          serviceId: selectedServiceId == -1 ? null : selectedServiceId,
+          query: hasSearchQuery ? searchTerm : null,
+          type: hasSearchQuery ? searchType : null,
+          startPrice: isPriceEnabled ? priceRange.start.round() : null,
+          endPrice: isPriceEnabled ? priceRange.end.round() : null,
+          pickupDate: pickupDate.format(),
+          returnDate: effectiveReturnDate,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
+          isSales: isSales,
+        ),
+      );
+    } else {
+      _selectProductBloc.add(
+        SelectProductEvent.loadProducts(
+          serviceId: selectedServiceId == -1 ? null : selectedServiceId,
+          pickupDate: pickupDate.format(),
+          returnDate: effectiveReturnDate,
+          pickupTime: pickupTime,
+          returnTime: returnTime,
+          useAvailableProductsApi: selectedBookingType == BookingType.booking,
+          isSales: isSales,
+        ),
+      );
+    }
   }
 }

@@ -272,7 +272,7 @@ class _BookingPaymentSummaryPanelState
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withOpacity(0.1),
+                            color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
@@ -304,12 +304,12 @@ class _BookingPaymentSummaryPanelState
                               border: Border.all(
                                 color: const Color(
                                   0xFF6132E4,
-                                ).withOpacity(0.2),
+                                ).withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
+                                  color: Colors.black.withValues(alpha: 0.03),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
@@ -339,7 +339,7 @@ class _BookingPaymentSummaryPanelState
                                       decoration: BoxDecoration(
                                         color: const Color(
                                           0xFF6132E4,
-                                        ).withOpacity(0.1),
+                                        ).withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -390,7 +390,7 @@ class _BookingPaymentSummaryPanelState
               color: Colors.transparent,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),
@@ -486,7 +486,7 @@ class _BookingPaymentSummaryPanelState
             ),
             borderRadius: BorderRadius.circular(8),
             color: isSelected
-                ? const Color(0xFF6132E4).withOpacity(0.05)
+                ? const Color(0xFF6132E4).withValues(alpha: 0.05)
                 : Colors.white,
           ),
           child: Row(
@@ -544,7 +544,7 @@ class _BookingPaymentSummaryPanelState
             ),
             borderRadius: BorderRadius.circular(8),
             color: isSelected
-                ? const Color(0xFF6132E4).withOpacity(0.05)
+                ? const Color(0xFF6132E4).withValues(alpha: 0.05)
                 : Colors.white,
           ),
           child: Row(

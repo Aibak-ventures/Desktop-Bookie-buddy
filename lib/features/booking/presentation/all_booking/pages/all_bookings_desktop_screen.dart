@@ -359,14 +359,14 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                       child: Material(
                         elevation: isActive ? 3 : 1,
                         shadowColor: isActive
-                            ? const Color(0xFF8A63FE).withOpacity(0.3)
-                            : Colors.grey.withOpacity(0.2),
+                            ? const Color(0xFF8A63FE).withValues(alpha: 0.3)
+                            : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
                           onTap: () => _onStatusTabChanged(displayLabel),
                           borderRadius: BorderRadius.circular(8),
-                          hoverColor: const Color(0xFFE7E4FF).withOpacity(0.5),
-                          splashColor: const Color(0xFF8A63FE).withOpacity(0.2),
+                          hoverColor: const Color(0xFFE7E4FF).withValues(alpha: 0.5),
+                          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.2),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
@@ -381,7 +381,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                               border: Border.all(
                                 width: isActive ? 1.5 : 1,
                                 color: isActive
-                                    ? const Color(0xFF8A63FE).withOpacity(0.3)
+                                    ? const Color(0xFF8A63FE).withValues(alpha: 0.3)
                                     : Colors.grey.shade300,
                               ),
                             ),
@@ -445,7 +445,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       width: 350,
       height: 40,
       decoration: BoxDecoration(
-        color: const Color(0xFFE7E4FF).withOpacity(0.3),
+        color: const Color(0xFFE7E4FF).withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey.shade300),
       ),

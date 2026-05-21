@@ -188,7 +188,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: showFocus
-              ? const Color(0xFF6132E4).withOpacity(0.08)
+              ? const Color(0xFF6132E4).withValues(alpha: 0.08)
               : Colors.transparent,
           border: Border(
             left: BorderSide(

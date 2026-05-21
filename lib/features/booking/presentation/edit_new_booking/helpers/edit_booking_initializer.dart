@@ -1,30 +1,6 @@
-part of '../pages/edit_new_booking_screen.dart';
+﻿part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingInitializer on EditNewBookingScreenState {
-  // ---------------------------------------------------------------------------
-  // Phone field population
-  // ---------------------------------------------------------------------------
-
-  void _populateClientPhones({
-    required String? phone1,
-    String? phone1E164,
-    String? phone2,
-    String? phone2E164,
-  }) {
-    BookingPhonePopulator.setPhoneFieldValue(
-      _clientPhone1FieldController,
-      clientPhone1Controller,
-      phoneNumber: phone1,
-      e164: phone1E164,
-    );
-    BookingPhonePopulator.setPhoneFieldValue(
-      _clientPhone2FieldController,
-      clientPhone2Controller,
-      phoneNumber: phone2,
-      e164: phone2E164,
-    );
-  }
-
   // ---------------------------------------------------------------------------
   // Booking initialization
   // ---------------------------------------------------------------------------
@@ -88,15 +64,21 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     // phone1/phone2 are non-nullable ints in ClientEntity but the API may return null,
     // in which case the entity defaults to 0. Check > 0 before trusting the raw int,
     // and fall back to extracting from the E.164 string.
-    _populateClientPhones(
-      phone1: booking.client.phone1 > 0
+    BookingPhonePopulator.setPhoneFieldValue(
+      _clientPhone1FieldController,
+      clientPhone1Controller,
+      phoneNumber: booking.client.phone1 > 0
           ? booking.client.phone1.toString()
           : null,
-      phone1E164: booking.client.phone1E164,
-      phone2: (booking.client.phone2 ?? 0) > 0
+      e164: booking.client.phone1E164,
+    );
+    BookingPhonePopulator.setPhoneFieldValue(
+      _clientPhone2FieldController,
+      clientPhone2Controller,
+      phoneNumber: (booking.client.phone2 ?? 0) > 0
           ? booking.client.phone2.toString()
           : null,
-      phone2E164: booking.client.phone2E164,
+      e164: booking.client.phone2E164,
     );
     if (booking.address != null) {
       clientAddressController.text = booking.address!;
@@ -215,14 +197,20 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     // Set client details
     final saleClient = sale.client;
     if (saleClient != null) {
-      _populateClientPhones(
-        phone1: saleClient.phone1 > 0 ? saleClient.phone1.toString() : null,
-        phone1E164: saleClient.phone1E164,
+      BookingPhonePopulator.setPhoneFieldValue(
+        _clientPhone1FieldController,
+        clientPhone1Controller,
+        phoneNumber: saleClient.phone1 > 0 ? saleClient.phone1.toString() : null,
+        e164: saleClient.phone1E164,
       );
     } else if (sale.clientPhone != null) {
       final phoneStr = sale.clientPhone.toString();
       if (phoneStr.isNotEmpty) {
-        _populateClientPhones(phone1: phoneStr);
+        BookingPhonePopulator.setPhoneFieldValue(
+          _clientPhone1FieldController,
+          clientPhone1Controller,
+          phoneNumber: phoneStr,
+        );
       }
     }
     if (sale.address.isNotEmpty) {
@@ -308,8 +296,8 @@ extension EditBookingInitializer on EditNewBookingScreenState {
                   booking.client.phone2E164!.isNotEmpty
               ? _extractPhoneFromE164(booking.client.phone2E164!)
               : null);
-    _originalClientPhone1E164 = booking.client.phone1E164;
-    _originalClientPhone2E164 = booking.client.phone2E164;
+    __originalClientPhone1E164 = booking.client.phone1E164;
+    __originalClientPhone2E164 = booking.client.phone2E164;
     _originalClientAddress = booking.address;
 
     _originalStaffId = booking.staffId;

@@ -5,54 +5,28 @@ part of '../pages/new_booking_screen.dart';
 extension BookingFlowBuilders on NewBookingScreenState {
   Widget _buildBookingContent() {
     return BookingTwoPanelLayout(
-      left: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDateSelectionSection(),
-          const SizedBox(height: 16),
-          Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                final offsetAnimation = Tween<Offset>(
-                  begin: child.key == const ValueKey('customization')
-                      ? const Offset(1.0, 0.0)
-                      : const Offset(-1.0, 0.0),
-                  end: Offset.zero,
-                ).animate(animation);
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-              child: showCustomization
-                  ? ProductCustomizationWidget(
-                      key: const ValueKey('customization'),
-                      onBack: () => rebuild(() => showCustomization = false),
-                      onSaveForProduct: (product, measurements) {
-                        rebuild(() {
-                          selectedProductsNotifier.value =
-                              SelectedProductsManager.updateMeasurements(
-                                currentProducts: selectedProductsNotifier.value,
-                                updatedProduct: product,
-                                measurements: measurements,
-                              );
-                        });
-                      },
-                      selectedProducts: selectedProductsNotifier.value
-                          .where(
-                            (p) =>
-                                (p.variant.mainServiceType?.isDress ?? false) ||
-                                (p.variant.mainServiceType?.isCostume ?? false),
-                          )
-                          .toList(),
-                    )
-                  : Container(
-                      key: const ValueKey('products'),
-                      child: _buildServiceSelectionSection(),
-                    ),
-            ),
-          ),
-        ],
+      left: BookingLeftPanel(
+        dateSection: _buildDateSelectionSection(),
+        serviceSection: _buildServiceSelectionSection(),
+        showCustomization: showCustomization,
+        customizationProducts: selectedProductsNotifier.value
+            .where(
+              (p) =>
+                  (p.variant.mainServiceType?.isDress ?? false) ||
+                  (p.variant.mainServiceType?.isCostume ?? false),
+            )
+            .toList(),
+        onBackFromCustomization: () => rebuild(() => showCustomization = false),
+        onSaveCustomization: (product, measurements) {
+          rebuild(() {
+            selectedProductsNotifier.value =
+                SelectedProductsManager.updateMeasurements(
+                  currentProducts: selectedProductsNotifier.value,
+                  updatedProduct: product,
+                  measurements: measurements,
+                );
+          });
+        },
       ),
       right: _buildRightSidePanel(),
     );
@@ -116,15 +90,21 @@ extension BookingFlowBuilders on NewBookingScreenState {
                           final client = state.selectedClient!;
                           // Auto-fill fields
                           clientNameController.text = client.name;
-                          _populateClientPhones(
-                            phone1: client.phone1 > 0
+                          BookingPhonePopulator.setPhoneFieldValue(
+                            _clientPhone1FieldController,
+                            clientPhone1Controller,
+                            phoneNumber: client.phone1 > 0
                                 ? client.phone1.toString()
                                 : null,
-                            phone1E164: client.phone1E164,
-                            phone2: (client.phone2 ?? 0) > 0
+                            e164: client.phone1E164,
+                          );
+                          BookingPhonePopulator.setPhoneFieldValue(
+                            _clientPhone2FieldController,
+                            clientPhone2Controller,
+                            phoneNumber: (client.phone2 ?? 0) > 0
                                 ? client.phone2.toString()
                                 : null,
-                            phone2E164: client.phone2E164,
+                            e164: client.phone2E164,
                           );
                           // Store selected client ID
                           selectedClientId = client.id;
@@ -137,7 +117,18 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         onClear: () {
                           // Clear all client fields when search is cleared
                           clientNameController.clear();
-                          _populateClientPhones(phone1: null, phone2: null);
+                          BookingPhonePopulator.setPhoneFieldValue(
+                            _clientPhone1FieldController,
+                            clientPhone1Controller,
+                            phoneNumber: null,
+                            e164: null,
+                          );
+                          BookingPhonePopulator.setPhoneFieldValue(
+                            _clientPhone2FieldController,
+                            clientPhone2Controller,
+                            phoneNumber: null,
+                            e164: null,
+                          );
                           clientAddressController.clear();
                           selectedClientId = null;
                         },
@@ -363,7 +354,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF6132E4).withOpacity(0.2),
+                      color: const Color(0xFF6132E4).withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -624,7 +615,11 @@ extension BookingFlowBuilders on NewBookingScreenState {
                           value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
                       if (hasSecurityAmount) {
-                        return _buildSecurityPaymentMethodSelector();
+                        return AccountSelectionField(
+                          selectedAccount: selectedSecurityAccount,
+                          onChanged: (account) => rebuild(() => selectedSecurityAccount = account),
+                          label: 'Security Payment Option',
+                        );
                       }
                       return const SizedBox.shrink();
                     },
@@ -805,7 +800,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withOpacity(0.1),
+                            color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
@@ -835,12 +830,12 @@ extension BookingFlowBuilders on NewBookingScreenState {
                               color: const Color(0xFFF8F9FA),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: const Color(0xFF6132E4).withOpacity(0.2),
+                                color: const Color(0xFF6132E4).withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.03),
+                                  color: Colors.black.withValues(alpha: 0.03),
                                   blurRadius: 4,
                                   offset: const Offset(0, 2),
                                 ),
@@ -870,7 +865,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                       decoration: BoxDecoration(
                                         color: const Color(
                                           0xFF6132E4,
-                                        ).withOpacity(0.1),
+                                        ).withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -921,7 +916,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
               color: Colors.transparent,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, -5),
                 ),
