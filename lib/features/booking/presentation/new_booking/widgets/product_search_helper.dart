@@ -1,6 +1,6 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
-extension ProductSearchBuilders on OldNewBookingScreenState {
+extension ProductSearchBuilders on NewBookingScreenState {
   // Update search type labels when the active service changes
   void _updateSearchTypesForService(int? serviceId) {
     final servicesState = context.read<ServiceBloc>().state;
@@ -134,10 +134,6 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
 
-    log(
-      '_onSearchChanged -> query: "$query", hasSearchQuery: $hasSearchQuery, hasPriceFilter: $hasPriceFilter, searchTypeIndex: ${_selectedSearchTypeIndex.value}, hasAnyFilter: $hasAnyFilter',
-    );
-
     if (!hasAnyFilter) {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
@@ -157,7 +153,6 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
           ) ??
           'name';
 
-      log('_onSearchChanged -> dispatching searchProducts, type: $searchType');
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
@@ -410,10 +405,6 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
     ProductEntity product,
     ProductVariantEntity variant,
   ) {
-    log(
-      '_addProductFromSearchWithVariant called for: ${product.name}, variant: ${variant.attribute}',
-    );
-
     final result = SelectedProductsManager.addOrIncrementFromVariant(
       currentProducts: selectedProductsNotifier.value,
       product: product,
@@ -427,7 +418,6 @@ extension ProductSearchBuilders on OldNewBookingScreenState {
     }
 
     selectedProductsNotifier.value = result.products;
-    log('Product added. Total selected: ${result.products.length}');
     setState(() {});
   }
 

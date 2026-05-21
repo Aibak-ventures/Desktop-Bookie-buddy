@@ -93,11 +93,13 @@ extension DesktopDashboardResponseExtensions on DesktopDashboardResponse {
     );
   }
 
-  /// Converts to carousel data for overview cards
+  /// Converts to carousel data for overview cards.
+  /// Uses pagination totals so the badge always shows the full count,
+  /// not the count of items on the first page.
   DesktopDashboardCarouselModel get carouselData =>
       DesktopDashboardCarouselModel(
-        upcomingCount: upcomingCount,
-        alterationBookingCount: alterationBookingCount,
+        upcomingCount: pagination.upcoming.count,
+        alterationBookingCount: pagination.ongoing.count,
         completedCount: completedCount,
         expiredCount: expiredCount,
       );

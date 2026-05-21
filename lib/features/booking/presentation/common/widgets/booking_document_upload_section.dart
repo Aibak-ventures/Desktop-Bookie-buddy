@@ -358,7 +358,6 @@ class BookingDocumentUploadSection extends StatelessWidget {
       // Web images are already compressed by browser
       const isWeb = identical(0, 0.0); // Simple web check
       if (isWeb) {
-        debugPrint('Skipping compression on web platform for $fileName');
         return imageBytes;
       }
 
@@ -371,9 +370,6 @@ class BookingDocumentUploadSection extends StatelessWidget {
         format: CompressFormat.jpeg,
       );
 
-      debugPrint(
-        'Compressed ${fileName}: ${imageBytes.length} -> ${result.length} bytes',
-      );
       return result;
     } catch (e) {
       // Silently return original if compression fails

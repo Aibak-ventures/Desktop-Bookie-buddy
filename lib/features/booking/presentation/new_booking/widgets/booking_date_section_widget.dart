@@ -1,6 +1,6 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
-extension BookingDateSectionBuilders on OldNewBookingScreenState {
+extension BookingDateSectionBuilders on NewBookingScreenState {
   Future<void> _selectDate({required bool isPickup}) async {
     final isSales = selectedBookingType == BookingType.sales;
     final isOldBooking = selectedBookingType == BookingType.oldBooking;
@@ -219,7 +219,7 @@ extension BookingDateSectionBuilders on OldNewBookingScreenState {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),

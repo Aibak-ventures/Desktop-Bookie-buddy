@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_form_validator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

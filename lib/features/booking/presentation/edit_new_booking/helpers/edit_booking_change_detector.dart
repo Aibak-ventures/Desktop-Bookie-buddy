@@ -1,6 +1,6 @@
-part of '../pages/old_edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
-extension EditBookingChangeDetector on OldEditNewBookingScreenState {
+extension EditBookingChangeDetector on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
   // Unsaved-changes guard
   // ---------------------------------------------------------------------------

@@ -23,7 +23,7 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';

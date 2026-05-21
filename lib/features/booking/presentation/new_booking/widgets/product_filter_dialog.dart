@@ -1,6 +1,6 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
-extension ProductFilterDialogBuilders on OldNewBookingScreenState {
+extension ProductFilterDialogBuilders on NewBookingScreenState {
   void _showProductFilterBottomSheet() {
     // Calculate max price from current product list
     final currentProducts = _selectProductBloc.state.maybeWhen(

@@ -12,5 +12,9 @@
 		<!--  -->
 		<key>com.apple.security.network.client</key>
 		<true/>
+
+		<!-- Required for file_picker to open user-selected files -->
+		<key>com.apple.security.files.user-selected.read-write</key>
+		<true/>
 	</dict>
 </plist>

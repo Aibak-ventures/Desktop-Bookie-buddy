@@ -1,83 +1,60 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
-extension BookingFlowBuilders on OldNewBookingScreenState {
+extension BookingFlowBuilders on NewBookingScreenState {
   Widget _buildBookingContent() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Left Side: Dates + Products OR Customization
-        Expanded(
-          flex: 7,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDateSelectionSection(),
-              const SizedBox(height: 16),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  switchInCurve: Curves.easeInOut,
-                  switchOutCurve: Curves.easeInOut,
-                  transitionBuilder: (Widget child, Animation<double> animation) {
-                    // Product search slides left, customization slides in from right
-                    final offsetAnimation = Tween<Offset>(
-                      begin: child.key == const ValueKey('customization')
-                          ? const Offset(1.0, 0.0) // Slide from right
-                          : const Offset(-1.0, 0.0), // Slide to left
-                      end: Offset.zero,
-                    ).animate(animation);
-
-                    return SlideTransition(
-                      position: offsetAnimation,
-                      child: child,
-                    );
-                  },
-                  child: showCustomization
-                      ? ProductCustomizationWidget(
-                          key: const ValueKey('customization'),
-                          onBack: () {
-                            setState(() {
-                              showCustomization = false;
-                            });
-                          },
-                          onSaveForProduct: (product, measurements) {
-                            setState(() {
-                              selectedProductsNotifier.value =
-                                  SelectedProductsManager.updateMeasurements(
-                                    currentProducts:
-                                        selectedProductsNotifier.value,
-                                    updatedProduct: product,
-                                    measurements: measurements,
-                                  );
-                            });
-                          },
-                          selectedProducts: selectedProductsNotifier.value
-                              .where(
-                                (p) =>
-                                    (p.variant.mainServiceType?.isDress ??
-                                        false) ||
-                                    (p.variant.mainServiceType?.isCostume ??
-                                        false),
-                              )
-                              .toList(),
-                        )
-                      : Container(
-                          key: const ValueKey('products'),
-                          child: _buildServiceSelectionSection(),
-                        ),
-                ),
-              ),
-            ],
+    return BookingTwoPanelLayout(
+      left: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDateSelectionSection(),
+          const SizedBox(height: 16),
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              switchInCurve: Curves.easeInOut,
+              switchOutCurve: Curves.easeInOut,
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                final offsetAnimation = Tween<Offset>(
+                  begin: child.key == const ValueKey('customization')
+                      ? const Offset(1.0, 0.0)
+                      : const Offset(-1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation);
+                return SlideTransition(position: offsetAnimation, child: child);
+              },
+              child: showCustomization
+                  ? ProductCustomizationWidget(
+                      key: const ValueKey('customization'),
+                      onBack: () => rebuild(() => showCustomization = false),
+                      onSaveForProduct: (product, measurements) {
+                        rebuild(() {
+                          selectedProductsNotifier.value =
+                              SelectedProductsManager.updateMeasurements(
+                                currentProducts: selectedProductsNotifier.value,
+                                updatedProduct: product,
+                                measurements: measurements,
+                              );
+                        });
+                      },
+                      selectedProducts: selectedProductsNotifier.value
+                          .where(
+                            (p) =>
+                                (p.variant.mainServiceType?.isDress ?? false) ||
+                                (p.variant.mainServiceType?.isCostume ?? false),
+                          )
+                          .toList(),
+                    )
+                  : Container(
+                      key: const ValueKey('products'),
+                      child: _buildServiceSelectionSection(),
+                    ),
+            ),
           ),
-        ),
-
-        const SizedBox(width: 16),
-
-        // Right panel: Client, Docs, Staff
-        SizedBox(width: 340, child: _buildRightSidePanel()),
-      ],
+        ],
+      ),
+      right: _buildRightSidePanel(),
     );
   }
 
@@ -128,7 +105,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                       color: Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Name - Only show for bookings
                   if (selectedBookingType != BookingType.sales) ...[
@@ -167,7 +144,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                         errorText: _clientNameError,
                       ),
                     ),
-                    const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                    const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   ], // End of name section for bookings only
                   // Phone 1 (WhatsApp) - Always enabled
                   CustomPhoneNumberField(
@@ -193,7 +170,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                       }
                     },
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   // Phone 2 - Optional, only show for bookings, always enabled
                   if (selectedBookingType != BookingType.sales)
                     CustomPhoneNumberField(
@@ -220,7 +197,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                         }
                       },
                     ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   // Place - Optional
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
@@ -230,7 +207,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                     prefixIcon: Icons.location_on,
                   ),
 
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   const SizedBox(height: 16),
                   // WhatsApp Checkbox - Only if feature enabled
                   if (context.read<UserCubit>().hasFeature(
@@ -574,17 +551,17 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                             'Locations',
                             optional: true,
                           ),
-                          const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: startLocationController,
                             hint: 'Start location',
                           ),
-                          const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: pickupLocationController,
                             hint: 'Pickup location',
                           ),
-                          const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: destinationLocationController,
                             hint: 'Destination',
@@ -600,7 +577,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                     'Payment details',
                     optional: true,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: advanceAmountController,
                     hint: 'Advance amount',
@@ -608,8 +585,8 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                     focusNode: _advanceAmountFocusNode,
                     nextFocusNode: _securityAmountFocusNode,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   // Payment Method Selection - only show if advance amount has value
                   ValueListenableBuilder(
                     valueListenable: advanceAmountController,
@@ -637,8 +614,8 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                     focusNode: _securityAmountFocusNode,
                     nextFocusNode: _discountAmountFocusNode,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   // Security Payment Method - show when security amount has value
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: securityAmountController,
@@ -652,7 +629,7 @@ extension BookingFlowBuilders on OldNewBookingScreenState {
                       return const SizedBox.shrink();
                     },
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

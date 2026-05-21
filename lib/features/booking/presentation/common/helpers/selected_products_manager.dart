@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_product_helpers.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_mapper.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/product_stock_validator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_stock_validator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';

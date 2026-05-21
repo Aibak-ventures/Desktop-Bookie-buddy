@@ -1,6 +1,6 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
-extension OldBookingFlowBuilders on OldNewBookingScreenState {
+extension OldBookingFlowBuilders on NewBookingScreenState {
   Widget _buildOldBookingContent() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +69,7 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
                       hitText: 'Type or search name',
                     ),
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Client Phone
                   CustomPhoneNumberField(
@@ -95,7 +95,7 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
                       }
                     },
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Client Phone 2
                   CustomPhoneNumberField(
@@ -122,7 +122,7 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
                       }
                     },
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Address
                   BookingTextFieldBuilder.buildRightPanelTextField(
@@ -130,7 +130,7 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
                     hint: 'Place / Address',
                     prefixIcon: Icons.location_on,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Notes / Description
                   Container(
@@ -157,7 +157,7 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing + OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing + NewBookingScreenState._fieldSpacing),
 
                   // Payment Account
                   AccountSelectionField(
@@ -277,7 +277,6 @@ extension OldBookingFlowBuilders on OldNewBookingScreenState {
     try {
       final repository = getIt<IBookingRepository>();
       final request = _buildOldBookingRequest();
-      log('Old Booking Request: ${request.toString()}');
       await repository.createOldBooking(request);
 
       if (mounted) Navigator.of(context).pop();

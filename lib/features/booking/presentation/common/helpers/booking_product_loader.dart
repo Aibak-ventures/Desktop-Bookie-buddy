@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/utils/debouncer.dart';

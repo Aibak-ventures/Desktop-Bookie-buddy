@@ -1,6 +1,6 @@
-part of '../pages/old_new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
-extension SalesFlowBuilders on OldNewBookingScreenState {
+extension SalesFlowBuilders on NewBookingScreenState {
   Widget _buildSalesSinglePanel() {
     return Container(
       key: const ValueKey(2),
@@ -38,7 +38,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                       }
                     },
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Place
                   BookingTextFieldBuilder.buildRightPanelTextField(
@@ -48,7 +48,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                     nextFocusNode: _staffNameFocusNode,
                     prefixIcon: Icons.location_on,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Staff Details
                   const Text(
@@ -66,7 +66,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                     focusNode: _staffNameFocusNode,
                     nextFocusNode: _notesFocusNode,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Notes
                   Container(
@@ -94,7 +94,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
 
                   // Discount
                   BookingTextFieldBuilder.buildRightPanelTextField(
@@ -102,7 +102,7 @@ extension SalesFlowBuilders on OldNewBookingScreenState {
                     hint: 'Discount amount',
                     isNumber: true,
                   ),
-                  const SizedBox(height: OldNewBookingScreenState._fieldSpacing + 8),
+                  const SizedBox(height: NewBookingScreenState._fieldSpacing + 8),
 
                   // Payment Method
                   _buildPaymentMethodSection(),

@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
