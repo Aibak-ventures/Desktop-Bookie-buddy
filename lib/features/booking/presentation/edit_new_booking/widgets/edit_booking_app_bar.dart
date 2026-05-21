@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class EditBookingAppBar extends StatelessWidget {
   final String bookingType;
-  final int bookingId;
+  final String displayId;
   final VoidCallback onBack;
   final VoidCallback onSave;
 
   const EditBookingAppBar({
     super.key,
     required this.bookingType,
-    required this.bookingId,
+    required this.displayId,
     required this.onBack,
     required this.onSave,
   });
@@ -22,7 +22,7 @@ class EditBookingAppBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -37,8 +37,10 @@ class EditBookingAppBar extends StatelessWidget {
               onTap: onBack,
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
@@ -90,11 +92,11 @@ class EditBookingAppBar extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6132E4).withOpacity(0.1),
+                        color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        '#$bookingId',
+                        '#$displayId',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -112,37 +114,6 @@ class EditBookingAppBar extends StatelessWidget {
                     fontSize: 12,
                     color: Colors.grey.shade600,
                     fontFamily: 'Inter',
-                  ),
-                ),
-              ],
-            ),
-
-            const Spacer(),
-
-            // Action buttons
-            Row(
-              children: [
-                // Cancel button
-                OutlinedButton(
-                  onPressed: onBack,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    side: BorderSide(color: Colors.grey.shade300, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade700,
-                      fontFamily: 'Inter',
-                    ),
                   ),
                 ),
               ],

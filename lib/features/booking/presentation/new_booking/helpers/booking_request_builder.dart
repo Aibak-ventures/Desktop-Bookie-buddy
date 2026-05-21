@@ -6,10 +6,9 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_request_entity/booking_payment_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/payment_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_web/features/sales/data/models/request_sales_model/request_sales_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -177,10 +176,10 @@ class BookingRequestBuilder {
   // Sales request
   // ---------------------------------------------------------------------------
 
-  /// Assembles [RequestSalesModel] for [BookingType.sales].
+  /// Assembles the sales request payload for [BookingType.sales].
   ///
   /// [isPastDate] must be pre-computed by the caller (`pickupDate < today`).
-  static RequestSalesModel buildSalesRequest({
+  static Map<String, dynamic> buildSalesRequest({
     required List<ProductSelectedEntity> products,
     required int discountInput,
     required bool isDiscountPercentage,
@@ -213,19 +212,19 @@ class BookingRequestBuilder {
         : discountInput;
     final finalTotal = (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
 
-    return RequestSalesModel(
-      staffId: staffId,
-      clientPhone: clientPhone.isEmpty ? null : clientPhone,
-      clientAddress: clientAddress.isEmpty ? null : clientAddress,
-      saleDate: saleDate.format(),
-      description: description,
-      sendInvoice: sendInvoice,
-      variants: variants,
-      paidAmount: finalTotal,
-      accountId: accountId,
-      discount: discount,
-      decreaseStock: decreaseStockForPastDate || !isPastDate,
-    );
+    return {
+      if (staffId != null) 'staff_id': staffId,
+      if (clientPhone.isNotEmpty) 'client_phone': clientPhone,
+      if (clientAddress.isNotEmpty) 'client_address': clientAddress,
+      'sale_date': saleDate.format(),
+      if (description != null) 'description': description,
+      'send_invoice': sendInvoice,
+      'variants': variants,
+      'paid_amount': finalTotal,
+      if (accountId != null) 'account_id': accountId,
+      'discount': discount,
+      'decrease_stock': decreaseStockForPastDate || !isPastDate,
+    };
   }
 
   // ---------------------------------------------------------------------------

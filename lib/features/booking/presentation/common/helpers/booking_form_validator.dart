@@ -1,10 +1,10 @@
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 
-export 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/helpers/booking_validation_helper.dart'
+export 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart'
     show BookingValidationResult;
 
 /// Pure, UI-free validation logic for the booking/sales form.

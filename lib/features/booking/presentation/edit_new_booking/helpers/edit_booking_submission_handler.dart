@@ -1,6 +1,6 @@
-﻿part of '../pages/old_edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
-extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
+extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
   // Navigation
   // ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
     GlobalLoadingOverlay.show(context);
 
     try {
-      final repository = getIt<BookingRepositoryImpl>();
+      final repository = getIt<IBookingRepository>();
 
       if (widget.bookingDetails != null) {
         final partialUpdate = _buildPartialUpdateRequest();
@@ -110,7 +110,7 @@ extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
         }
       } else if (widget.saleDetails != null) {
         final salesRequest = _buildSalesRequest();
-        await getIt<SalesRepositoryImpl>().updateSale(salesRequest);
+        await getIt<ISalesRepository>().updateSale(salesRequest);
         GlobalLoadingOverlay.hide();
         if (mounted) {
           context.showSnackBar('Sale updated successfully!');
@@ -261,7 +261,6 @@ extension EditBookingSubmissionHandler on OldEditNewBookingScreenState {
       updates['description'] = description;
     }
 
-    log('📝 Partial update payload: $updates');
     return updates;
   }
 

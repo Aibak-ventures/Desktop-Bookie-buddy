@@ -1,6 +1,6 @@
-part of '../pages/old_edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
-extension EditBookingInitializer on OldEditNewBookingScreenState {
+extension EditBookingInitializer on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
   // Phone field population
   // ---------------------------------------------------------------------------
@@ -177,21 +177,16 @@ extension EditBookingInitializer on OldEditNewBookingScreenState {
       '📄 Loading documents from booking. Total documents: ${booking.documents.length}',
     );
     if (booking.documents.isNotEmpty) {
-      log('📄 Raw documents data: ${booking.documents}');
       final docs = booking.documents
           .map((doc) {
             if (doc is Map<String, dynamic>) {
               final url = doc['url'] ?? doc['file'] ?? '';
               final name = doc['name'] ?? _extractFilenameFromUrl(url);
-              log('📄 Parsed document - Name: $name, URL: $url');
               return DocumentFileEntity(name: name, path: url);
             } else if (doc is String) {
-              log('📄 Simple string document: $doc');
               final filename = _extractFilenameFromUrl(doc);
-              log('📄 Extracted filename: $filename');
               return DocumentFileEntity(name: filename, path: doc);
             }
-            log('⚠️ Unknown document format: $doc');
             return null;
           })
           .whereType<DocumentFileEntity>()
@@ -359,8 +354,6 @@ extension EditBookingInitializer on OldEditNewBookingScreenState {
     _originalDeliveryStatus = booking.deliveryStatus;
     _originalCoolingPeriodDays = coolingPeriodDays;
     _originalCoolingPeriodMode = coolingPeriodMode;
-
-    log('✅ Original values stored for incremental update tracking');
   }
 
   // ---------------------------------------------------------------------------

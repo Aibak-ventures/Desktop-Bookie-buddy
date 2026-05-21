@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/old_new_booking/pages/old_new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
@@ -36,7 +36,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   bool newOrderActive = false;
   bool showNewBookingInContent = false;
 
-  final GlobalKey<OldNewBookingScreenState> _newBookingKey = GlobalKey();
+  final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
   final GlobalKey<AllBookingsDesktopScreenState> _allBookingsKey = GlobalKey();
 
   late final List<Widget> screens;
@@ -172,7 +172,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
           Positioned.fill(
             left: 80,
             child: showNewBookingInContent
-                ? OldNewBookingScreen(
+                ? NewBookingScreen(
                     key: _newBookingKey,
                     onClose: () {
                       setState(() {
