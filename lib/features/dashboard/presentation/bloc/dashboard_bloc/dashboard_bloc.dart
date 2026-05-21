@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';

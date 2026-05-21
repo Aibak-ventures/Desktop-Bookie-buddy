@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/bloc/add_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
@@ -86,6 +87,12 @@ class BookingDependencies {
     }
     if (!getIt.isRegistered<GetBookingInvoicePdfBytesUseCase>()) {
       getIt.registerLazySingleton(() => GetBookingInvoicePdfBytesUseCase(getIt<IBookingRepository>()));
+    }
+    if (!getIt.isRegistered<AddBookingCubit>()) {
+      getIt.registerFactory(() => AddBookingCubit(
+        addBooking: getIt<AddBookingUseCase>(),
+        createSale: getIt<CreateSaleBookingUseCase>(),
+      ));
     }
   }
 }

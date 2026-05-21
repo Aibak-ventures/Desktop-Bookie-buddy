@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
       context: context,
       barrierDismissible: false,
+      // ignore: deprecated_member_use
       barrierColor: Colors.black.withOpacity(0.5),
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,

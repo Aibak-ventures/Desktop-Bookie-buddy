@@ -1,4 +1,4 @@
-part of '../pages/new_booking_screen.dart';
+﻿part of '../pages/new_booking_screen.dart';
 
 extension SalesFlowBuilders on NewBookingScreenState {
   Widget _buildSalesSinglePanel() {
@@ -120,7 +120,7 @@ extension SalesFlowBuilders on NewBookingScreenState {
                           child: Checkbox(
                             value: sendPdfToWhatsApp,
                             onChanged: (v) =>
-                                setState(() => sendPdfToWhatsApp = v ?? false),
+                                rebuild(() => sendPdfToWhatsApp = v ?? false),
                             activeColor: Colors.black87,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
@@ -157,7 +157,7 @@ extension SalesFlowBuilders on NewBookingScreenState {
                               height: 24,
                               child: Checkbox(
                                 value: decreaseStockForPastDate,
-                                onChanged: (v) => setState(
+                                onChanged: (v) => rebuild(
                                   () => decreaseStockForPastDate = v ?? false,
                                 ),
                                 activeColor: Colors.black87,

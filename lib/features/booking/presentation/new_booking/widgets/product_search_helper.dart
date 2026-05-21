@@ -1,4 +1,4 @@
-part of '../pages/new_booking_screen.dart';
+﻿part of '../pages/new_booking_screen.dart';
 
 extension ProductSearchBuilders on NewBookingScreenState {
   // Update search type labels when the active service changes
@@ -504,7 +504,7 @@ extension ProductSearchBuilders on NewBookingScreenState {
     }
 
     selectedProductsNotifier.value = result.products;
-    setState(() {});
+    rebuild(() {});
   }
 
   FocusNode _getOverlayItemFocusNode(int index) {

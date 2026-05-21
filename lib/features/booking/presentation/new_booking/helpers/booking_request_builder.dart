@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/booking_fo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -179,7 +180,7 @@ class BookingRequestBuilder {
   /// Assembles the sales request payload for [BookingType.sales].
   ///
   /// [isPastDate] must be pre-computed by the caller (`pickupDate < today`).
-  static Map<String, dynamic> buildSalesRequest({
+  static SalesRequestEntity buildSalesRequest({
     required List<ProductSelectedEntity> products,
     required int discountInput,
     required bool isDiscountPercentage,
@@ -212,19 +213,19 @@ class BookingRequestBuilder {
         : discountInput;
     final finalTotal = (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
 
-    return {
-      if (staffId != null) 'staff_id': staffId,
-      if (clientPhone.isNotEmpty) 'client_phone': clientPhone,
-      if (clientAddress.isNotEmpty) 'client_address': clientAddress,
-      'sale_date': saleDate.format(),
-      if (description != null) 'description': description,
-      'send_invoice': sendInvoice,
-      'variants': variants,
-      'paid_amount': finalTotal,
-      if (accountId != null) 'account_id': accountId,
-      'discount': discount,
-      'decrease_stock': decreaseStockForPastDate || !isPastDate,
-    };
+    return SalesRequestEntity(
+      staffId: staffId,
+      clientPhone: clientPhone.isEmpty ? null : clientPhone,
+      address: clientAddress.isEmpty ? null : clientAddress,
+      saleDate: saleDate.format(),
+      description: description,
+      sendPdfToWhatsApp: sendInvoice,
+      products: products,
+      paidAmount: finalTotal,
+      discountAmount: discount,
+      stockCountDecrease: decreaseStockForPastDate || !isPastDate,
+      accountId: accountId,
+    );
   }
 
   // ---------------------------------------------------------------------------

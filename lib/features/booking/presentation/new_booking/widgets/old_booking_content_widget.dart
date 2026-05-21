@@ -1,4 +1,4 @@
-part of '../pages/new_booking_screen.dart';
+﻿part of '../pages/new_booking_screen.dart';
 
 extension OldBookingFlowBuilders on NewBookingScreenState {
   Widget _buildOldBookingContent() {
@@ -169,7 +169,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                   AccountSelectionField(
                     selectedAccount: selectedAdvanceAccount,
                     onChanged: (account) =>
-                        setState(() => selectedAdvanceAccount = account),
+                        rebuild(() => selectedAdvanceAccount = account),
                     label: 'Payment Option',
                   ),
                   const SizedBox(height: 16),
@@ -264,7 +264,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
     }
 
     if (clientNameController.text.trim().isEmpty) {
-      setState(() => _clientNameError = 'Please enter client name');
+      rebuild(() => _clientNameError = 'Please enter client name');
       context.showSnackBar('Please enter client name', isError: true);
       return;
     }
