@@ -18,6 +18,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/additional_cha
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
@@ -561,7 +562,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
+      onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         await _handleBackNavigation();
       },
@@ -871,7 +872,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
-  Map<String, dynamic> _buildSalesRequest() {
+  SalesRequestEntity _buildSalesRequest() {
     final staffState = context.read<StaffSearchCubit>().state;
     return BookingRequestBuilder.buildSalesRequest(
       products: selectedProductsNotifier.value,

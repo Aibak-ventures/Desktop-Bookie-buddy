@@ -60,7 +60,6 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_c
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -177,7 +176,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   int _bookingStep = 0;
   String? _clientNameError;
   String? _staffNameError;
-  String? _phoneError;
   final startLocationController = TextEditingController();
   final pickupLocationController = TextEditingController();
   final destinationLocationController = TextEditingController();
@@ -208,7 +206,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? __originalClientPhone2E164;
   String? _originalClientAddress;
   int? _originalStaffId;
-  int? _originalAdvanceAmount;
   int? _originalSecurityAmount;
   int? _originalDiscountAmount;
   List<AdditionalChargesEntity>? _originalAdditionalCharges;
@@ -304,7 +301,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   void _validateAndContinue() {
     setState(() {
       _clientNameError = null;
-      _phoneError = null;
       _staffNameError = null;
     });
 
@@ -330,7 +326,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       // Show validation errors
       setState(() {
         _clientNameError = validationResult.fieldErrors['clientName'];
-        _phoneError = validationResult.fieldErrors['phone1'];
         _staffNameError = validationResult.fieldErrors['staff'];
       });
       BookingValidationHelper.showValidationErrors(context, validationResult);

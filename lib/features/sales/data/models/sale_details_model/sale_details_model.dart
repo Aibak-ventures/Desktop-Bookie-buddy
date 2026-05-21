@@ -6,11 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sale_details_model.freezed.dart';
 part 'sale_details_model.g.dart';
 
-/// Prefers full-size [product_image]; falls back to [thumbnail].
-dynamic _readSaleProductImage(Map json, String key) =>
-    (json['product_image'] as String?)?.isNotEmpty == true
-        ? json['product_image']
-        : json['thumbnail'];
 
 int? _readAccountId(Map json, String key) {
   final payments = json['payments'] as List?;

@@ -302,7 +302,6 @@ extension EditBookingInitializer on EditNewBookingScreenState {
 
     _originalStaffId = booking.staffId;
 
-    _originalAdvanceAmount = booking.paidAmount;
     _originalSecurityAmount = booking.securityAmount;
     _originalDiscountAmount = booking.discountAmount;
 

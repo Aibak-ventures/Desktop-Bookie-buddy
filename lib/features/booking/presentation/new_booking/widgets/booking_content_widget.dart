@@ -1,4 +1,4 @@
-part of '../pages/new_booking_screen.dart';
+﻿part of '../pages/new_booking_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -212,7 +212,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                           child: Checkbox(
                             value: sendPdfToWhatsApp,
                             onChanged: (v) =>
-                                setState(() => sendPdfToWhatsApp = v ?? false),
+                                rebuild(() => sendPdfToWhatsApp = v ?? false),
                             activeColor: Colors.black87,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
@@ -362,7 +362,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                       // Collapsed view - always visible
                       InkWell(
                         onTap: () {
-                          setState(() {
+                          rebuild(() {
                             _isSummaryExpanded = !_isSummaryExpanded;
                           });
                         },
@@ -504,7 +504,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     onTap: () {
                       // Close search overlay before changing steps
                       _removeSearchOverlay();
-                      setState(() => _bookingStep = 0);
+                      rebuild(() => _bookingStep = 0);
                     },
                     child: Row(
                       children: [
@@ -682,7 +682,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                               color: Colors.grey.shade600,
                             ),
                             onSelected: (value) {
-                              setState(() {
+                              rebuild(() {
                                 final switchToPercent = value == 'percentage';
                                 if (switchToPercent != isDiscountPercentage) {
                                   final input =

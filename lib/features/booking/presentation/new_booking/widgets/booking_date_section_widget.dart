@@ -1,4 +1,4 @@
-part of '../pages/new_booking_screen.dart';
+﻿part of '../pages/new_booking_screen.dart';
 
 extension BookingDateSectionBuilders on NewBookingScreenState {
   Future<void> _selectDate({required bool isPickup}) async {
@@ -28,7 +28,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
       );
 
       if (picked != null) {
-        setState(() {
+        rebuild(() {
           pickupDate = picked;
 
           if (isSales) {
@@ -78,7 +78,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         );
 
         if (picked != null) {
-          setState(() {
+          rebuild(() {
             returnDate = picked;
           });
           _loadProductsForService(selectedServiceId);
@@ -109,7 +109,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
       );
 
       if (picked != null) {
-        setState(() {
+        rebuild(() {
           returnDate = picked;
 
           if (coolingPeriodDate != null) {
@@ -140,7 +140,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     );
 
     if (picked != null) {
-      setState(() => _bookedDate = picked);
+      rebuild(() => _bookedDate = picked);
     }
   }
 
@@ -168,14 +168,14 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
           return;
         }
 
-        setState(() {
+        rebuild(() {
           pickupTime = picked;
         });
 
         if (pickupDate.dateOnly.isAtSameMomentAs(returnDate.dateOnly) &&
             returnTime != null) {
           if (!BookingFormValidator.isReturnAfterPickup(picked, returnTime!)) {
-            setState(() {
+            rebuild(() {
               returnTime = null;
             });
             _showTimeError(
@@ -199,7 +199,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
           }
         }
 
-        setState(() {
+        rebuild(() {
           returnTime = picked;
         });
 
@@ -375,7 +375,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() {
+                              rebuild(() {
                                 coolingPeriodMode = coolingPeriodMode.isAfter
                                     ? CoolingPeriodMode.before
                                     : CoolingPeriodMode.after;
@@ -472,7 +472,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                                   ],
                                   onChanged: (val) {
                                     if (val != null) {
-                                      setState(
+                                      rebuild(
                                         () => coolingPeriodDays = val,
                                       );
                                       _updateCoolingPeriod();
@@ -562,7 +562,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                   ),
                   if (_bookedDate != null)
                     GestureDetector(
-                      onTap: () => setState(() => _bookedDate = null),
+                      onTap: () => rebuild(() => _bookedDate = null),
                       child: Icon(
                         Icons.close,
                         size: 16,
