@@ -1,30 +1,82 @@
-﻿part of '../pages/new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
-extension OldBookingFlowBuilders on NewBookingScreenState {
-  Widget _buildOldBookingContent() {
+class OldBookingContentWidget extends StatelessWidget {
+  final Widget dateSection;
+  final Widget serviceSection;
+  final TextEditingController clientNameController;
+  final PhoneController phone1FieldController;
+  final PhoneController phone2FieldController;
+  final TextEditingController clientPhone1Controller;
+  final TextEditingController clientPhone2Controller;
+  final TextEditingController clientAddressController;
+  final TextEditingController descriptionController;
+  final AccountEntity? selectedAdvanceAccount;
+  final ValueChanged<AccountEntity?> onAdvanceAccountChanged;
+  final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
+  final String? clientNameError;
+  final void Function(int? clientId) onClientIdChanged;
+  final void Function({required String rawPhoneNumber, required String? e164}) onCachePhoneE164;
+  final int Function(ProductSelectedEntity product) getDaysMultiplier;
+  final VoidCallback onConfirm;
+
+  static const double _fieldSpacing = 8.0;
+
+  const OldBookingContentWidget({
+    super.key,
+    required this.dateSection,
+    required this.serviceSection,
+    required this.clientNameController,
+    required this.phone1FieldController,
+    required this.phone2FieldController,
+    required this.clientPhone1Controller,
+    required this.clientPhone2Controller,
+    required this.clientAddressController,
+    required this.descriptionController,
+    required this.selectedAdvanceAccount,
+    required this.onAdvanceAccountChanged,
+    required this.selectedProductsNotifier,
+    required this.clientNameError,
+    required this.onClientIdChanged,
+    required this.onCachePhoneE164,
+    required this.getDaysMultiplier,
+    required this.onConfirm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left: dates + product search / table
         Expanded(
           flex: 7,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDateSelectionSection(),
+              dateSection,
               const SizedBox(height: 16),
-              Expanded(child: _buildServiceSelectionSection()),
+              Expanded(child: serviceSection),
             ],
           ),
         ),
         const SizedBox(width: 16),
-        // Right: client details + summary + submit
-        SizedBox(width: 340, child: _buildOldBookingRightPanel()),
+        SizedBox(width: 340, child: _buildRightPanel(context)),
       ],
     );
   }
 
-  Widget _buildOldBookingRightPanel() {
+  Widget _buildRightPanel(BuildContext context) {
     return Container(
       color: Colors.white,
       child: Column(
@@ -35,7 +87,6 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Client Name
                   const Text(
                     'Client',
                     style: TextStyle(
@@ -51,100 +102,75 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                         final client = state.selectedClient!;
                         clientNameController.text = client.name;
                         BookingPhonePopulator.setPhoneFieldValue(
-                          _clientPhone1FieldController,
+                          phone1FieldController,
                           clientPhone1Controller,
-                          phoneNumber: client.phone1 > 0
-                              ? client.phone1.toString()
-                              : null,
+                          phoneNumber: client.phone1 > 0 ? client.phone1.toString() : null,
                           e164: client.phone1E164,
                         );
                         BookingPhonePopulator.setPhoneFieldValue(
-                          _clientPhone2FieldController,
+                          phone2FieldController,
                           clientPhone2Controller,
-                          phoneNumber: (client.phone2 ?? 0) > 0
-                              ? client.phone2.toString()
-                              : null,
+                          phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
                           e164: client.phone2E164,
                         );
-                        selectedClientId = client.id;
+                        onClientIdChanged(client.id);
                       }
                     },
                     child: ClientSearchNameField(
                       nameController: clientNameController,
-                      errorText: _clientNameError,
+                      errorText: clientNameError,
                       hitText: 'Type or search name',
                     ),
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
-
-                  // Client Phone
+                  const SizedBox(height: _fieldSpacing),
                   CustomPhoneNumberField(
-                    controller: _clientPhone1FieldController,
+                    controller: phone1FieldController,
                     hintText: 'Client Phone',
                     textInputAction: TextInputAction.next,
                     onChanged: (phone) {
-                      final digits = phone.nsn.replaceAll(
-                        RegExp(r'[^0-9]'),
-                        '',
-                      );
-                      cachePhoneE164(
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
                       );
                       if (clientPhone1Controller.text != digits) {
                         clientPhone1Controller.value = TextEditingValue(
                           text: digits,
-                          selection: TextSelection.collapsed(
-                            offset: digits.length,
-                          ),
+                          selection: TextSelection.collapsed(offset: digits.length),
                         );
                       }
                     },
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
-
-                  // Client Phone 2
+                  const SizedBox(height: _fieldSpacing),
                   CustomPhoneNumberField(
-                    controller: _clientPhone2FieldController,
+                    controller: phone2FieldController,
                     hintText: 'Client Phone 2 (Optional)',
                     isRequired: false,
                     textInputAction: TextInputAction.next,
                     onChanged: (phone) {
-                      final digits = phone.nsn.replaceAll(
-                        RegExp(r'[^0-9]'),
-                        '',
-                      );
-                      cachePhoneE164(
+                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
                       );
                       if (clientPhone2Controller.text != digits) {
                         clientPhone2Controller.value = TextEditingValue(
                           text: digits,
-                          selection: TextSelection.collapsed(
-                            offset: digits.length,
-                          ),
+                          selection: TextSelection.collapsed(offset: digits.length),
                         );
                       }
                     },
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
-
-                  // Address
+                  const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: clientAddressController,
                     hint: 'Place / Address',
                     prefixIcon: Icons.location_on,
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
-
-                  // Notes / Description
+                  const SizedBox(height: _fieldSpacing),
                   Container(
                     height: 80,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -163,13 +189,10 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing + NewBookingScreenState._fieldSpacing),
-
-                  // Payment Account
+                  const SizedBox(height: _fieldSpacing * 2),
                   AccountSelectionField(
                     selectedAccount: selectedAdvanceAccount,
-                    onChanged: (account) =>
-                        rebuild(() => selectedAdvanceAccount = account),
+                    onChanged: onAdvanceAccountChanged,
                     label: 'Payment Option',
                   ),
                   const SizedBox(height: 16),
@@ -177,8 +200,6 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
               ),
             ),
           ),
-
-          // Bottom: total + submit button
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -208,11 +229,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                   builder: (context, products, _) {
                     final total = products.fold<int>(
                       0,
-                      (sum, product) =>
-                          sum +
-                          (product.amount *
-                              product.quantity *
-                              _getDaysMultiplierForProduct(product)),
+                      (sum, p) => sum + (p.amount * p.quantity * getDaysMultiplier(p)),
                     );
                     return Text(
                       total.toCurrency(),
@@ -228,7 +245,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _handleConfirmOldBooking,
+                    onPressed: onConfirm,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6132E4),
                       foregroundColor: Colors.white,
@@ -240,10 +257,7 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
                     ),
                     child: const Text(
                       'Save Old Booking',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -252,75 +266,6 @@ extension OldBookingFlowBuilders on NewBookingScreenState {
           ),
         ],
       ),
-    );
-  }
-
-  void _handleConfirmOldBooking() async {
-    final products = selectedProductsNotifier.value;
-
-    if (products.isEmpty) {
-      context.showSnackBar('Please select at least one item', isError: true);
-      return;
-    }
-
-    if (clientNameController.text.trim().isEmpty) {
-      rebuild(() => _clientNameError = 'Please enter client name');
-      context.showSnackBar('Please enter client name', isError: true);
-      return;
-    }
-
-    if (selectedAdvanceAccount == null) {
-      context.showSnackBar('Please select a payment option', isError: true);
-      return;
-    }
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      final repository = getIt<IBookingRepository>();
-      final request = _buildOldBookingRequest();
-      await repository.createOldBooking(request);
-
-      if (mounted) Navigator.of(context).pop();
-      if (mounted) {
-        context.showSnackBar('Old booking saved successfully!');
-        if (widget.onClose != null) {
-          widget.onClose!();
-        } else {
-          Navigator.of(context).pop();
-        }
-      }
-    } catch (e) {
-      if (mounted) Navigator.of(context).pop();
-      if (mounted) {
-        context.showSnackBar(
-          'Failed to save old booking: ${e.toString()}',
-          isError: true,
-        );
-      }
-      log('Error creating old booking: $e');
-    }
-  }
-
-  BookingRequestEntity _buildOldBookingRequest() {
-    return BookingRequestBuilder.buildOldBookingRequest(
-      products: selectedProductsNotifier.value,
-      bookingType: selectedBookingType,
-      effectiveRentalDays: _getEffectiveRentalDays(),
-      selectedClientId: selectedClientId,
-      clientName: clientNameController.text.trim(),
-      phone1Raw: clientPhone1Controller.text.trim(),
-      phone2Raw: clientPhone2Controller.text.trim(),
-      address: clientAddressController.text.trim(),
-      bookedDate: _bookedDate,
-      pickupDate: pickupDate,
-      returnDate: returnDate,
-      description: _buildDescriptionWithPaymentSummary(),
-      advanceAccountId: selectedAdvanceAccount?.id,
     );
   }
 }

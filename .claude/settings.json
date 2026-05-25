@@ -4,7 +4,11 @@
       "Bash(python3 -:*)",
       "Bash(git stash:*)",
       "Read(//Widget _buildSalesSinglePanel/,/^  Widget /**)",
-      "Bash(grep -l \"AppTextStyle\\\\|textStyle\" /Users/afnanp/Desktop/Work/Desktop-Bookie-buddy/lib/core/theme/*.dart)"
+      "Bash(grep -l \"AppTextStyle\\\\|textStyle\" /Users/afnanp/Desktop/Work/Desktop-Bookie-buddy/lib/core/theme/*.dart)",
+      "Bash(Remove-Item \"d:\\\\Documents\\\\Desktop-Bookie-buddy\\\\lib\\\\features\\\\booking\\\\presentation\\\\common\\\\widgets\\\\booking_search_overlay_widget.dart\" -Force)",
+      "Bash(Remove-Item \"d:\\\\Documents\\\\Desktop-Bookie-buddy\\\\lib\\\\features\\\\booking\\\\presentation\\\\new_booking\\\\widgets\\\\search_overlay_result_widget.dart\" -Force)",
+      "PowerShell(cd \"d:\\\\Documents\\\\Desktop-Bookie-buddy\"; $fvmPath = \\(Get-Command fvm -ErrorAction SilentlyContinue\\); if \\($fvmPath\\) { $fvmPath.Source } else { \"fvm not found\" }; dart --version)",
+      "PowerShell($paths = @\\(\"C:\\\\Users\\\\Adinan\\\\AppData\\\\Local\\\\fvm\", \"C:\\\\fvm\", \"C:\\\\Users\\\\Adinan\\\\.fvm\"\\); foreach \\($p in $paths\\) { if \\(Test-Path $p\\) { \"FOUND: $p\"; Get-ChildItem $p -Depth 1 | Select-Object FullName } else { \"Not found: $p\" } })"
     ]
   }
 }

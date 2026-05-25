@@ -29,7 +29,7 @@ void showSearchTypeBottomSheet({
   showDialog(
     context: context,
     barrierDismissible: true,
-    barrierColor: Colors.black.withOpacity(0.5),
+    barrierColor: Colors.black.withValues(alpha: 0.5),
     builder: (context) => Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -44,7 +44,7 @@ void showSearchTypeBottomSheet({
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 30,
               offset: const Offset(0, 10),
             ),
@@ -70,7 +70,7 @@ void showSearchTypeBottomSheet({
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6132E4).withOpacity(0.1),
+                      color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
@@ -156,7 +156,7 @@ void showSearchTypeBottomSheet({
                                       ? [
                                           BoxShadow(
                                             color: const Color(0xFF6132E4)
-                                                .withOpacity(0.3),
+                                                .withValues(alpha: 0.3),
                                             blurRadius: 8,
                                             offset: const Offset(0, 4),
                                           ),
@@ -227,7 +227,7 @@ void showSearchTypeBottomSheet({
                               },
                               activeThumbColor: const Color(0xFF6132E4),
                               activeTrackColor:
-                                  const Color(0xFF6132E4).withOpacity(0.3),
+                                  const Color(0xFF6132E4).withValues(alpha: 0.3),
                               inactiveThumbColor: Colors.grey.shade400,
                               inactiveTrackColor: Colors.grey.shade200,
                             ),
@@ -368,16 +368,16 @@ void showSearchTypeBottomSheet({
                                             gradient: LinearGradient(
                                               colors: [
                                                 const Color(0xFF6132E4)
-                                                    .withOpacity(0.1),
+                                                    .withValues(alpha: 0.1),
                                                 const Color(0xFF6132E4)
-                                                    .withOpacity(0.05),
+                                                    .withValues(alpha: 0.05),
                                               ],
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             border: Border.all(
                                               color: const Color(0xFF6132E4)
-                                                  .withOpacity(0.3),
+                                                  .withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -408,16 +408,16 @@ void showSearchTypeBottomSheet({
                                             gradient: LinearGradient(
                                               colors: [
                                                 const Color(0xFF6132E4)
-                                                    .withOpacity(0.1),
+                                                    .withValues(alpha: 0.1),
                                                 const Color(0xFF6132E4)
-                                                    .withOpacity(0.05),
+                                                    .withValues(alpha: 0.05),
                                               ],
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             border: Border.all(
                                               color: const Color(0xFF6132E4)
-                                                  .withOpacity(0.3),
+                                                  .withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -452,7 +452,7 @@ void showSearchTypeBottomSheet({
                                               Colors.grey.shade200,
                                           thumbColor: const Color(0xFF6132E4),
                                           overlayColor: const Color(0xFF6132E4)
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           trackHeight: 4,
                                           thumbShape:
                                               const RoundSliderThumbShape(
@@ -622,7 +622,7 @@ void showSearchTypeBottomSheet({
                         backgroundColor: const Color(0xFF6132E4),
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shadowColor: const Color(0xFF6132E4).withOpacity(0.3),
+                        shadowColor: const Color(0xFF6132E4).withValues(alpha: 0.3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

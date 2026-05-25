@@ -26,7 +26,7 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
           .map((e) => ProductSaleInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       accountId: (_readAccountId(json, 'account_id') as num?)?.toInt(),
-      accountName: _readAccountName(json, 'account_name'),
+      accountName: _readAccountName(json, 'account_name') as String?,
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
     );

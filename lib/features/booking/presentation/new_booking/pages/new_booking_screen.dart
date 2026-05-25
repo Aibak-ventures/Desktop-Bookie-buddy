@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/summary_amount_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -33,10 +34,10 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/pa
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/bloc/add_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -48,7 +49,6 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_c
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
@@ -66,9 +66,9 @@ import 'package:phone_form_field/phone_form_field.dart';
 import '../helpers/web_helper_stub.dart'
     if (dart.library.html) '../helpers/web_helper_web.dart'
     as web_helper;
+import '../widgets/old_booking_content_widget.dart';
 part '../widgets/booking_content_widget.dart';
 part '../widgets/sales_content_widget.dart';
-part '../widgets/old_booking_content_widget.dart';
 part '../widgets/product_search_helper.dart';
 part '../widgets/booking_date_section_widget.dart';
 
@@ -208,6 +208,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Customization state
   bool showCustomization = false;
 
+  late AddBookingCubit _addBookingCubit;
+
   void rebuild([VoidCallback? fn]) => setState(fn ?? () {});
 
   // Summary expansion state
@@ -224,6 +226,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _clientPhone2FieldController = PhoneController(
       initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
     );
+
+    _addBookingCubit = getIt<AddBookingCubit>();
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -292,6 +296,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _clientPhone1FieldController.dispose();
     _clientPhone2FieldController.dispose();
     _selectProductBloc.close();
+    _addBookingCubit.close();
     super.dispose();
   }
 
@@ -556,11 +561,37 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return pickupDate.dateOnly.isBefore(today);
   }
 
+  void _handleAddBookingState(BuildContext context, AddBookingState state) {
+    state.when(
+      initial: () {},
+      loading: () {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const Center(child: CircularProgressIndicator()),
+        );
+      },
+      success: (id, type) {
+        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+        _showBookingResult(id, type);
+      },
+      error: (message) {
+        if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+        context.showSnackBar(message, isError: true);
+        log('Error: $message');
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return PopScope(
+    return BlocProvider.value(
+      value: _addBookingCubit,
+      child: BlocListener<AddBookingCubit, AddBookingState>(
+        listener: _handleAddBookingState,
+        child: PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
@@ -593,6 +624,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
           ),
         ),
       ),
+        ),
+      ),
     );
   }
 
@@ -602,10 +635,68 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return Container(child: Center(child: Text('Custom Work - Coming Soon')));
     }
     if (selectedBookingType == BookingType.oldBooking) {
-      return _buildOldBookingContent();
+      return OldBookingContentWidget(
+        dateSection: _buildDateSelectionSection(),
+        serviceSection: _buildServiceSelectionSection(),
+        clientNameController: clientNameController,
+        phone1FieldController: _clientPhone1FieldController,
+        phone2FieldController: _clientPhone2FieldController,
+        clientPhone1Controller: clientPhone1Controller,
+        clientPhone2Controller: clientPhone2Controller,
+        clientAddressController: clientAddressController,
+        descriptionController: descriptionController,
+        selectedAdvanceAccount: selectedAdvanceAccount,
+        onAdvanceAccountChanged: (account) => rebuild(() => selectedAdvanceAccount = account),
+        selectedProductsNotifier: selectedProductsNotifier,
+        clientNameError: _clientNameError,
+        onClientIdChanged: (id) => setState(() => selectedClientId = id),
+        onCachePhoneE164: cachePhoneE164,
+        getDaysMultiplier: _getDaysMultiplierForProduct,
+        onConfirm: _handleConfirmOldBooking,
+      );
     }
     // Same UI for both booking and sales
     return _buildBookingContent();
+  }
+
+  void _handleConfirmOldBooking() {
+    final products = selectedProductsNotifier.value;
+
+    if (products.isEmpty) {
+      context.showSnackBar('Please select at least one item', isError: true);
+      return;
+    }
+
+    if (clientNameController.text.trim().isEmpty) {
+      setState(() => _clientNameError = 'Please enter client name');
+      context.showSnackBar('Please enter client name', isError: true);
+      return;
+    }
+
+    if (selectedAdvanceAccount == null) {
+      context.showSnackBar('Please select a payment option', isError: true);
+      return;
+    }
+
+    _addBookingCubit.submitOldBooking(_buildOldBookingRequest());
+  }
+
+  BookingRequestEntity _buildOldBookingRequest() {
+    return BookingRequestBuilder.buildOldBookingRequest(
+      products: selectedProductsNotifier.value,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: _getEffectiveRentalDays(),
+      selectedClientId: selectedClientId,
+      clientName: clientNameController.text.trim(),
+      phone1Raw: clientPhone1Controller.text.trim(),
+      phone2Raw: clientPhone2Controller.text.trim(),
+      address: clientAddressController.text.trim(),
+      bookedDate: _bookedDate,
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      description: _buildDescriptionWithPaymentSummary(),
+      advanceAccountId: selectedAdvanceAccount?.id,
+    );
   }
 
   void _showTimeError(String message) {
@@ -690,63 +781,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     Color? valueColor,
     bool isBold = false,
     bool isNegative = false,
-  }) {
-    final isTotalPayable = label == 'Total payable';
-    final isPaid = label == 'Paid';
-    final isProductTotal = label == 'Product total';
-
-    double labelSize = 15;
-    double valueSize = 13;
-    FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
-    FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
-    Color labelColor = const Color(0xFF3E3E3E);
-
-    if (isTotalPayable) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w600;
-      valueWeight = FontWeight.w700;
-      valueColor = const Color(0xFFD30000);
-    } else if (isPaid) {
-      labelSize = 15;
-      valueSize = 15;
-      labelWeight = FontWeight.w500;
-      valueWeight = FontWeight.w600;
-      valueColor = const Color(0xFF1AB000);
-    } else if (isProductTotal) {
-      labelSize = 13;
-      valueSize = 13;
-      labelWeight = FontWeight.w400;
-      valueWeight = FontWeight.w500;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: labelSize,
-              fontFamily: 'Inter',
-              fontWeight: labelWeight,
-              color: labelColor,
-            ),
-          ),
-          Text(
-            '${isNegative ? '-' : ''}${amount.abs().toCurrency()}',
-            style: TextStyle(
-              fontSize: valueSize,
-              fontFamily: 'Inter',
-              fontWeight: valueWeight,
-              color: valueColor ?? Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  }) =>
+      SummaryAmountRow(
+        label,
+        amount,
+        valueColor: valueColor,
+        isBold: isBold,
+        isNegative: isNegative,
+      );
 
   // Actions
 
@@ -757,7 +799,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _removeCharge(AdditionalChargesEntity charge) =>
       AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
 
-  void _handleConfirmBooking() async {
+  void _handleConfirmBooking() {
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -784,39 +826,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      final repository = getIt<IBookingRepository>();
-
-      if (selectedBookingType == BookingType.sales) {
-        final salesRequest = _buildSalesRequest();
-        final saleId = await repository.createSale(salesRequest);
-        _closeLoadingAndHandleResult(saleId, BookingType.sales);
-      } else {
-        final bookingRequest = _buildBookingRequest();
-        final bookingId = await repository.addBooking(bookingRequest);
-        _closeLoadingAndHandleResult(bookingId, BookingType.booking);
-      }
-    } catch (e) {
-      if (mounted) Navigator.of(context).pop();
-      if (mounted) {
-        final message = selectedBookingType == BookingType.sales
-            ? 'Failed to create sale: ${e.toString()}'
-            : 'Failed to create booking: ${e.toString()}';
-        context.showSnackBar(message, isError: true);
-      }
-      log('Error: $e');
+    if (selectedBookingType == BookingType.sales) {
+      _addBookingCubit.submitSale(_buildSalesRequest());
+    } else {
+      _addBookingCubit.submitBooking(_buildBookingRequest());
     }
   }
 
-  void _closeLoadingAndHandleResult(int id, BookingType type) {
-    if (!mounted) return;
-    Navigator.of(context).pop();
+  void _showBookingResult(int id, BookingType type) {
     if (!mounted) return;
     if (id != 0) {
       showBookingSuccessDialog(
@@ -829,9 +846,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       );
     } else {
       context.showSnackBar(
-        type == BookingType.sales
-            ? 'Sale created successfully!'
-            : 'Booking created successfully!',
+        type == BookingType.oldBooking
+            ? 'Old booking saved successfully!'
+            : type == BookingType.sales
+                ? 'Sale created successfully!'
+                : 'Booking created successfully!',
       );
       _closeScreen();
     }

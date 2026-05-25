@@ -15,8 +15,11 @@ import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/a
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_list_header.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_table_row.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_summary_section.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_filter_dialog.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_search_overlay_item.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
@@ -141,26 +144,19 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 7,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SalesFormDateSection(
-                                formController: _formController,
-                                onSelectDate: () => _selectSaleDate(context),
-                              ),
-                              const SizedBox(height: 16),
-                              Expanded(child: _buildProductsSection()),
-                            ],
+                    child: BookingTwoPanelLayout(
+                      left: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SalesFormDateSection(
+                            formController: _formController,
+                            onSelectDate: () => _selectSaleDate(context),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        SizedBox(width: 340, child: _buildRightSidePanel()),
-                      ],
+                          const SizedBox(height: 16),
+                          Expanded(child: _buildProductsSection()),
+                        ],
+                      ),
+                      right: _buildRightSidePanel(),
                     ),
                   ),
                 ),
@@ -614,31 +610,85 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       _priceRange.value = RangeValues(0, maxProductPrice);
     }
 
-    showDialog<SalesFilterResult>(
+    final serviceState = context.read<ServiceBloc>().state;
+    final allServices =
+        serviceState.whenOrNull(loaded: (s) => s) ?? <ServiceEntity>[];
+    final filteredServices = allServices
+        .where((s) => !s.mainServiceName.toLowerCase().contains('material'))
+        .toList();
+
+    List<String> computeTypes(int serviceId) {
+      if (serviceId == -1 || filteredServices.isEmpty) {
+        return ['Name', 'Category', 'Model', 'Color'];
+      }
+      final service = filteredServices.firstWhere(
+        (s) => s.id == serviceId,
+        orElse: () => filteredServices.first,
+      );
+      final type = MainServiceType.fromString(service.mainServiceName);
+      if (type.isMultiVariantProductType) {
+        return [
+          'Name',
+          type.categoryFieldLabel,
+          type.secondaryAttributeLabel ?? 'Color',
+          type.variantAttributeLabel,
+        ];
+      }
+      return [
+        'Name',
+        type.categoryFieldLabel,
+        type.secondaryAttributeLabel ?? 'Color',
+        'Color',
+      ];
+    }
+
+    showDialog<void>(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
-      builder: (_) => SalesProductFilterDialog(
+      builder: (_) => ProductFilterDialog(
+        services: filteredServices,
+        searchTypes: _searchTypes,
         initialServiceId: _selectedServiceId,
-        initialServiceType: _currentServiceType,
-        initialSearchTypes: _searchTypes,
         initialSearchTypeIndex: _selectedSearchTypeIndex.value,
-        initialIsPriceFilterEnabled: _isPriceFilterEnabled.value,
         initialPriceRange: _priceRange.value,
         initialMaxPrice: _maxPriceNotifier.value,
+        initialIsPriceFilterEnabled: _isPriceFilterEnabled.value,
+        computeSearchTypes: computeTypes,
+        onApply: ({
+          required int? serviceId,
+          required int searchTypeIndex,
+          required RangeValues priceRange,
+          required double maxPrice,
+          required bool isPriceFilterEnabled,
+        }) {
+          MainServiceType? serviceType;
+          List<String> newSearchTypes = ['Name', 'Category', 'Model', 'Color'];
+          if (serviceId != null &&
+              serviceId != -1 &&
+              filteredServices.isNotEmpty) {
+            serviceType = MainServiceType.fromString(
+              filteredServices
+                  .firstWhere(
+                    (s) => s.id == serviceId,
+                    orElse: () => filteredServices.first,
+                  )
+                  .mainServiceName,
+            );
+            newSearchTypes = computeTypes(serviceId);
+          }
+          setState(() {
+            _selectedServiceId = serviceId;
+            _currentServiceType = serviceType;
+            _searchTypes = newSearchTypes;
+            _selectedSearchTypeIndex.value = searchTypeIndex;
+            _isPriceFilterEnabled.value = isPriceFilterEnabled;
+            _priceRange.value = priceRange;
+            _maxPriceNotifier.value = maxPrice;
+          });
+          _applyProductFilters();
+        },
       ),
-    ).then((result) {
-      if (result == null) return;
-      setState(() {
-        _selectedServiceId = result.serviceId;
-        _currentServiceType = result.serviceType;
-        _searchTypes = result.searchTypes;
-        _selectedSearchTypeIndex.value = result.searchTypeIndex;
-        _isPriceFilterEnabled.value = result.isPriceFilterEnabled;
-        _priceRange.value = result.priceRange;
-        _maxPriceNotifier.value = result.maxPrice;
-      });
-      _applyProductFilters();
-    });
+    );
   }
 
   void _showSearchOverlay() {
@@ -814,9 +864,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                       height: 1,
                                       color: Colors.grey.shade200,
                                     ),
-                                    itemBuilder: (_, i) =>
-                                        SalesSearchOverlayItem(
+                                    itemBuilder: (_, i) => OverlaySearchItem(
                                           product: productList[i],
+                                          isSales: true,
                                           onAddProduct: (variant) {
                                             _removeSearchOverlay();
                                             _serviceSearchController.clear();

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      // ignore: deprecated_member_use
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -18,7 +17,7 @@ Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: 0.15),
                 blurRadius: 40,
                 offset: const Offset(0, 10),
               ),
@@ -46,7 +45,7 @@ Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFF9800).withOpacity(0.2),
+                        color: const Color(0xFFFF9800).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -140,7 +139,7 @@ Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shadowColor:
-                                  const Color(0xFFFF5252).withOpacity(0.3),
+                                  const Color(0xFFFF5252).withValues(alpha: 0.3),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

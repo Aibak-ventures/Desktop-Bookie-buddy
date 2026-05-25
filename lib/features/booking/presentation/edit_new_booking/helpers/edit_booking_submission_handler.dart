@@ -29,7 +29,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // Save handler
   // ---------------------------------------------------------------------------
 
-  Future<void> _handleSaveBooking() async {
+  void _handleSaveBooking() {
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -71,63 +71,27 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       return;
     }
 
-    GlobalLoadingOverlay.show(context);
+    if (widget.bookingDetails != null) {
+      final partialUpdate = _buildPartialUpdateRequest();
 
-    try {
-      final repository = getIt<IBookingRepository>();
+      final currentDocs = documentsNotifier.value;
+      final originalDocPaths =
+          _originalDocuments?.map((d) => d.path).toSet() ?? {};
+      final currentDocPaths = currentDocs.map((d) => d.path).toSet();
 
-      if (widget.bookingDetails != null) {
-        final partialUpdate = _buildPartialUpdateRequest();
+      final removedUrls = originalDocPaths.difference(currentDocPaths).toList();
+      final newDocs = currentDocs.where((d) => d.bytes != null).toList();
 
-        // Detect document changes
-        final currentDocs = documentsNotifier.value;
-        final originalDocPaths =
-            _originalDocuments?.map((d) => d.path).toSet() ?? {};
-        final currentDocPaths = currentDocs.map((d) => d.path).toSet();
+      log('📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}');
 
-        final removedUrls = originalDocPaths.difference(currentDocPaths).toList();
-        final newDocs = currentDocs.where((d) => d.bytes != null).toList();
-
-        log(
-          '📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}',
-        );
-
-        await repository.updateBookingPartial(
-          widget.bookingDetails!.id,
-          partialUpdate,
-          newDocuments: newDocs.isNotEmpty ? newDocs : null,
-          removedDocumentUrls: removedUrls.isNotEmpty ? removedUrls : null,
-        );
-
-        GlobalLoadingOverlay.hide();
-        if (mounted) {
-          context.showSnackBar('Booking updated successfully!');
-          if (widget.onClose != null) {
-            widget.onClose!();
-          } else {
-            Navigator.of(context).pop(true);
-          }
-        }
-      } else if (widget.saleDetails != null) {
-        final salesRequest = _buildSalesRequest();
-        await getIt<ISalesRepository>().updateSale(salesRequest);
-        GlobalLoadingOverlay.hide();
-        if (mounted) {
-          context.showSnackBar('Sale updated successfully!');
-          if (widget.onClose != null) {
-            widget.onClose!();
-          } else {
-            Navigator.of(context).pop();
-          }
-        }
-      }
-    } catch (e) {
-      GlobalLoadingOverlay.hide();
-      if (mounted) {
-        final formattedError = _formatBookingError(e.toString());
-        context.showSnackBar(formattedError, isError: true);
-      }
-      log('Error saving: $e');
+      _editBookingCubit.updateBooking(
+        widget.bookingDetails!.id,
+        partialUpdate,
+        newDocuments: newDocs.isNotEmpty ? newDocs : null,
+        removedDocumentUrls: removedUrls.isNotEmpty ? removedUrls : null,
+      );
+    } else if (widget.saleDetails != null) {
+      _editBookingCubit.updateSale(_buildSalesRequest());
     }
   }
 
