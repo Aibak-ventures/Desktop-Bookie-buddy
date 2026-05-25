@@ -71,7 +71,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     bool sendPdfToWhatsApp,
     @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
     @JsonKey(name: 'security_account_id') int? securityPaymentAccountId,
-    //TODO: Verify from backend that this api key is correctly used.
+   
 
     // Use this field when creating old booking with account id.
     @JsonKey(name: 'account_id') int? oldBookingAccountId,
