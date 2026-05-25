@@ -138,7 +138,7 @@ class AccountsSummaryScreen extends StatelessWidget {
                         onDelete: () {
                           performSecureActionDialog(
                             context,
-                            //TODO: support full time password
+                            
                             SecretPasswordLocations.ledgerView,
                             onSuccess: () async {
                               // get delete function to call inside the confirmation dialog
