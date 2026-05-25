@@ -23,7 +23,7 @@ import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
@@ -38,7 +38,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/se
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
@@ -50,7 +50,6 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_info_e
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
@@ -219,6 +218,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   bool showCustomization = false;
 
+  late EditBookingCubit _editBookingCubit;
+
   void rebuild([VoidCallback? fn]) => setState(fn ?? () {});
 
   @override
@@ -232,6 +233,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _clientPhone2FieldController = PhoneController(
       initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
     );
+
+    _editBookingCubit = getIt<EditBookingCubit>();
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -293,6 +296,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _clientPhone1FieldController.dispose();
     _clientPhone2FieldController.dispose();
     _selectProductBloc.close();
+    _editBookingCubit.close();
     super.dispose();
   }
 
@@ -332,11 +336,41 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
+  void _handleEditBookingState(BuildContext context, EditBookingState state) {
+    state.when(
+      initial: () {},
+      loading: () {
+        GlobalLoadingOverlay.show(context);
+      },
+      success: (isBooking) {
+        GlobalLoadingOverlay.hide();
+        if (!mounted) return;
+        context.showSnackBar(
+          isBooking ? 'Booking updated successfully!' : 'Sale updated successfully!',
+        );
+        if (widget.onClose != null) {
+          widget.onClose!();
+        } else {
+          Navigator.of(context).pop(isBooking ? true : null);
+        }
+      },
+      error: (message) {
+        GlobalLoadingOverlay.hide();
+        if (!mounted) return;
+        context.showSnackBar(_formatBookingError(message), isError: true);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
 
-    return PopScope(
+    return BlocProvider.value(
+      value: _editBookingCubit,
+      child: BlocListener<EditBookingCubit, EditBookingState>(
+        listener: _handleEditBookingState,
+        child: PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
@@ -371,8 +405,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             ),
           ),
         ),
+        ),
       ),
-    );
+    ));
   }
 
   Widget _buildMainContent() {

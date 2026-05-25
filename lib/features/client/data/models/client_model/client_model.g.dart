@@ -8,11 +8,11 @@ part of 'client_model.dart';
 
 _ClientModel _$ClientModelFromJson(Map<String, dynamic> json) => _ClientModel(
   id: (json['id'] as num?)?.toInt(),
-  name: _readName(json, 'name'),
+  name: _readName(json, 'name') as String,
   phone1: (_readPhone1(json, 'phone_1') as num).toInt(),
   phone2: (_readPhone2(json, 'phone_2') as num?)?.toInt(),
-  phone1E164: _readPhone1E164(json, 'phone_1_e164'),
-  phone2E164: _readPhone2E164(json, 'phone_2_e164'),
+  phone1E164: _readPhone1E164(json, 'phone_1_e164') as String?,
+  phone2E164: _readPhone2E164(json, 'phone_2_e164') as String?,
 );
 
 Map<String, dynamic> _$ClientModelToJson(_ClientModel instance) =>
