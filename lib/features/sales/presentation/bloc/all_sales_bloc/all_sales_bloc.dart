@@ -9,8 +9,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'all_sales_bloc.freezed.dart';
-part 'all_sales_event.dart';
-part 'all_sales_state.dart';
+
+@freezed
+abstract class AllSalesEvent with _$AllSalesEvent {
+  const factory AllSalesEvent.loadSales({
+    int? page,
+    String? searchQuery,
+    String? fromDate,
+    String? toDate,
+  }) = _LoadSales;
+  const factory AllSalesEvent.loadMoreSales() = _LoadMoreSales;
+}
+
+@freezed
+abstract class AllSalesState with _$AllSalesState {
+  const factory AllSalesState.loading() = _Loading;
+  const factory AllSalesState.loaded({
+    required List<SaleEntity> sales,
+    String? nextPageUrl,
+    String? searchQuery,
+    @Default(false) bool isPaginating,
+    String? fromDate,
+    String? toDate,
+  }) = _Loaded;
+  const factory AllSalesState.error(String message) = _Error;
+}
 
 class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
   final GetSalesUseCase _getSalesUseCase;

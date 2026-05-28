@@ -6,8 +6,15 @@ import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_en
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'save_sales_state.dart';
 part 'save_sales_cubit.freezed.dart';
+
+@freezed
+abstract class SaveSalesState with _$SaveSalesState {
+  const factory SaveSalesState.initial() = _Initial;
+  const factory SaveSalesState.saving() = _Saving;
+  const factory SaveSalesState.success([String? message]) = _Success;
+  const factory SaveSalesState.failure(String message) = _Failure;
+}
 
 class SaveSalesCubit extends Cubit<SaveSalesState> {
   final CreateSaleUseCase _createSaleUseCase;
@@ -24,7 +31,6 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     required SalesRequestEntity salesRequest,
     bool isEditMode = false,
   }) async {
-    // ✅ VALIDATION FIRST
     final products = salesRequest.products;
 
     if (products == null || products.isEmpty) {
@@ -56,7 +62,6 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
       return;
     }
 
-    // ✅ SAVE
     emit(const SaveSalesState.saving());
     try {
       isEditMode
@@ -74,10 +79,7 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     }
   }
 
-  /// Formats backend error messages into clean, user-readable text
   String _formatSalesError(String rawError) {
-    // Handle "Insufficient stock for ProductName (VariantName). Available: X, requested: Y."
-    // → "Not enough stock: ProductName is unavailable. Please remove it from the sale."
     final insufficientStockRegex = RegExp(
       r'Insufficient stock for (.+?)\s*\(.*?\)\.',
       caseSensitive: false,
@@ -88,7 +90,6 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
       return 'Not enough stock for "$productName". Please remove it from the sale or reduce the quantity.';
     }
 
-    // Handle other validation errors - just return the message as-is (it's already extracted cleanly)
     return rawError;
   }
 }
