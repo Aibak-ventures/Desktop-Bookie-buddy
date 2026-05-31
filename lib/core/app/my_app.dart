@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/pwa/pwa_update_listener_wrapper.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -142,7 +143,7 @@ class MyApp extends StatelessWidget {
             child: child ?? const SizedBox.shrink(),
           );
         },
-        home: const SplashScreen(),
+        home: const PwaUpdateListenerWrapper(child: SplashScreen()),
       ),
     );
   }
