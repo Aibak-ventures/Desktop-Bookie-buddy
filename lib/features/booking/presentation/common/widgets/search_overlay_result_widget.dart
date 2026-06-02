@@ -40,6 +40,13 @@ class OverlaySearchItem extends StatefulWidget {
 class OverlaySearchItemState extends State<OverlaySearchItem> {
   ProductVariantEntity? selectedVariant;
   bool _isImageHovered = false;
+  final ScrollController _variantScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _variantScrollController.dispose();
+    super.dispose();
+  }
 
   void _handleKeyboardActivate() {
     final variantToAdd =
@@ -319,27 +326,30 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                   child: SizedBox(
                     height: 40,
                     child: variants.isNotEmpty
-                        ? SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: variants.map((variant) {
-                                final isSelected =
-                                    selectedVariant?.id == variant.id;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 4),
-                                  child: SelectableVariantChip(
-                                    text: variant.attribute,
-                                    quantity:
-                                        variant.remainingStock ?? variant.stock,
-                                    isSelected: isSelected,
-                                    onTap: () {
-                                      setState(() {
-                                        selectedVariant = variant;
-                                      });
-                                    },
-                                  ),
-                                );
-                              }).toList(),
+                        ? Scrollbar(
+                            controller: _variantScrollController,
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              controller: _variantScrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: variants.map((variant) {
+                                  final isSelected =
+                                      selectedVariant?.id == variant.id;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 4),
+                                    child: SelectableVariantChip(
+                                      text: variant.attribute,
+                                      isSelected: isSelected,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedVariant = variant;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           )
                         : const SizedBox.shrink(),
@@ -409,42 +419,6 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                     ),
                     Text(
                       '₹$price',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 12),
-              // Divider
-              Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-              const SizedBox(width: 12),
-
-              // Available Quantity section
-              SizedBox(
-                width: 80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'avl qty',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    Text(
-                      selectedVariant != null
-                          ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
-                          : (variants.isNotEmpty
-                                ? '${variants.first.remainingStock ?? variants.first.stock}'
-                                : '0'),
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
@@ -530,13 +504,11 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
 // Selectable variant chip widget
 class SelectableVariantChip extends StatelessWidget {
   final String text;
-  final int quantity;
   final bool isSelected;
   final VoidCallback onTap;
 
   const SelectableVariantChip({
     required this.text,
-    required this.quantity,
     required this.isSelected,
     required this.onTap,
   });
@@ -549,11 +521,11 @@ class SelectableVariantChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: isShortText ? 46 : null,
-        height: 46,
+        width: isShortText ? 33 : null,
+        height: 33,
         padding: isShortText
             ? null
-            : const EdgeInsets.symmetric(horizontal: 10),
+            : const EdgeInsets.symmetric(horizontal: 12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
@@ -564,30 +536,13 @@ class SelectableVariantChip extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
-              ),
-            ),
-            Text(
-              '$quantity',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w700,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
-              ),
-            ),
-          ],
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
         ),
       ),
     );
