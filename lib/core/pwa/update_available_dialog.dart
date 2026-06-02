@@ -3,10 +3,13 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 void showUpdateAvailableDialog(BuildContext context) {
-  showDialog<void>(
+  showGeneralDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (_) => const _UpdateAvailableDialog(),
+    barrierLabel: 'update',
+    barrierColor: Colors.black.withValues(alpha: 0.4),
+    transitionDuration: Duration.zero,
+    pageBuilder: (_, __, ___) => const _UpdateAvailableDialog(),
   );
 }
 
@@ -15,17 +18,17 @@ class _UpdateAvailableDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      contentPadding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
-      content: SizedBox(
+      child: Container(
         width: 360,
+        padding: const EdgeInsets.all(28),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 56,
-              height: 56,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
                 color: AppColors.purpleLight,
                 borderRadius: BorderRadius.circular(12),
@@ -33,7 +36,7 @@ class _UpdateAvailableDialog extends StatelessWidget {
               child: const Icon(
                 Icons.system_update_alt_rounded,
                 color: AppColors.purple,
-                size: 28,
+                size: 26,
               ),
             ),
             const SizedBox(height: 16),
@@ -42,12 +45,11 @@ class _UpdateAvailableDialog extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black87,
               ),
             ),
             const SizedBox(height: 8),
             const Text(
-              'A newer version of Bookie Buddy has been released. Refresh now to get the latest features and fixes.',
+              'A newer version of Bookie Buddy has been released. Refresh now to get the latest version.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: AppColors.grey),
             ),
@@ -57,13 +59,6 @@ class _UpdateAvailableDialog extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: AppColors.greyBorder),
-                      foregroundColor: AppColors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
                     child: const Text('Later'),
                   ),
                 ),
@@ -73,10 +68,7 @@ class _UpdateAvailableDialog extends StatelessWidget {
                     onPressed: PwaUpdateService.reload,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.purple,
-                      foregroundColor: AppColors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      foregroundColor: Colors.white,
                     ),
                     child: const Text('Refresh Now'),
                   ),

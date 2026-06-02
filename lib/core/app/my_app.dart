@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/core/pwa/pwa_update_listener_wrapper.dart';
+import 'package:bookie_buddy_web/core/pwa/pwa_update_service.dart';
+import 'package:bookie_buddy_web/core/pwa/update_available_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,14 +21,33 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        PwaUpdateService.listenForUpdates(() {
+          final ctx = navigatorKey.currentState?.overlay?.context;
+          if (ctx != null) showUpdateAvailableDialog(ctx);
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +163,7 @@ class MyApp extends StatelessWidget {
             child: child ?? const SizedBox.shrink(),
           );
         },
-        home: const PwaUpdateListenerWrapper(child: SplashScreen()),
+        home: const SplashScreen(),
       ),
     );
   }
