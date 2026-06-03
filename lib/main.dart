@@ -11,7 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  //
   // Suppress known Flutter keyboard errors on Windows
   FlutterError.onError = (FlutterErrorDetails details) {
     // Filter out the RawKeyboard assertion error which is a known framework issue
