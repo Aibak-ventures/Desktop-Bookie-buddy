@@ -324,7 +324,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
               if (widget.product.mainServiceType.isMultiVariantProductType)
                 Expanded(
                   child: SizedBox(
-                    height: 40,
+                    height: 44,
                     child: variants.isNotEmpty
                         ? Scrollbar(
                             controller: _variantScrollController,
@@ -337,10 +337,12 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                                   final isSelected =
                                       selectedVariant?.id == variant.id;
                                   return Padding(
-                                    padding: const EdgeInsets.only(right: 4),
+                                    padding: const EdgeInsets.only(right: 6),
                                     child: SelectableVariantChip(
                                       text: variant.attribute,
                                       isSelected: isSelected,
+                                      stock: variant.remainingStock ??
+                                          variant.stock,
                                       onTap: () {
                                         setState(() {
                                           selectedVariant = variant;
@@ -507,25 +509,31 @@ class SelectableVariantChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
+  /// Available stock for this variant, shown as a small badge on the chip.
+  final int? stock;
+
   const SelectableVariantChip({
     required this.text,
     required this.isSelected,
     required this.onTap,
+    this.stock,
   });
 
   @override
   Widget build(BuildContext context) {
     final isShortText = text.length <= 3;
+    final hasStock = stock != null;
+    final isOutOfStock = (stock ?? 0) <= 0;
 
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: isShortText ? 33 : null,
-        height: 33,
+        height: 37,
         padding: isShortText
             ? null
-            : const EdgeInsets.symmetric(horizontal: 12),
+            : const EdgeInsets.symmetric(horizontal: 14),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
@@ -536,13 +544,32 @@ class SelectableVariantChip extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                height: 1.1,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            if (hasStock)
+              Text(
+                '${stock!}',
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.1,
+                  fontWeight: FontWeight.w700,
+                  color: isOutOfStock
+                      ? Colors.red.shade400
+                      :  Colors.grey.shade600,
+                ),
+              ),
+          ],
         ),
       ),
     );

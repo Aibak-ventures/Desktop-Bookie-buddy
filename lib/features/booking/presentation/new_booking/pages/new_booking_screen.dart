@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/summary_amount_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
@@ -829,7 +832,12 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (selectedBookingType == BookingType.sales) {
       _addBookingCubit.submitSale(_buildSalesRequest());
     } else {
-      _addBookingCubit.submitBooking(_buildBookingRequest());
+      _addBookingCubit.submitBooking(
+        _buildBookingRequest(),
+        documents: documentsNotifier.value.isEmpty
+            ? null
+            : List<DocumentFileEntity>.from(documentsNotifier.value),
+      );
     }
   }
 

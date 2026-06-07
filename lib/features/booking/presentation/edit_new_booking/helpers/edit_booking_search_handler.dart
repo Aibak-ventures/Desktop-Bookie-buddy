@@ -270,6 +270,12 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
+    final effectivePickup = BookingDateCalculator.effectivePickupDateStr(
+      pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     if (hasAnyFilter) {
       _selectProductBloc.add(
@@ -279,7 +285,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           type: searchType,
           startPrice: isPriceEnabled ? _priceRange.start.toInt() : null,
           endPrice: isPriceEnabled ? _priceRange.end.toInt() : null,
-          pickupDate: pickupDate.format(),
+          pickupDate: effectivePickup,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -291,7 +297,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
-          pickupDate: pickupDate.format(),
+          pickupDate: effectivePickup,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -317,6 +323,12 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
+    final effectivePickup = BookingDateCalculator.effectivePickupDateStr(
+      pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     final hasFilters =
         _isPriceFilterEnabled.value || _selectedSearchTypeIndex.value != 0;
@@ -325,7 +337,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
-          pickupDate: pickupDate.format(),
+          pickupDate: effectivePickup,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -347,7 +359,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           endPrice: _isPriceFilterEnabled.value
               ? _priceRange.value.end.toInt()
               : null,
-          pickupDate: pickupDate.format(),
+          pickupDate: effectivePickup,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,

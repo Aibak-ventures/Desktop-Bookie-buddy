@@ -233,14 +233,13 @@ extension BookingFlowBuilders on NewBookingScreenState {
 
                   const SizedBox(height: 7),
 
-                  // Upload documents - Hidden for now
-                  // if (selectedBookingType == BookingType.booking) ...[
-                  //   const SizedBox(height: 8),
-                  //   BookingDocumentUploadSection(
-                  //     documentsNotifier: documentsNotifier,
-                  //   ),
-                  //   const SizedBox(height: 7),
-                  // ],
+                  // Upload documents - Optional (images / PDFs / docs)
+                  if (selectedBookingType == BookingType.booking) ...[
+                    BookingDocumentUploadSection(
+                      documentsNotifier: documentsNotifier,
+                    ),
+                    const SizedBox(height: 7),
+                  ],
 
                   // Staff Details - Required
                   Row(

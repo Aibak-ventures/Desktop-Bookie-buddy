@@ -49,11 +49,18 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Create a booking
   @override
-  Future<int> addBooking(BookingRequestEntity bookingData) async {
+  Future<int> addBooking(
+    BookingRequestEntity bookingData, {
+    List<DocumentFileEntity>? documents,
+  }) async {
     try {
       final response = await safeApiCall(
-        () =>
-            _datasource.addBooking(BookingRequestModel.fromEntity(bookingData)),
+        () => _datasource.addBooking(
+          BookingRequestModel.fromEntity(bookingData),
+          documents: documents == null
+              ? null
+              : DocumentFileModel.fromEntityList(documents),
+        ),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {

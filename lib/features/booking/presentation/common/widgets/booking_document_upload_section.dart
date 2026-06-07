@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
@@ -242,6 +243,9 @@ class BookingDocumentUploadSection extends StatelessWidget {
         final newDocs = <DocumentFileEntity>[];
 
         for (final file in result.files) {
+          // On web `file.path` throws — only use it on native platforms.
+          final filePath = kIsWeb ? '' : (file.path ?? '');
+
           // Validate file size (max 10MB)
           if (file.bytes != null && file.bytes!.length > 10 * 1024 * 1024) {
             if (context.mounted) {
@@ -268,7 +272,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
               newDocs.add(
                 DocumentFileEntity(
                   name: file.name,
-                  path: file.path ?? '',
+                  path: filePath,
                   bytes: compressedBytes,
                 ),
               );
@@ -278,7 +282,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
               newDocs.add(
                 DocumentFileEntity(
                   name: file.name,
-                  path: file.path ?? '',
+                  path: filePath,
                   bytes: file.bytes,
                 ),
               );
@@ -288,7 +292,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
             newDocs.add(
               DocumentFileEntity(
                 name: file.name,
-                path: file.path ?? '',
+                path: filePath,
                 bytes: file.bytes,
               ),
             );

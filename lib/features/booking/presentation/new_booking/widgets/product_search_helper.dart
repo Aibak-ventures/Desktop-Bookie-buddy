@@ -87,6 +87,10 @@ extension ProductSearchBuilders on NewBookingScreenState {
     final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
+    // For bookings, never check availability against a past pickup date.
+    final availabilityPickupDate = isBooking
+        ? BookingDateCalculator.clampToTodayForAvailability(pickupDate).format()
+        : pickupDate.format();
 
     _showAllProductsOnSearchFocus = true;
     _overlayIsLoading.value = true;
@@ -105,7 +109,7 @@ extension ProductSearchBuilders on NewBookingScreenState {
         endPrice: _isPriceFilterEnabled.value
             ? _priceRange.value.end.round()
             : null,
-        pickupDate: pickupDate.format(),
+        pickupDate: availabilityPickupDate,
         returnDate: effectiveReturnDate,
         pickupTime: pickupTime,
         returnTime: returnTime,
@@ -133,12 +137,16 @@ extension ProductSearchBuilders on NewBookingScreenState {
     final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
+    // For bookings, never check availability against a past pickup date.
+    final availabilityPickupDate = isBooking
+        ? BookingDateCalculator.clampToTodayForAvailability(pickupDate).format()
+        : pickupDate.format();
 
     if (!hasAnyFilter) {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
-          pickupDate: pickupDate.format(),
+          pickupDate: availabilityPickupDate,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -160,7 +168,7 @@ extension ProductSearchBuilders on NewBookingScreenState {
           type: hasSearchQuery ? searchType : null,
           startPrice: hasPriceFilter ? _priceRange.value.start.round() : null,
           endPrice: hasPriceFilter ? _priceRange.value.end.round() : null,
-          pickupDate: pickupDate.format(),
+          pickupDate: availabilityPickupDate,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -524,6 +532,10 @@ extension ProductSearchBuilders on NewBookingScreenState {
     final effectiveReturnDate = isBooking && coolingPeriodMode.isAfter
         ? returnDate.add(Duration(days: coolingPeriodDays)).format()
         : returnDate.format();
+    // For bookings, never check availability against a past pickup date.
+    final availabilityPickupDate = isBooking
+        ? BookingDateCalculator.clampToTodayForAvailability(pickupDate).format()
+        : pickupDate.format();
 
     final searchType =
         BookingSearchRules.resolveSearchType(
@@ -543,7 +555,7 @@ extension ProductSearchBuilders on NewBookingScreenState {
           type: hasSearchQuery ? searchType : null,
           startPrice: isPriceEnabled ? priceRange.start.round() : null,
           endPrice: isPriceEnabled ? priceRange.end.round() : null,
-          pickupDate: pickupDate.format(),
+          pickupDate: availabilityPickupDate,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,
@@ -555,7 +567,7 @@ extension ProductSearchBuilders on NewBookingScreenState {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
-          pickupDate: pickupDate.format(),
+          pickupDate: availabilityPickupDate,
           returnDate: effectiveReturnDate,
           pickupTime: pickupTime,
           returnTime: returnTime,

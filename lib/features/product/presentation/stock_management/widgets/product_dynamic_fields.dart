@@ -319,16 +319,19 @@ class ProductDynamicFields extends StatelessWidget {
     } else {
       // DEFAULT (Vehicles, Gadgets, Equipment, etc.)
       commonFields.addAll([
-        SizedBox(
-          width: 280,
-          child: CustomTextField(
-            label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
-            controller: stockController,
-            keyboardType: TextInputType.number,
-            validator: (value) =>
-                AppInputValidators.quantity(value, allowZero: true),
+        // Gadgets manage stock through individual serial-number variants, so the
+        // single quantity field is hidden for them.
+        if (!mainServiceType.isGadget)
+          SizedBox(
+            width: 280,
+            child: CustomTextField(
+              label: mainServiceType.isVehicle ? 'Unit' : 'Quantity',
+              controller: stockController,
+              keyboardType: TextInputType.number,
+              validator: (value) =>
+                  AppInputValidators.quantity(value, allowZero: true),
+            ),
           ),
-        ),
         SizedBox(
           width: 280,
           child: CustomTextField(
