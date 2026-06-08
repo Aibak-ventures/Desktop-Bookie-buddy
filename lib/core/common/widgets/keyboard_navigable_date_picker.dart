@@ -255,13 +255,16 @@ class _KeyboardNavigableDatePickerState
         final isToday = _isSameDay(date, DateTime.now());
 
         return GestureDetector(
-          onTap: () {
-            setState(() {
-              _selectedDate = date;
-              _focusedDate = date;
-            });
-            widget.onDateSelected?.call(date);
-          },
+          onTap: isInRange
+              ? () {
+                  setState(() {
+                    _selectedDate = date;
+                    _focusedDate = date;
+                  });
+                  widget.onDateSelected?.call(date);
+                  Navigator.of(context).pop(date);
+                }
+              : null,
           child: Container(
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_old_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/create_sale_booking_usecase.dart';
@@ -24,10 +25,13 @@ class AddBookingCubit extends Cubit<AddBookingState> {
         _createOldBooking = createOldBooking,
         super(const AddBookingState.initial());
 
-  Future<void> submitBooking(BookingRequestEntity request) async {
+  Future<void> submitBooking(
+    BookingRequestEntity request, {
+    List<DocumentFileEntity>? documents,
+  }) async {
     emit(const AddBookingState.loading());
     try {
-      final id = await _addBooking(request);
+      final id = await _addBooking(request, documents: documents);
       emit(AddBookingState.success(id: id, type: BookingType.booking));
     } catch (e) {
       emit(AddBookingState.error(message: e.toString()));

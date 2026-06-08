@@ -192,6 +192,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
     final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+    // On click open the original (OG) image, not the thumbnail.
+    final fullImageUrl = product.variant.image ?? product.variant.thumbnailImage;
     final effectiveDaysMultiplier =
         (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
         ? (rentalDays > 0 ? rentalDays : 1)
@@ -219,7 +221,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                     onTap: hasImage
                         ? () => ZoomableImageDialog.show(
                             context,
-                            imageUrl: imageUrl,
+                            imageUrl: fullImageUrl ?? imageUrl,
                             title: product.variant.name,
                           )
                         : null,
@@ -618,6 +620,14 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       bookingType: widget.selectedBookingType,
     );
     if (identical(updatedProducts, widget.selectedProductsNotifier.value)) {
+      // Increment was blocked (out of / exceeds available stock) — tell the user
+      // instead of silently doing nothing.
+      final availableStock =
+          product.variant.remainingStock ?? product.variant.stock ?? 0;
+      context.showSnackBar(
+        'Cannot add more. Available stock: $availableStock',
+        isError: true,
+      );
       return;
     }
 

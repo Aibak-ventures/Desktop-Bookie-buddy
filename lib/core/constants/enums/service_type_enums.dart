@@ -68,8 +68,9 @@ extension MainServiceTypeX on MainServiceType? {
   bool get isOthers => this == MainServiceType.others;
 
   /// Returns true for service types that support multi-variant product setup
-  /// (dress sizes, costume sizes, shoe sizes, bridal sizes)
-  bool get needsVariantsSection => isDress || isCostume || isShoes || isBridal;
+  /// (dress sizes, costume sizes, shoe sizes, bridal sizes, gadget serials)
+  bool get needsVariantsSection =>
+      isDress || isCostume || isShoes || isBridal || isGadget;
 
   // ==================== Variant Management ====================
 

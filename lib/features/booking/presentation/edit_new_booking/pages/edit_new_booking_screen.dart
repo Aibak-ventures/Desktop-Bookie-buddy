@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
@@ -442,22 +444,15 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
-  static Widget _applyPickerTheme(BuildContext ctx, Widget? child) => Theme(
-    data: Theme.of(ctx).copyWith(
-      colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-    ),
-    child: child!,
-  );
-
   Future<void> _selectDate({required bool isPickup}) async {
     final initialDate = isPickup ? pickupDate : returnDate;
     final now = DateTime.now();
-    final picked = await showDatePicker(
+    final picked = await showKeyboardDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: isPickup ? DateTime(now.year - 5) : pickupDate,
       lastDate: now.add(const Duration(days: 365 * 2)),
-      builder: _applyPickerTheme,
+      selectedColor: const Color(0xFF6132E4),
     );
     if (picked != null) {
       setState(() {
@@ -478,10 +473,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   Future<void> _selectTime({required bool isPickup}) async {
     final initialTime =
         isPickup ? (pickupTime ?? TimeOfDay.now()) : (returnTime ?? TimeOfDay.now());
-    final picked = await showTimePicker(
+    final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
-      builder: _applyPickerTheme,
+      selectedColor: const Color(0xFF6132E4),
     );
     if (picked != null) {
       setState(() {
@@ -508,12 +503,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
-  /// Handles the full cooling-settings change cascade:
-  /// recalculates cooling period → reloads products → checks selected availability.
-  /// Called from both the cooling-mode toggle and the cooling-days dropdown.
+  /// Handles the cooling-settings change cascade:
+  /// recalculates cooling period → checks selected availability.
+  ///
+  /// Note: this intentionally does NOT also call [_loadAvailableProducts].
+  /// Both that loader and [_checkSelectedProductsAvailability] hit the same
+  /// `available-products` endpoint, which previously caused the availability
+  /// API to fire twice on every cooling change. The availability check already
+  /// sends the selected variant ids for the new cooling window (and surfaces the
+  /// unavailable-products dialog); the searchable product list refreshes on the
+  /// next search interaction. Called from the cooling-mode toggle and dropdown.
   void _onCoolingSettingsChanged() {
     _updateCoolingPeriod();
-    _loadAvailableProducts();
     _checkSelectedProductsAvailability();
   }
 
@@ -791,6 +792,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 });
                 _onCoolingSettingsChanged();
               },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               child: Text(
                 coolingPeriodMode.isAfter ? 'After' : 'Before',
                 style: const TextStyle(

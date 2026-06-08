@@ -34,16 +34,31 @@ class BookingRemoteDatasource {
   }
 
   Future<CustomResponseModel> addBooking(
-    BookingRequestModel bookingData,
-  ) async {
+    BookingRequestModel bookingData, {
+    List<DocumentFileModel>? documents,
+  }) async {
     try {
       final data = bookingData.toBookingJson();
+      final hasDocuments = documents != null && documents.isNotEmpty;
 
       log(data.toString());
-      final response = await _dio.post(
-        ApiEndpoints.bookings.bookingsV5,
-        data: data,
-      );
+
+      final Response response;
+      if (hasDocuments) {
+        // When documents are attached the payload must be sent as multipart so
+        // the files ride along with the booking fields.
+        final formData = _buildBookingFormData(data, documents: documents);
+        response = await _dio.post(
+          ApiEndpoints.bookings.bookingsV5,
+          data: formData,
+          options: Options(contentType: 'multipart/form-data'),
+        );
+      } else {
+        response = await _dio.post(
+          ApiEndpoints.bookings.bookingsV5,
+          data: data,
+        );
+      }
 
       log(
         'add booking response: ${response.realUri.toString()}, data: ${response.data}',
@@ -52,6 +67,79 @@ class BookingRemoteDatasource {
     } catch (e, stack) {
       log('Error adding booking: $e', stackTrace: stack);
       rethrow;
+    }
+  }
+
+  /// Builds a [FormData] from a booking JSON map, encoding nested lists/objects
+  /// the way the booking API expects (arrays as JSON strings, objects with
+  /// bracket notation) and attaching [documents] as `documents[n]` files.
+  FormData _buildBookingFormData(
+    Map<String, dynamic> data, {
+    required List<DocumentFileModel> documents,
+  }) {
+    final formData = FormData();
+
+    data.forEach((key, value) {
+      if (value == null) return;
+      if (value is List) {
+        formData.fields.add(MapEntry(key, jsonEncode(value)));
+      } else if (value is Map) {
+        (value as Map<String, dynamic>).forEach((subKey, subValue) {
+          if (subValue != null) {
+            formData.fields.add(
+              MapEntry('$key[$subKey]', subValue.toString()),
+            );
+          }
+        });
+      } else {
+        formData.fields.add(MapEntry(key, value.toString()));
+      }
+    });
+
+    for (int i = 0; i < documents.length; i++) {
+      final doc = documents[i];
+      if (doc.bytes != null) {
+        formData.files.add(
+          MapEntry(
+            'documents[${i + 1}]',
+            MultipartFile.fromBytes(
+              doc.bytes!,
+              filename: doc.name,
+              contentType: _documentMediaType(doc.name),
+            ),
+          ),
+        );
+      }
+    }
+
+    return formData;
+  }
+
+  /// Resolves a [MediaType] from a document's file extension so PDFs/docs are
+  /// uploaded with the correct content type (not forced to image/jpeg).
+  MediaType _documentMediaType(String fileName) {
+    final ext = fileName.toLowerCase().split('.').last;
+    switch (ext) {
+      case 'png':
+        return MediaType('image', 'png');
+      case 'gif':
+        return MediaType('image', 'gif');
+      case 'webp':
+        return MediaType('image', 'webp');
+      case 'jpg':
+      case 'jpeg':
+        return MediaType('image', 'jpeg');
+      case 'pdf':
+        return MediaType('application', 'pdf');
+      case 'doc':
+        return MediaType('application', 'msword');
+      case 'docx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        );
+      default:
+        return MediaType('application', 'octet-stream');
     }
   }
 

@@ -8,7 +8,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     final oldBookingMinDate = DateTime(2015);
 
     if (isPickup) {
-      final picked = await showDatePicker(
+      final picked = await showKeyboardDatePicker(
         context: context,
         initialDate: pickupDate,
         firstDate: isOldBooking
@@ -17,14 +17,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         lastDate: (isSales || isOldBooking)
             ? DateTime.now()
             : DateTime.now().add(const Duration(days: 365)),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-            ),
-            child: child!,
-          );
-        },
+        selectedColor: const Color(0xFF6132E4),
       );
 
       if (picked != null) {
@@ -60,21 +53,12 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
             ? today
             : returnDate.dateOnly;
 
-        final picked = await showDatePicker(
+        final picked = await showKeyboardDatePicker(
           context: context,
           initialDate: initialReturnDate,
           firstDate: minReturnDate,
           lastDate: today,
-          builder: (context, child) {
-            return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: Color(0xFF6132E4),
-                ),
-              ),
-              child: child!,
-            );
-          },
+          selectedColor: const Color(0xFF6132E4),
         );
 
         if (picked != null) {
@@ -91,21 +75,14 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
           ? pickupDate.dateOnly
           : today;
 
-      final picked = await showDatePicker(
+      final picked = await showKeyboardDatePicker(
         context: context,
         initialDate: minReturnDate.isAfter(returnDate.dateOnly)
             ? minReturnDate
             : returnDate,
         firstDate: minReturnDate,
         lastDate: DateTime.now().add(const Duration(days: 365)),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-            ),
-            child: child!,
-          );
-        },
+        selectedColor: const Color(0xFF6132E4),
       );
 
       if (picked != null) {
@@ -124,19 +101,12 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
   }
 
   Future<void> _selectBookedDate() async {
-    final picked = await showDatePicker(
+    final picked = await showKeyboardDatePicker(
       context: context,
       initialDate: _bookedDate ?? DateTime.now(),
       firstDate: DateTime(2015),
       lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-          ),
-          child: child!,
-        );
-      },
+      selectedColor: const Color(0xFF6132E4),
     );
 
     if (picked != null) {
@@ -148,17 +118,10 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     final initialTime = isPickup
         ? (pickupTime ?? TimeOfDay.now())
         : (returnTime ?? TimeOfDay.now());
-    final picked = await showTimePicker(
+    final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
-          ),
-          child: child!,
-        );
-      },
+      selectedColor: const Color(0xFF6132E4),
     );
 
     if (picked != null) {
@@ -385,6 +348,11 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                               if (_searchOverlayEntry != null)
                                 _searchAllProductsForOverlay();
                             },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             child: Text(
                               coolingPeriodMode.isAfter ? "After" : "Before",
                               style: const TextStyle(

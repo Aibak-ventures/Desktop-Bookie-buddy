@@ -15,7 +15,10 @@ import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_en
 abstract interface class IBookingRepository {
   Future<BookingDetailsEntity> getBooking(int bookingId);
 
-  Future<int> addBooking(BookingRequestEntity bookingData);
+  Future<int> addBooking(
+    BookingRequestEntity bookingData, {
+    List<DocumentFileEntity>? documents,
+  });
 
   Future<int> createSale(SalesRequestEntity saleData);
 
