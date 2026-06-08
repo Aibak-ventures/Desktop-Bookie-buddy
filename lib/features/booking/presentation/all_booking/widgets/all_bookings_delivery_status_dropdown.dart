@@ -71,9 +71,9 @@ class _AllBookingsDeliveryStatusDropdownState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
         decoration: BoxDecoration(
-          color: effectiveStatus.color.withOpacity(0.1),
+          color: effectiveStatus.color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: effectiveStatus.color.withOpacity(0.2)),
+          border: Border.all(color: effectiveStatus.color.withValues(alpha: 0.2)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

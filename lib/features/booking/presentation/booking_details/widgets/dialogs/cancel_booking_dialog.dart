@@ -132,7 +132,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppColors.purple.withOpacity(0.1),
+                          color: AppColors.purple.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(

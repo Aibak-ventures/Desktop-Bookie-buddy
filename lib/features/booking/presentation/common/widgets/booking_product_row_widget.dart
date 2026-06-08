@@ -46,6 +46,8 @@ class BookingProductRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+    // On click open the original (OG) image, not the thumbnail.
+    final fullImageUrl = product.variant.image ?? product.variant.thumbnailImage;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -69,7 +71,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     onTap: hasImage
                         ? () => ZoomableImageDialog.show(
                               context,
-                              imageUrl: imageUrl,
+                              imageUrl: fullImageUrl ?? imageUrl,
                               title: product.variant.name,
                             )
                         : null,
@@ -174,7 +176,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withOpacity(0.1),
+                    color: const Color(0xFF6132E4).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(

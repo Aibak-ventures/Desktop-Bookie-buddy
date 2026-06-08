@@ -66,9 +66,9 @@ class BookingCard extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          hoverColor: AppColors.purple.withOpacity(0.08),
-          highlightColor: AppColors.purple.withOpacity(0.05),
-          splashColor: AppColors.purple.withOpacity(0.1),
+          hoverColor: AppColors.purple.withValues(alpha: 0.08),
+          highlightColor: AppColors.purple.withValues(alpha: 0.05),
+          splashColor: AppColors.purple.withValues(alpha: 0.1),
           child: Padding(
             padding: 16.padding,
             child: Row(

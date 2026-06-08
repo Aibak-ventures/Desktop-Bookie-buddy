@@ -1,24 +1,36 @@
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-
-// import 'package:bookie_buddy_web/features/main/cubit/user_cubit.dart';
+import 'package:flutter/services.dart';
 
 // Stateful widget for overlay search item with variant selection
 class OverlaySearchItem extends StatefulWidget {
   final ProductEntity product;
   final Function(ProductVariantEntity) onAddProduct;
+  final Function(String imageUrl, String? title)? onImageTap;
   final bool isSales;
+  final FocusNode? focusNode;
+  final FocusNode? nextFocusNode;
+  final VoidCallback? onArrowDown;
+  final VoidCallback? onArrowUp;
+  final VoidCallback? onEscape;
+  final bool isSelected;
 
   const OverlaySearchItem({
+    super.key,
     required this.product,
     required this.onAddProduct,
+    this.onImageTap,
     this.isSales = false,
+    this.focusNode,
+    this.nextFocusNode,
+    this.onArrowDown,
+    this.onArrowUp,
+    this.onEscape,
+    this.isSelected = false,
   });
 
   @override
@@ -27,6 +39,58 @@ class OverlaySearchItem extends StatefulWidget {
 
 class OverlaySearchItemState extends State<OverlaySearchItem> {
   ProductVariantEntity? selectedVariant;
+  bool _isImageHovered = false;
+  final ScrollController _variantScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _variantScrollController.dispose();
+    super.dispose();
+  }
+
+  void _handleKeyboardActivate() {
+    final variantToAdd =
+        selectedVariant ??
+        (!widget.product.mainServiceType.isMultiVariantProductType &&
+                widget.product.variants.isNotEmpty
+            ? widget.product.variants.first
+            : null);
+
+    if (variantToAdd != null) {
+      widget.onAddProduct(variantToAdd);
+      return;
+    }
+
+    if (widget.product.variants.isNotEmpty) {
+      setState(() {
+        selectedVariant = widget.product.variants.first;
+      });
+    }
+  }
+
+  void _selectNextVariant() {
+    final variants = widget.product.variants;
+    if (variants.isEmpty) return;
+    if (selectedVariant == null) {
+      setState(() => selectedVariant = variants.first);
+      return;
+    }
+    final i = variants.indexWhere((v) => v.id == selectedVariant!.id);
+    setState(() => selectedVariant = variants[(i + 1) % variants.length]);
+  }
+
+  void _selectPrevVariant() {
+    final variants = widget.product.variants;
+    if (variants.isEmpty) return;
+    if (selectedVariant == null) {
+      setState(() => selectedVariant = variants.last);
+      return;
+    }
+    final i = variants.indexWhere((v) => v.id == selectedVariant!.id);
+    setState(
+      () => selectedVariant = variants[(i - 1 + variants.length) % variants.length],
+    );
+  }
 
   @override
   void initState() {
@@ -38,25 +102,38 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         widget.product.variants.isNotEmpty) {
       selectedVariant = widget.product.variants.first;
     } else {
-      // Also auto-select when all variants have empty attribute (single unnamed variant)
-      // — no chip will render so we must pre-select to allow adding
-      final hasVisibleChip = widget.product.variants.any(
-        (v) => v.attribute.isNotEmpty,
-      );
-      if (!hasVisibleChip && widget.product.variants.isNotEmpty) {
-        selectedVariant = widget.product.variants.first;
-      } else {
-        selectedVariant = null;
-      }
+      selectedVariant = null;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final serviceType = widget.product.mainServiceType;
-    final serviceTypeLabel =
-        serviceType?.name.toUpperCase() ?? 'PRODUCT';
+  void didUpdateWidget(covariant OverlaySearchItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
+    if (oldWidget.product.id == widget.product.id) {
+      return;
+    }
+
+    if (!widget.product.mainServiceType.isMultiVariantProductType &&
+        widget.product.variants.isNotEmpty) {
+      selectedVariant = widget.product.variants.first;
+      return;
+    }
+
+    if (selectedVariant == null) {
+      return;
+    }
+
+    final matchingIndex = widget.product.variants.indexWhere(
+      (variant) => variant.id == selectedVariant!.id,
+    );
+    selectedVariant = matchingIndex >= 0
+        ? widget.product.variants[matchingIndex]
+        : null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Show sale_price in sales mode, rent price in booking mode
     final price = widget.isSales
         ? (double.tryParse(widget.product.salePrice ?? '')?.toInt() ??
@@ -65,118 +142,171 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
         : (widget.product.price ?? 0);
     final variants = widget.product.variants;
     // Define min width preventing squeeze/overflow
-    const double minRowWidth = 860;
+    const double minRowWidth = 760;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final isOverflowing = constraints.maxWidth < minRowWidth;
+    return Focus(
+      focusNode: widget.focusNode,
+      onKeyEvent: (_, event) {
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.enter ||
+                event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+          _handleKeyboardActivate();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+                event.logicalKey == LogicalKeyboardKey.numpad2)) {
+          widget.onArrowDown?.call();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                event.logicalKey == LogicalKeyboardKey.numpad8)) {
+          widget.onArrowUp?.call();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+                event.logicalKey == LogicalKeyboardKey.numpad6)) {
+          _selectNextVariant();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+                event.logicalKey == LogicalKeyboardKey.numpad4)) {
+          _selectPrevVariant();
+          return KeyEventResult.handled;
+        }
+        if (event is KeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.escape) {
+          widget.onEscape?.call();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+      child: Builder(
+        builder: (context) {
+          final hasFocus = Focus.of(context).hasFocus;
+          final showFocus = hasFocus || widget.isSelected;
+          return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: showFocus
+              ? const Color(0xFF6132E4).withValues(alpha: 0.08)
+              : Colors.transparent,
+          border: Border(
+            left: BorderSide(
+              color: showFocus
+                  ? const Color(0xFF6132E4)
+                  : Colors.transparent,
+              width: 3,
+            ),
+          ),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isOverflowing = constraints.maxWidth < minRowWidth;
 
-          final content = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+            final content = Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: Container(
-                  width: 50,
-                  height: 40,
-                  color: Colors.grey.shade100,
-                  child: widget.product.image != null &&
+                child: MouseRegion(
+                  cursor: widget.product.image != null &&
                           widget.product.image!.isNotEmpty
-                      ? Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () => ZoomableImageDialog.show(
-                              context,
-                              imageUrl: widget.product.image!,
-                              title: widget.product.name,
-                            ),
-                            child: Image.network(
+                      ? SystemMouseCursors.click
+                      : MouseCursor.defer,
+                  onEnter: (_) {
+                    if (widget.product.image != null &&
+                        widget.product.image!.isNotEmpty) {
+                      setState(() => _isImageHovered = true);
+                    }
+                  },
+                  onExit: (_) => setState(() => _isImageHovered = false),
+                  child: GestureDetector(
+                    onTap: widget.product.image != null &&
+                            widget.product.image!.isNotEmpty
+                        ? () => widget.onImageTap?.call(
                               widget.product.image!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Icon(
-                                Icons.image_outlined,
-                                size: 20,
-                                color: Colors.grey.shade400,
+                              widget.product.name,
+                            )
+                        : null,
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 40,
+                          color: Colors.grey.shade100,
+                          child: ((widget.product.thumbnailImage ??
+                                          widget.product.image) !=
+                                      null &&
+                                  (widget.product.thumbnailImage ??
+                                          widget.product.image)!
+                                      .isNotEmpty)
+                              ? Image.network(
+                                  widget.product.thumbnailImage ??
+                                      widget.product.image!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Icon(
+                                    Icons.image_outlined,
+                                    size: 20,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                )
+                              : Icon(
+                                  Icons.image_outlined,
+                                  size: 20,
+                                  color: Colors.grey.shade400,
+                                ),
+                        ),
+                        if (_isImageHovered)
+                          Positioned.fill(
+                            child: Container(
+                              color: Colors.black45,
+                              child: const Icon(
+                                Icons.zoom_in,
+                                color: Colors.white,
+                                size: 18,
                               ),
                             ),
                           ),
-                        )
-                      : Icon(
-                          Icons.image_outlined,
-                          size: 20,
-                          color: Colors.grey.shade400,
-                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
 
-              // Product Info - wider and more readable
+              // Product Info - Fixed width
               SizedBox(
                 width: 240,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF3F0FF),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                    Tooltip(
+                      message: widget.product.name,
+                      waitDuration: const Duration(milliseconds: 250),
                       child: Text(
-                        serviceTypeLabel,
+                        widget.product.name,
                         style: const TextStyle(
-                          color: AppColors.purple,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.2,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF111827),
+                          height: 1.2,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 2),
                     Text(
-                      widget.product.name,
+                      widget.product.color ?? 'color',
                       style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        height: 1.2,
-                        color: Color(0xFF1F2937),
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      [
-                        if ((widget.product.color ?? '').isNotEmpty)
-                          widget.product.color!,
-                        if ((widget.product.category ?? '').isNotEmpty)
-                          widget.product.category!,
-                        if ((widget.product.model ?? '').isNotEmpty)
-                          widget.product.model!,
-                      ].join(' • ').isNotEmpty
-                          ? [
-                              if ((widget.product.color ?? '').isNotEmpty)
-                                widget.product.color!,
-                              if ((widget.product.category ?? '').isNotEmpty)
-                                widget.product.category!,
-                              if ((widget.product.model ?? '').isNotEmpty)
-                                widget.product.model!,
-                            ].join(' • ')
-                          : (widget.product.description ?? 'No extra details'),
-                      style: const TextStyle(
-                        color: Color(0xFF6B7280),
+                        color: Color(0xFF707070),
                         fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        height: 1.3,
+                        fontWeight: FontWeight.w400,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -194,27 +324,34 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
               if (widget.product.mainServiceType.isMultiVariantProductType)
                 Expanded(
                   child: SizedBox(
-                    height: 40,
+                    height: 44,
                     child: variants.isNotEmpty
-                        ? SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: variants.map((variant) {
-                                final isSelected =
-                                    selectedVariant?.id == variant.id;
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 4),
-                                  child: SelectableVariantChip(
-                                    text: variant.attribute,
-                                    isSelected: isSelected,
-                                    onTap: () {
-                                      setState(() {
-                                        selectedVariant = variant;
-                                      });
-                                    },
-                                  ),
-                                );
-                              }).toList(),
+                        ? Scrollbar(
+                            controller: _variantScrollController,
+                            thumbVisibility: true,
+                            child: SingleChildScrollView(
+                              controller: _variantScrollController,
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: variants.map((variant) {
+                                  final isSelected =
+                                      selectedVariant?.id == variant.id;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 6),
+                                    child: SelectableVariantChip(
+                                      text: variant.attribute,
+                                      isSelected: isSelected,
+                                      stock: variant.remainingStock ??
+                                          variant.stock,
+                                      onTap: () {
+                                        setState(() {
+                                          selectedVariant = variant;
+                                        });
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           )
                         : const SizedBox.shrink(),
@@ -295,42 +432,6 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
               ),
 
               const SizedBox(width: 12),
-              // Divider
-              Container(width: 1, height: 30, color: const Color(0xFFA6A6A6)),
-              const SizedBox(width: 12),
-
-              // Available Quantity section
-              SizedBox(
-                width: 80,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'avl qty',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    Text(
-                      selectedVariant != null
-                          ? '${selectedVariant!.remainingStock ?? selectedVariant!.stock}'
-                          : (variants.isNotEmpty
-                                ? '${variants.first.remainingStock ?? variants.first.stock}'
-                                : '0'),
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 12),
               // Add button
               GestureDetector(
                 onTap: () {
@@ -381,22 +482,24 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                   ),
                 ),
               ),
-            ],
-          );
+              ],
+            );
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: isOverflowing
-                ? const AlwaysScrollableScrollPhysics()
-                : const NeverScrollableScrollPhysics(),
-            child: SizedBox(
-              width: isOverflowing ? minRowWidth : constraints.maxWidth,
-              child: content,
-            ),
-          );
-        },
-      ),
-    );
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: isOverflowing
+                  ? const AlwaysScrollableScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                width: isOverflowing ? minRowWidth : constraints.maxWidth,
+                child: content,
+              ),
+            );
+          },
+        ),
+        );
+      },
+    ));
   }
 }
 
@@ -406,25 +509,31 @@ class SelectableVariantChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
+  /// Available stock for this variant, shown as a small badge on the chip.
+  final int? stock;
+
   const SelectableVariantChip({
     required this.text,
     required this.isSelected,
     required this.onTap,
+    this.stock,
   });
 
   @override
   Widget build(BuildContext context) {
     final isShortText = text.length <= 3;
+    final hasStock = stock != null;
+    final isOutOfStock = (stock ?? 0) <= 0;
 
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: isShortText ? 33 : null,
-        height: 33,
+        height: 37,
         padding: isShortText
             ? null
-            : const EdgeInsets.symmetric(horizontal: 12),
+            : const EdgeInsets.symmetric(horizontal: 14),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           shape: isShortText ? BoxShape.circle : BoxShape.rectangle,
@@ -435,13 +544,32 @@ class SelectableVariantChip extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                height: 1.1,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+            if (hasStock)
+              Text(
+                '${stock!}',
+                style: TextStyle(
+                  fontSize: 10,
+                  height: 1.1,
+                  fontWeight: FontWeight.w700,
+                  color: isOutOfStock
+                      ? Colors.red.shade400
+                      :  Colors.grey.shade600,
+                ),
+              ),
+          ],
         ),
       ),
     );

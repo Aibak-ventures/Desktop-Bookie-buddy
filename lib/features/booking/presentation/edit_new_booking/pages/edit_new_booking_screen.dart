@@ -1,741 +1,1451 @@
-// // import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-// // import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-// // import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
-// // import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
-// // import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
-// // import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
-// // import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
-// // import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-// // import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-// // import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
-// // import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
-// // import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_partial_usecase.dart';
-// // import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
-// // import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-// // import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/product_customization_widget.dart';
-// // import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-// // import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_validation_helper.dart';
-// // import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-// // import 'package:flutter/material.dart';
-// // import 'package:flutter_bloc/flutter_bloc.dart';
-// // import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_search_product_field_widget.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_search_overlay_widget.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_product_list_header_widget.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_selection_widget.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_selected_products_list_widget.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_client_details_panel.dart';
-// // import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_payment_summary_panel.dart';
+﻿
+import 'dart:developer';
 
-// // class EditNewBookingScreen extends StatefulWidget {
-// //   final VoidCallback? onClose;
-// //   final BookingDetailsEntity? bookingDetails;
-// //   final SaleDetailsEntity? saleDetails;
-// //   final int? bookingId;
+import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/select_date_failure_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
+import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
+import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
+import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
+import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
-// //   const EditNewBookingScreen({
-// //     super.key,
-// //     this.onClose,
-// //     this.bookingDetails,
-// //     this.saleDetails,
-// //     this.bookingId,
-// //   });
+part '../helpers/edit_booking_initializer.dart';
+part '../helpers/edit_booking_change_detector.dart';
+part '../helpers/edit_booking_submission_handler.dart';
+part '../helpers/edit_booking_search_handler.dart';
 
-// //   @override
-// //   State<EditNewBookingScreen> createState() => EditNewBookingScreenState();
-// // }
+class EditNewBookingScreen extends StatefulWidget {
+  final VoidCallback? onClose;
+  final BookingDetailsEntity? bookingDetails;
+  final SaleDetailsEntity? saleDetails;
+  final int? bookingId;
 
-// // class EditNewBookingScreenState extends State<EditNewBookingScreen>
-// //     with BookingFormMixin<EditNewBookingScreen> {
-// //   final _form = BookingFormControllers();
-// //   @override
-// //   BookingFormControllers get form => _form;
+  const EditNewBookingScreen({
+    super.key,
+    this.onClose,
+    this.bookingDetails,
+    this.saleDetails,
+    this.bookingId,
+  });
 
-// //   BookingType selectedBookingType = BookingType.booking;
-// //   final _formKey = GlobalKey<FormState>();
+  @override
+  State<EditNewBookingScreen> createState() =>
+      EditNewBookingScreenState();
+}
 
-// //   // Date / time getters/setters (bridged to form)
-// //   DateTime get pickupDate => _form.pickupDate;
-// //   set pickupDate(DateTime v) => _form.pickupDate = v;
-// //   DateTime get returnDate => _form.returnDate;
-// //   set returnDate(DateTime v) => _form.returnDate = v;
-// //   TimeOfDay? get pickupTime => _form.pickupTime;
-// //   set pickupTime(TimeOfDay? v) => _form.pickupTime = v;
-// //   TimeOfDay? get returnTime => _form.returnTime;
-// //   set returnTime(TimeOfDay? v) => _form.returnTime = v;
+class EditNewBookingScreenState extends State<EditNewBookingScreen> {
+  // Current selected tab
+  BookingType selectedBookingType = BookingType.booking;
 
-// //   BookingStatus? bookingStatus;
-// //   String? bookingCompletedDate;
-// //   bool sendPdfToWhatsApp = true;
-// //   int? selectedServiceId = -1;
-// //   int coolingPeriodDays = 0;
-// //   int _bookingStep = 0;
-// //   String? _clientNameError;
-// //   String? _staffNameError;
-// //   String? _phoneError;
-// //   bool showCustomization = false;
+  // Form key
+  final _formKey = GlobalKey<FormState>();
 
-// //   final _searchTypes = ['Name', 'Category', 'Model', 'Color'];
-// //   final _searchResultsScrollController = ScrollController();
+  // Date controllers
+  late DateTime pickupDate;
+  late DateTime returnDate;
+  DateTime? coolingPeriodDate;
+  TimeOfDay? coolingPeriodTime;
+  TimeOfDay? pickupTime;
+  TimeOfDay? returnTime;
 
-// //   // Original values for change tracking
-// //   DateTime? _originalPickupDate;
-// //   DateTime? _originalReturnDate;
-// //   TimeOfDay? _originalPickupTime;
-// //   TimeOfDay? _originalReturnTime;
-// //   String? _originalClientName;
-// //   int? _originalStaffId;
-// //   List<DocumentFileEntity>? _originalDocuments;
+  // Client details controllers
+  final clientNameController = TextEditingController();
+  final clientPhone1Controller = TextEditingController();
+  final clientPhone2Controller = TextEditingController();
+  late final PhoneController _clientPhone1FieldController;
+  late final PhoneController _clientPhone2FieldController;
+  final clientAddressController = TextEditingController();
+  final staffNameController = TextEditingController();
+  int? selectedStaffId;
+  int? selectedClientId;
+  bool isSearchClientEnabled = false;
+  // Payment controllers
+  final advanceAmountController = TextEditingController();
+  final securityAmountController = TextEditingController();
+  final discountAmountController = TextEditingController();
+  AccountEntity? selectedSecurityAccount;
+  DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  bool isDiscountPercentage = false;
+  final _discountTypeNotifier = ValueNotifier<bool>(false);
+  BookingStatus? bookingStatus; // Track booking status
+  String? bookingCompletedDate; // Store completed date
+  bool sendPdfToWhatsApp = true;
 
-// //   @override
-// //   void initState() {
-// //     super.initState();
-// //     pickupDate = DateTime.now();
-// //     returnDate = DateTime.now().add(const Duration(days: 1));
+  // Products/Services
+  final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
+    [],
+  );
 
-// //     if (widget.bookingDetails != null) {
-// //       _initializeFromBooking(widget.bookingDetails!);
-// //     } else if (widget.saleDetails != null) {
-// //       _initializeFromSale(widget.saleDetails!);
-// //     }
+  // Additional charges
+  final additionalChargesNotifier =
+      ValueNotifier<List<AdditionalChargesEntity>>([]);
 
-// //     _searchResultsScrollController.addListener(
-// //       () => handleSearchOverlayScroll(_searchResultsScrollController),
-// //     );
-// //     setupSelectProductBlocListener();
+  // Documents
+  final documentsNotifier = ValueNotifier<List<DocumentFileEntity>>([]);
 
-// //     WidgetsBinding.instance.addPostFrameCallback((_) {
-// //       context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+  // Description
+  final descriptionController = TextEditingController();
 
-// //       final bStaffId = widget.bookingDetails?.staffId;
-// //       final bStaffName = widget.bookingDetails?.staffName;
-// //       final sStaffId = widget.saleDetails?.staffId;
-// //       final sStaffName = widget.saleDetails?.staffName;
+  int? selectedServiceId = -1; // Initialize to -1 for "All Services" as default
+  final serviceSearchController = TextEditingController();
 
-// //       if (bStaffId != null) {
-// //         context.read<StaffSearchCubit>().getAllStaffs(
-// //           bStaffId,
-// //           StaffEntity(
-// //             id: bStaffId,
-// //             name: bStaffName ?? 'Staff',
-// //             phoneNumber: '',
-// //           ),
-// //         );
-// //       } else if (sStaffId != null) {
-// //         context.read<StaffSearchCubit>().getAllStaffs(
-// //           sStaffId,
-// //           StaffEntity(
-// //             id: sStaffId,
-// //             name: sStaffName ?? 'Staff',
-// //             phoneNumber: '',
-// //           ),
-// //         );
-// //       } else {
-// //         context.read<StaffSearchCubit>().getAllStaffs();
-// //       }
+  // SelectProductBloc for inline search
+  late SelectProductBloc _selectProductBloc;
 
-// //       _loadAvailableProducts();
-// //     });
-// //   }
+  // Product loading coordinator — owns debouncer; replaces _loadProductsDebouncer
+  late BookingProductLoader _productLoader;
 
-// //   @override
-// //   void dispose() {
-// //     _searchResultsScrollController.removeListener(
-// //       () => handleSearchOverlayScroll(_searchResultsScrollController),
-// //     );
-// //     disposeSelectProductBlocListener();
-// //     _searchResultsScrollController.dispose();
-// //     _form.dispose();
-// //     super.dispose();
-// //   }
+  // Search overlay management
+  final LayerLink _searchLayerLink = LayerLink();
+  OverlayEntry? _searchOverlayEntry;
+  // Reactive overlay state â€” updated without recreating the OverlayEntry
+  final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
+  final _overlayIsLoading = ValueNotifier<bool>(false);
 
-// //   void _initializeFromBooking(BookingDetailsEntity booking) {
-// //     selectedBookingType = BookingType.booking;
-// //     if (booking.pickupDate != null) {
-// //       pickupDate = booking.pickupDate!.parseToDateTime();
-// //       pickupTime = TimeOfDay.fromDateTime(pickupDate);
-// //     }
-// //     returnDate = booking.returnDate.parseToDateTime();
-// //     returnTime = TimeOfDay.fromDateTime(returnDate);
+  // Product search filter state
+  final _searchTypes = ['Name', 'Category', 'Model', 'Color'];
+  final _selectedSearchTypeIndex = ValueNotifier<int>(0);
+  final _priceRange = ValueNotifier<RangeValues>(const RangeValues(0, 50000));
+  final _maxPriceNotifier = ValueNotifier<double>(50000);
 
-// //     if (booking.coolingPeriodDate != null) {
-// //       final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
-// //       coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
-// //     }
+  final _isPriceFilterEnabled = ValueNotifier<bool>(false);
 
-// //     _form.clientNameController.text = booking.client.name;
-// //     _form.clientPhone1Controller.text = booking.client.phone1.toString();
-// //     _form.clientPhone2Controller.text = booking.client.phone2?.toString() ?? '';
-// //     _form.clientAddressController.text = booking.address ?? '';
-// //     _form.selectedClientId = booking.client.id;
-// //     _form.staffNameController.text = booking.staffName ?? '';
-// //     _form.selectedStaffId = booking.staffId;
-// //     _form.advanceAmountController.text = booking.paidAmount.toString();
-// //     _form.securityAmountController.text =
-// //         booking.securityAmount?.toString() ?? '';
-// //     _form.discountAmountController.text =
-// //         booking.discountAmount?.toString() ?? '';
-// //     _form.deliveryStatus = booking.deliveryStatus;
-// //     bookingStatus = booking.bookingStatus;
-// //     bookingCompletedDate = booking.bookingCompletedDate;
-// //     _form.descriptionController.text = booking.description ?? '';
-// //     _form.startLocationController.text =
-// //         booking.otherDetails.locationStart ?? '';
-// //     _form.pickupLocationController.text =
-// //         booking.otherDetails.locationFrom ?? '';
-// //     _form.destinationLocationController.text =
-// //         booking.otherDetails.locationTo ?? '';
-// //     _form.runningKilometersController.text = booking.otherDetails.end ?? '';
+  // New Fields for Redesign
+  int coolingPeriodDays = 0; // Default to None (0 = same as return date)
+  CoolingPeriodMode coolingPeriodMode = CoolingPeriodMode.after;
+  final runningKilometersController = TextEditingController();
 
-// //     final products = booking.bookedItems
-// //         .map(
-// //           (item) => ProductSelectedEntity(
-// //             variant: ProductInfoEntity(
-// //               id: item.id,
-// //               variantId: item.variantId,
-// //               productId: item.productId,
-// //               name: item.name,
-// //               image: item.image,
-// //               amount: item.amount,
-// //               category: item.category,
-// //               color: item.color,
-// //               model: item.model,
-// //               mainServiceType: item.mainServiceType,
-// //               variantAttribute: item.variantAttribute,
-// //               measurements: item.measurements,
-// //               quantity: item.quantity,
-// //             ),
-// //             measurements: item.measurements,
-// //             quantity: item.quantity,
-// //             amount: item.amount,
-// //           ),
-// //         )
-// //         .toList();
-// //     _form.selectedProductsNotifier.value = products;
-// //     _form.additionalChargesNotifier.value = booking.additionalCharges;
+  // Step state
+  int _bookingStep = 0;
+  String? _clientNameError;
+  String? _staffNameError;
+  final startLocationController = TextEditingController();
+  final pickupLocationController = TextEditingController();
+  final destinationLocationController = TextEditingController();
 
-// //     if (booking.documents.isNotEmpty) {
-// //       _form.documentsNotifier.value = booking.documents.map((doc) {
-// //         final url = doc is Map
-// //             ? (doc['url'] ?? doc['file'] ?? '')
-// //             : (doc is String ? doc : '');
-// //         return DocumentFileEntity(name: url.split('/').last, path: url);
-// //       }).toList();
-// //     }
-// //     _storeOriginalValues(booking);
-// //   }
+  // UI Constants
+  static const double _fieldSpacing = 8.0;
 
-//   void _initializeFromSale(SaleDetailsEntity sale) {
-//     selectedBookingType = BookingType.sales;
-//     pickupDate = sale.saleDate.parseToDateTime();
-//     _form.clientPhone1Controller.text = sale.clientPhone.toString();
-//     _form.clientAddressController.text = sale.address;
-//     _form.staffNameController.text = sale.staffName ?? '';
-//     _form.advanceAmountController.text = sale.paidAmount.toString();
-//     _form.discountAmountController.text = sale.discountAmount.toString();
-//     _form.paymentMethod = sale.paymentMethod;
-//     _form.selectedPaymentMethods.value = [sale.paymentMethod];
-//     _form.descriptionController.text = sale.description;
+  // Search overlay keyboard navigation
+  final Map<int, FocusNode> _overlayItemFocusNodes = {};
 
-// //     _form.selectedProductsNotifier.value = sale.products
-// //         .map(
-// //           (item) => ProductSelectedEntity(
-// //             variant: ProductInfoEntity(
-// //               id: item.id,
-// //               variantId: item.variantId,
-// //               productId: item.productId,
-// //               name: item.name,
-// //               image: item.image,
-// //               amount: item.price,
-// //               category: item.category,
-// //               color: item.color,
-// //               model: item.model,
-// //               mainServiceType: item.mainServiceType,
-// //               variantAttribute: item.variantAttribute ?? '',
-// //               quantity: item.quantity,
-// //             ),
-// //             quantity: item.quantity,
-// //             amount: item.price,
-// //           ),
-// //         )
-// //         .toList();
-// //   }
+  // Focus nodes for client details navigation
+  final _clientNameFocusNode = FocusNode();
+  final _productSearchFocusNode = FocusNode();
+  final _clientPhone1FocusNode = FocusNode();
+  final _clientPhone2FocusNode = FocusNode();
+  final _clientAddressFocusNode = FocusNode();
 
-// //   void _storeOriginalValues(BookingDetailsEntity booking) {
-// //     _originalPickupDate = booking.pickupDate?.parseToDateTime();
-// //     _originalReturnDate = booking.returnDate.parseToDateTime();
-// //     _originalPickupTime = booking.pickupDate != null
-// //         ? TimeOfDay.fromDateTime(booking.pickupDate!.parseToDateTime())
-// //         : null;
-// //     _originalReturnTime = TimeOfDay.fromDateTime(
-// //       booking.returnDate.parseToDateTime(),
-// //     );
-// //     _originalClientName = booking.client.name;
-// //     _originalStaffId = booking.staffId;
-// //     _originalDocuments = List.from(_form.documentsNotifier.value);
-// //   }
+  // Original values for change tracking (incremental updates)
+  BookingDetailsEntity? _originalBooking;
+  DateTime? _originalPickupDate;
+  DateTime? _originalReturnDate;
+  TimeOfDay? _originalPickupTime;
+  TimeOfDay? _originalReturnTime;
+  String? _originalClientName;
+  String? _originalClientPhone1;
+  String? _originalClientPhone2;
+  String? __originalClientPhone1E164;
+  String? __originalClientPhone2E164;
+  String? _originalClientAddress;
+  int? _originalStaffId;
+  int? _originalSecurityAmount;
+  int? _originalDiscountAmount;
+  List<AdditionalChargesEntity>? _originalAdditionalCharges;
+  List<DocumentFileEntity>?
+  _originalDocuments; // Track original documents for removal detection
+  String? _originalRunningKm; // Track original running kilometers
+  DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
+  int _originalCoolingPeriodDays = 0; // Track original cooling period
+  CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
+  bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
 
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return PopScope(
-// //       canPop: false,
-// //       onPopInvoked: (didPop) async {
-// //         if (didPop) return;
-// //         await handleBackNavigation();
-// //       },
-// //       child: Scaffold(
-// //         backgroundColor: const Color(0xFFF5F6FA),
-// //         body: Form(
-// //           key: _formKey,
-// //           child: Column(
-// //             children: [
-// //               EditBookingAppBar(
-// //                 onSave: _handleSaveBooking,
-// //                 bookingId:
-// //                     widget.bookingId ??
-// //                     widget.bookingDetails?.id ??
-// //                     widget.saleDetails?.id ??
-// //                     0,
-// //                 bookingType: selectedBookingType.name,
-// //                 onBack: handleBackNavigation,
-// //               ),
-// //               Expanded(
-// //                 child: Padding(
-// //                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-// //                   child: buildBookingContent(),
-// //                 ),
-// //               ),
-// //             ],
-// //           ),
-// //         ),
-// //       ),
-// //     );
-// //   }
+  bool showCustomization = false;
 
-// //   Widget buildBookingContent() {
-// //     return Row(
-// //       crossAxisAlignment: CrossAxisAlignment.start,
-// //       children: [
-// //         Expanded(
-// //           flex: 7,
-// //           child: Column(
-// //             children: [
-// //               BookingDateSelectionWidget(
-// //                 isSales: selectedBookingType == BookingType.sales,
-// //                 pickupDate: pickupDate,
-// //                 returnDate: returnDate,
-// //                 pickupTime: pickupTime,
-// //                 returnTime: returnTime,
-// //                 coolingPeriodDays: coolingPeriodDays,
-// //                 onSelectPickupDate: () => _selectDate(isPickup: true),
-// //                 onSelectReturnDate: () => _selectDate(isPickup: false),
-// //                 onSelectPickupTime: () => _selectTime(isPickup: true),
-// //                 onSelectReturnTime: () => _selectTime(isPickup: false),
-// //                 onCoolingPeriodChanged: (val) {
-// //                   setState(() => coolingPeriodDays = val);
-// //                   _loadAvailableProducts();
-// //                 },
-// //               ),
-// //               const SizedBox(height: 16),
-// //               Expanded(
-// //                 child: AnimatedSwitcher(
-// //                   duration: const Duration(milliseconds: 400),
-// //                   child: showCustomization
-// //                       ? ProductCustomizationWidget(
-// //                           key: const ValueKey('customization'),
-// //                           onBack: () =>
-// //                               setState(() => showCustomization = false),
-// //                           onSaveForProduct: (p, m) =>
-// //                               _updateProductWithMeasurements(p, m),
-// //                           selectedProducts:
-// //                               _form.selectedProductsNotifier.value,
-// //                         )
-// //                       : buildServiceSelectionSection(),
-// //                 ),
-// //               ),
-// //             ],
-// //           ),
-// //         ),
-// //         const SizedBox(width: 16),
-// //         SizedBox(width: 340, child: _buildRightSidePanel()),
-// //       ],
-// //     );
-// //   }
+  late EditBookingCubit _editBookingCubit;
 
-// //   Widget buildServiceSelectionSection() {
-// //     return Container(
-// //       padding: const EdgeInsets.all(16),
-// //       decoration: BoxDecoration(
-// //         color: Colors.white,
-// //         borderRadius: BorderRadius.circular(10),
-// //         boxShadow: [
-// //           BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
-// //         ],
-// //       ),
-// //       child: Column(
-// //         children: [
-// //           BookingSearchProductFieldWidget(
-// //             form: _form,
-// //             onSearchChanged: () => onSearchChanged(selectedBookingType),
-// //             showProductFilterDialog: _showProductFilterBottomSheet,
-// //           ),
-// //           const SizedBox(height: 8),
-// //           BookingProductListHeaderWidget(
-// //             isSales: selectedBookingType == BookingType.sales,
-// //             hasVariants: hasAnyProductWithVariants(),
-// //           ),
-// //           Expanded(
-// //             child: BookingSelectedProductsListWidget(
-// //               form: _form,
-// //               selectedBookingType: selectedBookingType,
-// //               calculateRentalDays: calculateRentalDays,
-// //               shouldMultiplyByDays: shouldMultiplyByDays,
-// //               hasAnyProductWithVariants: hasAnyProductWithVariants,
-// //               onDecrement: decrementQuantity,
-// //               onIncrement: incrementQuantity,
-// //               onStartEditingPrice: startEditingPrice,
-// //               onSaveEditingPrice: saveEditingPrice,
-// //               onRemove: removeProduct,
-// //             ),
-// //           ),
-// //         ],
-// //       ),
-// //     );
-// //   }
+  void rebuild([VoidCallback? fn]) => setState(fn ?? () {});
 
-// //   void _updateProductWithMeasurements(
-// //     ProductSelectedEntity product,
-// //     List<MeasurementValueEntity> measurements,
-// //   ) {
-// //     final products = List<ProductSelectedEntity>.from(
-// //       _form.selectedProductsNotifier.value,
-// //     );
-// //     final idx = products.indexWhere(
-// //       (p) => p.variant.variantId == product.variant.variantId,
-// //     );
-// //     if (idx != -1) {
-// //       products[idx] = product.copyWith(measurements: measurements);
-// //       _form.selectedProductsNotifier.value = products;
-// //     }
-// //   }
+  @override
+  void initState() {
+    super.initState();
+    pickupDate = DateTime.now();
+    returnDate = DateTime.now().add(const Duration(days: 1));
+    _clientPhone1FieldController = PhoneController(
+      initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
+    );
+    _clientPhone2FieldController = PhoneController(
+      initialValue: PhoneNumber(isoCode: kDefaultPhoneIsoCode, nsn: ''),
+    );
 
-// //   void _loadAvailableProducts() {
-// //     final isSales = selectedBookingType == BookingType.sales;
-// //     final currentVariantIds = _form.selectedProductsNotifier.value
-// //         .map((p) => p.variant.variantId)
-// //         .whereType<int>()
-// //         .toList();
-// //     _form.selectProductBloc.add(
-// //       SelectProductEvent.loadProducts(
-// //         serviceId: (selectedServiceId == -1) ? null : selectedServiceId,
-// //         pickupDate: pickupDate.format(),
-// //         returnDate: returnDate.format(),
-// //         pickupTime: pickupTime,
-// //         returnTime: returnTime,
-// //         useAvailableProductsApi: !isSales,
-// //         isSales: isSales,
-// //         bookingId: widget.bookingId,
-// //         variantIds: currentVariantIds.isNotEmpty ? currentVariantIds : null,
-// //       ),
-// //     );
-// //   }
+    _editBookingCubit = getIt<EditBookingCubit>();
 
-// //   Future<void> _selectDate({required bool isPickup}) async {
-// //     final picked = await showDatePicker(
-// //       context: context,
-// //       initialDate: isPickup ? pickupDate : returnDate,
-// //       firstDate: DateTime.now(),
-// //       lastDate: DateTime.now().add(const Duration(days: 730)),
-// //     );
-// //     if (picked != null) {
-// //       setState(() {
-// //         if (isPickup) {
-// //           pickupDate = picked;
-// //           if (returnDate.isBefore(picked))
-// //             returnDate = picked.add(const Duration(days: 1));
-// //         } else
-// //           returnDate = picked;
-// //       });
-// //       _loadAvailableProducts();
-// //     }
-// //   }
+    // Initialize SelectProductBloc
+    _selectProductBloc = SelectProductBloc(
+      getAvailableProducts: getIt(),
+      getProducts: getIt(),
+      searchAndFilterProducts: getIt(),
+    );
+    _productLoader = BookingProductLoader(selectProductBloc: _selectProductBloc);
 
-// //   Future<void> _selectTime({required bool isPickup}) async {
-// //     final picked = await showTimePicker(
-// //       context: context,
-// //       initialTime: isPickup
-// //           ? (pickupTime ?? TimeOfDay.now())
-// //           : (returnTime ?? TimeOfDay.now()),
-// //     );
-// //     if (picked != null) {
-// //       setState(() {
-// //         if (isPickup)
-// //           pickupTime = picked;
-// //         else
-// //           returnTime = picked;
-// //       });
-// //       _loadAvailableProducts();
-// //     }
-// //   }
+    // Pre-fill data if editing
+    if (widget.bookingDetails != null) {
+      _initializeFromBooking(widget.bookingDetails!);
+    } else if (widget.saleDetails != null) {
+      _initializeFromSale(widget.saleDetails!);
+    }
 
-// //   void _showProductFilterBottomSheet() {
-// //     showDialog(
-// //       context: context,
-// //       builder: (_) => ProductFilterDialog(
-// //         services: [],
-// //         searchTypes: _searchTypes,
-// //         initialServiceId: selectedServiceId,
-// //         initialSearchTypeIndex: _form.selectedSearchTypeIndex.value,
-// //         initialPriceRange: const RangeValues(0, 100000),
-// //         initialMaxPrice: 100000,
-// //         initialIsPriceFilterEnabled: false,
-// //         onApply:
-// //             ({
-// //               required serviceId,
-// //               required searchTypeIndex,
-// //               required priceRange,
-// //               required maxPrice,
-// //               required isPriceFilterEnabled,
-// //             }) {
-// //               setState(() {
-// //                 selectedServiceId = serviceId;
-// //                 _form.selectedSearchTypeIndex.value = searchTypeIndex;
-// //               });
-// //               applyProductFilters(
-// //                 selectedBookingType,
-// //                 searchTypeIndex,
-// //                 priceRange,
-// //                 isPriceFilterEnabled,
-// //               );
-// //             },
-// //       ),
-// //     );
-// //   }
+    // Load services and auto-select first one
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+      final staffId =
+          widget.bookingDetails?.staffId ?? widget.saleDetails?.staffId;
+      final staffName =
+          widget.bookingDetails?.staffName ?? widget.saleDetails?.staffName;
+      if (staffId != null) {
+        context.read<StaffSearchCubit>().getAllStaffs(
+          staffId,
+          StaffEntity(id: staffId, name: staffName ?? 'Staff', phoneNumber: ''),
+        );
+      } else {
+        context.read<StaffSearchCubit>().getAllStaffs();
+      }
 
-// //   Widget _buildRightSidePanel() {
-// //     return AnimatedSwitcher(
-// //       duration: const Duration(milliseconds: 300),
-// //       child: _bookingStep == 0
-// //           ? BookingClientDetailsPanel(
-// //               form: _form,
-// //               isSales: selectedBookingType == BookingType.sales,
-// //               sendPdfToWhatsApp: sendPdfToWhatsApp,
-// //               onSendPdfChanged: (v) => setState(() => sendPdfToWhatsApp = v),
-// //               calculateRentalDays: calculateRentalDays,
-// //               onContinue: _validateAndContinue,
-// //               clientNameError: _clientNameError,
-// //               phoneError: _phoneError,
-// //               staffNameError: _staffNameError,
-// //             )
-// //           : BookingPaymentSummaryPanel(
-// //               form: _form,
-// //               onBack: () => setState(() => _bookingStep = 0),
-// //               summarySection: _buildSummarySection(),
-// //             ),
-// //     );
-// //   }
+      // ðŸ”„ Load available products immediately using check-availability API
+      // This ensures only products available for the booking dates are shown
+      if (!_hasLoadedInitialProducts) {
+        _hasLoadedInitialProducts = true;
+        _loadAvailableProducts();
+      }
+    });
+  }
 
-// //   Widget _buildSummarySection() {
-// //     return BookingSummarySection(
-// //       form: _form,
-// //       isSales: selectedBookingType == BookingType.sales,
-// //       calculateRentalDays: calculateRentalDays,
-// //       bookingStatus: bookingStatus,
-// //       bookingCompletedDate: bookingCompletedDate,
-// //       onShowCustomization: () => setState(() => showCustomization = true),
-// //       onConfirm: _handleSaveBooking,
-// //       confirmLabel: 'Save Changes',
-// //     );
-// //   }
+  @override
+  void dispose() {
+    _removeSearchOverlay();
+    for (final f in _overlayItemFocusNodes.values) f.dispose();
+    for (final d in <ChangeNotifier>[
+      clientNameController, clientPhone1Controller, clientPhone2Controller,
+      clientAddressController, startLocationController, pickupLocationController,
+      destinationLocationController, staffNameController, advanceAmountController,
+      securityAmountController, discountAmountController, descriptionController,
+      serviceSearchController, runningKilometersController,
+      _clientNameFocusNode, _productSearchFocusNode, _clientPhone1FocusNode,
+      _clientPhone2FocusNode, _clientAddressFocusNode,
+      selectedProductsNotifier, additionalChargesNotifier, documentsNotifier,
+      _selectedSearchTypeIndex, _priceRange, _maxPriceNotifier,
+      _isPriceFilterEnabled, _overlayProducts, _overlayIsLoading,
+      _discountTypeNotifier,
+    ]) d.dispose();
+    _clientPhone1FieldController.dispose();
+    _clientPhone2FieldController.dispose();
+    _selectProductBloc.close();
+    _editBookingCubit.close();
+    super.dispose();
+  }
 
-// //   void _validateAndContinue() {
-// //     final staff = context.read<StaffSearchCubit>().state.selectedStaff;
-// //     final res = BookingValidationHelper.validateClientDetailsPanel(
-// //       clientName: _form.clientNameController.text,
-// //       phone1: _form.clientPhone1Controller.text,
-// //       phone2: _form.clientPhone2Controller.text,
-// //       address: _form.clientAddressController.text,
-// //       documentsCount: _form.documentsNotifier.value.length,
-// //       selectedStaffId: staff?.id,
-// //       staffName: _form.staffNameController.text,
-// //     );
-// //     if (res.isValid)
-// //       setState(() => _bookingStep = 1);
-// //     else {
-// //       setState(() {
-// //         _clientNameError = res.fieldErrors['clientName'];
-// //         _phoneError = res.fieldErrors['phone1'];
-// //         _staffNameError = res.fieldErrors['staff'];
-// //       });
-// //       BookingValidationHelper.showValidationErrors(context, res);
-// //     }
-// //   }
 
-// //   Future<void> _handleSaveBooking() async {
-// //     if (!_formKey.currentState!.validate()) return;
-// //     if (_form.selectedProductsNotifier.value.isEmpty) {
-// //       context.showSnackBar('Please select at least one item', isError: true);
-// //       return;
-// //     }
+  /// Validates client details and continues to next step if valid
+  void _validateAndContinue() {
+    setState(() {
+      _clientNameError = null;
+      _staffNameError = null;
+    });
 
-// //     GlobalLoadingOverlay.show(context);
-// //     try {
-// //       if (widget.bookingDetails != null) {
-// //         final updates = _buildPartialUpdateRequest();
-// //         final currentDocs = _form.documentsNotifier.value;
-// //         final originalDocPaths =
-// //             _originalDocuments?.map((d) => d.path).toSet() ?? {};
-// //         final removedUrls = originalDocPaths
-// //             .difference(currentDocs.map((d) => d.path).toSet())
-// //             .toList();
-// //         final newDocs = currentDocs.where((d) => d.bytes != null).toList();
+    // Get the selected staff from cubit
+    final staffState = context.read<StaffSearchCubit>().state;
+    final selectedStaff = staffState.selectedStaff;
 
-//         await getIt<UpdateBookingPartialUseCase>()(
-//           widget.bookingDetails!.id,
-//           updates,
-//           newDocuments: newDocs.isNotEmpty ? newDocs : null,
-//           removedDocumentUrls: removedUrls.isNotEmpty ? removedUrls : null,
-//         );
-//       } else if (widget.saleDetails != null) {
-//         await getIt<ISalesRepository>().updateSale(_buildSalesRequest());
-//       }
-//       GlobalLoadingOverlay.hide();
-//       if (mounted) {
-//         context.showSnackBar('Changes saved successfully.');
-//         if (widget.onClose != null)
-//           widget.onClose!();
-//         else
-//           Navigator.of(context).pop(true);
-//       }
-//     } catch (e) {
-//       GlobalLoadingOverlay.hide();
-//       context.showSnackBar(
-//         _formatUserFriendlyError(e),
-//         isError: true,
-//       );
-//     }
-//   }
+    final validationResult = BookingFormValidator.validateClientDetails(
+      clientName: clientNameController.text,
+      phone1: clientPhone1Controller.text,
+      phone2: clientPhone2Controller.text,
+      address: clientAddressController.text,
+      documentsCount: documentsNotifier.value.length,
+      selectedStaffId: selectedStaff?.id,
+      staffName: staffNameController.text,
+      isSalesMode: selectedBookingType == BookingType.sales,
+    );
 
-// //   Map<String, dynamic> _buildPartialUpdateRequest() {
-// //     final updates = <String, dynamic>{};
-// //     final currentP = pickupDate.format().appendTimeToDate(time: pickupTime);
-// //     final currentR = returnDate.format().appendTimeToDate(time: returnTime);
-// //     final origP = _originalPickupDate?.format().appendTimeToDate(
-// //       time: _originalPickupTime,
-// //     );
-// //     final origR = _originalReturnDate?.format().appendTimeToDate(
-// //       time: _originalReturnTime,
-// //     );
+    if (validationResult.isValid) {
+      // Move to next step
+      setState(() => _bookingStep = 1);
+    } else {
+      // Show validation errors
+      setState(() {
+        _clientNameError = validationResult.fieldErrors['clientName'];
+        _staffNameError = validationResult.fieldErrors['staff'];
+      });
+      BookingValidationHelper.showValidationErrors(context, validationResult);
+    }
+  }
 
-// //     if (currentP != origP || currentR != origR) {
-// //       updates['pickup_date'] = currentP;
-// //       updates['return_date'] = currentR;
-// //       updates['cooling_period_date'] = coolingPeriodDays == 0
-// //           ? currentR
-// //           : returnDate
-// //                 .add(Duration(days: coolingPeriodDays))
-// //                 .format()
-// //                 .appendTimeToDate(time: returnTime);
-// //     }
+  void _handleEditBookingState(BuildContext context, EditBookingState state) {
+    state.when(
+      initial: () {},
+      loading: () {
+        GlobalLoadingOverlay.show(context);
+      },
+      success: (isBooking) {
+        GlobalLoadingOverlay.hide();
+        if (!mounted) return;
+        context.showSnackBar(
+          isBooking ? 'Booking updated successfully!' : 'Sale updated successfully!',
+        );
+        if (widget.onClose != null) {
+          widget.onClose!();
+        } else {
+          Navigator.of(context).pop(isBooking ? true : null);
+        }
+      },
+      error: (message) {
+        GlobalLoadingOverlay.hide();
+        if (!mounted) return;
+        context.showSnackBar(_formatBookingError(message), isError: true);
+      },
+    );
+  }
 
-// //     if (_form.clientNameController.text.trim() != (_originalClientName ?? '')) {
-// //       updates['client'] = {
-// //         'id': _form.selectedClientId,
-// //         'name': _form.clientNameController.text.trim(),
-// //         'phone1': _form.clientPhone1Controller.text.trim().toIntOrNull(),
-// //       };
-// //       updates['address'] = _form.clientAddressController.text.trim();
-// //     }
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
 
-// //     final staffId = context.read<StaffSearchCubit>().state.selectedStaff?.id;
-// //     if (staffId != _originalStaffId) updates['staff_id'] = staffId;
+    return BlocProvider.value(
+      value: _editBookingCubit,
+      child: BlocListener<EditBookingCubit, EditBookingState>(
+        listener: _handleEditBookingState,
+        child: PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        await _handleBackNavigation();
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F6FA),
+        body: Container(
+          height: screenHeight,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Edit booking app bar
+                EditBookingAppBar(
+                  onSave: _handleSaveBooking,
+                  displayId:
+                      widget.bookingDetails?.invoiceId ??
+                      widget.saleDetails?.invoiceId ??
+                      '${widget.bookingId ?? widget.bookingDetails?.id ?? widget.saleDetails?.id ?? 0}',
+                  bookingType: selectedBookingType.name,
+                  onBack: _handleBackNavigation,
+                ),
+                // Main content - no scrolling
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    child: _buildMainContent(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        ),
+      ),
+    ));
+  }
 
-//     updates['advance_amount'] = _form.advanceAmountController.text
-//         .trim()
-//         .toIntOrNull();
-//     updates['security_amount'] = _form.securityAmountController.text
-//         .trim()
-//         .toIntOrNull();
-//     updates['discount_amount'] = _form.discountAmountController.text
-//         .trim()
-//         .toIntOrNull();
-//     updates['variants'] = _form.selectedProductsNotifier.value
-//         .map(
-//           (p) => {
-//             'id': p.variant.variantId ?? p.variant.id,
-//             'quantity': p.quantity,
-//             'amount': p.amount * p.quantity,
-//             'measurements': p.measurements,
-//           },
-//         )
-//         .toList();
-//     updates['delivery_status'] = _form.deliveryStatus.toValue();
-//     updates['description'] = _buildDescriptionWithPaymentMethods();
+  Widget _buildMainContent() {
+    if (selectedBookingType == BookingType.customWork) {
+      return Container(child: Center(child: Text('Custom Work - Coming Soon')));
+    }
+    // Same UI for both booking and sales
+    return _buildBookingContent();
+  }
 
-// //     return updates;
-// //   }
+  // BOOKING & SALES - Same UI with conditional fields
+  Widget _buildBookingContent() {
+    return BookingTwoPanelLayout(
+      left: BookingLeftPanel(
+        dateSection: _buildDateSelectionSection(),
+        serviceSection: _buildServiceSelectionSection(),
+        showCustomization: showCustomization,
+        customizationProducts: selectedProductsNotifier.value,
+        onBackFromCustomization: () => rebuild(() => showCustomization = false),
+        onSaveCustomization: (product, measurements) {
+          rebuild(() {
+            selectedProductsNotifier.value =
+                SelectedProductsManager.updateMeasurements(
+                  currentProducts: selectedProductsNotifier.value,
+                  updatedProduct: product,
+                  measurements: measurements,
+                );
+          });
+        },
+      ),
+      right: _buildRightSidePanel(),
+    );
+  }
 
-//   SalesRequestEntity _buildSalesRequest() {
-//     return SalesRequestEntity(
-//       id: widget.saleDetails?.id,
-//       staffId: _form.selectedStaffId,
-//       clientPhone: _form.clientPhone1Controller.text.trim(),
-//       address: _form.clientAddressController.text.trim(),
-//       saleDate: pickupDate.format(),
-//       description: _buildDescriptionWithPaymentMethods(),
-//       sendPdfToWhatsApp: sendPdfToWhatsApp,
-//       products: _form.selectedProductsNotifier.value,
-//       paidAmount: _form.advanceAmountController.text.trim().toIntOrNull() ?? 0,
-//       paymentMethod: _form.paymentMethod,
-//       discountAmount:
-//           _form.discountAmountController.text.trim().toIntOrNull() ?? 0,
-//     );
-//   }
+  Future<void> _selectDate({required bool isPickup}) async {
+    final initialDate = isPickup ? pickupDate : returnDate;
+    final now = DateTime.now();
+    final picked = await showKeyboardDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: isPickup ? DateTime(now.year - 5) : pickupDate,
+      lastDate: now.add(const Duration(days: 365 * 2)),
+      selectedColor: const Color(0xFF6132E4),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isPickup) {
+          pickupDate = picked;
+          if (returnDate.isBefore(picked)) {
+            returnDate = picked.add(const Duration(days: 1));
+          }
+        } else {
+          returnDate = picked;
+        }
+        _updateCoolingPeriod();
+      });
+      _loadAvailableProducts();
+    }
+  }
 
-//   @override
-//   void showSearchOverlay() {
-//     BookingSearchOverlayHelper.showSearchOverlay(
-//       form: _form,
-//       context: context,
-//       isSales: selectedBookingType == BookingType.sales,
-//       onAddProduct: (p, v) => addProductFromSearchWithVariant(
-//         product: p,
-//         variant: v,
-//         isSales: selectedBookingType == BookingType.sales,
-//       ),
-//     );
-//   }
+  Future<void> _selectTime({required bool isPickup}) async {
+    final initialTime =
+        isPickup ? (pickupTime ?? TimeOfDay.now()) : (returnTime ?? TimeOfDay.now());
+    final picked = await showKeyboardTimePicker(
+      context: context,
+      initialTime: initialTime,
+      selectedColor: const Color(0xFF6132E4),
+    );
+    if (picked != null) {
+      setState(() {
+        isPickup ? pickupTime = picked : returnTime = picked;
+      });
+      _loadAvailableProducts();
+    }
+  }
 
-//   String _buildDescriptionWithPaymentMethods() {
-//     final note = _form.descriptionController.text.trim();
-//     final methods = _form.selectedPaymentMethods.value;
-//     if (methods.length <= 1) return note;
+  /// Load available products using the check-availability API.
+  /// Called on screen entry and whenever pickup/return date or time changes.
+  void _loadAvailableProducts() {
+    _productLoader.load(
+      bookingType: selectedBookingType,
+      selectedServiceId: selectedServiceId,
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      pickupTime: pickupTime,
+      returnTime: returnTime,
+      coolingPeriodDays: coolingPeriodDays,
+      coolingPeriodMode: coolingPeriodMode,
+      selectedProducts: selectedProductsNotifier.value,
+      bookingId: widget.bookingId,
+    );
+  }
 
-//     final paymentLine = 'Payment split via: ${methods.map((m) => m.name).join(', ')}';
-//     if (note.isEmpty) return paymentLine;
-//     if (note.contains(paymentLine)) return note;
-//     return '$note\n$paymentLine';
-//   }
+  /// Handles the cooling-settings change cascade:
+  /// recalculates cooling period → checks selected availability.
+  ///
+  /// Note: this intentionally does NOT also call [_loadAvailableProducts].
+  /// Both that loader and [_checkSelectedProductsAvailability] hit the same
+  /// `available-products` endpoint, which previously caused the availability
+  /// API to fire twice on every cooling change. The availability check already
+  /// sends the selected variant ids for the new cooling window (and surfaces the
+  /// unavailable-products dialog); the searchable product list refreshes on the
+  /// next search interaction. Called from the cooling-mode toggle and dropdown.
+  void _onCoolingSettingsChanged() {
+    _updateCoolingPeriod();
+    _checkSelectedProductsAvailability();
+  }
 
-//   String _formatUserFriendlyError(Object error) {
-//     final message = error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
-//     if (message.contains('Failed to update booking')) {
-//       return 'Could not save the booking changes right now. Please try again.';
-//     }
-//     if (message.contains('Failed to update sale')) {
-//       return 'Could not save the sale changes right now. Please try again.';
-//     }
-//     if (message.contains('network') || message.contains('SocketException')) {
-//       return 'Network issue detected. Please check your internet connection and try again.';
-//     }
-//     return message.startsWith('Error: ') ? message.substring(7) : message;
-//   }
-// }
+  /// Check if already-selected products are still available for the current
+  /// date range. Uses booking_id to exclude the current booking from conflict
+  /// checks (edit mode). Shows [showUnavailableProductsDialog] if any are not.
+  Future<void> _checkSelectedProductsAvailability() async {
+    final isSales = selectedBookingType == BookingType.sales;
+    final isBooking = selectedBookingType == BookingType.booking;
+    if (isSales) return;
+
+    final selected = selectedProductsNotifier.value;
+    if (selected.isEmpty) return;
+
+    final variantIds = selected
+        .map((p) => p.variant.variantId)
+        .whereType<int>()
+        .toList();
+    if (variantIds.isEmpty) return;
+
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+      pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+      returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+
+    try {
+      final notFoundIds = await getIt<IProductRepository>()
+          .checkVariantAvailability(
+            pickupDate: effectivePickupDate.format(),
+            returnDate: effectiveReturnDate,
+            variantIds: variantIds,
+            bookingId: widget.bookingId, // Pass booking_id in edit mode
+            pickupTime: pickupTime,
+            returnTime: returnTime,
+          );
+
+      if (notFoundIds.isNotEmpty && mounted) {
+        await showUnavailableProductsDialog(
+          context: context,
+          unavailableDateFrom: pickupDate.format(),
+          unavailableDateTo: returnDate.format(),
+          unavailableProducts: notFoundIds,
+          selectedProductsNotifier: selectedProductsNotifier,
+        );
+      }
+    } catch (e) {
+      log('Error checking selected product availability: $e');
+    }
+  }
+
+  Widget _buildServiceSelectionSection() {
+    return ServiceSelectionSection(
+      selectedProductsNotifier: selectedProductsNotifier,
+      searchBar: _buildProductSearchBar(),
+      selectedBookingType: selectedBookingType,
+      effectiveRentalDays: _calculateRentalDays(),
+      manualExtraRentalDays: 0,
+      clientNameFocusNode: _clientNameFocusNode,
+      onIncrementRentalDays: () {},
+      onDecrementRentalDays: () {},
+      showDayControls: false,
+    );
+  }
+
+  int _calculateRentalDays() => PaymentCalculator.calculateRentalDays(
+    pickupDate: pickupDate,
+    returnDate: returnDate,
+    pickupTime: pickupTime,
+    returnTime: returnTime,
+  );
+
+  void _updateCoolingPeriod() {
+    coolingPeriodDate = BookingDateCalculator.coolingPeriodDate(
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+    );
+  }
+
+  int _getDiscountProductBase() => PaymentCalculator.getDiscountProductBase(
+    selectedProducts: selectedProductsNotifier.value,
+    additionalCharges: additionalChargesNotifier.value,
+    bookingType: selectedBookingType,
+    effectiveRentalDays: _calculateRentalDays(),
+  );
+
+  Widget _buildSummaryBreakdownCard() {
+    return BookingAmountSummary(
+      selectedProductsNotifier: selectedProductsNotifier,
+      additionalChargesNotifier: additionalChargesNotifier,
+      advanceAmountController: advanceAmountController,
+      discountAmountController: discountAmountController,
+      isDiscountPercentage: _discountTypeNotifier,
+      securityAmountController: securityAmountController,
+      securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSales: selectedBookingType == BookingType.sales,
+      calculateRentalDays: _calculateRentalDays,
+      advanceLabel: 'Paid',
+      totalRemainingLabel: 'Balance Amount',
+    );
+  }
+
+  Widget _buildSummarySection() {
+    return BookingSummarySection(
+      selectedProductsNotifier: selectedProductsNotifier,
+      additionalChargesNotifier: additionalChargesNotifier,
+      advanceAmountController: advanceAmountController,
+      discountAmountController: discountAmountController,
+      isDiscountPercentage: _discountTypeNotifier,
+      securityAmountController: securityAmountController,
+      securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSales: selectedBookingType == BookingType.sales,
+      calculateRentalDays: _calculateRentalDays,
+      advanceLabel: 'Paid',
+      totalRemainingLabel: 'Balance Amount',
+      onShowCustomization: () => setState(() => showCustomization = true),
+      bookingStatus: bookingStatus,
+      bookingCompletedDate: bookingCompletedDate,
+      onConfirm: _handleSaveBooking,
+      confirmLabel: 'Save Change',
+    );
+  }
+
+  void _addAdditionalCharge() =>
+      AdditionalChargesManager.showAddChargeDialog(
+          context, additionalChargesNotifier);
+
+  void _removeCharge(AdditionalChargesEntity charge) =>
+      AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
+
+
+  Widget _buildDateSelectionSection() {
+    final isSales = selectedBookingType == BookingType.sales;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isSales ? 'Sale date' : 'Select dates',
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 7),
+          if (isSales)
+            // Sales mode - single date only
+            SizedBox(
+              width: 400,
+              child: BookingDatePickerField(
+                label: 'Sale date',
+                value: pickupDate.format(),
+                onTap: () => _selectDate(isPickup: true),
+              ),
+            )
+          else
+            // Booking mode - pickup and return dates
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                // Pickup Date
+                Expanded(
+                  flex: 3,
+                  child: BookingDatePickerField(
+                    label: 'Pickup date',
+                    value: pickupDate.format(),
+                    onTap: () => _selectDate(isPickup: true),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Pickup Time
+                Expanded(
+                  flex: 2,
+                  child: BookingTimePickerField(
+                    label: 'time',
+                    value: pickupTime?.format(context) ?? '',
+                    onTap: () => _selectTime(isPickup: true),
+                  ),
+                ),
+                const SizedBox(width: 24),
+
+                // Return Date
+                Expanded(
+                  flex: 3,
+                  child: BookingDatePickerField(
+                    label: 'Return date',
+                    value: returnDate.format(),
+                    onTap: () => _selectDate(isPickup: false),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Return Time
+                Expanded(
+                  flex: 2,
+                  child: BookingTimePickerField(
+                    label: 'time',
+                    value: returnTime?.format(context) ?? '',
+                    onTap: () => _selectTime(isPickup: false),
+                  ),
+                ),
+
+                const SizedBox(width: 24),
+                Expanded(
+                  flex: 2,
+                  child: _buildCoolingPeriodSection(),
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCoolingPeriodSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const SizedBox(width: 4),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Cooling period',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey.shade600,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    coolingPeriodMode.isAfter ? '(after)' : '(before)',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey.shade500,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 4),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  coolingPeriodMode = coolingPeriodMode.isAfter
+                      ? CoolingPeriodMode.before
+                      : CoolingPeriodMode.after;
+                });
+                _onCoolingSettingsChanged();
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                coolingPeriodMode.isAfter ? 'After' : 'Before',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 42,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: Builder(
+              builder: (context) {
+                final currentDays = coolingPeriodDays;
+                const standardValues = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+                final hasCustomValue = !standardValues.contains(currentDays);
+                return DropdownButton<int>(
+                  value: currentDays,
+                  isExpanded: true,
+                  icon: const Icon(Icons.keyboard_arrow_down, size: 18),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.black87,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
+                  items: [
+                    const DropdownMenuItem(value: 0, child: Text('None')),
+                    if (hasCustomValue)
+                      DropdownMenuItem(
+                        value: currentDays,
+                        child: Text('$currentDays days'),
+                      ),
+                    ...List.generate(10, (index) {
+                      final days = index + 1;
+                      return DropdownMenuItem(
+                        value: days,
+                        child: Text('$days day${days > 1 ? 's' : ''}'),
+                      );
+                    }),
+                  ],
+                  onChanged: (val) {
+                    if (val != null) {
+                      setState(() => coolingPeriodDays = val);
+                      _onCoolingSettingsChanged();
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRightSidePanel() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            ),
+            child: child,
+          ),
+        );
+      },
+      child: _bookingStep == 0
+          ? _buildClientDetailsPanel()
+          : _buildPaymentSummaryPanel(),
+    );
+  }
+
+  Widget _buildClientDetailsPanel() {
+    return Container(
+      key: const ValueKey(0),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Client details',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+                  _buildClientNameField(),
+                  const SizedBox(height: _fieldSpacing),
+                  _buildPhone1Field(),
+                  const SizedBox(height: _fieldSpacing),
+                  _buildPhone2Field(),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: clientAddressController,
+                    hint: 'place',
+                    focusNode: _clientAddressFocusNode,
+                    nextFocusNode: null,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+                  if (selectedBookingType == BookingType.booking) ...[
+                    const SizedBox(height: 8),
+                    BookingDocumentUploadSection(
+                      documentsNotifier: documentsNotifier,
+                    ),
+                    const SizedBox(height: 7),
+                  ],
+                  const Text(
+                    'Staff details',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  StaffSearchNameField(
+                    nameController: staffNameController,
+                    errorText: _staffNameError,
+                  ),
+                  const SizedBox(height: 7),
+                  BookingNotesField(controller: descriptionController),
+                  const SizedBox(height: 7),
+                  _buildVehicleKmField(),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Summary',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSummaryBreakdownCard(),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: _validateAndContinue,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6132E4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Continue',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClientNameField() {
+    return BlocListener<ClientCubit, ClientState>(
+      listener: (context, state) {
+        if (state.selectedClient != null) {
+          final client = state.selectedClient!;
+          clientNameController.text = client.name;
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone1FieldController,
+            clientPhone1Controller,
+            phoneNumber: client.phone1 > 0 ? client.phone1.toString() : null,
+            e164: client.phone1E164,
+          );
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone2FieldController,
+            clientPhone2Controller,
+            phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
+            e164: client.phone2E164,
+          );
+          selectedClientId = client.id;
+        }
+      },
+      child: ClientSearchNameField(
+        nameController: clientNameController,
+        focusNode: _clientNameFocusNode,
+        hitText: 'Search client by name',
+        onClear: () {
+          clientNameController.clear();
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone1FieldController,
+            clientPhone1Controller,
+            phoneNumber: null,
+            e164: null,
+          );
+          BookingPhonePopulator.setPhoneFieldValue(
+            _clientPhone2FieldController,
+            clientPhone2Controller,
+            phoneNumber: null,
+            e164: null,
+          );
+          clientAddressController.clear();
+          selectedClientId = null;
+        },
+        errorText: _clientNameError,
+      ),
+    );
+  }
+
+  Widget _buildPhone1Field() {
+    return BlocBuilder<ClientCubit, ClientState>(
+      builder: (context, state) {
+        final isClientSelected = state.selectedClient != null;
+        return CustomPhoneNumberField(
+          controller: _clientPhone1FieldController,
+          hintText: 'Phone',
+          readOnly: isClientSelected,
+          textInputAction: TextInputAction.next,
+          onChanged: (phone) {
+            final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+            cachePhoneE164(
+              rawPhoneNumber: digits,
+              e164: phoneNumberToE164(phone),
+            );
+            if (clientPhone1Controller.text != digits) {
+              clientPhone1Controller.value = TextEditingValue(
+                text: digits,
+                selection: TextSelection.collapsed(offset: digits.length),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPhone2Field() {
+    return BlocBuilder<ClientCubit, ClientState>(
+      builder: (context, state) {
+        final isClientSelected = state.selectedClient != null;
+        return CustomPhoneNumberField(
+          controller: _clientPhone2FieldController,
+          hintText: 'Phone 2',
+          readOnly: isClientSelected,
+          isRequired: false,
+          textInputAction: TextInputAction.next,
+          onChanged: (phone) {
+            final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+            cachePhoneE164(
+              rawPhoneNumber: digits,
+              e164: phoneNumberToE164(phone),
+            );
+            if (clientPhone2Controller.text != digits) {
+              clientPhone2Controller.value = TextEditingValue(
+                text: digits,
+                selection: TextSelection.collapsed(offset: digits.length),
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildVehicleKmField() {
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
+      valueListenable: selectedProductsNotifier,
+      builder: (context, products, _) {
+        final hasVehicles = products.any(
+          (p) => p.variant.mainServiceType?.isVehicle ?? false,
+        );
+        if (!hasVehicles) return const SizedBox.shrink();
+        return Column(
+          children: [
+            BookingTextFieldBuilder.buildRightPanelTextField(
+              controller: runningKilometersController,
+              hint: 'Running Kilometers',
+              isNumber: true,
+            ),
+            const SizedBox(height: 7),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPaymentSummaryPanel() {
+    return Container(
+      key: const ValueKey(1),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () => setState(() => _bookingStep = 0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                          color: Colors.grey.shade700,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Back',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildLocationsSection(),
+                  BookingTextFieldBuilder.buildSectionHeader(
+                    'Payment details',
+                    optional: true,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+                  _buildSecurityAmountSection(),
+                  const SizedBox(height: _fieldSpacing),
+                  _buildDiscountField(),
+                  const SizedBox(height: 14),
+                  _buildAdditionalChargesSection(),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+          _buildPaymentPanelSummaryBar(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationsSection() {
+    return ValueListenableBuilder<List<ProductSelectedEntity>>(
+      valueListenable: selectedProductsNotifier,
+      builder: (context, products, _) {
+        final hasVehicles = products.any(
+          (p) => p.variant.mainServiceType?.isVehicle ?? false,
+        );
+        if (!hasVehicles) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BookingTextFieldBuilder.buildSectionHeader(
+              'Locations',
+              optional: true,
+            ),
+            const SizedBox(height: _fieldSpacing),
+            BookingTextFieldBuilder.buildRightPanelTextField(
+              controller: startLocationController,
+              hint: 'Start location',
+            ),
+            const SizedBox(height: _fieldSpacing),
+            BookingTextFieldBuilder.buildRightPanelTextField(
+              controller: pickupLocationController,
+              hint: 'Pickup location',
+            ),
+            const SizedBox(height: _fieldSpacing),
+            BookingTextFieldBuilder.buildRightPanelTextField(
+              controller: destinationLocationController,
+              hint: 'Destination',
+            ),
+            const SizedBox(height: 14),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSecurityAmountSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        BookingTextFieldBuilder.buildRightPanelTextField(
+          controller: securityAmountController,
+          hint: 'Security amount',
+          isNumber: true,
+        ),
+        const SizedBox(height: 8),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: securityAmountController,
+          builder: (context, value, child) {
+            final hasSecurityAmount =
+                value.text.trim().isNotEmpty &&
+                (int.tryParse(value.text.trim()) ?? 0) > 0;
+            if (hasSecurityAmount) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  AccountSelectionField(
+                    selectedAccount: selectedSecurityAccount,
+                    initialAccountId: widget.bookingDetails?.securityAccountId,
+                    onChanged: (account) => rebuild(() => selectedSecurityAccount = account),
+                    label: 'Security Payment Option',
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDiscountField() {
+    return Row(
+      children: [
+        Expanded(
+          child: BookingTextFieldBuilder.buildRightPanelTextField(
+            controller: discountAmountController,
+            hint: isDiscountPercentage ? 'Discount %' : 'Discount amount',
+            isNumber: true,
+            suffix: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: discountAmountController,
+              builder: (context, val, _) {
+                final input = val.text.trim().toIntOrNull() ?? 0;
+                final total = _getDiscountProductBase();
+                if (input <= 0 || total <= 0) return const SizedBox.shrink();
+                final String equiv;
+                if (isDiscountPercentage) {
+                  final amount = (total * input / 100).round();
+                  equiv = 'â‰ˆ â‚¹$amount';
+                } else {
+                  final pct = input / total * 100;
+                  final pctStr = pct % 1 == 0
+                      ? '${pct.round()}'
+                      : pct.toStringAsFixed(1);
+                  equiv = 'â‰ˆ $pctStr%';
+                }
+                return Text(
+                  equiv,
+                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                );
+              },
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        PopupMenuButton<String>(
+          icon: Icon(Icons.more_vert, color: Colors.grey.shade600),
+          onSelected: (value) {
+            setState(() {
+              final switchToPercent = value == 'percentage';
+              if (switchToPercent != isDiscountPercentage) {
+                final input =
+                    discountAmountController.text.trim().toIntOrNull() ?? 0;
+                final total = _getDiscountProductBase();
+                if (input > 0 && total > 0) {
+                  if (switchToPercent) {
+                    final pct =
+                        (input / total * 100).round().clamp(0, 100);
+                    discountAmountController.text = pct.toString();
+                  } else {
+                    final amount = (total * input / 100).round();
+                    discountAmountController.text = amount.toString();
+                  }
+                }
+                isDiscountPercentage = switchToPercent;
+                _discountTypeNotifier.value = switchToPercent;
+              }
+            });
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'amount',
+              child: Row(
+                children: [
+                  Icon(
+                    isDiscountPercentage
+                        ? Icons.circle_outlined
+                        : Icons.check_circle,
+                    size: 18,
+                    color: isDiscountPercentage
+                        ? Colors.grey
+                        : const Color(0xFF6132E4),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Amount (â‚¹)'),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'percentage',
+              child: Row(
+                children: [
+                  Icon(
+                    isDiscountPercentage
+                        ? Icons.check_circle
+                        : Icons.circle_outlined,
+                    size: 18,
+                    color: isDiscountPercentage
+                        ? const Color(0xFF6132E4)
+                        : Colors.grey,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Percentage (%)'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdditionalChargesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Additional charges',
+              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+            ),
+            InkWell(
+              onTap: _addAdditionalCharge,
+              borderRadius: BorderRadius.circular(4),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  size: 16,
+                  color: Color(0xFF6132E4),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ValueListenableBuilder<List<AdditionalChargesEntity>>(
+          valueListenable: additionalChargesNotifier,
+          builder: (context, charges, _) {
+            if (charges.isEmpty) return const SizedBox();
+            return Column(
+              children: charges
+                  .map(
+                    (c) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              c.name ?? '',
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
+                          Text(
+                            'â‚¹${c.amount}',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () => _removeCharge(c),
+                            child: Icon(
+                              Icons.close,
+                              size: 14,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentPanelSummaryBar() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Summary',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildSummarySection(),
+        ],
+      ),
+    );
+  }
+}

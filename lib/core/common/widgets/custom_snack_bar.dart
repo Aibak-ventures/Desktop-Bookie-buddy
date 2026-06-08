@@ -122,7 +122,7 @@ class _WebSnackBarState extends State<_WebSnackBar>
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   offset: const Offset(0, 2),
                   blurRadius: 8,
                   spreadRadius: 0,

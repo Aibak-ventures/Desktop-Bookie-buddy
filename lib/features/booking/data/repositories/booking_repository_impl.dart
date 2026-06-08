@@ -21,6 +21,7 @@ import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
@@ -48,11 +49,18 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Create a booking
   @override
-  Future<int> addBooking(BookingRequestEntity bookingData) async {
+  Future<int> addBooking(
+    BookingRequestEntity bookingData, {
+    List<DocumentFileEntity>? documents,
+  }) async {
     try {
       final response = await safeApiCall(
-        () =>
-            _datasource.addBooking(BookingRequestModel.fromEntity(bookingData)),
+        () => _datasource.addBooking(
+          BookingRequestModel.fromEntity(bookingData),
+          documents: documents == null
+              ? null
+              : DocumentFileModel.fromEntityList(documents),
+        ),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {
@@ -74,10 +82,31 @@ class BookingRepositoryImpl implements IBookingRepository {
 
   // Create a sale
   @override
-  Future<int> createSale(Map<String, dynamic> saleData) async {
+  Future<int> createSale(SalesRequestEntity saleData) async {
     try {
+      final map = <String, dynamic>{
+        if (saleData.staffId != null) 'staff_id': saleData.staffId,
+        if (saleData.clientPhone != null && saleData.clientPhone!.isNotEmpty)
+          'client_phone': saleData.clientPhone,
+        if (saleData.address != null && saleData.address!.isNotEmpty)
+          'client_address': saleData.address,
+        if (saleData.saleDate != null) 'sale_date': saleData.saleDate,
+        if (saleData.description != null) 'description': saleData.description,
+        'send_invoice': saleData.sendPdfToWhatsApp,
+        'variants': (saleData.products ?? [])
+            .map((p) => {
+                  'id': p.variant.variantId,
+                  'quantity': p.quantity,
+                  'amount': p.amount * p.quantity,
+                })
+            .toList(),
+        'paid_amount': saleData.paidAmount ?? 0,
+        if (saleData.accountId != null) 'account_id': saleData.accountId,
+        'discount': saleData.discountAmount ?? 0,
+        'decrease_stock': saleData.stockCountDecrease ?? true,
+      };
       final response = await safeApiCall(
-        () => _datasource.createSale(saleData),
+        () => _datasource.createSale(map),
       );
       if (response.status.isSuccess) {
         if (response.data is Map) {

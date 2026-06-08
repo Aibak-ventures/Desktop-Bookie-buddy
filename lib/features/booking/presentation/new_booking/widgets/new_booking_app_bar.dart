@@ -1,17 +1,18 @@
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:flutter/material.dart';
-
-enum BookingTabType { booking, sales, customWork, oldBooking }
 
 class NewBookingAppBar extends StatefulWidget {
   final BookingTabType selectedTab;
   final Function(BookingTabType) onTabChanged;
   final VoidCallback? onBack;
+  final bool showSalesTab;
 
   const NewBookingAppBar({
     super.key,
     required this.selectedTab,
     required this.onTabChanged,
     this.onBack,
+    this.showSalesTab = true,
   });
 
   @override
@@ -27,7 +28,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -73,7 +74,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildTab('Booking', BookingTabType.booking),
-          _buildTab('Sales', BookingTabType.sales),
+          if (widget.showSalesTab) _buildTab('Sales', BookingTabType.sales),
           _buildTab('Old Booking', BookingTabType.oldBooking),
           // _buildTab('Custom work', BookingTabType.customWork),
         ],

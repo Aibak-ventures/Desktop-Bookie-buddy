@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -321,7 +321,7 @@ class _BookingClientDetailsPanelState
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF6132E4).withOpacity(0.2),
+                      color: const Color(0xFF6132E4).withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(

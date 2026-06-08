@@ -10,13 +10,17 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 
 abstract interface class IBookingRepository {
   Future<BookingDetailsEntity> getBooking(int bookingId);
 
-  Future<int> addBooking(BookingRequestEntity bookingData);
+  Future<int> addBooking(
+    BookingRequestEntity bookingData, {
+    List<DocumentFileEntity>? documents,
+  });
 
-  Future<int> createSale(Map<String, dynamic> saleData);
+  Future<int> createSale(SalesRequestEntity saleData);
 
   Future<void> createOldBooking(BookingRequestEntity bookingData);
 
