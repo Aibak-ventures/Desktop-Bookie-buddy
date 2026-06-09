@@ -24,18 +24,28 @@ class KeyboardNavigableDatePicker extends StatefulWidget {
 
 class _KeyboardNavigableDatePickerState
     extends State<KeyboardNavigableDatePicker> {
-  late DateTime _focusedDate;
-  late DateTime _selectedDate;
-  late PageController _pageController;
-  int _currentMonthOffset = 0;
+  // Date-only normalized bounds, so time components never skew comparisons.
+  late final DateTime _firstDate;
+  late final DateTime _lastDate;
+
+  // Single source of truth for what the calendar shows.
+  late DateTime _displayedMonth; // first day of the visible month
+  late DateTime _focusedDate; // keyboard cursor
+  late DateTime _selectedDate; // the chosen date
+
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _focusedDate = widget.initialDate;
-    _selectedDate = widget.initialDate;
-    _pageController = PageController();
+    _firstDate = _dateOnly(widget.firstDate);
+    _lastDate = _dateOnly(widget.lastDate);
+
+    final initial = _clamp(_dateOnly(widget.initialDate));
+    _selectedDate = initial;
+    _focusedDate = initial;
+    _displayedMonth = DateTime(initial.year, initial.month);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
@@ -43,76 +53,86 @@ class _KeyboardNavigableDatePickerState
 
   @override
   void dispose() {
-    _pageController.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
+
+  DateTime _clamp(DateTime d) {
+    if (d.isBefore(_firstDate)) return _firstDate;
+    if (d.isAfter(_lastDate)) return _lastDate;
+    return d;
   }
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
   bool _isInRange(DateTime date) =>
-      !date.isBefore(widget.firstDate) && !date.isAfter(widget.lastDate);
+      !date.isBefore(_firstDate) && !date.isAfter(_lastDate);
+
+  bool get _canGoPrevious =>
+      DateTime(_displayedMonth.year, _displayedMonth.month, 1)
+          .isAfter(DateTime(_firstDate.year, _firstDate.month, 1));
+
+  bool get _canGoNext =>
+      DateTime(_displayedMonth.year, _displayedMonth.month, 1)
+          .isBefore(DateTime(_lastDate.year, _lastDate.month, 1));
+
+  void _goToPreviousMonth() {
+    if (!_canGoPrevious) return;
+    setState(() {
+      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month - 1);
+    });
+  }
+
+  void _goToNextMonth() {
+    if (!_canGoNext) return;
+    setState(() {
+      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month + 1);
+    });
+  }
+
+  void _moveFocus(int dayDelta) {
+    final newDate = _focusedDate.add(Duration(days: dayDelta));
+    if (!_isInRange(newDate)) return;
+    setState(() {
+      _focusedDate = newDate;
+      _displayedMonth = DateTime(newDate.year, newDate.month);
+    });
+  }
+
+  void _selectDate(DateTime date) {
+    final selected = _dateOnly(date);
+    widget.onDateSelected?.call(selected);
+    Navigator.of(context).pop(selected);
+  }
 
   void _handleKeyEvent(KeyEvent event) {
     if (event is! KeyDownEvent) return;
 
-    setState(() {
-      switch (event.logicalKey) {
-        case LogicalKeyboardKey.arrowLeft:
-          final newDate = _focusedDate.subtract(const Duration(days: 1));
-          if (_isInRange(newDate)) {
-            _focusedDate = newDate;
-            _updateMonthIfNeeded(newDate);
-          }
-          break;
-        case LogicalKeyboardKey.arrowRight:
-          final newDate = _focusedDate.add(const Duration(days: 1));
-          if (_isInRange(newDate)) {
-            _focusedDate = newDate;
-            _updateMonthIfNeeded(newDate);
-          }
-          break;
-        case LogicalKeyboardKey.arrowUp:
-          final newDate = _focusedDate.subtract(const Duration(days: 7));
-          if (_isInRange(newDate)) {
-            _focusedDate = newDate;
-            _updateMonthIfNeeded(newDate);
-          }
-          break;
-        case LogicalKeyboardKey.arrowDown:
-          final newDate = _focusedDate.add(const Duration(days: 7));
-          if (_isInRange(newDate)) {
-            _focusedDate = newDate;
-            _updateMonthIfNeeded(newDate);
-          }
-          break;
-        case LogicalKeyboardKey.enter:
-        case LogicalKeyboardKey.space:
-          _selectedDate = _focusedDate;
-          widget.onDateSelected?.call(_selectedDate);
-          Navigator.of(context).pop(_selectedDate);
-          break;
-        case LogicalKeyboardKey.escape:
-          Navigator.of(context).pop();
-          break;
-        default:
-          break;
-      }
-    });
-  }
-
-  void _updateMonthIfNeeded(DateTime newDate) {
-    final currentMonth = DateTime(
-      widget.initialDate.year,
-      widget.initialDate.month + _currentMonthOffset,
-    );
-    if (newDate.month != currentMonth.month ||
-        newDate.year != currentMonth.year) {
-      _currentMonthOffset = (newDate.year - widget.initialDate.year) * 12 +
-          newDate.month -
-          widget.initialDate.month;
-      _pageController.jumpToPage(_currentMonthOffset);
+    switch (event.logicalKey) {
+      case LogicalKeyboardKey.arrowLeft:
+        _moveFocus(-1);
+        break;
+      case LogicalKeyboardKey.arrowRight:
+        _moveFocus(1);
+        break;
+      case LogicalKeyboardKey.arrowUp:
+        _moveFocus(-7);
+        break;
+      case LogicalKeyboardKey.arrowDown:
+        _moveFocus(7);
+        break;
+      case LogicalKeyboardKey.enter:
+      case LogicalKeyboardKey.space:
+        if (_isInRange(_focusedDate)) _selectDate(_focusedDate);
+        break;
+      case LogicalKeyboardKey.escape:
+        Navigator.of(context).pop();
+        break;
+      default:
+        break;
     }
   }
 
@@ -135,7 +155,7 @@ class _KeyboardNavigableDatePickerState
             const SizedBox(height: 16),
             _buildWeekdayHeaders(),
             const SizedBox(height: 8),
-            _buildCalendarGrid(),
+            _buildMonthCalendar(),
             const SizedBox(height: 16),
             _buildActions(),
           ],
@@ -145,40 +165,20 @@ class _KeyboardNavigableDatePickerState
   }
 
   Widget _buildHeader() {
-    final displayDate = DateTime(
-      widget.initialDate.year,
-      widget.initialDate.month + _currentMonthOffset,
-    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
           icon: const Icon(Icons.chevron_left),
-          onPressed: () {
-            setState(() {
-              _currentMonthOffset--;
-              _pageController.previousPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            });
-          },
+          onPressed: _canGoPrevious ? _goToPreviousMonth : null,
         ),
         Text(
-          '${_getMonthName(displayDate.month)} ${displayDate.year}',
+          '${_getMonthName(_displayedMonth.month)} ${_displayedMonth.year}',
           style: Theme.of(context).textTheme.titleMedium,
         ),
         IconButton(
           icon: const Icon(Icons.chevron_right),
-          onPressed: () {
-            setState(() {
-              _currentMonthOffset++;
-              _pageController.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            });
-          },
+          onPressed: _canGoNext ? _goToNextMonth : null,
         ),
       ],
     );
@@ -205,104 +205,73 @@ class _KeyboardNavigableDatePickerState
     );
   }
 
-  Widget _buildCalendarGrid() {
-    return SizedBox(
-      height: 240,
-      child: PageView.builder(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentMonthOffset = index;
-          });
-        },
-        itemBuilder: (context, index) {
-          final monthDate = DateTime(
-            widget.initialDate.year,
-            widget.initialDate.month + index,
-          );
-          return _buildMonthCalendar(monthDate);
-        },
-      ),
-    );
-  }
-
-  Widget _buildMonthCalendar(DateTime monthDate) {
-    final daysInMonth =
-        DateTime(monthDate.year, monthDate.month + 1, 0).day;
+  Widget _buildMonthCalendar() {
+    final monthDate = _displayedMonth;
+    final daysInMonth = DateTime(monthDate.year, monthDate.month + 1, 0).day;
     final firstDayOfMonth = DateTime(monthDate.year, monthDate.month, 1);
     final startOffset = (firstDayOfMonth.weekday - 1) % 7;
 
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 7,
-        childAspectRatio: 1,
-      ),
-      itemCount: 42,
-      itemBuilder: (context, index) {
-        final dayOffset = index - startOffset;
-        if (dayOffset < 0 || dayOffset >= daysInMonth) {
-          return const SizedBox.shrink();
-        }
+    return SizedBox(
+      height: 240,
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: 1,
+        ),
+        itemCount: 42,
+        itemBuilder: (context, index) {
+          final dayOffset = index - startOffset;
+          if (dayOffset < 0 || dayOffset >= daysInMonth) {
+            return const SizedBox.shrink();
+          }
 
-        final date = DateTime(
-          monthDate.year,
-          monthDate.month,
-          dayOffset + 1,
-        );
-        final isSelected = _isSameDay(date, _selectedDate);
-        final isFocused = _isSameDay(date, _focusedDate);
-        final isInRange = _isInRange(date);
-        final isToday = _isSameDay(date, DateTime.now());
+          final date = DateTime(monthDate.year, monthDate.month, dayOffset + 1);
+          final isSelected = _isSameDay(date, _selectedDate);
+          final isFocused = _isSameDay(date, _focusedDate);
+          final isInRange = _isInRange(date);
+          final isToday = _isSameDay(date, DateTime.now());
 
-        return GestureDetector(
-          onTap: isInRange
-              ? () {
-                  setState(() {
-                    _selectedDate = date;
-                    _focusedDate = date;
-                  });
-                  widget.onDateSelected?.call(date);
-                  Navigator.of(context).pop(date);
-                }
-              : null,
-          child: Container(
-            margin: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? (widget.selectedColor ??
-                      Theme.of(context).colorScheme.primary)
-                  : isFocused
-                      ? Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: 0.2)
-                      : null,
-              borderRadius: BorderRadius.circular(8),
-              border: isToday
-                  ? Border.all(
-                      color: widget.selectedColor ??
-                          Theme.of(context).colorScheme.primary,
-                      width: 2,
-                    )
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                '${dayOffset + 1}',
-                style: TextStyle(
-                  color: !isInRange
-                      ? Theme.of(context).disabledColor
-                      : isSelected
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : null,
-                  fontWeight:
-                      isFocused || isToday ? FontWeight.bold : null,
+          return GestureDetector(
+            onTap: isInRange ? () => _selectDate(date) : null,
+            child: Container(
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? (widget.selectedColor ??
+                        Theme.of(context).colorScheme.primary)
+                    : isFocused
+                        ? Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.2)
+                        : null,
+                borderRadius: BorderRadius.circular(8),
+                border: isToday
+                    ? Border.all(
+                        color: widget.selectedColor ??
+                            Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      )
+                    : null,
+              ),
+              child: Center(
+                child: Text(
+                  '${dayOffset + 1}',
+                  style: TextStyle(
+                    color: !isInRange
+                        ? Theme.of(context).disabledColor
+                        : isSelected
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : null,
+                    fontWeight: isFocused || isToday ? FontWeight.bold : null,
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -316,10 +285,7 @@ class _KeyboardNavigableDatePickerState
         ),
         const SizedBox(width: 8),
         FilledButton(
-          onPressed: () {
-            widget.onDateSelected?.call(_selectedDate);
-            Navigator.of(context).pop(_selectedDate);
-          },
+          onPressed: () => _selectDate(_selectedDate),
           child: const Text('OK'),
         ),
       ],
