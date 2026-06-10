@@ -95,8 +95,20 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
           skipTraversal: true,
           canRequestFocus: false,
           onKeyEvent: (_, event) {
-            _handleKeyEvent(event);
-            return KeyEventResult.handled;
+            if (event is! KeyDownEvent) return KeyEventResult.ignored;
+            final key = event.logicalKey;
+            final isHandled =
+                key == LogicalKeyboardKey.arrowDown ||
+                key == LogicalKeyboardKey.arrowUp ||
+                key == LogicalKeyboardKey.escape ||
+                (key == LogicalKeyboardKey.enter &&
+                    _suggestionsController.isOpen &&
+                    _highlightedIndex >= 0) ||
+                (key == LogicalKeyboardKey.numpadEnter &&
+                    _suggestionsController.isOpen &&
+                    _highlightedIndex >= 0);
+            if (isHandled) _handleKeyEvent(event);
+            return isHandled ? KeyEventResult.handled : KeyEventResult.ignored;
           },
           child: TypeAheadField<StaffEntity>(
             controller: widget.nameController,
@@ -111,10 +123,12 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
               _currentSuggestions = search.isEmpty
                   ? staffs
                   : staffs
-                      .where((s) => s.name
-                          .toLowerCase()
-                          .contains(search.toLowerCase()))
-                      .toList();
+                        .where(
+                          (s) => s.name.toLowerCase().contains(
+                            search.toLowerCase(),
+                          ),
+                        )
+                        .toList();
               return _currentSuggestions;
             },
             onSelected: (staff) {
@@ -167,22 +181,30 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
                         ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 14),
+                  horizontal: 10,
+                  vertical: 14,
+                ),
                 isDense: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                      color: Color(0xFFE0E0E0), width: 1.0),
+                    color: Color(0xFFE0E0E0),
+                    width: 1.0,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                      color: Color(0xFFE0E0E0), width: 1.0),
+                    color: Color(0xFFE0E0E0),
+                    width: 1.0,
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                      color: AppColors.purple, width: 1.5),
+                    color: AppColors.purple,
+                    width: 1.5,
+                  ),
                 ),
               ),
               validator: AppInputValidators.name,
@@ -195,12 +217,10 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
                     : null,
                 child: ListTile(
                   dense: true,
-                  title: Text(staff.name,
-                      style: const TextStyle(fontSize: 14)),
+                  title: Text(staff.name, style: const TextStyle(fontSize: 14)),
                   subtitle: Text(
                     staff.phoneNumber,
-                    style: TextStyle(
-                        fontSize: 14, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                 ),
               );
@@ -223,15 +243,17 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
             emptyBuilder: (_) => const SizedBox(
               height: 70,
               child: Center(
-                child: Text('No staff found',
-                    style: TextStyle(fontSize: 11)),
+                child: Text('No staff found', style: TextStyle(fontSize: 11)),
               ),
             ),
             errorBuilder: (_, error) => SizedBox(
               height: 70,
               child: Center(
-                  child: Text(error.toString(),
-                      style: const TextStyle(fontSize: 11))),
+                child: Text(
+                  error.toString(),
+                  style: const TextStyle(fontSize: 11),
+                ),
+              ),
             ),
             loadingBuilder: (_) => const Padding(
               padding: EdgeInsets.all(4),

@@ -99,219 +99,227 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Focus(
-            skipTraversal: true,
-            canRequestFocus: false,
-            onFocusChange: (_) {},
-            onKeyEvent: (_, event) {
-              _handleKeyEvent(event);
-              return KeyEventResult.handled;
-            },
-            child: TypeAheadField<ClientEntity>(
-              controller: widget.nameController,
-              focusNode: widget.focusNode,
-              suggestionsController: _suggestionsController,
-              scrollController: widget.scrollController,
-              debounceDuration: const Duration(milliseconds: 300),
-              hideOnEmpty: true,
-              hideWithKeyboard: false,
-              hideOnUnfocus: true,
-              hideOnSelect: true,
-              builder: (context, controller, focusNode) => Container(
-                height: 42,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.errorText != null
-                        ? Colors.red.shade400
-                        : Colors.grey.shade300,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
-                ),
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.person,
-                      size: 16,
-                      color: widget.errorText != null
-                          ? Colors.red.shade400
-                          : Colors.grey,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        focusNode: focusNode,
-                        controller: controller,
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        onEditingComplete: () =>
-                            FocusScope.of(context).nextFocus(),
-                        style: const TextStyle(
-                            fontSize: 13, color: Colors.black87),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: widget.hitText,
-                          hintStyle: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey.shade400,
-                          ),
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                      ),
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: controller,
-                      builder: (context, searchValue, child) =>
-                          searchValue.text.isEmpty
-                              ? const SizedBox.shrink()
-                              : IconButton(
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  onPressed: () {
-                                    controller.clear();
-                                    context
-                                        .read<ClientCubit>()
-                                        .clearSelected(widget.onClear);
-                                  },
-                                  icon: const Icon(
-                                    Icons.clear,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                    ),
-                  ],
-                ),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Focus(
+        skipTraversal: true,
+        canRequestFocus: false,
+        onFocusChange: (_) {},
+        onKeyEvent: (_, event) {
+          if (event is! KeyDownEvent) return KeyEventResult.ignored;
+          final key = event.logicalKey;
+          final isHandled =
+              key == LogicalKeyboardKey.arrowDown ||
+              key == LogicalKeyboardKey.arrowUp ||
+              key == LogicalKeyboardKey.escape ||
+              (key == LogicalKeyboardKey.enter &&
+                  _suggestionsController.isOpen &&
+                  _highlightedIndex >= 0) ||
+              (key == LogicalKeyboardKey.numpadEnter &&
+                  _suggestionsController.isOpen &&
+                  _highlightedIndex >= 0);
+          if (isHandled) _handleKeyEvent(event);
+          return isHandled ? KeyEventResult.handled : KeyEventResult.ignored;
+        },
+        child: TypeAheadField<ClientEntity>(
+          controller: widget.nameController,
+          focusNode: widget.focusNode,
+          suggestionsController: _suggestionsController,
+          scrollController: widget.scrollController,
+          debounceDuration: const Duration(milliseconds: 300),
+          hideOnEmpty: true,
+          hideWithKeyboard: false,
+          hideOnUnfocus: true,
+          hideOnSelect: true,
+          builder: (context, controller, focusNode) => Container(
+            height: 42,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.errorText != null
+                    ? Colors.red.shade400
+                    : Colors.grey.shade300,
               ),
-              itemBuilder: (context, client) {
-                final index = _currentSuggestions.indexOf(client);
-                if (client.id == -1) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: const Text(
-                      'No client found',
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
+            ),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  size: 16,
+                  color: widget.errorText != null
+                      ? Colors.red.shade400
+                      : Colors.grey,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    focusNode: focusNode,
+                    controller: controller,
+                    keyboardType: TextInputType.name,
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: widget.hitText,
+                      hintStyle: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade400,
+                      ),
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
                     ),
-                  );
-                }
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: _highlightedIndex == index
-                        ? AppColors.purple.withValues(alpha: 0.1)
-                        : Colors.white,
-                    border: Border(
-                        bottom: BorderSide(color: Colors.grey.shade100)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        client.name,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        client.phone1E164 ??
-                            (client.phone1 > 0
-                                ? client.phone1.toString()
-                                : ''),
-                        style: const TextStyle(
-                            fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              suggestionsCallback: (query) async {
-                if (!widget.isSearchEnabled) return [];
-
-                final selected =
-                    context.read<ClientCubit>().state.selectedClient;
-                if (selected != null && query == selected.name) return null;
-
-                if (query.isEmpty) {
-                  final results =
-                      await context.read<ClientCubit>().searchClient('');
-                  _currentSuggestions = results.isEmpty
-                      ? [
-                          const ClientEntity(
-                            id: -1,
-                            name: 'No client found',
-                            phone1: 0,
-                          ),
-                        ]
-                      : results;
-                  return _currentSuggestions;
-                }
-
-                final results =
-                    await context.read<ClientCubit>().searchClient(query);
-                _currentSuggestions = results.isEmpty
-                    ? [
-                        const ClientEntity(
-                            id: -1, name: 'No client found', phone1: 0),
-                      ]
-                    : results;
-                return _currentSuggestions;
-              },
-              onSelected: (client) {
-                if (client.id == -1) return;
-                setState(() {
-                  _highlightedIndex = -1;
-                });
-                context.read<ClientCubit>().selectClient(client);
-                widget.onClientSelected?.call(client);
-              },
-              emptyBuilder: (context) => const SizedBox(
-                height: 100,
-                child: Center(child: Text('No client found')),
-              ),
-              errorBuilder: (context, error) => SizedBox(
-                  height: 100,
-                  child: Center(child: Text(error.toString()))),
-              loadingBuilder: (context) => ListView.builder(
-                itemCount: 4,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => ListTile(
-                  title: Row(
-                    children: [
-                      CustomShimmerBox(width: 0.11.widthR, height: 20)
-                    ],
-                  ),
-                  subtitle: Row(
-                    children: [
-                      CustomShimmerBox(width: 0.12.widthR, height: 15)
-                    ],
                   ),
                 ),
+                ValueListenableBuilder(
+                  valueListenable: controller,
+                  builder: (context, searchValue, child) =>
+                      searchValue.text.isEmpty
+                      ? const SizedBox.shrink()
+                      : IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            controller.clear();
+                            context.read<ClientCubit>().clearSelected(
+                              widget.onClear,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.clear,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          ),
+          itemBuilder: (context, client) {
+            final index = _currentSuggestions.indexOf(client);
+            if (client.id == -1) {
+              return Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: const Text(
+                  'No client found',
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+              );
+            }
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: _highlightedIndex == index
+                    ? AppColors.purple.withValues(alpha: 0.1)
+                    : Colors.white,
+                border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    client.name,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    client.phone1E164 ??
+                        (client.phone1 > 0 ? client.phone1.toString() : ''),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
+          },
+          suggestionsCallback: (query) async {
+            if (!widget.isSearchEnabled) return [];
+
+            final selected = context.read<ClientCubit>().state.selectedClient;
+            if (selected != null && query == selected.name) return null;
+
+            if (query.isEmpty) {
+              final results = await context.read<ClientCubit>().searchClient(
+                '',
+              );
+              _currentSuggestions = results.isEmpty
+                  ? [
+                      const ClientEntity(
+                        id: -1,
+                        name: 'No client found',
+                        phone1: 0,
+                      ),
+                    ]
+                  : results;
+              return _currentSuggestions;
+            }
+
+            final results = await context.read<ClientCubit>().searchClient(
+              query,
+            );
+            _currentSuggestions = results.isEmpty
+                ? [
+                    const ClientEntity(
+                      id: -1,
+                      name: 'No client found',
+                      phone1: 0,
+                    ),
+                  ]
+                : results;
+            return _currentSuggestions;
+          },
+          onSelected: (client) {
+            if (client.id == -1) return;
+            setState(() {
+              _highlightedIndex = -1;
+            });
+            context.read<ClientCubit>().selectClient(client);
+            widget.onClientSelected?.call(client);
+          },
+          emptyBuilder: (context) => const SizedBox(
+            height: 100,
+            child: Center(child: Text('No client found')),
+          ),
+          errorBuilder: (context, error) => SizedBox(
+            height: 100,
+            child: Center(child: Text(error.toString())),
+          ),
+          loadingBuilder: (context) => ListView.builder(
+            itemCount: 4,
+            shrinkWrap: true,
+            itemBuilder: (context, index) => ListTile(
+              title: Row(
+                children: [CustomShimmerBox(width: 0.11.widthR, height: 20)],
+              ),
+              subtitle: Row(
+                children: [CustomShimmerBox(width: 0.12.widthR, height: 15)],
               ),
             ),
           ),
-          if (widget.errorText != null) ...[
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.only(left: 4),
-              child: Text(
-                widget.errorText!,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.red.shade600,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+        ),
+      ),
+      if (widget.errorText != null) ...[
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Text(
+            widget.errorText!,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.red.shade600,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ],
-      );
+          ),
+        ),
+      ],
+    ],
+  );
 }
