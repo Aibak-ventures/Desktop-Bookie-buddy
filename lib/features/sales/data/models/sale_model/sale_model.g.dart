@@ -21,3 +21,18 @@ _SaleModel _$SaleModelFromJson(Map<String, dynamic> json) => _SaleModel(
   staffName: json['staff_name'] as String?,
 );
 
+Map<String, dynamic> _$SaleModelToJson(_SaleModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'shop_sale_id': instance.shopSaleId,
+      'client_name': instance.clientName,
+      'client_phone': instance.clientPhone,
+      'total_amount': instance.totalAmount,
+      'paid_amount': instance.paidAmount,
+      'discount': instance.discountAmount,
+      'sale_date': instance.saleDate,
+      'created_at': instance.createdAt,
+      'products': instance.products,
+      'staff_color': instance.staffColor,
+      'staff_name': instance.staffName,
+    };

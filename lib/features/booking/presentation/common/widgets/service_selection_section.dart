@@ -13,6 +13,8 @@ class ServiceSelectionSection extends StatelessWidget {
   final VoidCallback onIncrementRentalDays;
   final VoidCallback onDecrementRentalDays;
   final bool showDayControls;
+  final ValueNotifier<int?>? focusTargetProductKey;
+  final VoidCallback? onNavigateToClientDetails;
 
   const ServiceSelectionSection({
     super.key,
@@ -25,6 +27,8 @@ class ServiceSelectionSection extends StatelessWidget {
     required this.onIncrementRentalDays,
     required this.onDecrementRentalDays,
     this.showDayControls = true,
+    this.focusTargetProductKey,
+    this.onNavigateToClientDetails,
   });
 
   @override
@@ -61,18 +65,20 @@ class ServiceSelectionSection extends StatelessWidget {
           const SizedBox(height: 5),
           searchBar,
           const SizedBox(height: 5),
-          Expanded(
-            child: ProductListTableWidget(
-              selectedProductsNotifier: selectedProductsNotifier,
-              selectedBookingType: selectedBookingType,
-              effectiveRentalDays: effectiveRentalDays,
-              manualExtraRentalDays: manualExtraRentalDays,
-              clientNameFocusNode: clientNameFocusNode,
-              onIncrementRentalDays: onIncrementRentalDays,
-              onDecrementRentalDays: onDecrementRentalDays,
-              showDayControls: showDayControls,
+            Expanded(
+              child: ProductListTableWidget(
+                selectedProductsNotifier: selectedProductsNotifier,
+                selectedBookingType: selectedBookingType,
+                effectiveRentalDays: effectiveRentalDays,
+                manualExtraRentalDays: manualExtraRentalDays,
+                clientNameFocusNode: clientNameFocusNode,
+                onIncrementRentalDays: onIncrementRentalDays,
+                onDecrementRentalDays: onDecrementRentalDays,
+                showDayControls: showDayControls,
+                focusTargetProductKey: focusTargetProductKey,
+                onNavigateToClientDetails: onNavigateToClientDetails,
+              ),
             ),
-          ),
         ],
       ),
     );

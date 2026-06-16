@@ -19,6 +19,10 @@ class ProductListTableWidget extends StatefulWidget {
   final VoidCallback onDecrementRentalDays;
   /// When false, the Days column shows the count only (no +/− controls).
   final bool showDayControls;
+  /// When set to a product key, auto-focuses that product's quantity field.
+  final ValueNotifier<int?>? focusTargetProductKey;
+  /// Called when navigation reaches the end of the product list.
+  final VoidCallback? onNavigateToClientDetails;
 
   const ProductListTableWidget({
     super.key,
@@ -30,6 +34,8 @@ class ProductListTableWidget extends StatefulWidget {
     required this.onIncrementRentalDays,
     required this.onDecrementRentalDays,
     this.showDayControls = true,
+    this.focusTargetProductKey,
+    this.onNavigateToClientDetails,
   });
 
   @override
@@ -42,9 +48,22 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   final _inlinePriceFocusNode = FocusNode();
   final Map<int, TextEditingController> _quantityControllers = {};
   final Map<int, FocusNode> _quantityFocusNodes = {};
+  /// Row-level focus nodes for keyboard navigation
+  final Map<int, FocusNode> _rowFocusNodes = {};
+  /// Element focus nodes for each product row: [qtyMinus, qtyPlus, daysMinus, daysPlus, price]
+  final Map<int, List<FocusNode>> _rowElementFocusNodes = {};
+  /// Tracks active sub-element index within a row: 0=qtyMinus, 1=qtyInput, 2=qtyPlus, 3=daysMinus, 4=daysPlus, 5=price
+  final Map<int, int> _rowActiveElement = {};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.focusTargetProductKey?.addListener(_onFocusTargetChanged);
+  }
 
   @override
   void dispose() {
+    widget.focusTargetProductKey?.removeListener(_onFocusTargetChanged);
     _inlinePriceController.dispose();
     _inlinePriceFocusNode.dispose();
     for (final controller in _quantityControllers.values) {
@@ -53,7 +72,25 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     for (final focusNode in _quantityFocusNodes.values) {
       focusNode.dispose();
     }
+    for (final node in _rowFocusNodes.values) node.dispose();
+    for (final nodes in _rowElementFocusNodes.values) {
+      for (final node in nodes) node.dispose();
+    }
     super.dispose();
+  }
+
+  void _onFocusTargetChanged() {
+    final targetKey = widget.focusTargetProductKey?.value;
+    if (targetKey == null) return;
+    final products = widget.selectedProductsNotifier.value;
+    final index = products.indexWhere((p) => _quantityKey(p) == targetKey);
+    if (index == -1) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _rowActiveElement[targetKey] = 1;
+      _getQuantityFocusNode(targetKey).requestFocus();
+    });
+    widget.focusTargetProductKey?.value = null;
   }
 
   @override
@@ -199,353 +236,418 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         ? (rentalDays > 0 ? rentalDays : 1)
         : 1;
     final hasVariants = _hasAnyProductWithVariants();
+    final productKey = _quantityKey(product);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
-      ),
-      child: Row(
-        children: [
-          // Item Name & Image
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                MouseRegion(
-                  cursor: hasImage
-                      ? SystemMouseCursors.click
-                      : MouseCursor.defer,
-                  child: GestureDetector(
-                    onTap: hasImage
-                        ? () => ZoomableImageDialog.show(
-                            context,
-                            imageUrl: fullImageUrl ?? imageUrl,
-                            title: product.variant.name,
-                          )
-                        : null,
-                    child: Container(
-                      width: 48,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: Colors.grey.shade100,
-                        border: Border.all(color: Colors.grey.shade200),
-                        image: hasImage
-                            ? DecorationImage(
-                                image: NetworkImage(imageUrl),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: !hasImage
-                          ? const Icon(
-                              Icons.image_not_supported,
-                              size: 20,
-                              color: Colors.grey,
+    return Focus(
+      focusNode: _getRowFocusNode(productKey),
+      onKeyEvent: (_, event) => _handleRowKeyEvent(product, event),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(bottom: BorderSide(color: Colors.grey.shade100)),
+        ),
+        child: Row(
+          children: [
+            // Item Name & Image
+            Expanded(
+              flex: 3,
+              child: Row(
+                children: [
+                  MouseRegion(
+                    cursor: hasImage
+                        ? SystemMouseCursors.click
+                        : MouseCursor.defer,
+                    child: GestureDetector(
+                      onTap: hasImage
+                          ? () => ZoomableImageDialog.show(
+                              context,
+                              imageUrl: fullImageUrl ?? imageUrl,
+                              title: product.variant.name,
                             )
-                          : Align(
-                              alignment: Alignment.topRight,
-                              child: Container(
-                                margin: const EdgeInsets.all(3),
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.black45,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.zoom_in,
-                                  size: 12,
-                                  color: Colors.white,
+                          : null,
+                      child: Container(
+                        width: 48,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: Colors.grey.shade100,
+                          border: Border.all(color: Colors.grey.shade200),
+                          image: hasImage
+                              ? DecorationImage(
+                                  image: NetworkImage(imageUrl),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: !hasImage
+                            ? const Icon(
+                                Icons.image_not_supported,
+                                size: 20,
+                                color: Colors.grey,
+                              )
+                            : Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  margin: const EdgeInsets.all(3),
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black45,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: const Icon(
+                                    Icons.zoom_in,
+                                    size: 12,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    product.variant.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF2D3436),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      product.variant.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2D3436),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 4),
-          // Specifications
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: Text(
-                _getProductSpecifications(product),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                ],
               ),
             ),
-          ),
-          const SizedBox(width: 4),
-          // Variant (only for multi-variant products)
-          if (hasVariants) ...[
+            const SizedBox(width: 4),
+            // Specifications
             Expanded(
+              flex: 2,
               child: Center(
                 child: Text(
-                  _getVariantDisplayText(product),
-                  style: const TextStyle(
-                    fontSize: 13,
+                  _getProductSpecifications(product),
+                  style: TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: Colors.grey.shade700,
                   ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
             const SizedBox(width: 4),
-          ],
-          // Available Badge
-          if (!isOldBooking) ...[
-            Expanded(
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 11,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0x1C1FD300),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF27AE60),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${product.variant.remainingStock ?? product.variant.stock} left',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF27AE60),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 4),
-          ],
-          // Quantity Buttons
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildQuantityBtn(
-                  icon: Icons.remove,
-                  onTap: () => _decrementQuantity(product),
-                  compact: true,
-                ),
-                const SizedBox(width: 3),
-                SizedBox(
-                  width: 25,
-                  height: 20,
-                  child: TextField(
-                    controller: _getQuantityController(product),
-                    focusNode: _getQuantityFocusNode(_quantityKey(product)),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                    ],
-                    textAlign: TextAlign.center,
+            // Variant (only for multi-variant products)
+            if (hasVariants) ...[
+              Expanded(
+                child: Center(
+                  child: Text(
+                    _getVariantDisplayText(product),
                     style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                       color: Colors.black87,
                     ),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 0,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: BorderSide(color: Colors.grey.shade400),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(4),
-                        borderSide: const BorderSide(color: Color(0xFF6132E4)),
-                      ),
-                    ),
-                    onSubmitted: (value) => _saveTypedQuantity(product, value),
-                    onTapOutside: (_) => _saveTypedQuantity(
-                      product,
-                      _getQuantityController(product).text,
-                    ),
                   ),
                 ),
-                const SizedBox(width: 3),
-                _buildQuantityBtn(
-                  icon: Icons.add,
-                  onTap: () => _incrementQuantity(product),
-                  compact: true,
-                  isDisabled:
-                      !isOldBooking &&
-                      product.quantity >=
-                          (product.variant.remainingStock ??
-                              product.variant.stock ??
-                              999),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          // Days column (only for bookings/custom/old booking)
-          if (!isSales) ...[
-            Expanded(
-              child: widget.showDayControls
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              const SizedBox(width: 4),
+            ],
+            // Available Badge
+            if (!isOldBooking) ...[
+              Expanded(
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 11,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0x1C1FD300),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildQuantityBtn(
-                          icon: Icons.remove,
-                          onTap: widget.onDecrementRentalDays,
-                          isDisabled: widget.manualExtraRentalDays == 0,
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF27AE60),
+                            shape: BoxShape.circle,
+                          ),
                         ),
                         const SizedBox(width: 6),
                         Text(
+                          '${product.variant.remainingStock ?? product.variant.stock} left',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF27AE60),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+            ],
+            // Quantity Buttons
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Focus(
+                    focusNode: _getRowElementFocusNode(productKey, 0),
+                    onKeyEvent: (_, event) {
+                      if (event is KeyDownEvent &&
+                          (event.logicalKey == LogicalKeyboardKey.enter ||
+                              event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                        _decrementQuantity(product);
+                        return KeyEventResult.handled;
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: _buildQuantityBtn(
+                      icon: Icons.remove,
+                      onTap: () => _decrementQuantity(product),
+                      compact: true,
+                    ),
+                  ),
+                  const SizedBox(width: 3),
+                  SizedBox(
+                    width: 25,
+                    height: 20,
+                    child: TextField(
+                      controller: _getQuantityController(product),
+                      focusNode: _getQuantityFocusNode(productKey),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 0,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide(color: Colors.grey.shade400),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: const BorderSide(color: Color(0xFF6132E4)),
+                        ),
+                      ),
+                      onSubmitted: (value) => _saveTypedQuantity(product, value),
+                      onTapOutside: (_) => _saveTypedQuantity(
+                        product,
+                        _getQuantityController(product).text,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 3),
+                  Focus(
+                    focusNode: _getRowElementFocusNode(productKey, 1),
+                    onKeyEvent: (_, event) {
+                      if (event is KeyDownEvent &&
+                          (event.logicalKey == LogicalKeyboardKey.enter ||
+                              event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                        _incrementQuantity(product);
+                        return KeyEventResult.handled;
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: _buildQuantityBtn(
+                      icon: Icons.add,
+                      onTap: () => _incrementQuantity(product),
+                      compact: true,
+                      isDisabled:
+                          !isOldBooking &&
+                          product.quantity >=
+                              (product.variant.remainingStock ??
+                                  product.variant.stock ??
+                                  999),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            // Days column (only for bookings/custom/old booking)
+            if (!isSales) ...[
+              Expanded(
+                child: widget.showDayControls
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Focus(
+                            focusNode: _getRowElementFocusNode(productKey, 2),
+                            onKeyEvent: (_, event) {
+                              if (event is KeyDownEvent &&
+                                  (event.logicalKey == LogicalKeyboardKey.enter ||
+                                      event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                                widget.onDecrementRentalDays();
+                                return KeyEventResult.handled;
+                              }
+                              return KeyEventResult.ignored;
+                            },
+                            child: _buildQuantityBtn(
+                              icon: Icons.remove,
+                              onTap: widget.onDecrementRentalDays,
+                              isDisabled: widget.manualExtraRentalDays == 0,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            '$rentalDays',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Focus(
+                            focusNode: _getRowElementFocusNode(productKey, 3),
+                            onKeyEvent: (_, event) {
+                              if (event is KeyDownEvent &&
+                                  (event.logicalKey == LogicalKeyboardKey.enter ||
+                                      event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                                widget.onIncrementRentalDays();
+                                return KeyEventResult.handled;
+                              }
+                              return KeyEventResult.ignored;
+                            },
+                            child: _buildQuantityBtn(
+                              icon: Icons.add,
+                              onTap: widget.onIncrementRentalDays,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Center(
+                        child: Text(
                           '$rentalDays',
                           style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                             color: Colors.black87,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        _buildQuantityBtn(
-                          icon: Icons.add,
-                          onTap: widget.onIncrementRentalDays,
+                      ),
+              ),
+              const SizedBox(width: 4),
+            ],
+            // Price / item
+            Expanded(
+              child: _editingVariantId == product.variant.variantId
+                  ? Center(
+                      child: SizedBox(
+                        width: 80,
+                        height: 32,
+                        child: TextField(
+                          controller: _inlinePriceController,
+                          focusNode: _inlinePriceFocusNode,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: BorderSide(color: Colors.grey.shade400),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(4),
+                              borderSide: const BorderSide(
+                                color: Color(0xFF6132E4),
+                              ),
+                            ),
+                          ),
+                          onSubmitted: (_) => _saveEditingPrice(product),
                         ),
-                      ],
+                      ),
                     )
-                  : Center(
-                      child: Text(
-                        '$rentalDays',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
+                  : Focus(
+                      focusNode: _getRowElementFocusNode(productKey, 4),
+                      onKeyEvent: (_, event) {
+                        if (event is KeyDownEvent &&
+                            (event.logicalKey == LogicalKeyboardKey.enter ||
+                                event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                          _startEditingPrice(product);
+                          return KeyEventResult.handled;
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                      child: GestureDetector(
+                        onTap: () => _startEditingPrice(product),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${product.amount}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF2D3436),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.edit_outlined,
+                              size: 16,
+                              color: Color(0xFF6132E4),
+                            ),
+                          ],
                         ),
                       ),
                     ),
             ),
             const SizedBox(width: 4),
-          ],
-          // Price / item
-          Expanded(
-            child: _editingVariantId == product.variant.variantId
-                ? Center(
-                    child: SizedBox(
-                      width: 80,
-                      height: 32,
-                      child: TextField(
-                        controller: _inlinePriceController,
-                        focusNode: _inlinePriceFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 0,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: const BorderSide(
-                              color: Color(0xFF6132E4),
-                            ),
-                          ),
-                        ),
-                        onSubmitted: (_) => _saveEditingPrice(product),
-                      ),
-                    ),
-                  )
-                : GestureDetector(
-                    onTap: () => _startEditingPrice(product),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${product.amount}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2D3436),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(
-                          Icons.edit_outlined,
-                          size: 16,
-                          color: Color(0xFF6132E4),
-                        ),
-                      ],
-                    ),
+            // Total
+            Expanded(
+              child: Center(
+                child: Text(
+                  '${product.amount * product.quantity * effectiveDaysMultiplier}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2D3436),
                   ),
-          ),
-          const SizedBox(width: 4),
-          // Total
-          Expanded(
-            child: Center(
-              child: Text(
-                '${product.amount * product.quantity * effectiveDaysMultiplier}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
                 ),
               ),
             ),
-          ),
-          // Remove
-          SizedBox(
-            width: 50,
-            child: IconButton(
-              icon: const Icon(Icons.close, size: 20, color: Colors.black87),
-              onPressed: () => _removeProduct(product),
+            // Remove
+            SizedBox(
+              width: 50,
+              child: IconButton(
+                icon: const Icon(Icons.close, size: 20, color: Colors.black87),
+                onPressed: () => _removeProduct(product),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -607,10 +709,117 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     );
     if (currentIndex != -1 && currentIndex + 1 < products.length) {
       final nextProduct = products[currentIndex + 1];
-      _getQuantityFocusNode(_quantityKey(nextProduct)).requestFocus();
+      final nextKey = _quantityKey(nextProduct);
+      _rowActiveElement[nextKey] = 0;
+      _getRowElementFocusNode(nextKey, 0).requestFocus();
       return;
     }
-    widget.clientNameFocusNode.requestFocus();
+    widget.onNavigateToClientDetails?.call();
+  }
+
+  FocusNode _getRowFocusNode(int productKey) {
+    return _rowFocusNodes.putIfAbsent(productKey, FocusNode.new);
+  }
+
+  FocusNode _getRowElementFocusNode(int productKey, int elementIndex) {
+    final nodes = _rowElementFocusNodes.putIfAbsent(
+      productKey,
+      () => List.generate(5, (_) => FocusNode()),
+    );
+    return nodes[elementIndex];
+  }
+
+  void _focusElementInRow(ProductSelectedEntity product, int elementIndex) {
+    final key = _quantityKey(product);
+    _rowActiveElement[key] = elementIndex;
+    switch (elementIndex) {
+      case 0:
+        _getRowElementFocusNode(key, 0).requestFocus();
+      case 1:
+        _getQuantityFocusNode(key).requestFocus();
+      case 2:
+        _getRowElementFocusNode(key, 1).requestFocus();
+      case 3:
+        _getRowElementFocusNode(key, 2).requestFocus();
+      case 4:
+        _getRowElementFocusNode(key, 3).requestFocus();
+      case 5:
+        _startEditingPrice(product);
+    }
+  }
+
+  void _focusPrevProductRow(ProductSelectedEntity product) {
+    final products = widget.selectedProductsNotifier.value;
+    final key = _quantityKey(product);
+    final currentIndex = products.indexWhere(
+      (item) => _quantityKey(item) == key,
+    );
+    if (currentIndex > 0) {
+      final prev = products[currentIndex - 1];
+      final active = _rowActiveElement[key] ?? 1;
+      _focusElementInRow(prev, active.clamp(0, 5));
+    }
+  }
+
+  void _focusNextProductRow(ProductSelectedEntity product) {
+    final products = widget.selectedProductsNotifier.value;
+    final key = _quantityKey(product);
+    final currentIndex = products.indexWhere(
+      (item) => _quantityKey(item) == key,
+    );
+    if (currentIndex != -1 && currentIndex + 1 < products.length) {
+      final next = products[currentIndex + 1];
+      final active = _rowActiveElement[key] ?? 1;
+      _focusElementInRow(next, active.clamp(0, 5));
+      return;
+    }
+    widget.onNavigateToClientDetails?.call();
+  }
+
+  KeyEventResult _handleRowKeyEvent(ProductSelectedEntity product, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final key = _quantityKey(product);
+    final products = widget.selectedProductsNotifier.value;
+    final currentIndex = products.indexWhere((item) => _quantityKey(item) == key);
+
+    if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
+        event.logicalKey == LogicalKeyboardKey.numpad6) {
+      final currentElement = _rowActiveElement[key] ?? 1;
+      if (currentElement < 5) {
+        _focusElementInRow(product, currentElement + 1);
+      } else if (currentIndex != -1 && currentIndex + 1 < products.length) {
+        final next = products[currentIndex + 1];
+        _focusElementInRow(next, 0);
+      } else {
+        widget.onNavigateToClientDetails?.call();
+      }
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
+        event.logicalKey == LogicalKeyboardKey.numpad4) {
+      final currentElement = _rowActiveElement[key] ?? 1;
+      if (currentElement > 0) {
+        _focusElementInRow(product, currentElement - 1);
+      } else if (currentIndex > 0) {
+        final prev = products[currentIndex - 1];
+        _focusElementInRow(prev, 5);
+      } else {
+        // Stay at the first element of first row
+        _focusElementInRow(product, 0);
+      }
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
+        event.logicalKey == LogicalKeyboardKey.numpad2) {
+      _focusNextProductRow(product);
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+        event.logicalKey == LogicalKeyboardKey.numpad8) {
+      _focusPrevProductRow(product);
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 
   void _incrementQuantity(ProductSelectedEntity product) {
@@ -660,6 +869,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     if (removedItem) {
       _quantityControllers.remove(_quantityKey(product))?.dispose();
       _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
+      _removeRowFocusNodes(_quantityKey(product));
     } else {
       final index = updatedProducts.indexWhere(
         (item) =>
@@ -745,10 +955,18 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     _focusNextProductRowOrClient(product);
   }
 
+  void _removeRowFocusNodes(int key) {
+    _rowFocusNodes.remove(key)?.dispose();
+    _rowElementFocusNodes.remove(key)?.forEach((n) => n.dispose());
+    _rowActiveElement.remove(key);
+  }
+
   void _removeProduct(ProductSelectedEntity product) {
     final products = widget.selectedProductsNotifier.value;
-    _quantityControllers.remove(_quantityKey(product))?.dispose();
-    _quantityFocusNodes.remove(_quantityKey(product))?.dispose();
+    final key = _quantityKey(product);
+    _quantityControllers.remove(key)?.dispose();
+    _quantityFocusNodes.remove(key)?.dispose();
+    _removeRowFocusNodes(key);
     widget.selectedProductsNotifier.value = SelectedProductsManager.removeProduct(
       currentProducts: products,
       product: product,

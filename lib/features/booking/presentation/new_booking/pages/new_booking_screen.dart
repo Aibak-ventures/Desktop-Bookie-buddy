@@ -204,9 +204,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final _clientAddressFocusNode = FocusNode();
   final _staffNameFocusNode = FocusNode();
   final _notesFocusNode = FocusNode();
+  final _continueButtonFocusNode = FocusNode();
   final _advanceAmountFocusNode = FocusNode();
   final _securityAmountFocusNode = FocusNode();
   final _discountAmountFocusNode = FocusNode();
+  final _confirmStepButtonFocusNode = FocusNode();
+
+  /// Triggers auto-focus on a product's quantity field after adding from search
+  final _focusOnProductQuantityKey = ValueNotifier<int?>(null);
 
   // Customization state
   bool showCustomization = false;
@@ -290,11 +295,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       _pickupTimeFocusNode, _returnDateFocusNode, _returnTimeFocusNode,
       _coolingPeriodFocusNode, _clientPhone1FocusNode, _clientPhone2FocusNode,
       _clientAddressFocusNode, _staffNameFocusNode, _notesFocusNode,
+      _continueButtonFocusNode,
       _advanceAmountFocusNode, _securityAmountFocusNode, _discountAmountFocusNode,
+      _confirmStepButtonFocusNode,
       selectedProductsNotifier, additionalChargesNotifier, documentsNotifier,
       _selectedSearchTypeIndex, _priceRange, _maxPriceNotifier,
       _isPriceFilterEnabled, _overlayProducts, _overlayIsLoading,
       _discountTypeNotifier, _searchResultsScrollController,
+      _focusOnProductQuantityKey,
     ]) d.dispose();
     _clientPhone1FieldController.dispose();
     _clientPhone2FieldController.dispose();
@@ -732,6 +740,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
+  void _onNavigateToClientDetails() {
+    _clientNameFocusNode.requestFocus();
+  }
+
   Widget _buildServiceSelectionSection() {
     return ServiceSelectionSection(
       selectedProductsNotifier: selectedProductsNotifier,
@@ -742,6 +754,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       clientNameFocusNode: _clientNameFocusNode,
       onIncrementRentalDays: _incrementRentalDays,
       onDecrementRentalDays: _decrementRentalDays,
+      focusTargetProductKey: _focusOnProductQuantityKey,
+      onNavigateToClientDetails: _onNavigateToClientDetails,
     );
   }
 
@@ -775,6 +789,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       confirmLabel: selectedBookingType == BookingType.sales
           ? 'Confirm Sales'
           : 'Confirm Booking',
+      confirmButtonFocusNode: _confirmStepButtonFocusNode,
     );
   }
 

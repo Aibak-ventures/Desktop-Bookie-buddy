@@ -261,6 +261,7 @@ class BookingSummarySection extends StatelessWidget {
   /// Confirm button
   final VoidCallback onConfirm;
   final String confirmLabel;
+  final FocusNode? confirmButtonFocusNode;
 
   const BookingSummarySection({
     super.key,
@@ -280,6 +281,7 @@ class BookingSummarySection extends StatelessWidget {
     this.bookingCompletedDate,
     required this.onConfirm,
     required this.confirmLabel,
+    this.confirmButtonFocusNode,
   });
 
   @override
@@ -456,27 +458,47 @@ class BookingSummarySection extends StatelessWidget {
               ),
             )
           else
-            SizedBox(
-              width: double.infinity,
-              height: 39,
-              child: ElevatedButton(
-                onPressed: onConfirm,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  confirmLabel,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+            Focus(
+              focusNode: confirmButtonFocusNode,
+              child: ListenableBuilder(
+                listenable: confirmButtonFocusNode ?? Listenable.merge([]),
+                builder: (context, _) {
+                  final isFocused = confirmButtonFocusNode?.hasFocus ?? false;
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isFocused
+                            ? const Color(0xFF6132E4)
+                            : Colors.transparent,
+                        width: 2,
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 39,
+                      child: ElevatedButton(
+                        onPressed: onConfirm,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6132E4),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          confirmLabel,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
         ],

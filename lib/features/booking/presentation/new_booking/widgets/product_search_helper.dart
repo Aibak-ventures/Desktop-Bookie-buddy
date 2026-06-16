@@ -460,7 +460,6 @@ extension ProductSearchBuilders on NewBookingScreenState {
         _addProductFromSearchWithVariant(product, selectedVariant);
         _removeSearchOverlay();
         serviceSearchController.clear();
-        _clientNameFocusNode.requestFocus();
       },
       onArrowDown: () {
         if (index + 1 < itemCount) {
@@ -512,6 +511,13 @@ extension ProductSearchBuilders on NewBookingScreenState {
     }
 
     selectedProductsNotifier.value = result.products;
+    final addedProduct = result.products.firstWhere(
+      (p) =>
+        (p.variant.variantId ?? p.variant.id) ==
+        (variant.id),
+    );
+    final newKey = addedProduct.variant.variantId ?? addedProduct.variant.id;
+    _focusOnProductQuantityKey.value = newKey;
     rebuild(() {});
   }
 

@@ -85,7 +85,8 @@ extension SalesFlowBuilders on NewBookingScreenState {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
-                      textInputAction: TextInputAction.newline,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _confirmStepButtonFocusNode.requestFocus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
