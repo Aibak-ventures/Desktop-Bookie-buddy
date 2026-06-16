@@ -137,6 +137,7 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
               });
               context.read<StaffSearchCubit>().selectStaff(staff);
               widget.nameController.text = staff.name;
+              widget.nextFocusNode?.requestFocus();
             },
             builder: (context, controller, fieldFocusNode) => TextFormField(
               focusNode: fieldFocusNode,

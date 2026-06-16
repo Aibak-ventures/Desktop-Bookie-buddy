@@ -278,6 +278,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   BookingNotesField(
                     controller: descriptionController,
                     focusNode: _notesFocusNode,
+                    onSubmitted: () => _continueButtonFocusNode.requestFocus(),
                   ),
 
                   const SizedBox(height: 7),
@@ -461,22 +462,42 @@ extension BookingFlowBuilders on NewBookingScreenState {
             child: SizedBox(
               width: double.infinity,
               height: 48,
-              child: ElevatedButton(
-                onPressed: _validateAndContinue,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+              child: Focus(
+                focusNode: _continueButtonFocusNode,
+                child: ListenableBuilder(
+                  listenable: _continueButtonFocusNode,
+                  builder: (context, _) {
+                    final isFocused = _continueButtonFocusNode.hasFocus;
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: isFocused
+                              ? const Color(0xFF6132E4)
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: _validateAndContinue,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6132E4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          'Continue',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -638,6 +659,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                       : 'Discount amount',
                                   isNumber: true,
                                   focusNode: _discountAmountFocusNode,
+                                  nextFocusNode: _confirmStepButtonFocusNode,
                                   suffix:
                                       ValueListenableBuilder<TextEditingValue>(
                                         valueListenable:

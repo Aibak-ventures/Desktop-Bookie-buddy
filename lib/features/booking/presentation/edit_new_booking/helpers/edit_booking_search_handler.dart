@@ -41,7 +41,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
         return BlocListener<SelectProductBloc, SelectProductState>(
           bloc: _selectProductBloc,
           listener: (context, state) {
-            //Update existing products' stock from availability API
+            // Update existing products' stock from availability API
             state.maybeWhen(
               loaded:
                   (
@@ -61,16 +61,8 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
                     p13,
                     p14,
                   ) {
-                    // Update stock for already selected products from fresh availability data
                     if (widget.bookingId != null && products.isNotEmpty) {
-                      final currentProducts = selectedProductsNotifier.value;
-                      final updatedProducts = ProductMapper.syncStockFromAvailability(
-                        currentProducts: currentProducts,
-                        freshProducts: products,
-                      );
-                      if (updatedProducts.toString() != currentProducts.toString()) {
-                        selectedProductsNotifier.value = updatedProducts;
-                      }
+                      _syncSelectedProductStock(products);
                     }
 
                     // Reactive overlay update â€" show/hide overlay based on search state
@@ -343,6 +335,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           returnTime: returnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
+          bookingId: widget.bookingId,
         ),
       );
     } else {
@@ -365,8 +358,21 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           returnTime: returnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
+          bookingId: widget.bookingId,
         ),
       );
+    }
+  }
+
+  void _syncSelectedProductStock(List<ProductEntity> freshProducts) {
+    final currentProducts = selectedProductsNotifier.value;
+    if (currentProducts.isEmpty) return;
+    final updatedProducts = ProductMapper.syncStockFromAvailability(
+      currentProducts: currentProducts,
+      freshProducts: freshProducts,
+    );
+    if (updatedProducts.toString() != currentProducts.toString()) {
+      selectedProductsNotifier.value = updatedProducts;
     }
   }
 

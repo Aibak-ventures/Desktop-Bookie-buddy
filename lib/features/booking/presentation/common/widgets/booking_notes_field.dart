@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class BookingNotesField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
+  final VoidCallback? onSubmitted;
 
   const BookingNotesField({
     super.key,
     required this.controller,
     this.focusNode,
+    this.onSubmitted,
   });
 
   @override
@@ -25,7 +27,8 @@ class BookingNotesField extends StatelessWidget {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         expands: true,
-        textInputAction: TextInputAction.newline,
+        textInputAction: TextInputAction.done,
+        onSubmitted: onSubmitted != null ? (_) => onSubmitted!() : null,
         decoration: const InputDecoration(
           border: InputBorder.none,
           hintText: 'Notes',
