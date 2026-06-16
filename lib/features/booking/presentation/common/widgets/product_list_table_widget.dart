@@ -382,7 +382,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '${product.variant.remainingStock ?? product.variant.stock} left',
+                          product.variant.remainingStock != null
+                              ? '${product.variant.remainingStock} left'
+                              : product.variant.stock != null
+                                  ? '${product.variant.stock} left'
+                                  : '-',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -693,7 +697,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   int _quantityKey(ProductSelectedEntity product) {
-    return product.variant.variantId ?? product.variant.id;
+    return product.variant.id;
   }
 
   FocusNode _getQuantityFocusNode(int quantityKey) {
