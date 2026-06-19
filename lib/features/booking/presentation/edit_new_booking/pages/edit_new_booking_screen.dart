@@ -216,6 +216,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
   int _originalCoolingPeriodDays = 0; // Track original cooling period
   CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
+  int? _originalRentalDays; // Rental days computed from original booking entity
   bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
 
   bool showCustomization = false;
@@ -587,12 +588,21 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
-  int _calculateRentalDays() => PaymentCalculator.calculateRentalDays(
-    pickupDate: pickupDate,
-    returnDate: returnDate,
-    pickupTime: pickupTime,
-    returnTime: returnTime,
-  );
+  int _calculateRentalDays() {
+    final result = PaymentCalculator.calculateRentalDays(
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      pickupTime: pickupTime,
+      returnTime: returnTime,
+    );
+    // Fallback: if calculation returns 1 (e.g., because screen-state pickupDate
+    // is incorrect when booking.pickupDate is null from the API), use the
+    // original booking entity's dates for a more accurate computation.
+    if ((result <= 1) && _originalRentalDays != null && _originalRentalDays! > 1) {
+      return _originalRentalDays!;
+    }
+    return result;
+  }
 
   void _updateCoolingPeriod() {
     coolingPeriodDate = BookingDateCalculator.coolingPeriodDate(
