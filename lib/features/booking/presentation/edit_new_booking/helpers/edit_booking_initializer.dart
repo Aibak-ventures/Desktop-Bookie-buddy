@@ -11,6 +11,13 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     // Set dates
     if (booking.pickupDate != null) {
       pickupDate = booking.pickupDate!.parseToDateTime();
+    } else {
+      // When pickupDate is null from the API, estimate from returnDate - 1 day
+      // so _calculateRentalDays() and date pickers show reasonable values
+      // instead of defaulting to DateTime.now().
+      log('⚠️ booking.pickupDate is null — estimating pickupDate from returnDate');
+      pickupDate = booking.returnDate.parseToDateTime()
+          .subtract(const Duration(days: 1));
     }
     returnDate = booking.returnDate.parseToDateTime();
 
@@ -145,7 +152,14 @@ extension EditBookingInitializer on EditNewBookingScreenState {
 
     // Set products
     log('🔧 Loading ${booking.bookedItems.length} products from booking');
-    final products = ProductMapper.fromBookedItems(booking.bookedItems);
+    // Use the booking entity's dates directly for product mapping so the
+    // per-item price reconstruction is correct even when screen-state dates
+    // are not yet initialized (e.g. booking.pickupDate is null from API).
+    final entityRentalDays = _computeRentalDaysFromBookingEntity(booking);
+    final products = ProductMapper.fromBookedItems(
+      booking.bookedItems,
+      rentalDays: entityRentalDays,
+    );
     log(
       '✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}',
     );
@@ -341,6 +355,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     _originalDeliveryStatus = booking.deliveryStatus;
     _originalCoolingPeriodDays = coolingPeriodDays;
     _originalCoolingPeriodMode = coolingPeriodMode;
+    _originalRentalDays = _computeRentalDaysFromBookingEntity(booking);
   }
 
   // ---------------------------------------------------------------------------
@@ -378,4 +393,51 @@ extension EditBookingInitializer on EditNewBookingScreenState {
   }
 
   String _extractPhoneFromE164(String e164) => extractPhoneFromE164(e164);
+
+  /// Computes rental days directly from the [BookingDetailsEntity]'s raw date
+  /// strings, without relying on screen state variables ([pickupDate] etc.)
+  /// that may not have been correctly populated.
+  ///
+  /// This prevents a cascade bug where:
+  ///   1. [booking.pickupDate] is null → [pickupDate] stays as `DateTime.now()`
+  ///   2. If `DateTime.now()` is after [returnDate], the safety check in
+  ///      [PaymentCalculator.calculateRentalDays] returns 1
+  ///   3. [BookingProductHelpers.fromBookedItem] divides by 1 → total line
+  ///      amount is shown as the per-item price
+  ///
+  /// NOTE: Uses actual pickup→return days, NOT cooling period days, because
+  /// the server stores amounts based on actual rental days, not cooling days.
+  int _computeRentalDaysFromBookingEntity(BookingDetailsEntity booking) {
+    if (booking.pickupDate == null) {
+      // When pickupDate is null from the API, estimate based on returnDate
+      // minus 1 day. This ensures the calculation doesn't return 1 due to a
+      // future DateTime.now() being after a past returnDate.
+      log('⚠️ booking.pickupDate is null — estimating from returnDate');
+      try {
+        final returnD = booking.returnDate.parseToDateTime();
+        final estPickup = returnD.subtract(const Duration(days: 1));
+        return PaymentCalculator.calculateRentalDays(
+          pickupDate: estPickup,
+          returnDate: returnD,
+        );
+      } catch (e) {
+        log('⚠️ Error estimating rental days from returnDate only: $e');
+        return 1;
+      }
+    }
+
+    try {
+      final pickup = booking.pickupDate!.parseToDateTime();
+      final returnD = booking.returnDate.parseToDateTime();
+      final days = PaymentCalculator.calculateRentalDays(
+        pickupDate: pickup,
+        returnDate: returnD,
+      );
+      log('📅 Rental days from entity dates: $days');
+      return days;
+    } catch (e) {
+      log('⚠️ Error computing rental days from booking entity: $e');
+      return 1;
+    }
+  }
 }

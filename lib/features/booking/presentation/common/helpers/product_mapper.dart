@@ -7,10 +7,13 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_varian
 
 class ProductMapper {
   static List<ProductSelectedEntity> fromBookedItems(
-    List<ProductInfoEntity> bookedItems,
-  ) {
+    List<ProductInfoEntity> bookedItems, {
+    int rentalDays = 1,
+  }) {
     return bookedItems
-        .map(BookingProductHelpers.fromBookedItem)
+        .map(
+          (item) => BookingProductHelpers.fromBookedItem(item, rentalDays: rentalDays),
+        )
         .toList(growable: false);
   }
 

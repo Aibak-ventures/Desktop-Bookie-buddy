@@ -180,10 +180,12 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       final runningKm = runningKilometersController.text.trim();
       updates['variants'] = products.map((p) {
         final variantId = p.variant.variantId ?? p.variant.id;
+        final rentalDays = _calculateRentalDays();
+        final lineAmount = p.amount * p.quantity * rentalDays;
         final variantData = <String, dynamic>{
           'id': variantId,
           'quantity': p.quantity,
-          'amount': p.amount * p.quantity,
+          'amount': lineAmount,
         };
         final measurementMap = <String, dynamic>{};
         for (final m in p.measurements) {

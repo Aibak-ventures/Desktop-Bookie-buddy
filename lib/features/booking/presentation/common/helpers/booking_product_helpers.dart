@@ -85,12 +85,15 @@ class BookingProductHelpers {
     );
   }
 
-  static ProductSelectedEntity fromBookedItem(ProductInfoEntity item) {
+  static ProductSelectedEntity fromBookedItem(ProductInfoEntity item,
+      {int rentalDays = 1}) {
     return ProductSelectedEntity(
       variant: item.copyWith(),
       measurements: item.measurements,
       quantity: item.quantity,
-      amount: item.quantity > 0 ? item.amount ~/ item.quantity : item.amount,
+      amount: (item.quantity > 0 && rentalDays > 0)
+          ? item.amount ~/ (item.quantity * rentalDays)
+          : item.amount,
     );
   }
 }
