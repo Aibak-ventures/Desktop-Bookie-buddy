@@ -19,6 +19,7 @@ class ClientSearchNameField extends StatefulWidget {
     this.focusNode,
     this.errorText,
     this.onClientSelected,
+    this.onSubmitName,
   });
 
   final TextEditingController nameController;
@@ -29,6 +30,10 @@ class ClientSearchNameField extends StatefulWidget {
   final FocusNode? focusNode;
   final String? errorText;
   final ValueChanged<ClientEntity>? onClientSelected;
+
+  /// Called when the user presses "next"/Enter while typing a name without
+  /// picking a suggestion. Lets the parent move focus (e.g. to the phone field).
+  final VoidCallback? onSubmitName;
 
   @override
   State<ClientSearchNameField> createState() => _ClientSearchNameFieldState();
@@ -160,7 +165,16 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                     controller: controller,
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
-                    onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                    onEditingComplete: () {
+                      // If a suggestion is highlighted, Enter is handled by the
+                      // outer Focus (selection). Reaching here means the user
+                      // typed a name without picking one from the list.
+                      if (widget.onSubmitName != null) {
+                        widget.onSubmitName!();
+                      } else {
+                        FocusScope.of(context).nextFocus();
+                      }
+                    },
                     style: const TextStyle(fontSize: 13, color: Colors.black87),
                     decoration: InputDecoration(
                       border: InputBorder.none,

@@ -454,7 +454,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                           borderSide: const BorderSide(color: Color(0xFF6132E4)),
                         ),
                       ),
-                      onSubmitted: (value) => _saveTypedQuantity(product, value),
+                      onSubmitted: (value) =>
+                          _saveTypedQuantity(product, value, advanceToPrice: true),
                       onTapOutside: (_) => _saveTypedQuantity(
                         product,
                         _getQuantityController(product).text,
@@ -888,7 +889,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     widget.selectedProductsNotifier.value = updatedProducts;
   }
 
-  void _saveTypedQuantity(ProductSelectedEntity product, String value) {
+  void _saveTypedQuantity(
+    ProductSelectedEntity product,
+    String value, {
+    bool advanceToPrice = false,
+  }) {
     final parsedQuantity = int.tryParse(value.trim());
 
     if (parsedQuantity == null || parsedQuantity <= 0) {
@@ -921,8 +926,12 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           BookingProductHelpers.productKey(item) ==
           BookingProductHelpers.productKey(product),
     );
-    if (updatedIndex != -1) {
-      _focusNextProductRowOrClient(result.products[updatedIndex]);
+    if (updatedIndex != -1 && advanceToPrice) {
+      // After confirming the quantity with Enter, move focus to the price field
+      // so the user can review/edit it before continuing to the next row /
+      // client. (Tapping outside just saves without grabbing focus.)
+      _rowActiveElement[_quantityKey(product)] = 5;
+      _startEditingPrice(result.products[updatedIndex]);
     }
   }
 
