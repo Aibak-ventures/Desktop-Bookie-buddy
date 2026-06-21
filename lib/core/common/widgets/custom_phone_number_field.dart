@@ -19,6 +19,10 @@ class CustomPhoneNumberField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final TextInputAction? textInputAction;
   final bool isRequired;
+  final FocusNode? focusNode;
+
+  /// When provided, pressing the keyboard "next" action moves focus here.
+  final FocusNode? nextFocusNode;
 
   const CustomPhoneNumberField({
     super.key,
@@ -31,6 +35,8 @@ class CustomPhoneNumberField extends StatelessWidget {
     this.autofillHints,
     this.textInputAction,
     this.isRequired = true,
+    this.focusNode,
+    this.nextFocusNode,
   });
 
   @override
@@ -38,6 +44,10 @@ class CustomPhoneNumberField extends StatelessWidget {
     const borderRadius = 5.0;
     return PhoneFormField(
       controller: controller,
+      focusNode: focusNode,
+      onEditingComplete: nextFocusNode != null
+          ? nextFocusNode!.requestFocus
+          : null,
       initialValue: controller != null
           ? null
           : initialValue.isNullOrEmpty
@@ -57,7 +67,9 @@ class CustomPhoneNumberField extends StatelessWidget {
       ),
       shouldLimitLengthByCountry: true,
       autofillHints: autofillHints,
-      textInputAction: textInputAction,
+      textInputAction:
+          textInputAction ??
+          (nextFocusNode != null ? TextInputAction.next : null),
       countrySelectorNavigator: CountrySelectorNavigator.modalBottomSheet(
         favorites: [
           IsoCode.IN,

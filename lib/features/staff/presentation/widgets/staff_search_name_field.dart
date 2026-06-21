@@ -35,12 +35,27 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
   void initState() {
     super.initState();
     _suggestionsController = SuggestionsController<StaffEntity>();
+    widget.focusNode?.addListener(_handleFocusChange);
   }
 
   @override
   void dispose() {
+    widget.focusNode?.removeListener(_handleFocusChange);
     _suggestionsController.dispose();
     super.dispose();
+  }
+
+  /// Auto-opens the staff list whenever the field receives focus (e.g. when the
+  /// keyboard flow lands here), so the user can immediately arrow + Enter.
+  void _handleFocusChange() {
+    if (!(widget.focusNode?.hasFocus ?? false)) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted &&
+          (widget.focusNode?.hasFocus ?? false) &&
+          !_suggestionsController.isOpen) {
+        _suggestionsController.open();
+      }
+    });
   }
 
   void _handleKeyEvent(KeyEvent event) {
@@ -78,6 +93,8 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
         setState(() {
           _highlightedIndex = -1;
         });
+        // Advance to the next field (e.g. notes) after picking a staff.
+        widget.nextFocusNode?.requestFocus();
       }
     } else if (event.logicalKey == LogicalKeyboardKey.escape) {
       _suggestionsController.close();

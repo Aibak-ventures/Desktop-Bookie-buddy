@@ -114,6 +114,8 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         nameController: clientNameController,
                         focusNode: _clientNameFocusNode,
                         hitText: 'Type or Search name',
+                        onSubmitName: _onClientNameSubmitted,
+                        onClientSelected: (_) => _onClientPickedFromList(),
                         onClear: () {
                           // Clear all client fields when search is cleared
                           clientNameController.clear();
@@ -142,6 +144,10 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     controller: _clientPhone1FieldController,
                     hintText: 'Whatsapp number',
                     textInputAction: TextInputAction.next,
+                    focusNode: _clientPhone1FocusNode,
+                    nextFocusNode: selectedBookingType != BookingType.sales
+                        ? _clientPhone2FocusNode
+                        : _clientAddressFocusNode,
                     onChanged: (phone) {
                       final digits = phone.nsn.replaceAll(
                         RegExp(r'[^0-9]'),
@@ -169,6 +175,8 @@ extension BookingFlowBuilders on NewBookingScreenState {
                       hintText: 'Phone 2',
                       isRequired: false,
                       textInputAction: TextInputAction.next,
+                      focusNode: _clientPhone2FocusNode,
+                      nextFocusNode: _clientAddressFocusNode,
                       onChanged: (phone) {
                         final digits = phone.nsn.replaceAll(
                           RegExp(r'[^0-9]'),
@@ -464,6 +472,16 @@ extension BookingFlowBuilders on NewBookingScreenState {
               height: 48,
               child: Focus(
                 focusNode: _continueButtonFocusNode,
+                onKeyEvent: (_, event) {
+                  if (event is KeyDownEvent &&
+                      (event.logicalKey == LogicalKeyboardKey.enter ||
+                          event.logicalKey == LogicalKeyboardKey.numpadEnter ||
+                          event.logicalKey == LogicalKeyboardKey.space)) {
+                    _validateAndContinue();
+                    return KeyEventResult.handled;
+                  }
+                  return KeyEventResult.ignored;
+                },
                 child: ListenableBuilder(
                   listenable: _continueButtonFocusNode,
                   builder: (context, _) {

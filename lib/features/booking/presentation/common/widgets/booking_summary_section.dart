@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_select
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Standalone reactive summary tile — shows the amount breakdown without any
 /// action buttons. Use this when you only need to display the summary (e.g.
@@ -460,6 +461,16 @@ class BookingSummarySection extends StatelessWidget {
           else
             Focus(
               focusNode: confirmButtonFocusNode,
+              onKeyEvent: (_, event) {
+                if (event is KeyDownEvent &&
+                    (event.logicalKey == LogicalKeyboardKey.enter ||
+                        event.logicalKey == LogicalKeyboardKey.numpadEnter ||
+                        event.logicalKey == LogicalKeyboardKey.space)) {
+                  onConfirm();
+                  return KeyEventResult.handled;
+                }
+                return KeyEventResult.ignored;
+              },
               child: ListenableBuilder(
                 listenable: confirmButtonFocusNode ?? Listenable.merge([]),
                 builder: (context, _) {

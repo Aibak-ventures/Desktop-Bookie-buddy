@@ -485,6 +485,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (clientResult.isValid) {
       _removeSearchOverlay();
       setState(() => _bookingStep = 1);
+      // Drop focus into the (optional) payment step so the user can either type
+      // amounts and Enter through to Confirm, or arrow straight down to it.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _advanceAmountFocusNode.requestFocus();
+      });
     } else {
       setState(() {
         _clientNameError = clientResult.fieldErrors['clientName'];
@@ -742,6 +747,25 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _onNavigateToClientDetails() {
     _clientNameFocusNode.requestFocus();
+  }
+
+  /// User typed a client name without picking a suggestion → go to phone field.
+  void _onClientNameSubmitted() {
+    _clientPhone1FocusNode.requestFocus();
+  }
+
+  /// User picked an existing client from the list. Phone numbers are auto-filled
+  /// by the ClientCubit listener, so skip them: focus the place field if it's
+  /// still empty, otherwise jump straight to the staff field.
+  void _onClientPickedFromList() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (clientAddressController.text.trim().isEmpty) {
+        _clientAddressFocusNode.requestFocus();
+      } else {
+        _staffNameFocusNode.requestFocus();
+      }
+    });
   }
 
   Widget _buildServiceSelectionSection() {
