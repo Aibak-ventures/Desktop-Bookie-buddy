@@ -181,5 +181,5 @@ extension MainServiceTypeX on MainServiceType? {
   /// Required for: vehicle, equipment, gadget, costume, room
   /// Not required for: material (custom work may not need dates)
   bool get requiresDateRange =>
-      isVehicle || isEquipment || isGadget || isCostume || isRoom;
+      isVehicle || isEquipment || isGadget || isCostume;
 }
