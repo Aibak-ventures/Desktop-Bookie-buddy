@@ -121,29 +121,56 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
     BuildContext context,
     ProductEntity product,
   ) {
-    performSecureActionDialog(
-      context,
-      SecretPasswordLocations.productDeletion,
-      onSuccess: () async {
-        try {
-          await context.read<StockManagementCubit>().deleteProduct(product.id);
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Product deleted successfully')),
+    showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Product'),
+        content: Text(
+          'Are you sure you want to delete "${product.name}"? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    ).then((confirmed) {
+      if (confirmed != true) return;
+      performSecureActionDialog(
+        context,
+        SecretPasswordLocations.productDeletion,
+        onSuccess: () async {
+          try {
+            await context.read<StockManagementCubit>().deleteProduct(
+              product.id,
             );
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Product deleted successfully')),
+              );
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to delete product: $e'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
-        } catch (e) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to delete product: $e'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }
-      },
-    );
+        },
+      );
+    });
   }
 
   /// Show product filter dialog
@@ -271,18 +298,19 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   BlocBuilder<StockManagementCubit, StockManagementState>(
                     builder: (context, state) {
                       final showingProductDetails = state.maybeWhen(
-                        loaded: (
-                          _,
-                          __,
-                          ___,
-                          ____,
-                          _____,
-                          ______,
-                          _______,
-                          selectedProductId,
-                        ) {
-                          return selectedProductId != null;
-                        },
+                        loaded:
+                            (
+                              _,
+                              __,
+                              ___,
+                              ____,
+                              _____,
+                              ______,
+                              _______,
+                              selectedProductId,
+                            ) {
+                              return selectedProductId != null;
+                            },
                         orElse: () => false,
                       );
 
@@ -298,50 +326,55 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                     },
                   ),
                   Expanded(
-                    child: BlocBuilder<StockManagementCubit,
-                        StockManagementState>(
-                      builder: (context, state) {
-                        return state.maybeWhen(
-                          loaded: (
-                            products,
-                            __,
-                            ___,
-                            ____,
-                            _____,
-                            selectedServiceId,
-                            _______,
-                            selectedProductId,
-                          ) {
-                            if (selectedProductId != null) {
-                              final selectedProduct = products.firstWhere(
-                                (p) => p.id == selectedProductId,
-                                orElse: () => products.first,
-                              );
-                              return BlocProvider(
-                                create: (context) => ProductDetailsCubit(
-                                  getProductInfo: getIt.get(),
-                                  updateVariant: getIt.get(),
-                                  deleteProduct: getIt.get(),
-                                  addProductVariants: getIt.get(),
-                                  getProductBookings: getIt.get(),
-                                  getProductGrowthData: getIt.get(),
-                                )..loadProductDetails(selectedProductId),
-                                child: ProductDetailsScreen(
-                                  productId: selectedProductId,
-                                  serviceId: selectedServiceId,
-                                  mainServiceType:
-                                      selectedProduct.mainServiceType,
-                                  productForEdit: selectedProduct,
-                                ),
-                              );
-                            } else {
-                              return _buildProductList();
-                            }
+                    child:
+                        BlocBuilder<StockManagementCubit, StockManagementState>(
+                          builder: (context, state) {
+                            return state.maybeWhen(
+                              loaded:
+                                  (
+                                    products,
+                                    __,
+                                    ___,
+                                    ____,
+                                    _____,
+                                    selectedServiceId,
+                                    _______,
+                                    selectedProductId,
+                                  ) {
+                                    if (selectedProductId != null) {
+                                      final selectedProduct = products
+                                          .firstWhere(
+                                            (p) => p.id == selectedProductId,
+                                            orElse: () => products.first,
+                                          );
+                                      return BlocProvider(
+                                        create: (context) =>
+                                            ProductDetailsCubit(
+                                              getProductInfo: getIt.get(),
+                                              updateVariant: getIt.get(),
+                                              deleteProduct: getIt.get(),
+                                              addProductVariants: getIt.get(),
+                                              getProductBookings: getIt.get(),
+                                              getProductGrowthData: getIt.get(),
+                                            )..loadProductDetails(
+                                              selectedProductId,
+                                            ),
+                                        child: ProductDetailsScreen(
+                                          productId: selectedProductId,
+                                          serviceId: selectedServiceId,
+                                          mainServiceType:
+                                              selectedProduct.mainServiceType,
+                                          productForEdit: selectedProduct,
+                                        ),
+                                      );
+                                    } else {
+                                      return _buildProductList();
+                                    }
+                                  },
+                              orElse: () => _buildProductList(),
+                            );
                           },
-                          orElse: () => _buildProductList(),
-                        );
-                      },
-                    ),
+                        ),
                   ),
                 ],
               ),
@@ -370,7 +403,8 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
   Widget _buildProductList() {
     return BlocBuilder<StockManagementCubit, StockManagementState>(
       builder: (context, state) {
-        final selectedServiceId = state.maybeWhen(
+        final selectedServiceId =
+            state.maybeWhen(
               loaded: (_, __, ___, ____, _____, selected, ______, _______) =>
                   selected,
               orElse: () => -1,
@@ -517,8 +551,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
                   const SizedBox(height: 16),
                   Text(
                     message,
-                    style: TextStyle(
-                        fontSize: 16, color: Colors.red.shade400),
+                    style: TextStyle(fontSize: 16, color: Colors.red.shade400),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),

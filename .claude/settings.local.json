@@ -6,7 +6,9 @@
       "Bash(where fvm:*)",
       "Read(//c/Users/Adinan/fvm/default/**)",
       "Read(//c/Users/Adinan/AppData/Local/Pub/Cache/**)",
-      "Bash(fvm flutter *)"
+      "Bash(fvm flutter *)",
+      "Skill(code-review)",
+      "Skill(code-review:*)"
     ]
   }
 }
