@@ -1,4 +1,5 @@
 // Web-specific PDF viewer - opens PDF in new tab
+// ignore: deprecated_member_use
 import 'dart:html' as html;
 import 'dart:typed_data';
 
