@@ -722,7 +722,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Pickup time',
                     value: pickupTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: true),
                   ),
@@ -743,7 +743,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Return time',
                     value: returnTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: false),
                   ),

@@ -87,7 +87,7 @@ class BookingDateSelectionWidget extends StatelessWidget {
                   flex: 2,
                   child: _buildNewTimeField(
                     context: context,
-                    label: 'time',
+                    label: 'Pickup time',
                     value: pickupTime?.format(context) ?? '--:--',
                     onTap: onSelectPickupTime,
                   ),
@@ -119,7 +119,7 @@ class BookingDateSelectionWidget extends StatelessWidget {
                   flex: 2,
                   child: _buildNewTimeField(
                     context: context,
-                    label: 'time',
+                    label: 'Return time',
                     value: returnTime?.format(context) ?? '--:--',
                     onTap: onSelectReturnTime,
                   ),

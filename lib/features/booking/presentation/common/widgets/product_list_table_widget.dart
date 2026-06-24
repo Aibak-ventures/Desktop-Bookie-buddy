@@ -54,6 +54,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   final Map<int, List<FocusNode>> _rowElementFocusNodes = {};
   /// Tracks active sub-element index within a row: 0=qtyMinus, 1=qtyInput, 2=qtyPlus, 3=daysMinus, 4=daysPlus, 5=price
   final Map<int, int> _rowActiveElement = {};
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     for (final nodes in _rowElementFocusNodes.values) {
       for (final node in nodes) node.dispose();
     }
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -90,6 +92,13 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       _rowActiveElement[targetKey] = 1;
       _getQuantityFocusNode(targetKey).requestFocus();
     });
+    // Also scroll to the target product
+    final targetProduct = widget.selectedProductsNotifier.value
+        .where((p) => _quantityKey(p) == targetKey)
+        .firstOrNull;
+    if (targetProduct != null) {
+      _scrollToProduct(targetProduct);
+    }
     widget.focusTargetProductKey?.value = null;
   }
 
@@ -211,6 +220,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           );
         }
         return ListView.builder(
+          controller: _scrollController,
           padding: EdgeInsets.zero,
           itemCount: products.length,
           itemBuilder: (context, index) => _buildProductRow(products[index]),
@@ -717,6 +727,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       final nextKey = _quantityKey(nextProduct);
       _rowActiveElement[nextKey] = 0;
       _getRowElementFocusNode(nextKey, 0).requestFocus();
+      _scrollToProduct(nextProduct);
       return;
     }
     widget.onNavigateToClientDetails?.call();
@@ -732,6 +743,22 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       () => List.generate(5, (_) => FocusNode()),
     );
     return nodes[elementIndex];
+  }
+
+  void _scrollToProduct(ProductSelectedEntity product) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final key = _quantityKey(product);
+      final context = _rowFocusNodes[key]?.context;
+      if (context != null && context.mounted) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          alignment: 0.15,
+        );
+      }
+    });
   }
 
   void _focusElementInRow(ProductSelectedEntity product, int elementIndex) {
@@ -751,6 +778,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       case 5:
         _startEditingPrice(product);
     }
+    _scrollToProduct(product);
   }
 
   void _focusPrevProductRow(ProductSelectedEntity product) {
