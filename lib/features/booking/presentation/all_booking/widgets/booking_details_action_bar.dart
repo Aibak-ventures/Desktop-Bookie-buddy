@@ -9,7 +9,6 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_detail
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
@@ -113,6 +112,12 @@ class BookingDetailsActionBar extends StatelessWidget {
                 context,
                 SecretPasswordLocations.bookingEdit,
                 onSuccess: () async {
+                  // Capture the list bloc BEFORE closing the drawer: closing it
+                  // collapses this action bar's subtree to a SizedBox, so once
+                  // the edit screen returns `context` is unmounted and reading
+                  // the bloc from it (or gating on context.mounted) would skip
+                  // the list refresh — the exact bug we're fixing here.
+                  final allBookingBloc = context.read<AllBookingBloc>();
                   context.read<BookingDetailsDrawerCubit>().closeDrawer();
 
                   final result = await Navigator.of(context).push(
@@ -142,11 +147,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                     ),
                   );
 
-                  if (result == true && context.mounted) {
-                    context.read<BookingDetailsBloc>().add(
-                      BookingDetailsEvent.fetchBookingDetails(booking.id),
-                    );
-                    final allBookingBloc = context.read<AllBookingBloc>();
+                  if (result == true) {
                     allBookingBloc.state.mapOrNull(
                       loaded: (s) => allBookingBloc.add(
                         AllBookingEvent.loadBookings(

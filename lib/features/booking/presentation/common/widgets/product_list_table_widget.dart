@@ -809,6 +809,18 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     widget.onNavigateToClientDetails?.call();
   }
 
+  /// Element ids that can actually receive focus in a row, in visual
+  /// left-to-right order. The days controls (3 = minus, 4 = plus) only exist
+  /// for bookings when [ProductListTableWidget.showDayControls] is true — on the
+  /// edit screen and for sales they're absent, so left/right navigation must
+  /// skip them instead of focusing a node that isn't in the tree.
+  /// Ids: 0 qtyMinus, 1 qtyInput, 2 qtyPlus, 3 daysMinus, 4 daysPlus, 5 price.
+  List<int> _navigableElements() {
+    final isSales = widget.selectedBookingType == BookingType.sales;
+    final hasDays = !isSales && widget.showDayControls;
+    return [0, 1, 2, if (hasDays) 3, if (hasDays) 4, 5];
+  }
+
   KeyEventResult _handleRowKeyEvent(ProductSelectedEntity product, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final key = _quantityKey(product);
@@ -817,12 +829,12 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
 
     if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
         event.logicalKey == LogicalKeyboardKey.numpad6) {
-      final currentElement = _rowActiveElement[key] ?? 1;
-      if (currentElement < 5) {
-        _focusElementInRow(product, currentElement + 1);
+      final elements = _navigableElements();
+      final idx = elements.indexOf(_rowActiveElement[key] ?? 1);
+      if (idx != -1 && idx + 1 < elements.length) {
+        _focusElementInRow(product, elements[idx + 1]);
       } else if (currentIndex != -1 && currentIndex + 1 < products.length) {
-        final next = products[currentIndex + 1];
-        _focusElementInRow(next, 0);
+        _focusElementInRow(products[currentIndex + 1], elements.first);
       } else {
         widget.onNavigateToClientDetails?.call();
       }
@@ -830,25 +842,45 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
         event.logicalKey == LogicalKeyboardKey.numpad4) {
-      final currentElement = _rowActiveElement[key] ?? 1;
-      if (currentElement > 0) {
-        _focusElementInRow(product, currentElement - 1);
+      final elements = _navigableElements();
+      final idx = elements.indexOf(_rowActiveElement[key] ?? 1);
+      if (idx > 0) {
+        _focusElementInRow(product, elements[idx - 1]);
       } else if (currentIndex > 0) {
-        final prev = products[currentIndex - 1];
-        _focusElementInRow(prev, 5);
+        _focusElementInRow(products[currentIndex - 1], elements.last);
       } else {
         // Stay at the first element of first row
-        _focusElementInRow(product, 0);
+        _focusElementInRow(product, elements.first);
       }
       return KeyEventResult.handled;
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
         event.logicalKey == LogicalKeyboardKey.numpad2) {
+      // On the quantity input or the days stepper, Up/Down adjust the value
+      // (Up = increase, Down = decrease) instead of moving between rows.
+      final active = _rowActiveElement[key] ?? 1;
+      if (active == 1) {
+        _decrementQuantity(product);
+        return KeyEventResult.handled;
+      }
+      if (active == 3 || active == 4) {
+        widget.onDecrementRentalDays();
+        return KeyEventResult.handled;
+      }
       _focusNextProductRow(product);
       return KeyEventResult.handled;
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
         event.logicalKey == LogicalKeyboardKey.numpad8) {
+      final active = _rowActiveElement[key] ?? 1;
+      if (active == 1) {
+        _incrementQuantity(product);
+        return KeyEventResult.handled;
+      }
+      if (active == 3 || active == 4) {
+        widget.onIncrementRentalDays();
+        return KeyEventResult.handled;
+      }
       _focusPrevProductRow(product);
       return KeyEventResult.handled;
     }
