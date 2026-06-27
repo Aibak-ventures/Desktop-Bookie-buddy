@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
@@ -44,7 +45,9 @@ class BookingProductHelpers {
     required ProductEntity product,
     required ProductVariantEntity variant,
   }) {
-    return variant.attribute.isEmpty ? (product.model ?? '') : variant.attribute;
+    return variant.attribute.isEmpty
+        ? (product.model ?? '')
+        : variant.attribute;
   }
 
   static ProductSelectedEntity buildSelectedProductFromVariant({
@@ -61,7 +64,10 @@ class BookingProductHelpers {
         image: product.image,
         thumbnailImage: product.thumbnailImage,
         mainServiceType: product.mainServiceType,
-        variantAttribute: resolveVariantAttribute(product: product, variant: variant),
+        variantAttribute: resolveVariantAttribute(
+          product: product,
+          variant: variant,
+        ),
         measurements: const [],
         quantity: 1,
         amount: resolveVariantPrice(

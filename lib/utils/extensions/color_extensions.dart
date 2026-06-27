@@ -16,5 +16,5 @@ extension ColorX on Color {
   ///
   /// The [opacity] should be a value between 0 and 1, where
   /// `0.0` = fully transparent, `1.0` = fully opaque
-  Color changeOpacity(double opacity) => withOpacity(opacity);
+  Color changeOpacity(double opacity) => withValues(alpha: opacity);
 }

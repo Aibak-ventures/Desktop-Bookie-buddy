@@ -82,7 +82,9 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       final removedUrls = originalDocPaths.difference(currentDocPaths).toList();
       final newDocs = currentDocs.where((d) => d.bytes != null).toList();
 
-      log('📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}');
+      log(
+        '📄 Document changes - New: ${newDocs.length}, Removed: ${removedUrls.length}',
+      );
 
       _editBookingCubit.updateBooking(
         widget.bookingDetails!.id,
@@ -117,8 +119,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
         time: returnTime,
         time24HourAsString: returnTime == null ? '23:59:00' : null,
       );
-      if (pickupTime != null) updates['pickup_time'] = pickupTime!.formatToTime();
-      if (returnTime != null) updates['return_time'] = returnTime!.formatToTime();
+      if (pickupTime != null)
+        updates['pickup_time'] = pickupTime!.formatToTime();
+      if (returnTime != null)
+        updates['return_time'] = returnTime!.formatToTime();
       _appendCoolingPeriodFields(updates);
     } else if (hasCoolingSettingsChanged) {
       // Cooling period changed but dates didn't — still send return_date + cooling fields
@@ -126,8 +130,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
         time: returnTime,
         time24HourAsString: returnTime == null ? '23:59:00' : null,
       );
-      if (pickupTime != null) updates['pickup_time'] = pickupTime!.formatToTime();
-      if (returnTime != null) updates['return_time'] = returnTime!.formatToTime();
+      if (pickupTime != null)
+        updates['pickup_time'] = pickupTime!.formatToTime();
+      if (returnTime != null)
+        updates['return_time'] = returnTime!.formatToTime();
       _appendCoolingPeriodFields(updates);
     }
 
@@ -153,7 +159,11 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Staff — read directly from cubit to avoid listener-timing issues
     if (_hasStaffChanged()) {
-      updates['staff_id'] = context.read<StaffSearchCubit>().state.selectedStaff?.id;
+      updates['staff_id'] = context
+          .read<StaffSearchCubit>()
+          .state
+          .selectedStaff
+          ?.id;
     }
 
     // Amounts
