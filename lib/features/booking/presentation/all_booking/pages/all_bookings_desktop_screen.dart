@@ -74,10 +74,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     }
     _loadData();
     _searchController.addListener(_onSearchChanged);
-    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.addListener(_onScroll);
+    });
   }
 
   void _onScroll() {
+    if (!_scrollController.hasClients) return;
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       if (_activeActionTab == 1) {
@@ -119,7 +122,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         ),
       );
     } else {
-      // Load booking data
       // Load booking data
       context.read<AllBookingBloc>().add(
         AllBookingEvent.loadBookings(
@@ -164,17 +166,34 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: BlocListener<AllBookingBloc, AllBookingState>(
-          listener: (context, state) {
-            state.mapOrNull(
-              loaded: (s) {
-                if (s.actionError != null) {
-                  // Show SnackBar
-                  context.showSnackBar(s.actionError!, isError: true);
-                }
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<AllBookingBloc, AllBookingState>(
+              listener: (context, state) {
+                state.mapOrNull(
+                  loaded: (s) {
+                    if (s.actionError != null) {
+                      // Show SnackBar
+                      context.showSnackBar(s.actionError!, isError: true);
+                    }
+                  },
+                );
+                // If the loaded page didn't fill the viewport, there's no
+                // scroll event to trigger loading the next page, so check
+                // again after this frame renders.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _onScroll();
+                });
               },
-            );
-          },
+            ),
+            BlocListener<AllSalesBloc, AllSalesState>(
+              listener: (context, state) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _onScroll();
+                });
+              },
+            ),
+          ],
           child: Stack(
             children: [
               // Main content
@@ -365,8 +384,12 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                         child: InkWell(
                           onTap: () => _onStatusTabChanged(displayLabel),
                           borderRadius: BorderRadius.circular(8),
-                          hoverColor: const Color(0xFFE7E4FF).withValues(alpha: 0.5),
-                          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.2),
+                          hoverColor: const Color(
+                            0xFFE7E4FF,
+                          ).withValues(alpha: 0.5),
+                          splashColor: const Color(
+                            0xFF8A63FE,
+                          ).withValues(alpha: 0.2),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
@@ -381,7 +404,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                               border: Border.all(
                                 width: isActive ? 1.5 : 1,
                                 color: isActive
-                                    ? const Color(0xFF8A63FE).withValues(alpha: 0.3)
+                                    ? const Color(
+                                        0xFF8A63FE,
+                                      ).withValues(alpha: 0.3)
                                     : Colors.grey.shade300,
                               ),
                             ),
@@ -715,5 +740,4 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     }
     return Colors.grey.shade700;
   }
-
 }
