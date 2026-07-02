@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DesktopBookingItemModel {
 
- int get id;@JsonKey(name: 'shop_booking_id') String get shopBookingId; String get client;@JsonKey(name: 'pickup_date') String get pickupDate;@JsonKey(name: 'return_date') String get returnDate;@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool get paymentStatus;@JsonKey(name: 'staff_name') String? get staffName;@JsonKey(name: 'staff_color') String? get staffColor;@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? get deliveryStatus;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'booked_items') String get bookedItems;@JsonKey(name: 'advance_amount') int get advanceAmount;@JsonKey(name: 'remaining_amount') int get remainingAmount;
+ int get id;@JsonKey(name: 'shop_booking_id') String get shopBookingId; String get client;@JsonKey(name: 'pickup_date') String get pickupDate;@JsonKey(name: 'return_date') String get returnDate;@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool get paymentStatus;@JsonKey(name: 'staff_name') String? get staffName;@JsonKey(name: 'staff_color') String? get staffColor;@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? get deliveryStatus;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'booked_items') String get bookedItems;@JsonKey(name: 'advance_amount', defaultValue: 0) int get advanceAmount;@JsonKey(name: 'remaining_amount', defaultValue: 0) int get remainingAmount;@JsonKey(name: 'total_amount_after_discount', defaultValue: 0) int get totalAmount;
 /// Create a copy of DesktopBookingItemModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DesktopBookingItemModelCopyWith<DesktopBookingItemModel> get copyWith => _$Desk
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopBookingItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopBookingItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount);
+int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount,totalAmount);
 
 @override
 String toString() {
-  return 'DesktopBookingItemModel(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount)';
+  return 'DesktopBookingItemModel(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount, totalAmount: $totalAmount)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $DesktopBookingItemModelCopyWith<$Res>  {
   factory $DesktopBookingItemModelCopyWith(DesktopBookingItemModel value, $Res Function(DesktopBookingItemModel) _then) = _$DesktopBookingItemModelCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'shop_booking_id') String shopBookingId, String client,@JsonKey(name: 'pickup_date') String pickupDate,@JsonKey(name: 'return_date') String returnDate,@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool paymentStatus,@JsonKey(name: 'staff_name') String? staffName,@JsonKey(name: 'staff_color') String? staffColor,@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? deliveryStatus,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'booked_items') String bookedItems,@JsonKey(name: 'advance_amount') int advanceAmount,@JsonKey(name: 'remaining_amount') int remainingAmount
+ int id,@JsonKey(name: 'shop_booking_id') String shopBookingId, String client,@JsonKey(name: 'pickup_date') String pickupDate,@JsonKey(name: 'return_date') String returnDate,@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool paymentStatus,@JsonKey(name: 'staff_name') String? staffName,@JsonKey(name: 'staff_color') String? staffColor,@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? deliveryStatus,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'booked_items') String bookedItems,@JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,@JsonKey(name: 'remaining_amount', defaultValue: 0) int remainingAmount,@JsonKey(name: 'total_amount_after_discount', defaultValue: 0) int totalAmount
 });
 
 
@@ -65,7 +65,7 @@ class _$DesktopBookingItemModelCopyWithImpl<$Res>
 
 /// Create a copy of DesktopBookingItemModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shopBookingId = null,Object? client = null,Object? pickupDate = null,Object? returnDate = null,Object? paymentStatus = null,Object? staffName = freezed,Object? staffColor = freezed,Object? deliveryStatus = freezed,Object? createdAt = null,Object? bookedItems = null,Object? advanceAmount = null,Object? remainingAmount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shopBookingId = null,Object? client = null,Object? pickupDate = null,Object? returnDate = null,Object? paymentStatus = null,Object? staffName = freezed,Object? staffColor = freezed,Object? deliveryStatus = freezed,Object? createdAt = null,Object? bookedItems = null,Object? advanceAmount = null,Object? remainingAmount = null,Object? totalAmount = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,shopBookingId: null == shopBookingId ? _self.shopBookingId : shopBookingId // ignore: cast_nullable_to_non_nullable
@@ -80,6 +80,7 @@ as DeliveryStatus?,createdAt: null == createdAt ? _self.createdAt : createdAt //
 as String,bookedItems: null == bookedItems ? _self.bookedItems : bookedItems // ignore: cast_nullable_to_non_nullable
 as String,advanceAmount: null == advanceAmount ? _self.advanceAmount : advanceAmount // ignore: cast_nullable_to_non_nullable
 as int,remainingAmount: null == remainingAmount ? _self.remainingAmount : remainingAmount // ignore: cast_nullable_to_non_nullable
+as int,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -165,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount')  int advanceAmount, @JsonKey(name: 'remaining_amount')  int remainingAmount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount', defaultValue: 0)  int advanceAmount, @JsonKey(name: 'remaining_amount', defaultValue: 0)  int remainingAmount, @JsonKey(name: 'total_amount_after_discount', defaultValue: 0)  int totalAmount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DesktopBookingItemModel() when $default != null:
-return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount);case _:
+return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount,_that.totalAmount);case _:
   return orElse();
 
 }
@@ -186,10 +187,10 @@ return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount')  int advanceAmount, @JsonKey(name: 'remaining_amount')  int remainingAmount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount', defaultValue: 0)  int advanceAmount, @JsonKey(name: 'remaining_amount', defaultValue: 0)  int remainingAmount, @JsonKey(name: 'total_amount_after_discount', defaultValue: 0)  int totalAmount)  $default,) {final _that = this;
 switch (_that) {
 case _DesktopBookingItemModel():
-return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount);case _:
+return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount,_that.totalAmount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +207,10 @@ return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount')  int advanceAmount, @JsonKey(name: 'remaining_amount')  int remainingAmount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'shop_booking_id')  String shopBookingId,  String client, @JsonKey(name: 'pickup_date')  String pickupDate, @JsonKey(name: 'return_date')  String returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool)  bool paymentStatus, @JsonKey(name: 'staff_name')  String? staffName, @JsonKey(name: 'staff_color')  String? staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson)  DeliveryStatus? deliveryStatus, @JsonKey(name: 'created_at')  String createdAt, @JsonKey(name: 'booked_items')  String bookedItems, @JsonKey(name: 'advance_amount', defaultValue: 0)  int advanceAmount, @JsonKey(name: 'remaining_amount', defaultValue: 0)  int remainingAmount, @JsonKey(name: 'total_amount_after_discount', defaultValue: 0)  int totalAmount)?  $default,) {final _that = this;
 switch (_that) {
 case _DesktopBookingItemModel() when $default != null:
-return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount);case _:
+return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that.returnDate,_that.paymentStatus,_that.staffName,_that.staffColor,_that.deliveryStatus,_that.createdAt,_that.bookedItems,_that.advanceAmount,_that.remainingAmount,_that.totalAmount);case _:
   return null;
 
 }
@@ -221,7 +222,7 @@ return $default(_that.id,_that.shopBookingId,_that.client,_that.pickupDate,_that
 @JsonSerializable()
 
 class _DesktopBookingItemModel implements DesktopBookingItemModel {
-  const _DesktopBookingItemModel({required this.id, @JsonKey(name: 'shop_booking_id') required this.shopBookingId, required this.client, @JsonKey(name: 'pickup_date') required this.pickupDate, @JsonKey(name: 'return_date') required this.returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) required this.paymentStatus, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'staff_color') this.staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) this.deliveryStatus, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'booked_items') required this.bookedItems, @JsonKey(name: 'advance_amount') required this.advanceAmount, @JsonKey(name: 'remaining_amount') required this.remainingAmount});
+  const _DesktopBookingItemModel({required this.id, @JsonKey(name: 'shop_booking_id') required this.shopBookingId, required this.client, @JsonKey(name: 'pickup_date') required this.pickupDate, @JsonKey(name: 'return_date') required this.returnDate, @JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) required this.paymentStatus, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'staff_color') this.staffColor, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) this.deliveryStatus, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'booked_items') required this.bookedItems, @JsonKey(name: 'advance_amount', defaultValue: 0) required this.advanceAmount, @JsonKey(name: 'remaining_amount', defaultValue: 0) required this.remainingAmount, @JsonKey(name: 'total_amount_after_discount', defaultValue: 0) required this.totalAmount});
   factory _DesktopBookingItemModel.fromJson(Map<String, dynamic> json) => _$DesktopBookingItemModelFromJson(json);
 
 @override final  int id;
@@ -235,8 +236,9 @@ class _DesktopBookingItemModel implements DesktopBookingItemModel {
 @override@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) final  DeliveryStatus? deliveryStatus;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'booked_items') final  String bookedItems;
-@override@JsonKey(name: 'advance_amount') final  int advanceAmount;
-@override@JsonKey(name: 'remaining_amount') final  int remainingAmount;
+@override@JsonKey(name: 'advance_amount', defaultValue: 0) final  int advanceAmount;
+@override@JsonKey(name: 'remaining_amount', defaultValue: 0) final  int remainingAmount;
+@override@JsonKey(name: 'total_amount_after_discount', defaultValue: 0) final  int totalAmount;
 
 /// Create a copy of DesktopBookingItemModel
 /// with the given fields replaced by the non-null parameter values.
@@ -251,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopBookingItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopBookingItemModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount);
+int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount,totalAmount);
 
 @override
 String toString() {
-  return 'DesktopBookingItemModel(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount)';
+  return 'DesktopBookingItemModel(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount, totalAmount: $totalAmount)';
 }
 
 
@@ -271,7 +273,7 @@ abstract mixin class _$DesktopBookingItemModelCopyWith<$Res> implements $Desktop
   factory _$DesktopBookingItemModelCopyWith(_DesktopBookingItemModel value, $Res Function(_DesktopBookingItemModel) _then) = __$DesktopBookingItemModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'shop_booking_id') String shopBookingId, String client,@JsonKey(name: 'pickup_date') String pickupDate,@JsonKey(name: 'return_date') String returnDate,@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool paymentStatus,@JsonKey(name: 'staff_name') String? staffName,@JsonKey(name: 'staff_color') String? staffColor,@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? deliveryStatus,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'booked_items') String bookedItems,@JsonKey(name: 'advance_amount') int advanceAmount,@JsonKey(name: 'remaining_amount') int remainingAmount
+ int id,@JsonKey(name: 'shop_booking_id') String shopBookingId, String client,@JsonKey(name: 'pickup_date') String pickupDate,@JsonKey(name: 'return_date') String returnDate,@JsonKey(name: 'payment_status', fromJson: _paymentStatusFromBool, toJson: _paymentStatusToBool) bool paymentStatus,@JsonKey(name: 'staff_name') String? staffName,@JsonKey(name: 'staff_color') String? staffColor,@JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromString, toJson: DeliveryStatus.toJson) DeliveryStatus? deliveryStatus,@JsonKey(name: 'created_at') String createdAt,@JsonKey(name: 'booked_items') String bookedItems,@JsonKey(name: 'advance_amount', defaultValue: 0) int advanceAmount,@JsonKey(name: 'remaining_amount', defaultValue: 0) int remainingAmount,@JsonKey(name: 'total_amount_after_discount', defaultValue: 0) int totalAmount
 });
 
 
@@ -288,7 +290,7 @@ class __$DesktopBookingItemModelCopyWithImpl<$Res>
 
 /// Create a copy of DesktopBookingItemModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? shopBookingId = null,Object? client = null,Object? pickupDate = null,Object? returnDate = null,Object? paymentStatus = null,Object? staffName = freezed,Object? staffColor = freezed,Object? deliveryStatus = freezed,Object? createdAt = null,Object? bookedItems = null,Object? advanceAmount = null,Object? remainingAmount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? shopBookingId = null,Object? client = null,Object? pickupDate = null,Object? returnDate = null,Object? paymentStatus = null,Object? staffName = freezed,Object? staffColor = freezed,Object? deliveryStatus = freezed,Object? createdAt = null,Object? bookedItems = null,Object? advanceAmount = null,Object? remainingAmount = null,Object? totalAmount = null,}) {
   return _then(_DesktopBookingItemModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,shopBookingId: null == shopBookingId ? _self.shopBookingId : shopBookingId // ignore: cast_nullable_to_non_nullable
@@ -303,6 +305,7 @@ as DeliveryStatus?,createdAt: null == createdAt ? _self.createdAt : createdAt //
 as String,bookedItems: null == bookedItems ? _self.bookedItems : bookedItems // ignore: cast_nullable_to_non_nullable
 as String,advanceAmount: null == advanceAmount ? _self.advanceAmount : advanceAmount // ignore: cast_nullable_to_non_nullable
 as int,remainingAmount: null == remainingAmount ? _self.remainingAmount : remainingAmount // ignore: cast_nullable_to_non_nullable
+as int,totalAmount: null == totalAmount ? _self.totalAmount : totalAmount // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

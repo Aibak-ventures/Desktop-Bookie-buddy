@@ -19,45 +19,121 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
         children: [
           SizedBox(
             width: 100,
-            child: Text('Booking ID', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Booking ID',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 105,
-            child: Text('Delivery Status', textAlign: TextAlign.center, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Delivery Status',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 20),
           SizedBox(
             width: 95,
-            child: Text('Pickup', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Pickup',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           Expanded(
-            child: Text('Items', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Items',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(
             width: 110,
-            child: Text('Customer', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Customer',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 70,
-            child: Text('Paid', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Paid',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 70,
-            child: Text('Balance', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Balance',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 5),
           SizedBox(
             width: 90,
-            child: Text('Payment Status', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Payment Status',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 80,
-            child: Text('Staff', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Staff',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          SizedBox(width: 10),
+          SizedBox(
+            width: 80,
+            child: Text(
+              'Total',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 28),
         ],

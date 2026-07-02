@@ -2,6 +2,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,10 +52,17 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                       color: parseStaffColor(booking.staffColor),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    textStyle: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                    textStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                     child: Text(
                       booking.shopBookingId,
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -63,7 +71,10 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                 SizedBox(
                   width: 105,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: status.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
@@ -71,7 +82,11 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                     child: Text(
                       status.name,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 10, color: status.color, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: status.color,
+                        fontWeight: FontWeight.w600,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -81,7 +96,10 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                   width: 95,
                   child: Text(
                     formatDateWithLabel(booking.pickupDate),
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -99,25 +117,42 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                   width: 110,
                   child: Text(
                     booking.client,
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 70,
-                  child: Text('₹${booking.advanceAmount}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    '₹${booking.advanceAmount}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 70,
-                  child: Text('₹${booking.remainingAmount}', style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    '₹${booking.remainingAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(width: 4),
                 SizedBox(
                   width: 90,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: booking.paymentStatus
                           ? const Color(0xFF20D400).withValues(alpha: 0.1)
@@ -129,7 +164,9 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 10,
-                        color: booking.paymentStatus ? const Color(0xFF0F9D00) : const Color(0xFFB89600),
+                        color: booking.paymentStatus
+                            ? const Color(0xFF0F9D00)
+                            : const Color(0xFFB89600),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -140,12 +177,33 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                   width: 80,
                   child: Text(
                     booking.staffName ?? 'N/A',
-                    style: const TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
+                const SizedBox(width: 2),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    booking.totalAmount.toCurrency(),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Colors.blueAccent,
+                ),
               ],
             ),
           ),
