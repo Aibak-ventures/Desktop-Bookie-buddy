@@ -25,27 +25,23 @@ abstract class SaleModel with _$SaleModel {
     @JsonKey(name: 'staff_name') String? staffName, // Added staff name field
   }) = _SaleModel;
 
-  factory SaleModel.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey('staff_col lor')) {
-      json['staff_color'] = json['staff_col lor'];
-    }
-    return _$SaleModelFromJson(json);
-  }
+  factory SaleModel.fromJson(Map<String, dynamic> json) =>
+      _$SaleModelFromJson(json);
 }
 
 extension SaleModelMapper on SaleModel {
   SaleEntity toEntity() => SaleEntity(
-        id: id,
-        shopSaleId: shopSaleId,
-        clientName: clientName,
-        clientPhone: clientPhone,
-        totalAmount: totalAmount,
-        paidAmount: paidAmount,
-        discountAmount: discountAmount,
-        saleDate: saleDate,
-        createdAt: createdAt,
-        products: products,
-        staffColor: staffColor,
-        staffName: staffName,
-      );
+    id: id,
+    shopSaleId: shopSaleId,
+    clientName: clientName,
+    clientPhone: clientPhone,
+    totalAmount: totalAmount,
+    paidAmount: paidAmount,
+    discountAmount: discountAmount,
+    saleDate: saleDate,
+    createdAt: createdAt,
+    products: products,
+    staffColor: staffColor,
+    staffName: staffName,
+  );
 }

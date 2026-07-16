@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
@@ -140,6 +141,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: const StockManagementScreen(),
       ),
+      const SettingsScreen(),
     ];
     super.initState();
   }

@@ -7,7 +7,7 @@ class EmptyDataWidget extends StatelessWidget {
   final bool isScrollable;
   final double? height;
   final bool isShowIcon;
-
+  final Widget? childAfterMessage;
   const EmptyDataWidget({
     super.key,
     required this.message,
@@ -15,6 +15,7 @@ class EmptyDataWidget extends StatelessWidget {
     this.isScrollable = false,
     this.height,
     this.isShowIcon = true,
+    this.childAfterMessage,
   });
 
   @override
@@ -24,12 +25,7 @@ class EmptyDataWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (isShowIcon)
-            icon ??
-                const Icon(
-                  Icons.inbox,
-                  size: 80,
-                  color: Colors.grey,
-                ),
+            icon ?? const Icon(Icons.inbox, size: 80, color: Colors.grey),
           const SizedBox(height: 20),
           Text(
             message,
@@ -40,6 +36,7 @@ class EmptyDataWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          ?childAfterMessage,
         ],
       ),
     );

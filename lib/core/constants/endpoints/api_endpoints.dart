@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/core/constants/endpoints/service_endpoints.dart
 import 'package:bookie_buddy_web/core/constants/endpoints/shop_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/staff_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/tailor_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/tax_configuration_endpoints.dart';
 
 /// Centralized, namespaced API paths facade used across the app.
 ///
@@ -38,6 +39,7 @@ class ApiEndpoints {
   static const products = _ProductsNamespace();
   static const search = SearchEndpoints();
   static const accounts = AccountEndpoints();
+  static const taxConfiguration = TaxConfigurationEndpoints();
 }
 
 class _ApiConfigNamespace {

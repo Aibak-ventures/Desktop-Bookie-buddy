@@ -6,14 +6,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sale_details_model.freezed.dart';
 part 'sale_details_model.g.dart';
 
-
 int? _readAccountId(Map json, String key) {
   final payments = json['payments'] as List?;
   if (payments == null || payments.isEmpty) return null;
   return (payments.first as Map)['account_id'] as int?;
 }
 
-String? _readAccountName(Map json, String key) {
+dynamic _readAccountName(Map json, String key) {
   final payments = json['payments'] as List?;
   if (payments == null || payments.isEmpty) return null;
   return (payments.first as Map)['account_name'] as String?;

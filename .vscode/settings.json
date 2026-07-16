@@ -9,7 +9,10 @@
     "Lucide",
     "mocktail",
     "msix",
+    "msword",
     "Noto",
+    "officedocument",
+    "openxmlformats",
     "pendings",
     "pincode",
     "Populator",
@@ -20,6 +23,7 @@
     "Upto",
     "usecase",
     "usecases",
+    "wordprocessingml",
     "zoomable"
   ],
   "dart.flutterSdkPath": ".fvm/versions/3.38.9"
