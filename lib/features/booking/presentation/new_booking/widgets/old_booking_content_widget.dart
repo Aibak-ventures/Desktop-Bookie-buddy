@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,8 @@ class OldBookingContentWidget extends StatelessWidget {
   final TextEditingController clientPhone2Controller;
   final TextEditingController clientAddressController;
   final TextEditingController descriptionController;
+  final TextEditingController discountController;
+  final TextEditingController taxController;
   final AccountEntity? selectedAdvanceAccount;
   final ValueChanged<AccountEntity?> onAdvanceAccountChanged;
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
@@ -44,6 +47,8 @@ class OldBookingContentWidget extends StatelessWidget {
     required this.clientPhone2Controller,
     required this.clientAddressController,
     required this.descriptionController,
+    required this.discountController,
+    required this.taxController,
     required this.selectedAdvanceAccount,
     required this.onAdvanceAccountChanged,
     required this.selectedProductsNotifier,
@@ -189,6 +194,19 @@ class OldBookingContentWidget extends StatelessWidget {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: discountController,
+                    hint: 'Discount amount (Optional)',
+                    isNumber: true,
+                  ),
+                  const SizedBox(height: _fieldSpacing),
+                  BookingTextFieldBuilder.buildRightPanelTextField(
+                    controller: taxController,
+                    hint: 'Tax Amount (Optional)',
+                    isNumber: true,
+                    prefixIcon: Icons.currency_rupee_sharp,
+                  ),
                   const SizedBox(height: _fieldSpacing * 2),
                   AccountSelectionField(
                     selectedAccount: selectedAdvanceAccount,
@@ -224,13 +242,23 @@ class OldBookingContentWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                ValueListenableBuilder<List<ProductSelectedEntity>>(
-                  valueListenable: selectedProductsNotifier,
-                  builder: (context, products, _) {
-                    final total = products.fold<int>(
+                ListenableBuilder(
+                  listenable: Listenable.merge([
+                    selectedProductsNotifier,
+                    discountController,
+                    taxController,
+                  ]),
+                  builder: (context, _) {
+                    final products = selectedProductsNotifier.value;
+                    final productTotal = products.fold<int>(
                       0,
                       (sum, p) => sum + (p.amount * p.quantity * getDaysMultiplier(p)),
                     );
+                    final discountAmount =
+                        discountController.text.trim().toIntOrNull() ?? 0;
+                    final taxAmount =
+                        taxController.text.trim().toIntOrNull() ?? 0;
+                    final total = productTotal - discountAmount + taxAmount;
                     return Text(
                       total.toCurrency(),
                       style: const TextStyle(

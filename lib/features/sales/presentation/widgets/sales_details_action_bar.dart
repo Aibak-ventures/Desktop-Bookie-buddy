@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
@@ -11,7 +11,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/edit_sales_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';//added
+import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart'; //added
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,9 +92,9 @@ class SalesDetailsActionBar extends StatelessWidget {
           ),
         );
         if (confirm == true && context.mounted) {
-          context
-              .read<SalesDetailsBloc>()
-              .add(SalesDetailsEvent.deleteSale(sale.id));
+          context.read<SalesDetailsBloc>().add(
+            SalesDetailsEvent.deleteSale(sale.id),
+          );
         }
       },
     );
@@ -119,9 +119,9 @@ class SalesDetailsActionBar extends StatelessWidget {
         );
         if (result == true && context.mounted) {
           context.read<AllSalesBloc>().add(const AllSalesEvent.loadSales());
-          context
-              .read<SalesDetailsBloc>()
-              .add(SalesDetailsEvent.fetchSaleDetails(sale.id));
+          context.read<SalesDetailsBloc>().add(
+            SalesDetailsEvent.fetchSaleDetails(sale.id),
+          );
         }
       },
     );

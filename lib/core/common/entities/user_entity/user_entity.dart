@@ -1,10 +1,10 @@
+import 'package:bookie_buddy_web/core/common/entities/user_feature_details_entity/user_feature_details_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
-    show SecretPasswordLocations, UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
-    hide UserPasswordSettingRole;
 import 'package:bookie_buddy_web/core/common/entities/shop_settings_entity/shop_settings_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/subscription_status_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_entity.freezed.dart';
@@ -16,8 +16,7 @@ abstract class UserEntity with _$UserEntity {
     required String firstName,
     required String lastName,
     required String phone,
-    ShopRole? role,
-    ShopRole? shopRole,
+    required String email,
     required bool block,
     required bool haveMultipleShops,
     required bool isNotificationActive,
@@ -30,35 +29,37 @@ abstract class UserEntity with _$UserEntity {
 
 extension UserEntityX on UserEntity {
   String get userFullName => '$firstName $lastName'.trim();
-
-  bool hasFeature(AppPremiumFeatures feature) {
-    return subscription?.features.contains(feature) ?? false;
-  }
 }
 
 @freezed
 abstract class UserSubscriptionEntity with _$UserSubscriptionEntity {
   const factory UserSubscriptionEntity({
     required String plan,
-    required String status,
+    required SubscriptionStatus status,
     required String expiryDate,
+    required int daysRemaining,
     required Set<AppPremiumFeatures> features,
     required Set<AppPremiumFeatures> userSpecificFeatures,
+    required List<UserFeatureDetailsEntity> userFeatureDetails,
   }) = _UserSubscriptionEntity;
 }
 
 @freezed
 abstract class UserPasswordSettingsEntity with _$UserPasswordSettingsEntity {
   const factory UserPasswordSettingsEntity({
-    required SecretPasswordLocations location,
+    required SecretPasswordLocations? location,
     required UserPasswordSettingRole role,
+    @Default('') String description,
   }) = _UserPasswordSettingsEntity;
 }
 
 extension UserPasswordSettingsEntityX on List<UserPasswordSettingsEntity> {
   Map<String, dynamic> toCustomJson() {
     final Map<String, dynamic> data = {};
-    forEach((e) => data.addAll({e.location.value: e.role.value}));
+    forEach((e) {
+      if (e.location == null) return;
+      data.addAll({e.location!.value: e.role.value});
+    });
     return data;
   }
 }

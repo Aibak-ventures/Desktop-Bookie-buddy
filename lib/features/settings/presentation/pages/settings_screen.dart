@@ -22,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: BlocBuilder<UserCubit, UserEntity?>(
         builder: (context, user) {
-          final canManageTax = user?.shopRole != ShopRole.staff;
+          final canManageTax = user?.shopDetails.shopRole != ShopRole.staff;
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
             child: Center(
@@ -47,18 +47,28 @@ class SettingsScreen extends StatelessWidget {
                           iconBackground: AppColors.purpleLight,
                           title: 'Tax & Compliance',
                           subtitle: 'Manage tax rules applied to this shop',
-                          onTap: () => context.push(
-                            BlocProvider(
-                              create: (context) => TaxAndComplianceCubit(
-                                getTaxConfigurations: getIt(),
-                                createTaxConfiguration: getIt(),
-                                updateTaxConfiguration: getIt(),
-                              )..loadTaxConfigurations(),
-                              child: TaxAndComplianceScreen(
-                                canManage: canManageTax,
+                          onTap: () async {
+                            final userCubit = context.read<UserCubit>();
+                            final hasChanges = await context.push<bool>(
+                              BlocProvider(
+                                create: (context) => TaxAndComplianceCubit(
+                                  getTaxConfigurations: getIt(),
+                                  createTaxConfiguration: getIt(),
+                                  updateTaxConfiguration: getIt(),
+                                )..loadTaxConfigurations(),
+                                child: TaxAndComplianceScreen(
+                                  canManage: canManageTax,
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                            // Booking/sales screens read tax config off the
+                            // cached UserCubit.shopDetails snapshot, so a
+                            // rule created/edited/toggled here won't be seen
+                            // by them until that snapshot is refetched.
+                            if (hasChanges ?? false) {
+                              await userCubit.loadUserData();
+                            }
+                          },
                         ),
                       ],
                     ),

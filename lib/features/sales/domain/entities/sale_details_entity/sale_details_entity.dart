@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -24,6 +25,7 @@ abstract class SaleDetailsEntity with _$SaleDetailsEntity {
     String? accountName,
     int? staffId,
     String? staffName,
+    @Default([]) List<AppliedTaxEntity> appliedTaxes,
   }) = _SaleDetailsEntity;
 }
 

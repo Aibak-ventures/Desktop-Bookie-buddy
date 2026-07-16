@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserShopEntity {
 
- int get id; String get name; String get phone; String? get phone2; String get address; String? get gstNumber; String? get image; String? get place; String? get email; String? get city; String? get state; String? get pincode; List<String> get termsAndConditions;
+ int get id; String get name; String get phone; String? get phone2; String get address; String? get gstNumber; String? get image; String? get place; String? get email; String? get city; String? get state; String? get pincode; ShopRole get shopRole; List<String> get termsAndConditions; List<TaxConfigurationEntity> get taxConfigurations;
 /// Create a copy of UserShopEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserShopEntityCopyWith<UserShopEntity> get copyWith => _$UserShopEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&const DeepCollectionEquality().equals(other.termsAndConditions, termsAndConditions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other.termsAndConditions, termsAndConditions)&&const DeepCollectionEquality().equals(other.taxConfigurations, taxConfigurations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,const DeepCollectionEquality().hash(termsAndConditions));
+int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(termsAndConditions),const DeepCollectionEquality().hash(taxConfigurations));
 
 @override
 String toString() {
-  return 'UserShopEntity(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, termsAndConditions: $termsAndConditions)';
+  return 'UserShopEntity(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UserShopEntityCopyWith<$Res>  {
   factory $UserShopEntityCopyWith(UserShopEntity value, $Res Function(UserShopEntity) _then) = _$UserShopEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String phone, String? phone2, String address, String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode, List<String> termsAndConditions
+ int id, String name, String phone, String? phone2, String address, String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode, ShopRole shopRole, List<String> termsAndConditions, List<TaxConfigurationEntity> taxConfigurations
 });
 
 
@@ -62,7 +62,7 @@ class _$UserShopEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserShopEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? termsAndConditions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? shopRole = null,Object? termsAndConditions = null,Object? taxConfigurations = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -76,8 +76,10 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
-as String?,termsAndConditions: null == termsAndConditions ? _self.termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as String?,shopRole: null == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
+as ShopRole,termsAndConditions: null == termsAndConditions ? _self.termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
+as List<String>,taxConfigurations: null == taxConfigurations ? _self.taxConfigurations : taxConfigurations // ignore: cast_nullable_to_non_nullable
+as List<TaxConfigurationEntity>,
   ));
 }
 
@@ -162,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  List<String> termsAndConditions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  ShopRole shopRole,  List<String> termsAndConditions,  List<TaxConfigurationEntity> taxConfigurations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserShopEntity() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   return orElse();
 
 }
@@ -183,10 +185,10 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  List<String> termsAndConditions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  ShopRole shopRole,  List<String> termsAndConditions,  List<TaxConfigurationEntity> taxConfigurations)  $default,) {final _that = this;
 switch (_that) {
 case _UserShopEntity():
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +205,10 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  List<String> termsAndConditions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String? phone2,  String address,  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode,  ShopRole shopRole,  List<String> termsAndConditions,  List<TaxConfigurationEntity> taxConfigurations)?  $default,) {final _that = this;
 switch (_that) {
 case _UserShopEntity() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   return null;
 
 }
@@ -218,7 +220,7 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 
 
 class _UserShopEntity implements UserShopEntity {
-  const _UserShopEntity({required this.id, required this.name, required this.phone, this.phone2, required this.address, this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, required final  List<String> termsAndConditions}): _termsAndConditions = termsAndConditions;
+  const _UserShopEntity({required this.id, required this.name, required this.phone, this.phone2, required this.address, this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, this.shopRole = ShopRole.staff, required final  List<String> termsAndConditions, required final  List<TaxConfigurationEntity> taxConfigurations}): _termsAndConditions = termsAndConditions,_taxConfigurations = taxConfigurations;
   
 
 @override final  int id;
@@ -233,11 +235,19 @@ class _UserShopEntity implements UserShopEntity {
 @override final  String? city;
 @override final  String? state;
 @override final  String? pincode;
+@override@JsonKey() final  ShopRole shopRole;
  final  List<String> _termsAndConditions;
 @override List<String> get termsAndConditions {
   if (_termsAndConditions is EqualUnmodifiableListView) return _termsAndConditions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_termsAndConditions);
+}
+
+ final  List<TaxConfigurationEntity> _taxConfigurations;
+@override List<TaxConfigurationEntity> get taxConfigurations {
+  if (_taxConfigurations is EqualUnmodifiableListView) return _taxConfigurations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_taxConfigurations);
 }
 
 
@@ -251,16 +261,16 @@ _$UserShopEntityCopyWith<_UserShopEntity> get copyWith => __$UserShopEntityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&const DeepCollectionEquality().equals(other._termsAndConditions, _termsAndConditions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other._termsAndConditions, _termsAndConditions)&&const DeepCollectionEquality().equals(other._taxConfigurations, _taxConfigurations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,const DeepCollectionEquality().hash(_termsAndConditions));
+int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(_termsAndConditions),const DeepCollectionEquality().hash(_taxConfigurations));
 
 @override
 String toString() {
-  return 'UserShopEntity(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, termsAndConditions: $termsAndConditions)';
+  return 'UserShopEntity(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
 }
 
 
@@ -271,7 +281,7 @@ abstract mixin class _$UserShopEntityCopyWith<$Res> implements $UserShopEntityCo
   factory _$UserShopEntityCopyWith(_UserShopEntity value, $Res Function(_UserShopEntity) _then) = __$UserShopEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String phone, String? phone2, String address, String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode, List<String> termsAndConditions
+ int id, String name, String phone, String? phone2, String address, String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode, ShopRole shopRole, List<String> termsAndConditions, List<TaxConfigurationEntity> taxConfigurations
 });
 
 
@@ -288,7 +298,7 @@ class __$UserShopEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserShopEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? termsAndConditions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? shopRole = null,Object? termsAndConditions = null,Object? taxConfigurations = null,}) {
   return _then(_UserShopEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -302,8 +312,10 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
-as String?,termsAndConditions: null == termsAndConditions ? _self._termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as String?,shopRole: null == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
+as ShopRole,termsAndConditions: null == termsAndConditions ? _self._termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
+as List<String>,taxConfigurations: null == taxConfigurations ? _self._taxConfigurations : taxConfigurations // ignore: cast_nullable_to_non_nullable
+as List<TaxConfigurationEntity>,
   ));
 }
 

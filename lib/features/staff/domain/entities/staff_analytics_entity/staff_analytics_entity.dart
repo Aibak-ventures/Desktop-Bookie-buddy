@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/date_and_time_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'staff_analytics_entity.freezed.dart';

@@ -11,8 +11,7 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   firstName: json['full_name'] as String,
   lastName: json['last_name'] as String? ?? '',
   phone: json['phone'] as String,
-  role: ShopRole.fromJson(json['role'] as String?),
-  shopRole: ShopRole.fromJson(json['shop_role'] as String?),
+  email: json['email'] as String? ?? '',
   block: json['block'] as bool? ?? false,
   haveMultipleShops: json['multiple_shops'] as bool? ?? false,
   isNotificationActive: json['has_active_notification'] as bool? ?? false,
@@ -21,7 +20,9 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
       : UserSubscriptionModel.fromJson(
           json['subscription'] as Map<String, dynamic>,
         ),
-  passwordSettings: _passwordSettingsFromJson(json['password_settings'] as Map),
+  passwordSettings: _passwordSettingsFromJson(
+    json['password_settings'] as List,
+  ),
   shopSettings: ShopSettingsModel.fromJson(
     json['shop_settings'] as Map<String, dynamic>,
   ),
@@ -34,8 +35,7 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'full_name': instance.firstName,
       'last_name': instance.lastName,
       'phone': instance.phone,
-      'role': instance.role,
-      'shop_role': instance.shopRole,
+      'email': instance.email,
       'block': instance.block,
       'multiple_shops': instance.haveMultipleShops,
       'has_active_notification': instance.isNotificationActive,
@@ -49,54 +49,46 @@ _UserSubscriptionModel _$UserSubscriptionModelFromJson(
   Map<String, dynamic> json,
 ) => _UserSubscriptionModel(
   plan: json['plan'] as String,
-  status: json['status'] as String,
+  status: SubscriptionStatus.fromJson(json['status'] as String?),
   expiryDate: json['expiry_date'] as String? ?? '',
-  features: json['features'] == null
-      ? {}
-      : AppPremiumFeatures.fromList(json['features'] as List?),
+  daysRemaining: (json['days_remaining'] as num?)?.toInt() ?? 0,
   userSpecificFeatures: json['user_features'] == null
       ? {}
       : AppPremiumFeatures.fromList(json['user_features'] as List?),
+  userFeatureDetails:
+      (json['features_details'] as List<dynamic>?)
+          ?.map(
+            (e) => UserFeatureDetailsModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList() ??
+      [],
 );
 
 Map<String, dynamic> _$UserSubscriptionModelToJson(
   _UserSubscriptionModel instance,
 ) => <String, dynamic>{
   'plan': instance.plan,
-  'status': instance.status,
+  'status': SubscriptionStatus.toJson(instance.status),
   'expiry_date': instance.expiryDate,
-  'features': AppPremiumFeatures.toJsonList(instance.features),
+  'days_remaining': instance.daysRemaining,
   'user_features': AppPremiumFeatures.toJsonList(instance.userSpecificFeatures),
+  'features_details': instance.userFeatureDetails,
 };
 
 _UserPasswordSettingsModel _$UserPasswordSettingsModelFromJson(
   Map<String, dynamic> json,
 ) => _UserPasswordSettingsModel(
-  location: $enumDecode(_$SecretPasswordLocationsEnumMap, json['location']),
-  role: $enumDecode(_$UserPasswordSettingRoleEnumMap, json['role']),
+  location: SecretPasswordLocations.fromString(json['setting_name'] as String?),
+  role: UserPasswordSettingRole.fromString(
+    json['requires_password_for'] as String?,
+  ),
+  description: json['description'] as String? ?? '',
 );
 
 Map<String, dynamic> _$UserPasswordSettingsModelToJson(
   _UserPasswordSettingsModel instance,
 ) => <String, dynamic>{
-  'location': _$SecretPasswordLocationsEnumMap[instance.location]!,
-  'role': _$UserPasswordSettingRoleEnumMap[instance.role]!,
-};
-
-const _$SecretPasswordLocationsEnumMap = {
-  SecretPasswordLocations.ledgerView: 'ledgerView',
-  SecretPasswordLocations.bookingEdit: 'bookingEdit',
-  SecretPasswordLocations.bookingDelete: 'bookingDelete',
-  SecretPasswordLocations.bookingPayment: 'bookingPayment',
-  SecretPasswordLocations.transferProduct: 'transferProduct',
-  SecretPasswordLocations.monthlyGrossView: 'monthlyGrossView',
-  SecretPasswordLocations.productDeletion: 'productDeletion',
-  SecretPasswordLocations.productEdit: 'productEdit',
-};
-
-const _$UserPasswordSettingRoleEnumMap = {
-  UserPasswordSettingRole.all: 'all',
-  UserPasswordSettingRole.none: 'none',
-  UserPasswordSettingRole.staff: 'staff',
-  UserPasswordSettingRole.managerAndStaff: 'managerAndStaff',
+  'setting_name': SecretPasswordLocations.toJson(instance.location),
+  'requires_password_for': UserPasswordSettingRole.toJson(instance.role),
+  'description': instance.description,
 };

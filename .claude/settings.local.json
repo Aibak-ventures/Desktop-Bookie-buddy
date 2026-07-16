@@ -8,7 +8,8 @@
       "Read(//c/Users/Adinan/AppData/Local/Pub/Cache/**)",
       "Bash(fvm flutter *)",
       "Skill(code-review)",
-      "Skill(code-review:*)"
+      "Skill(code-review:*)",
+      "Bash(fvm dart *)"
     ]
   }
 }

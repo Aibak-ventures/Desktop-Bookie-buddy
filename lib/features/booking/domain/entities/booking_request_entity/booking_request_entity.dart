@@ -39,6 +39,8 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     int? securityPaymentAccountId,
     List<BookingPaymentRequestEntity>? payments,
     int? oldBookingAccountId,
+    // Only use this field when creating an old booking.
+    int? taxAmount,
   }) = _BookingRequestEntity;
 }
 

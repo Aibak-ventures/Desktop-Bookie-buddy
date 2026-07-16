@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserEntity {
 
- int get id; String get firstName; String get lastName; String get phone; ShopRole? get role; ShopRole? get shopRole; bool get block; bool get haveMultipleShops; bool get isNotificationActive; UserSubscriptionEntity? get subscription; List<UserPasswordSettingsEntity> get passwordSettings; ShopSettingsEntity get shopSettings; UserShopEntity get shopDetails;
+ int get id; String get firstName; String get lastName; String get phone; String get email; bool get block; bool get haveMultipleShops; bool get isNotificationActive; UserSubscriptionEntity? get subscription; List<UserPasswordSettingsEntity> get passwordSettings; ShopSettingsEntity get shopSettings; UserShopEntity get shopDetails;
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserEntityCopyWith<UserEntity> get copyWith => _$UserEntityCopyWithImpl<UserEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.role, role) || other.role == role)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,role,shopRole,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
+int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, role: $role, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UserEntityCopyWith<$Res>  {
   factory $UserEntityCopyWith(UserEntity value, $Res Function(UserEntity) _then) = _$UserEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String firstName, String lastName, String phone, ShopRole? role, ShopRole? shopRole, bool block, bool haveMultipleShops, bool isNotificationActive, UserSubscriptionEntity? subscription, List<UserPasswordSettingsEntity> passwordSettings, ShopSettingsEntity shopSettings, UserShopEntity shopDetails
+ int id, String firstName, String lastName, String phone, String email, bool block, bool haveMultipleShops, bool isNotificationActive, UserSubscriptionEntity? subscription, List<UserPasswordSettingsEntity> passwordSettings, ShopSettingsEntity shopSettings, UserShopEntity shopDetails
 });
 
 
@@ -62,15 +62,14 @@ class _$UserEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? role = freezed,Object? shopRole = freezed,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as ShopRole?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
-as ShopRole?,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
 as bool,haveMultipleShops: null == haveMultipleShops ? _self.haveMultipleShops : haveMultipleShops // ignore: cast_nullable_to_non_nullable
 as bool,isNotificationActive: null == isNotificationActive ? _self.isNotificationActive : isNotificationActive // ignore: cast_nullable_to_non_nullable
 as bool,subscription: freezed == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
@@ -192,10 +191,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String firstName,  String lastName,  String phone,  ShopRole? role,  ShopRole? shopRole,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String firstName,  String lastName,  String phone,  String email,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserEntity() when $default != null:
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   return orElse();
 
 }
@@ -213,10 +212,10 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String firstName,  String lastName,  String phone,  ShopRole? role,  ShopRole? shopRole,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String firstName,  String lastName,  String phone,  String email,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)  $default,) {final _that = this;
 switch (_that) {
 case _UserEntity():
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -233,10 +232,10 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String firstName,  String lastName,  String phone,  ShopRole? role,  ShopRole? shopRole,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String firstName,  String lastName,  String phone,  String email,  bool block,  bool haveMultipleShops,  bool isNotificationActive,  UserSubscriptionEntity? subscription,  List<UserPasswordSettingsEntity> passwordSettings,  ShopSettingsEntity shopSettings,  UserShopEntity shopDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _UserEntity() when $default != null:
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   return null;
 
 }
@@ -248,15 +247,14 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 
 
 class _UserEntity implements UserEntity {
-  const _UserEntity({required this.id, required this.firstName, required this.lastName, required this.phone, this.role, this.shopRole, required this.block, required this.haveMultipleShops, required this.isNotificationActive, this.subscription, required final  List<UserPasswordSettingsEntity> passwordSettings, required this.shopSettings, required this.shopDetails}): _passwordSettings = passwordSettings;
+  const _UserEntity({required this.id, required this.firstName, required this.lastName, required this.phone, required this.email, required this.block, required this.haveMultipleShops, required this.isNotificationActive, this.subscription, required final  List<UserPasswordSettingsEntity> passwordSettings, required this.shopSettings, required this.shopDetails}): _passwordSettings = passwordSettings;
   
 
 @override final  int id;
 @override final  String firstName;
 @override final  String lastName;
 @override final  String phone;
-@override final  ShopRole? role;
-@override final  ShopRole? shopRole;
+@override final  String email;
 @override final  bool block;
 @override final  bool haveMultipleShops;
 @override final  bool isNotificationActive;
@@ -281,16 +279,16 @@ _$UserEntityCopyWith<_UserEntity> get copyWith => __$UserEntityCopyWithImpl<_Use
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.role, role) || other.role == role)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,role,shopRole,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, role: $role, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -301,7 +299,7 @@ abstract mixin class _$UserEntityCopyWith<$Res> implements $UserEntityCopyWith<$
   factory _$UserEntityCopyWith(_UserEntity value, $Res Function(_UserEntity) _then) = __$UserEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String firstName, String lastName, String phone, ShopRole? role, ShopRole? shopRole, bool block, bool haveMultipleShops, bool isNotificationActive, UserSubscriptionEntity? subscription, List<UserPasswordSettingsEntity> passwordSettings, ShopSettingsEntity shopSettings, UserShopEntity shopDetails
+ int id, String firstName, String lastName, String phone, String email, bool block, bool haveMultipleShops, bool isNotificationActive, UserSubscriptionEntity? subscription, List<UserPasswordSettingsEntity> passwordSettings, ShopSettingsEntity shopSettings, UserShopEntity shopDetails
 });
 
 
@@ -318,15 +316,14 @@ class __$UserEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? role = freezed,Object? shopRole = freezed,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
   return _then(_UserEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as ShopRole?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
-as ShopRole?,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
 as bool,haveMultipleShops: null == haveMultipleShops ? _self.haveMultipleShops : haveMultipleShops // ignore: cast_nullable_to_non_nullable
 as bool,isNotificationActive: null == isNotificationActive ? _self.isNotificationActive : isNotificationActive // ignore: cast_nullable_to_non_nullable
 as bool,subscription: freezed == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
@@ -373,7 +370,7 @@ $UserShopEntityCopyWith<$Res> get shopDetails {
 /// @nodoc
 mixin _$UserSubscriptionEntity {
 
- String get plan; String get status; String get expiryDate; Set<AppPremiumFeatures> get features; Set<AppPremiumFeatures> get userSpecificFeatures;
+ String get plan; SubscriptionStatus get status; String get expiryDate; int get daysRemaining; Set<AppPremiumFeatures> get features; Set<AppPremiumFeatures> get userSpecificFeatures; List<UserFeatureDetailsEntity> get userFeatureDetails;
 /// Create a copy of UserSubscriptionEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -384,16 +381,16 @@ $UserSubscriptionEntityCopyWith<UserSubscriptionEntity> get copyWith => _$UserSu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, userFeatureDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(userSpecificFeatures));
+int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(userSpecificFeatures),const DeepCollectionEquality().hash(userFeatureDetails));
 
 @override
 String toString() {
-  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, features: $features, userSpecificFeatures: $userSpecificFeatures)';
+  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, features: $features, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -404,7 +401,7 @@ abstract mixin class $UserSubscriptionEntityCopyWith<$Res>  {
   factory $UserSubscriptionEntityCopyWith(UserSubscriptionEntity value, $Res Function(UserSubscriptionEntity) _then) = _$UserSubscriptionEntityCopyWithImpl;
 @useResult
 $Res call({
- String plan, String status, String expiryDate, Set<AppPremiumFeatures> features, Set<AppPremiumFeatures> userSpecificFeatures
+ String plan, SubscriptionStatus status, String expiryDate, int daysRemaining, Set<AppPremiumFeatures> features, Set<AppPremiumFeatures> userSpecificFeatures, List<UserFeatureDetailsEntity> userFeatureDetails
 });
 
 
@@ -421,14 +418,16 @@ class _$UserSubscriptionEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserSubscriptionEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? features = null,Object? userSpecificFeatures = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? features = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
   return _then(_self.copyWith(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
-as String,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
+as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
+as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemaining // ignore: cast_nullable_to_non_nullable
+as int,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
 as Set<AppPremiumFeatures>,userSpecificFeatures: null == userSpecificFeatures ? _self.userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,
+as Set<AppPremiumFeatures>,userFeatureDetails: null == userFeatureDetails ? _self.userFeatureDetails : userFeatureDetails // ignore: cast_nullable_to_non_nullable
+as List<UserFeatureDetailsEntity>,
   ));
 }
 
@@ -513,10 +512,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String plan,  String status,  String expiryDate,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String plan,  SubscriptionStatus status,  String expiryDate,  int daysRemaining,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures,  List<UserFeatureDetailsEntity> userFeatureDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserSubscriptionEntity() when $default != null:
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.features,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   return orElse();
 
 }
@@ -534,10 +533,10 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String plan,  String status,  String expiryDate,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String plan,  SubscriptionStatus status,  String expiryDate,  int daysRemaining,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures,  List<UserFeatureDetailsEntity> userFeatureDetails)  $default,) {final _that = this;
 switch (_that) {
 case _UserSubscriptionEntity():
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.features,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -554,10 +553,10 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String plan,  String status,  String expiryDate,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String plan,  SubscriptionStatus status,  String expiryDate,  int daysRemaining,  Set<AppPremiumFeatures> features,  Set<AppPremiumFeatures> userSpecificFeatures,  List<UserFeatureDetailsEntity> userFeatureDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _UserSubscriptionEntity() when $default != null:
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.features,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   return null;
 
 }
@@ -569,12 +568,13 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 
 
 class _UserSubscriptionEntity implements UserSubscriptionEntity {
-  const _UserSubscriptionEntity({required this.plan, required this.status, required this.expiryDate, required final  Set<AppPremiumFeatures> features, required final  Set<AppPremiumFeatures> userSpecificFeatures}): _features = features,_userSpecificFeatures = userSpecificFeatures;
+  const _UserSubscriptionEntity({required this.plan, required this.status, required this.expiryDate, required this.daysRemaining, required final  Set<AppPremiumFeatures> features, required final  Set<AppPremiumFeatures> userSpecificFeatures, required final  List<UserFeatureDetailsEntity> userFeatureDetails}): _features = features,_userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
   
 
 @override final  String plan;
-@override final  String status;
+@override final  SubscriptionStatus status;
 @override final  String expiryDate;
+@override final  int daysRemaining;
  final  Set<AppPremiumFeatures> _features;
 @override Set<AppPremiumFeatures> get features {
   if (_features is EqualUnmodifiableSetView) return _features;
@@ -589,6 +589,13 @@ class _UserSubscriptionEntity implements UserSubscriptionEntity {
   return EqualUnmodifiableSetView(_userSpecificFeatures);
 }
 
+ final  List<UserFeatureDetailsEntity> _userFeatureDetails;
+@override List<UserFeatureDetailsEntity> get userFeatureDetails {
+  if (_userFeatureDetails is EqualUnmodifiableListView) return _userFeatureDetails;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_userFeatureDetails);
+}
+
 
 /// Create a copy of UserSubscriptionEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -600,16 +607,16 @@ _$UserSubscriptionEntityCopyWith<_UserSubscriptionEntity> get copyWith => __$Use
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other._userFeatureDetails, _userFeatureDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_userSpecificFeatures));
+int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
 
 @override
 String toString() {
-  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, features: $features, userSpecificFeatures: $userSpecificFeatures)';
+  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, features: $features, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -620,7 +627,7 @@ abstract mixin class _$UserSubscriptionEntityCopyWith<$Res> implements $UserSubs
   factory _$UserSubscriptionEntityCopyWith(_UserSubscriptionEntity value, $Res Function(_UserSubscriptionEntity) _then) = __$UserSubscriptionEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String plan, String status, String expiryDate, Set<AppPremiumFeatures> features, Set<AppPremiumFeatures> userSpecificFeatures
+ String plan, SubscriptionStatus status, String expiryDate, int daysRemaining, Set<AppPremiumFeatures> features, Set<AppPremiumFeatures> userSpecificFeatures, List<UserFeatureDetailsEntity> userFeatureDetails
 });
 
 
@@ -637,14 +644,16 @@ class __$UserSubscriptionEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserSubscriptionEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? features = null,Object? userSpecificFeatures = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? features = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
   return _then(_UserSubscriptionEntity(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
-as String,features: null == features ? _self._features : features // ignore: cast_nullable_to_non_nullable
+as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
+as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemaining // ignore: cast_nullable_to_non_nullable
+as int,features: null == features ? _self._features : features // ignore: cast_nullable_to_non_nullable
 as Set<AppPremiumFeatures>,userSpecificFeatures: null == userSpecificFeatures ? _self._userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,
+as Set<AppPremiumFeatures>,userFeatureDetails: null == userFeatureDetails ? _self._userFeatureDetails : userFeatureDetails // ignore: cast_nullable_to_non_nullable
+as List<UserFeatureDetailsEntity>,
   ));
 }
 
@@ -654,7 +663,7 @@ as Set<AppPremiumFeatures>,
 /// @nodoc
 mixin _$UserPasswordSettingsEntity {
 
- SecretPasswordLocations get location; UserPasswordSettingRole get role;
+ SecretPasswordLocations? get location; UserPasswordSettingRole get role; String get description;
 /// Create a copy of UserPasswordSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -665,16 +674,16 @@ $UserPasswordSettingsEntityCopyWith<UserPasswordSettingsEntity> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,location,role);
+int get hashCode => Object.hash(runtimeType,location,role,description);
 
 @override
 String toString() {
-  return 'UserPasswordSettingsEntity(location: $location, role: $role)';
+  return 'UserPasswordSettingsEntity(location: $location, role: $role, description: $description)';
 }
 
 
@@ -685,7 +694,7 @@ abstract mixin class $UserPasswordSettingsEntityCopyWith<$Res>  {
   factory $UserPasswordSettingsEntityCopyWith(UserPasswordSettingsEntity value, $Res Function(UserPasswordSettingsEntity) _then) = _$UserPasswordSettingsEntityCopyWithImpl;
 @useResult
 $Res call({
- SecretPasswordLocations location, UserPasswordSettingRole role
+ SecretPasswordLocations? location, UserPasswordSettingRole role, String description
 });
 
 
@@ -702,11 +711,12 @@ class _$UserPasswordSettingsEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserPasswordSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? location = null,Object? role = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
   return _then(_self.copyWith(
-location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as SecretPasswordLocations,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserPasswordSettingRole,
+location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -791,10 +801,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SecretPasswordLocations location,  UserPasswordSettingRole role)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SecretPasswordLocations? location,  UserPasswordSettingRole role,  String description)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsEntity() when $default != null:
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   return orElse();
 
 }
@@ -812,10 +822,10 @@ return $default(_that.location,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SecretPasswordLocations location,  UserPasswordSettingRole role)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SecretPasswordLocations? location,  UserPasswordSettingRole role,  String description)  $default,) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsEntity():
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -832,10 +842,10 @@ return $default(_that.location,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SecretPasswordLocations location,  UserPasswordSettingRole role)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SecretPasswordLocations? location,  UserPasswordSettingRole role,  String description)?  $default,) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsEntity() when $default != null:
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   return null;
 
 }
@@ -847,11 +857,12 @@ return $default(_that.location,_that.role);case _:
 
 
 class _UserPasswordSettingsEntity implements UserPasswordSettingsEntity {
-  const _UserPasswordSettingsEntity({required this.location, required this.role});
+  const _UserPasswordSettingsEntity({required this.location, required this.role, this.description = ''});
   
 
-@override final  SecretPasswordLocations location;
+@override final  SecretPasswordLocations? location;
 @override final  UserPasswordSettingRole role;
+@override@JsonKey() final  String description;
 
 /// Create a copy of UserPasswordSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -863,16 +874,16 @@ _$UserPasswordSettingsEntityCopyWith<_UserPasswordSettingsEntity> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,location,role);
+int get hashCode => Object.hash(runtimeType,location,role,description);
 
 @override
 String toString() {
-  return 'UserPasswordSettingsEntity(location: $location, role: $role)';
+  return 'UserPasswordSettingsEntity(location: $location, role: $role, description: $description)';
 }
 
 
@@ -883,7 +894,7 @@ abstract mixin class _$UserPasswordSettingsEntityCopyWith<$Res> implements $User
   factory _$UserPasswordSettingsEntityCopyWith(_UserPasswordSettingsEntity value, $Res Function(_UserPasswordSettingsEntity) _then) = __$UserPasswordSettingsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- SecretPasswordLocations location, UserPasswordSettingRole role
+ SecretPasswordLocations? location, UserPasswordSettingRole role, String description
 });
 
 
@@ -900,11 +911,12 @@ class __$UserPasswordSettingsEntityCopyWithImpl<$Res>
 
 /// Create a copy of UserPasswordSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? location = null,Object? role = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
   return _then(_UserPasswordSettingsEntity(
-location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as SecretPasswordLocations,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserPasswordSettingRole,
+location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

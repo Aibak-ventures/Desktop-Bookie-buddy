@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
- int get id;@JsonKey(name: 'full_name') String get firstName;@JsonKey(name: 'last_name', defaultValue: '') String get lastName; String get phone;@JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? get role;@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) ShopRole? get shopRole;@JsonKey(defaultValue: false) bool get block;@JsonKey(name: 'multiple_shops', defaultValue: false) bool get haveMultipleShops;@JsonKey(name: 'has_active_notification', defaultValue: false) bool get isNotificationActive;@JsonKey(name: 'subscription') UserSubscriptionModel? get subscription;@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> get passwordSettings;@JsonKey(name: 'shop_settings') ShopSettingsModel get shopSettings;@JsonKey(name: 'shop') UserShopModel get shopDetails;
+ int get id;@JsonKey(name: 'full_name') String get firstName;@JsonKey(name: 'last_name', defaultValue: '') String get lastName; String get phone;@JsonKey(defaultValue: '') String get email;@JsonKey(defaultValue: false) bool get block;@JsonKey(name: 'multiple_shops', defaultValue: false) bool get haveMultipleShops;@JsonKey(name: 'has_active_notification', defaultValue: false) bool get isNotificationActive;@JsonKey(name: 'subscription') UserSubscriptionModel? get subscription;@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> get passwordSettings;@JsonKey(name: 'shop_settings') ShopSettingsModel get shopSettings;@JsonKey(name: 'shop') UserShopModel get shopDetails;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.role, role) || other.role == role)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,role,shopRole,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
+int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, role: $role, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- int id,@JsonKey(name: 'full_name') String firstName,@JsonKey(name: 'last_name', defaultValue: '') String lastName, String phone,@JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) ShopRole? shopRole,@JsonKey(defaultValue: false) bool block,@JsonKey(name: 'multiple_shops', defaultValue: false) bool haveMultipleShops,@JsonKey(name: 'has_active_notification', defaultValue: false) bool isNotificationActive,@JsonKey(name: 'subscription') UserSubscriptionModel? subscription,@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> passwordSettings,@JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,@JsonKey(name: 'shop') UserShopModel shopDetails
+ int id,@JsonKey(name: 'full_name') String firstName,@JsonKey(name: 'last_name', defaultValue: '') String lastName, String phone,@JsonKey(defaultValue: '') String email,@JsonKey(defaultValue: false) bool block,@JsonKey(name: 'multiple_shops', defaultValue: false) bool haveMultipleShops,@JsonKey(name: 'has_active_notification', defaultValue: false) bool isNotificationActive,@JsonKey(name: 'subscription') UserSubscriptionModel? subscription,@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> passwordSettings,@JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,@JsonKey(name: 'shop') UserShopModel shopDetails
 });
 
 
@@ -65,15 +65,14 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? role = freezed,Object? shopRole = freezed,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as ShopRole?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
-as ShopRole?,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
 as bool,haveMultipleShops: null == haveMultipleShops ? _self.haveMultipleShops : haveMultipleShops // ignore: cast_nullable_to_non_nullable
 as bool,isNotificationActive: null == isNotificationActive ? _self.isNotificationActive : isNotificationActive // ignore: cast_nullable_to_non_nullable
 as bool,subscription: freezed == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
@@ -195,10 +194,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(name: 'role', fromJson: ShopRole.fromJson)  ShopRole? role, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)  ShopRole? shopRole, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(defaultValue: '')  String email, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   return orElse();
 
 }
@@ -216,10 +215,10 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(name: 'role', fromJson: ShopRole.fromJson)  ShopRole? role, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)  ShopRole? shopRole, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(defaultValue: '')  String email, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -236,10 +235,10 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(name: 'role', fromJson: ShopRole.fromJson)  ShopRole? role, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson)  ShopRole? shopRole, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(name: 'full_name')  String firstName, @JsonKey(name: 'last_name', defaultValue: '')  String lastName,  String phone, @JsonKey(defaultValue: '')  String email, @JsonKey(defaultValue: false)  bool block, @JsonKey(name: 'multiple_shops', defaultValue: false)  bool haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false)  bool isNotificationActive, @JsonKey(name: 'subscription')  UserSubscriptionModel? subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson)  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings')  ShopSettingsModel shopSettings, @JsonKey(name: 'shop')  UserShopModel shopDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_that.shopRole,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
+return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,_that.block,_that.haveMultipleShops,_that.isNotificationActive,_that.subscription,_that.passwordSettings,_that.shopSettings,_that.shopDetails);case _:
   return null;
 
 }
@@ -251,15 +250,14 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.role,_
 @JsonSerializable()
 
 class _UserModel implements UserModel {
-  const _UserModel({required this.id, @JsonKey(name: 'full_name') required this.firstName, @JsonKey(name: 'last_name', defaultValue: '') required this.lastName, required this.phone, @JsonKey(name: 'role', fromJson: ShopRole.fromJson) this.role, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) this.shopRole, @JsonKey(defaultValue: false) required this.block, @JsonKey(name: 'multiple_shops', defaultValue: false) required this.haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false) required this.isNotificationActive, @JsonKey(name: 'subscription') this.subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) required final  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings') required this.shopSettings, @JsonKey(name: 'shop') required this.shopDetails}): _passwordSettings = passwordSettings;
+  const _UserModel({required this.id, @JsonKey(name: 'full_name') required this.firstName, @JsonKey(name: 'last_name', defaultValue: '') required this.lastName, required this.phone, @JsonKey(defaultValue: '') required this.email, @JsonKey(defaultValue: false) required this.block, @JsonKey(name: 'multiple_shops', defaultValue: false) required this.haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false) required this.isNotificationActive, @JsonKey(name: 'subscription') this.subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) required final  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings') required this.shopSettings, @JsonKey(name: 'shop') required this.shopDetails}): _passwordSettings = passwordSettings;
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override final  int id;
 @override@JsonKey(name: 'full_name') final  String firstName;
 @override@JsonKey(name: 'last_name', defaultValue: '') final  String lastName;
 @override final  String phone;
-@override@JsonKey(name: 'role', fromJson: ShopRole.fromJson) final  ShopRole? role;
-@override@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) final  ShopRole? shopRole;
+@override@JsonKey(defaultValue: '') final  String email;
 @override@JsonKey(defaultValue: false) final  bool block;
 @override@JsonKey(name: 'multiple_shops', defaultValue: false) final  bool haveMultipleShops;
 @override@JsonKey(name: 'has_active_notification', defaultValue: false) final  bool isNotificationActive;
@@ -287,16 +285,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.role, role) || other.role == role)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,role,shopRole,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
 
 @override
 String toString() {
-  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, role: $role, shopRole: $shopRole, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -307,7 +305,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id,@JsonKey(name: 'full_name') String firstName,@JsonKey(name: 'last_name', defaultValue: '') String lastName, String phone,@JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) ShopRole? shopRole,@JsonKey(defaultValue: false) bool block,@JsonKey(name: 'multiple_shops', defaultValue: false) bool haveMultipleShops,@JsonKey(name: 'has_active_notification', defaultValue: false) bool isNotificationActive,@JsonKey(name: 'subscription') UserSubscriptionModel? subscription,@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> passwordSettings,@JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,@JsonKey(name: 'shop') UserShopModel shopDetails
+ int id,@JsonKey(name: 'full_name') String firstName,@JsonKey(name: 'last_name', defaultValue: '') String lastName, String phone,@JsonKey(defaultValue: '') String email,@JsonKey(defaultValue: false) bool block,@JsonKey(name: 'multiple_shops', defaultValue: false) bool haveMultipleShops,@JsonKey(name: 'has_active_notification', defaultValue: false) bool isNotificationActive,@JsonKey(name: 'subscription') UserSubscriptionModel? subscription,@JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) List<UserPasswordSettingsModel> passwordSettings,@JsonKey(name: 'shop_settings') ShopSettingsModel shopSettings,@JsonKey(name: 'shop') UserShopModel shopDetails
 });
 
 
@@ -324,15 +322,14 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? role = freezed,Object? shopRole = freezed,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
   return _then(_UserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
-as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as ShopRole?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
-as ShopRole?,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,block: null == block ? _self.block : block // ignore: cast_nullable_to_non_nullable
 as bool,haveMultipleShops: null == haveMultipleShops ? _self.haveMultipleShops : haveMultipleShops // ignore: cast_nullable_to_non_nullable
 as bool,isNotificationActive: null == isNotificationActive ? _self.isNotificationActive : isNotificationActive // ignore: cast_nullable_to_non_nullable
 as bool,subscription: freezed == subscription ? _self.subscription : subscription // ignore: cast_nullable_to_non_nullable
@@ -380,7 +377,7 @@ $UserShopModelCopyWith<$Res> get shopDetails {
 /// @nodoc
 mixin _$UserSubscriptionModel {
 
- String get plan; String get status;@JsonKey(name: 'expiry_date', defaultValue: '') String get expiryDate;@JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> get features;@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> get userSpecificFeatures;
+ String get plan;@JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) SubscriptionStatus get status;@JsonKey(name: 'expiry_date', defaultValue: '') String get expiryDate;@JsonKey(name: 'days_remaining', defaultValue: 0) int get daysRemaining;@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> get userSpecificFeatures;@JsonKey(name: 'features_details', defaultValue: const []) List<UserFeatureDetailsModel> get userFeatureDetails;
 /// Create a copy of UserSubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -393,16 +390,16 @@ $UserSubscriptionModelCopyWith<UserSubscriptionModel> get copyWith => _$UserSubs
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, userFeatureDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(userSpecificFeatures));
+int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(userSpecificFeatures),const DeepCollectionEquality().hash(userFeatureDetails));
 
 @override
 String toString() {
-  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, features: $features, userSpecificFeatures: $userSpecificFeatures)';
+  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -413,7 +410,7 @@ abstract mixin class $UserSubscriptionModelCopyWith<$Res>  {
   factory $UserSubscriptionModelCopyWith(UserSubscriptionModel value, $Res Function(UserSubscriptionModel) _then) = _$UserSubscriptionModelCopyWithImpl;
 @useResult
 $Res call({
- String plan, String status,@JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,@JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> features,@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> userSpecificFeatures
+ String plan,@JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) SubscriptionStatus status,@JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,@JsonKey(name: 'days_remaining', defaultValue: 0) int daysRemaining,@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> userSpecificFeatures,@JsonKey(name: 'features_details', defaultValue: const []) List<UserFeatureDetailsModel> userFeatureDetails
 });
 
 
@@ -430,14 +427,15 @@ class _$UserSubscriptionModelCopyWithImpl<$Res>
 
 /// Create a copy of UserSubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? features = null,Object? userSpecificFeatures = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
   return _then(_self.copyWith(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
-as String,features: null == features ? _self.features : features // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,userSpecificFeatures: null == userSpecificFeatures ? _self.userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,
+as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
+as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemaining // ignore: cast_nullable_to_non_nullable
+as int,userSpecificFeatures: null == userSpecificFeatures ? _self.userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
+as Set<AppPremiumFeatures>,userFeatureDetails: null == userFeatureDetails ? _self.userFeatureDetails : userFeatureDetails // ignore: cast_nullable_to_non_nullable
+as List<UserFeatureDetailsModel>,
   ));
 }
 
@@ -522,10 +520,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String plan,  String status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> features, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson)  SubscriptionStatus status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0)  int daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const [])  List<UserFeatureDetailsModel> userFeatureDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserSubscriptionModel() when $default != null:
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   return orElse();
 
 }
@@ -543,10 +541,10 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String plan,  String status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> features, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson)  SubscriptionStatus status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0)  int daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const [])  List<UserFeatureDetailsModel> userFeatureDetails)  $default,) {final _that = this;
 switch (_that) {
 case _UserSubscriptionModel():
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -563,10 +561,10 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String plan,  String status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> features, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson)  SubscriptionStatus status, @JsonKey(name: 'expiry_date', defaultValue: '')  String expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0)  int daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList)  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const [])  List<UserFeatureDetailsModel> userFeatureDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _UserSubscriptionModel() when $default != null:
-return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.userSpecificFeatures);case _:
+return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_that.userSpecificFeatures,_that.userFeatureDetails);case _:
   return null;
 
 }
@@ -578,24 +576,25 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.features,_that.us
 @JsonSerializable()
 
 class _UserSubscriptionModel implements UserSubscriptionModel {
-  const _UserSubscriptionModel({required this.plan, required this.status, @JsonKey(name: 'expiry_date', defaultValue: '') required this.expiryDate, @JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) required final  Set<AppPremiumFeatures> features, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) required final  Set<AppPremiumFeatures> userSpecificFeatures}): _features = features,_userSpecificFeatures = userSpecificFeatures;
+  const _UserSubscriptionModel({required this.plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) required this.status, @JsonKey(name: 'expiry_date', defaultValue: '') required this.expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0) required this.daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) required final  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const []) required final  List<UserFeatureDetailsModel> userFeatureDetails}): _userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
   factory _UserSubscriptionModel.fromJson(Map<String, dynamic> json) => _$UserSubscriptionModelFromJson(json);
 
 @override final  String plan;
-@override final  String status;
+@override@JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) final  SubscriptionStatus status;
 @override@JsonKey(name: 'expiry_date', defaultValue: '') final  String expiryDate;
- final  Set<AppPremiumFeatures> _features;
-@override@JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> get features {
-  if (_features is EqualUnmodifiableSetView) return _features;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableSetView(_features);
-}
-
+@override@JsonKey(name: 'days_remaining', defaultValue: 0) final  int daysRemaining;
  final  Set<AppPremiumFeatures> _userSpecificFeatures;
 @override@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> get userSpecificFeatures {
   if (_userSpecificFeatures is EqualUnmodifiableSetView) return _userSpecificFeatures;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableSetView(_userSpecificFeatures);
+}
+
+ final  List<UserFeatureDetailsModel> _userFeatureDetails;
+@override@JsonKey(name: 'features_details', defaultValue: const []) List<UserFeatureDetailsModel> get userFeatureDetails {
+  if (_userFeatureDetails is EqualUnmodifiableListView) return _userFeatureDetails;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_userFeatureDetails);
 }
 
 
@@ -612,16 +611,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other._userFeatureDetails, _userFeatureDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_userSpecificFeatures));
+int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
 
 @override
 String toString() {
-  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, features: $features, userSpecificFeatures: $userSpecificFeatures)';
+  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -632,7 +631,7 @@ abstract mixin class _$UserSubscriptionModelCopyWith<$Res> implements $UserSubsc
   factory _$UserSubscriptionModelCopyWith(_UserSubscriptionModel value, $Res Function(_UserSubscriptionModel) _then) = __$UserSubscriptionModelCopyWithImpl;
 @override @useResult
 $Res call({
- String plan, String status,@JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,@JsonKey(name: 'features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> features,@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> userSpecificFeatures
+ String plan,@JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) SubscriptionStatus status,@JsonKey(name: 'expiry_date', defaultValue: '') String expiryDate,@JsonKey(name: 'days_remaining', defaultValue: 0) int daysRemaining,@JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) Set<AppPremiumFeatures> userSpecificFeatures,@JsonKey(name: 'features_details', defaultValue: const []) List<UserFeatureDetailsModel> userFeatureDetails
 });
 
 
@@ -649,14 +648,15 @@ class __$UserSubscriptionModelCopyWithImpl<$Res>
 
 /// Create a copy of UserSubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? features = null,Object? userSpecificFeatures = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
   return _then(_UserSubscriptionModel(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
-as String,features: null == features ? _self._features : features // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,userSpecificFeatures: null == userSpecificFeatures ? _self._userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
-as Set<AppPremiumFeatures>,
+as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
+as String,daysRemaining: null == daysRemaining ? _self.daysRemaining : daysRemaining // ignore: cast_nullable_to_non_nullable
+as int,userSpecificFeatures: null == userSpecificFeatures ? _self._userSpecificFeatures : userSpecificFeatures // ignore: cast_nullable_to_non_nullable
+as Set<AppPremiumFeatures>,userFeatureDetails: null == userFeatureDetails ? _self._userFeatureDetails : userFeatureDetails // ignore: cast_nullable_to_non_nullable
+as List<UserFeatureDetailsModel>,
   ));
 }
 
@@ -667,7 +667,7 @@ as Set<AppPremiumFeatures>,
 /// @nodoc
 mixin _$UserPasswordSettingsModel {
 
- SecretPasswordLocations get location; UserPasswordSettingRole get role;
+@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson) SecretPasswordLocations? get location;@JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson) UserPasswordSettingRole get role;@JsonKey(name: 'description') String get description;
 /// Create a copy of UserPasswordSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -680,16 +680,16 @@ $UserPasswordSettingsModelCopyWith<UserPasswordSettingsModel> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,location,role);
+int get hashCode => Object.hash(runtimeType,location,role,description);
 
 @override
 String toString() {
-  return 'UserPasswordSettingsModel(location: $location, role: $role)';
+  return 'UserPasswordSettingsModel(location: $location, role: $role, description: $description)';
 }
 
 
@@ -700,7 +700,7 @@ abstract mixin class $UserPasswordSettingsModelCopyWith<$Res>  {
   factory $UserPasswordSettingsModelCopyWith(UserPasswordSettingsModel value, $Res Function(UserPasswordSettingsModel) _then) = _$UserPasswordSettingsModelCopyWithImpl;
 @useResult
 $Res call({
- SecretPasswordLocations location, UserPasswordSettingRole role
+@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson) SecretPasswordLocations? location,@JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson) UserPasswordSettingRole role,@JsonKey(name: 'description') String description
 });
 
 
@@ -717,11 +717,12 @@ class _$UserPasswordSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of UserPasswordSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? location = null,Object? role = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
   return _then(_self.copyWith(
-location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as SecretPasswordLocations,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserPasswordSettingRole,
+location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -806,10 +807,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SecretPasswordLocations location,  UserPasswordSettingRole role)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson)  SecretPasswordLocations? location, @JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson)  UserPasswordSettingRole role, @JsonKey(name: 'description')  String description)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsModel() when $default != null:
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   return orElse();
 
 }
@@ -827,10 +828,10 @@ return $default(_that.location,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SecretPasswordLocations location,  UserPasswordSettingRole role)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson)  SecretPasswordLocations? location, @JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson)  UserPasswordSettingRole role, @JsonKey(name: 'description')  String description)  $default,) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsModel():
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -847,10 +848,10 @@ return $default(_that.location,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SecretPasswordLocations location,  UserPasswordSettingRole role)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson)  SecretPasswordLocations? location, @JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson)  UserPasswordSettingRole role, @JsonKey(name: 'description')  String description)?  $default,) {final _that = this;
 switch (_that) {
 case _UserPasswordSettingsModel() when $default != null:
-return $default(_that.location,_that.role);case _:
+return $default(_that.location,_that.role,_that.description);case _:
   return null;
 
 }
@@ -862,11 +863,12 @@ return $default(_that.location,_that.role);case _:
 @JsonSerializable()
 
 class _UserPasswordSettingsModel implements UserPasswordSettingsModel {
-  const _UserPasswordSettingsModel({required this.location, required this.role});
+  const _UserPasswordSettingsModel({@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson) this.location, @JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson) required this.role, @JsonKey(name: 'description') this.description = ''});
   factory _UserPasswordSettingsModel.fromJson(Map<String, dynamic> json) => _$UserPasswordSettingsModelFromJson(json);
 
-@override final  SecretPasswordLocations location;
-@override final  UserPasswordSettingRole role;
+@override@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson) final  SecretPasswordLocations? location;
+@override@JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson) final  UserPasswordSettingRole role;
+@override@JsonKey(name: 'description') final  String description;
 
 /// Create a copy of UserPasswordSettingsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -881,16 +883,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,location,role);
+int get hashCode => Object.hash(runtimeType,location,role,description);
 
 @override
 String toString() {
-  return 'UserPasswordSettingsModel(location: $location, role: $role)';
+  return 'UserPasswordSettingsModel(location: $location, role: $role, description: $description)';
 }
 
 
@@ -901,7 +903,7 @@ abstract mixin class _$UserPasswordSettingsModelCopyWith<$Res> implements $UserP
   factory _$UserPasswordSettingsModelCopyWith(_UserPasswordSettingsModel value, $Res Function(_UserPasswordSettingsModel) _then) = __$UserPasswordSettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
- SecretPasswordLocations location, UserPasswordSettingRole role
+@JsonKey(name: 'setting_name', fromJson: SecretPasswordLocations.fromString, toJson: SecretPasswordLocations.toJson) SecretPasswordLocations? location,@JsonKey(name: 'requires_password_for', fromJson: UserPasswordSettingRole.fromString, toJson: UserPasswordSettingRole.toJson) UserPasswordSettingRole role,@JsonKey(name: 'description') String description
 });
 
 
@@ -918,11 +920,12 @@ class __$UserPasswordSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of UserPasswordSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? location = null,Object? role = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
   return _then(_UserPasswordSettingsModel(
-location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as SecretPasswordLocations,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as UserPasswordSettingRole,
+location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

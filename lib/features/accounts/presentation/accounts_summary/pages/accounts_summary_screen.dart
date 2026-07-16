@@ -2,7 +2,7 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.da
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/accounts_summary/cubit/accounts_summary_cubit.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/accounts_summary/widgets/account_list_tile.dart';
@@ -138,7 +138,7 @@ class AccountsSummaryScreen extends StatelessWidget {
                         onDelete: () {
                           performSecureActionDialog(
                             context,
-                            
+
                             SecretPasswordLocations.ledgerView,
                             onSuccess: () async {
                               // get delete function to call inside the confirmation dialog

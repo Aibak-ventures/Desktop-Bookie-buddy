@@ -131,7 +131,7 @@ class _ExpensesNamespace {
   String get expenses => ExpensesEndpoints.expenses;
   String get variantExpenses => ExpensesEndpoints.variantExpenses;
   String get transactionHistory => ExpensesEndpoints.transactionHistory;
-  String get dayWiseSummary => ExpensesEndpoints.daywiseSummary;
+  String get dayWiseSummary => ExpensesEndpoints.dayWiseSummary;
   String get exportTransactionsExcel =>
       ExpensesEndpoints.exportTransactionsExcel;
 }

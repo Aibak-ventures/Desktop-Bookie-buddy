@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/date_and_time_enums.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_analytics_entity/staff_analytics_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -34,49 +34,22 @@ abstract class StaffAnalyticsModel with _$StaffAnalyticsModel {
 
   factory StaffAnalyticsModel.fromJson(Map<String, dynamic> json) =>
       _$StaffAnalyticsModelFromJson(json);
-
-  // static StaffAnalyticsModel empty({
-  //   int? staffId,
-  //   String? staffName,
-  //   DateTime? date,
-  // }) {
-  //   final now = date ?? DateTime.now();
-
-  //   final year = now.year;
-  //   final month = Month.fromInt(now.month);
-
-  //   return StaffAnalyticsModel(
-  //     staffId: staffId ?? 0,
-  //     staffName: staffName ?? 'Staff',
-  //     year: year,
-  //     month: month,
-  //     monthName: month.value,
-  //     totalBookingsCount: 0,
-  //     totalSalesCount: 0,
-  //     totalPendingsCount: 0,
-  //     totalBookingsAmount: 0,
-  //     totalSalesAmount: 0,
-  //     totalPendingAmount: 0,
-  //     totalAmount: 0,
-  //     performancePercent: 0,
-  //   );
-  // }
 }
 
 extension StaffAnalyticsModelMapper on StaffAnalyticsModel {
   StaffAnalyticsEntity toEntity() => StaffAnalyticsEntity(
-        staffId: staffId,
-        staffName: staffName,
-        year: year,
-        month: month,
-        monthName: monthName,
-        totalBookingsCount: totalBookingsCount,
-        totalSalesCount: totalSalesCount,
-        totalPendingsCount: totalPendingsCount,
-        totalBookingsAmount: totalBookingsAmount,
-        totalSalesAmount: totalSalesAmount,
-        totalPendingAmount: totalPendingAmount,
-        totalAmount: totalAmount,
-        performancePercent: performancePercent,
-      );
+    staffId: staffId,
+    staffName: staffName,
+    year: year,
+    month: month,
+    monthName: monthName,
+    totalBookingsCount: totalBookingsCount,
+    totalSalesCount: totalSalesCount,
+    totalPendingsCount: totalPendingsCount,
+    totalBookingsAmount: totalBookingsAmount,
+    totalSalesAmount: totalSalesAmount,
+    totalPendingAmount: totalPendingAmount,
+    totalAmount: totalAmount,
+    performancePercent: performancePercent,
+  );
 }

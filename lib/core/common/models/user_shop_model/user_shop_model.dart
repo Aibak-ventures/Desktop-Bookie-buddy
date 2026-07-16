@@ -1,4 +1,6 @@
 import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_web/core/common/models/tax_configuration_model/tax_configuration_model.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_shop_model.freezed.dart';
@@ -19,6 +21,12 @@ abstract class UserShopModel with _$UserShopModel {
     String? city,
     String? state,
     String? pincode,
+    @JsonKey(
+      name: 'shop_role',
+      fromJson: ShopRole.fromJson,
+      toJson: ShopRole.toJson,
+    )
+    ShopRole? shopRole,
     @JsonKey(name: 'terms_and_conditions')
     @Default(const [
       'No refund will be given after Booking cancellation.',
@@ -29,6 +37,11 @@ abstract class UserShopModel with _$UserShopModel {
       'Products should be returned on the exact return date, without any damages.',
     ])
     List<String> termsAndConditions,
+    @JsonKey(
+      name: 'tax_configuration',
+      fromJson: TaxConfigurationModel.listFromJson,
+    )
+    List<TaxConfigurationModel>? taxConfigurations,
   }) = _UserShopModel;
 
   factory UserShopModel.fromJson(Map<String, dynamic> json) =>
@@ -37,31 +50,21 @@ abstract class UserShopModel with _$UserShopModel {
 
 extension UserShopModelMapper on UserShopModel {
   UserShopEntity toEntity() => UserShopEntity(
-        id: id,
-        name: name,
-        phone: phone,
-        phone2: phone2,
-        address: address,
-        gstNumber: gstNumber,
-        image: image,
-        place: place,
-        email: email,
-        city: city,
-        state: state,
-        pincode: pincode,
-        termsAndConditions: termsAndConditions,
-      );
-}
-
-extension UserShopModelX on UserShopModel {
-  String get fullAddress {
-    final parts = <String>[
-      address, // street
-      if (place != null && place!.trim().isNotEmpty) place!.trim(),
-      if (city != null && city!.trim().isNotEmpty) city!.trim(),
-      if (state != null && state!.trim().isNotEmpty) state!.trim(),
-      if (pincode != null && pincode!.trim().isNotEmpty) pincode!.trim(),
-    ];
-    return parts.join(', ');
-  }
+    id: id,
+    name: name,
+    phone: phone,
+    phone2: phone2,
+    address: address,
+    gstNumber: gstNumber,
+    image: image,
+    place: place,
+    email: email,
+    city: city,
+    state: state,
+    pincode: pincode,
+    shopRole: shopRole ?? ShopRole.staff,
+    termsAndConditions: termsAndConditions,
+    taxConfigurations:
+        taxConfigurations?.map((e) => e.toEntity()).toList() ?? [],
+  );
 }
