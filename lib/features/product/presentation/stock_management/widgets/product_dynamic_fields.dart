@@ -323,9 +323,7 @@ class ProductDynamicFields extends StatelessWidget {
     } else {
       // DEFAULT (Vehicles, Gadgets, Equipment, etc.)
       commonFields.addAll([
-        // Gadgets manage stock through individual serial-number variants, so the
-        // single quantity field is hidden for them.
-        if (!mainServiceType.isGadget)
+        if (mainServiceType.showQuantityInDynamicFields)
           SizedBox(
             width: 280,
             child: CustomTextField(

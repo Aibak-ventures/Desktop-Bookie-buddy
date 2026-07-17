@@ -431,8 +431,6 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
               if (form.currentServiceType == MainServiceType.dress ||
                   form.currentServiceType == MainServiceType.costume) {
                 searchType = 'size';
-              } else if (form.currentServiceType == MainServiceType.gadgets) {
-                searchType = 'serial_number';
               } else {
                 searchType = 'variant';
               }

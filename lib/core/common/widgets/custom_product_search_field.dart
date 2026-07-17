@@ -53,14 +53,11 @@ class _CustomProductSearchFieldState extends State<CustomProductSearchField> {
 
     // Determine the third field mapping:
     // - Dress/Costume: Show "Size" display → map to "size" API field
-    // - Gadget: Show "Serial Number" display → map to "model" API field
     // - Vehicle: Show "Brand" display → map to "category" API field
     // - Others: Show "Category" display → map to "category" API field
     String thirdFieldApiName;
     if (widget.mainServiceType.isDressType) {
       thirdFieldApiName = 'size';
-    } else if (widget.mainServiceType.isGadget) {
-      thirdFieldApiName = 'model'; // Serial numbers are stored in model field
     } else {
       thirdFieldApiName = 'category'; // Brand for vehicles, Category for others
     }
@@ -72,12 +69,9 @@ class _CustomProductSearchFieldState extends State<CustomProductSearchField> {
       'Name',
       widget.mainServiceType.secondaryAttributeLabel ?? 'Color',
       widget.mainServiceType.isMultiVariantProductType
-          ? widget
-                .mainServiceType
-                .variantAttributeLabel // "Size" for dress, "Serial Number" for gadget
-          : widget
-                .mainServiceType
-                .categoryFieldLabel, // "Brand" for vehicle, "Category" for others
+          ? widget.mainServiceType.variantAttributeLabel // "Size" for dress
+          : widget.mainServiceType
+              .categoryFieldLabel, // "Brand" for vehicle, "Category" for others
       'Model',
     ];
   }

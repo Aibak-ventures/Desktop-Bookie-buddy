@@ -22,8 +22,6 @@ class BookingSearchRules {
           if (serviceType == MainServiceType.dress ||
               serviceType == MainServiceType.costume) {
             return 'size';
-          } else if (serviceType == MainServiceType.gadgets) {
-            return 'serial_number';
           } else {
             return 'variant';
           }

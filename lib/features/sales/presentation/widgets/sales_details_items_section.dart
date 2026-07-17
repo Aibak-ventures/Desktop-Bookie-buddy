@@ -122,25 +122,6 @@ class SalesDetailsItemsSection extends StatelessWidget {
                               ),
                             ),
                         ] else if (item.mainServiceType ==
-                            MainServiceType.gadgets) ...[
-                          if (item.variantAttribute != null &&
-                              item.variantAttribute!.isNotEmpty)
-                            Text(
-                              'Serial Number : ${item.variantAttribute}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                          if (item.color != null && item.color!.isNotEmpty)
-                            Text(
-                              'Colour : ${item.color}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                        ] else if (item.mainServiceType ==
                             MainServiceType.equipment) ...[
                           if (item.category != null &&
                               item.category!.isNotEmpty)

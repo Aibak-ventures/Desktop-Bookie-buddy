@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 /// the secure-action and cubit calls.
 class ProductDetailsLeftPanel extends StatelessWidget {
   final ProductEntity product;
+  final MainServiceType? mainServiceType;
   final void Function(ProductVariantEntity variant) onEditVariant;
   final VoidCallback onAddVariant;
 
@@ -22,6 +23,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
     required this.product,
     required this.onEditVariant,
     required this.onAddVariant,
+    required this.mainServiceType,
   });
 
   @override
@@ -158,9 +160,8 @@ class ProductDetailsLeftPanel extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Variants section
-            if (product.variants.length > 1 ||
-                (product.variants.length == 1 &&
-                    product.variants.first.attribute != product.name))
+            if (mainServiceType.isMultiVariantProductType &&
+                product.variants.length > 0)
               ..._buildVariantsSection(),
 
             // Single-variant stock count
@@ -395,7 +396,6 @@ class ProductDetailsLeftPanel extends StatelessWidget {
   }
 
   List<Widget> _buildVariantsSection() {
-    final isGadget = product.mainServiceType?.isGadget == true;
     final displayVariants = product.variants
         .where(
           (v) =>
@@ -406,7 +406,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
 
     if (displayVariants.isEmpty) return [];
 
-    final sectionTitle = isGadget ? 'Serial Numbers' : 'Available Variants';
+    final sectionTitle = 'Available Variants';
 
     return [
       Text(
@@ -420,7 +420,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
       const SizedBox(height: 12),
       _HorizontalMouseScrollView(
         builder: (controller, isHovered) => SizedBox(
-          height: isGadget ? 90 : 76,
+          height: 76,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -457,9 +457,8 @@ class ProductDetailsLeftPanel extends StatelessWidget {
   }
 
   Widget _variantCard(ProductVariantEntity variant) {
-    final isGadget = product.mainServiceType?.isGadget == true;
-    final cardWidth = isGadget ? 200.0 : 102.0;
-    final cardMinHeight = isGadget ? 72.0 : 58.0;
+    final cardWidth = 102.0;
+    final cardMinHeight = 58.0;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -481,7 +480,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
               Text(
                 variant.attribute,
                 textAlign: TextAlign.center,
-                maxLines: isGadget ? 3 : 2,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Color(0xFF171717),

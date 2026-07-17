@@ -95,7 +95,7 @@ class BookingDetailsItemsSection extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 4),
-                            if (item.variantAttribute != null)
+                            if (item.mainServiceType.isMultiVariantProductType)
                               Text(
                                 '$specsLabel : ${item.variantAttribute}',
                                 style: TextStyle(

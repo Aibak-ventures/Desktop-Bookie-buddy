@@ -98,7 +98,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
     super.initState();
 
     // For non-multi-variant products, auto-select the first variant
-    // For multi-variant products (dress, costume, gadgets), user must explicitly select
+    // For multi-variant products (dress, costume), user must explicitly select
     if (!widget.product.mainServiceType.isMultiVariantProductType &&
         widget.product.variants.isNotEmpty) {
       selectedVariant = widget.product.variants.first;

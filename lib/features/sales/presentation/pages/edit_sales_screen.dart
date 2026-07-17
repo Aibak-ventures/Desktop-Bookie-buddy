@@ -540,8 +540,6 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         if (_currentServiceType == MainServiceType.dress ||
             _currentServiceType == MainServiceType.costume) {
           searchType = 'size';
-        } else if (_currentServiceType == MainServiceType.gadgets) {
-          searchType = 'serial_number';
         } else {
           searchType = 'variant';
         }

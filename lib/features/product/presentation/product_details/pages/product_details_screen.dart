@@ -197,6 +197,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                   flex: 2,
                   child: ProductDetailsLeftPanel(
                     product: product,
+                    mainServiceType: widget.mainServiceType,
                     onEditVariant: (variant) => performSecureActionDialog(
                       context,
                       SecretPasswordLocations.productEdit,
