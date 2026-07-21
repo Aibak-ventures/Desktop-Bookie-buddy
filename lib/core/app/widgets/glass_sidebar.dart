@@ -92,7 +92,7 @@ class _GlassSidebarState extends State<GlassSidebar> {
                 _navItemExpanded(1, Icons.dashboard_outlined, 'Dashboard'),
                 _navItemExpanded(2, Icons.list_alt, 'Orders'),
                 _navItemExpanded(3, Icons.bar_chart_outlined, 'Stocks'),
-                _navItemExpanded(4, Icons.settings_outlined, 'Settings'),
+                // _navItemExpanded(4, Icons.settings_outlined, 'Settings'), //Currently not using 
               ],
             ),
           ),
