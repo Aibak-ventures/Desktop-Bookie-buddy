@@ -5,10 +5,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'client_model.freezed.dart';
 part 'client_model.g.dart';
 
-String _readName(Map json, String key) =>
+dynamic _readName(Map json, String key) =>
     json[key] ?? json['client_name'] ?? 'Unknown';
 
-int _readPhone1(Map json, String key) {
+dynamic _readPhone1(Map json, String key) {
   final phone1E164 = json['phone_1_e164'] as String?;
   if (phone1E164 != null && phone1E164.isNotEmpty) {
     final extracted = extractPhoneFromE164(phone1E164);
@@ -19,7 +19,7 @@ int _readPhone1(Map json, String key) {
   return json[key] ?? json['client_phone_1'] ?? 0;
 }
 
-int? _readPhone2(Map json, String key) {
+dynamic _readPhone2(Map json, String key) {
   final phone2E164 = json['phone_2_e164'] as String?;
   if (phone2E164 != null && phone2E164.isNotEmpty) {
     final extracted = extractPhoneFromE164(phone2E164);
@@ -30,9 +30,9 @@ int? _readPhone2(Map json, String key) {
   return json[key] ?? json['client_phone_2'];
 }
 
-String? _readPhone1E164(Map json, String key) => json[key];
+dynamic _readPhone1E164(Map json, String key) => json[key];
 
-String? _readPhone2E164(Map json, String key) => json[key];
+dynamic _readPhone2E164(Map json, String key) => json[key];
 
 @freezed
 abstract class ClientModel with _$ClientModel {

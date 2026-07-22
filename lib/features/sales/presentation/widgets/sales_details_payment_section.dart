@@ -1,4 +1,7 @@
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Payment details section for [SalesDetailsDrawer].
@@ -13,6 +16,8 @@ class SalesDetailsPaymentSection extends StatelessWidget {
       0,
       (sum, item) => sum + item.subtotal,
     );
+    final appliedTaxes = sale.appliedTaxes.appliedOnly;
+    final totalTaxAmount = appliedTaxes.totalTaxAmount;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -67,6 +72,10 @@ class SalesDetailsPaymentSection extends StatelessWidget {
             const SizedBox(height: 8),
           ],
           const Divider(height: 24),
+          if (totalTaxAmount > 0) ...[
+            _buildTaxRow(appliedTaxes, totalTaxAmount),
+            const SizedBox(height: 8),
+          ],
           _buildPaymentRow(
             'Grand Total',
             '₹${sale.paidAmount}',
@@ -75,6 +84,35 @@ class SalesDetailsPaymentSection extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTaxRow(List<AppliedTaxEntity> appliedTaxes, int totalTaxAmount) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            const Text(
+              'Tax amount',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.black87,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TaxAllInfoButton(taxes: appliedTaxes),
+          ],
+        ),
+        Text(
+          totalTaxAmount.toCurrency(),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 

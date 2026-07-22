@@ -11,6 +11,7 @@ part of 'sale_model.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$SaleModel {
 
@@ -24,6 +25,8 @@ mixin _$SaleModel {
 @pragma('vm:prefer-inline')
 $SaleModelCopyWith<SaleModel> get copyWith => _$SaleModelCopyWithImpl<SaleModel>(this as SaleModel, _$identity);
 
+  /// Serializes this SaleModel to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +34,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopSaleId, shopSaleId) || other.shopSaleId == shopSaleId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.staffName, staffName) || other.staffName == staffName));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,shopSaleId,clientName,const DeepCollectionEquality().hash(clientPhone),totalAmount,paidAmount,discountAmount,saleDate,createdAt,products,staffColor,staffName);
 
@@ -221,7 +224,7 @@ return $default(_that.id,_that.shopSaleId,_that.clientName,_that.clientPhone,_th
 @JsonSerializable(explicitToJson: true)
 class _SaleModel implements SaleModel {
   const _SaleModel({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'shop_sale_id') this.shopSaleId, @JsonKey(name: 'client_name') this.clientName, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'total_amount') required this.totalAmount, @JsonKey(name: 'paid_amount') required this.paidAmount, @JsonKey(name: 'discount') required this.discountAmount, @JsonKey(name: 'sale_date') required this.saleDate, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'products') required this.products, @JsonKey(name: 'staff_color', unknownEnumValue: null) this.staffColor, @JsonKey(name: 'staff_name') this.staffName});
-  
+  factory _SaleModel.fromJson(Map<String, dynamic> json) => _$SaleModelFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
 @override@JsonKey(name: 'shop_sale_id') final  String? shopSaleId;
@@ -245,14 +248,17 @@ class _SaleModel implements SaleModel {
 @pragma('vm:prefer-inline')
 _$SaleModelCopyWith<_SaleModel> get copyWith => __$SaleModelCopyWithImpl<_SaleModel>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$SaleModelToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopSaleId, shopSaleId) || other.shopSaleId == shopSaleId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.staffName, staffName) || other.staffName == staffName));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,id,shopSaleId,clientName,const DeepCollectionEquality().hash(clientPhone),totalAmount,paidAmount,discountAmount,saleDate,createdAt,products,staffColor,staffName);
 

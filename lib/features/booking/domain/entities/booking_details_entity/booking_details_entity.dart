@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -49,6 +50,7 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     @Default(0.0) double totalRefunded,
     @Default(0.0) double refundableBalance,
     @Default(SecuritySummaryEntity.empty) SecuritySummaryEntity securitySummary,
+    @Default([]) List<AppliedTaxEntity> appliedTaxes,
   }) = _BookingDetailsEntity;
 }
 

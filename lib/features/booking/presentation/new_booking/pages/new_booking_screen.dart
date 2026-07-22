@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
@@ -117,6 +119,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final advanceAmountController = TextEditingController();
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
+  // Old booking only — a flat, already-calculated tax amount typed by the
+  // user, not computed from the shop's live tax config.
+  final taxAmountController = TextEditingController();
   AccountEntity? selectedAdvanceAccount;
   AccountEntity? selectedSecurityAccount;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
@@ -243,7 +248,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       getProducts: getIt(),
       searchAndFilterProducts: getIt(),
     );
-    _productLoader = BookingProductLoader(selectProductBloc: _selectProductBloc);
+    _productLoader = BookingProductLoader(
+      selectProductBloc: _selectProductBloc,
+    );
 
     // Add listener to client name controller to detect manual changes
     clientNameController.addListener(_onClientNameChanged);
@@ -286,24 +293,52 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
     for (final f in _overlayItemFocusNodes.values) f.dispose();
     for (final d in <ChangeNotifier>[
-      clientNameController, clientPhone1Controller, clientPhone2Controller,
-      clientAddressController, startLocationController, pickupLocationController,
-      destinationLocationController, staffNameController, advanceAmountController,
-      securityAmountController, discountAmountController, descriptionController,
-      serviceSearchController, runningKilometersController,
-      _clientNameFocusNode, _productSearchFocusNode, _pickupDateFocusNode,
-      _pickupTimeFocusNode, _returnDateFocusNode, _returnTimeFocusNode,
-      _coolingPeriodFocusNode, _clientPhone1FocusNode, _clientPhone2FocusNode,
-      _clientAddressFocusNode, _staffNameFocusNode, _notesFocusNode,
+      clientNameController,
+      clientPhone1Controller,
+      clientPhone2Controller,
+      clientAddressController,
+      startLocationController,
+      pickupLocationController,
+      destinationLocationController,
+      staffNameController,
+      advanceAmountController,
+      securityAmountController,
+      discountAmountController,
+      taxAmountController,
+      descriptionController,
+      serviceSearchController,
+      runningKilometersController,
+      _clientNameFocusNode,
+      _productSearchFocusNode,
+      _pickupDateFocusNode,
+      _pickupTimeFocusNode,
+      _returnDateFocusNode,
+      _returnTimeFocusNode,
+      _coolingPeriodFocusNode,
+      _clientPhone1FocusNode,
+      _clientPhone2FocusNode,
+      _clientAddressFocusNode,
+      _staffNameFocusNode,
+      _notesFocusNode,
       _continueButtonFocusNode,
-      _advanceAmountFocusNode, _securityAmountFocusNode, _discountAmountFocusNode,
+      _advanceAmountFocusNode,
+      _securityAmountFocusNode,
+      _discountAmountFocusNode,
       _confirmStepButtonFocusNode,
-      selectedProductsNotifier, additionalChargesNotifier, documentsNotifier,
-      _selectedSearchTypeIndex, _priceRange, _maxPriceNotifier,
-      _isPriceFilterEnabled, _overlayProducts, _overlayIsLoading,
-      _discountTypeNotifier, _searchResultsScrollController,
+      selectedProductsNotifier,
+      additionalChargesNotifier,
+      documentsNotifier,
+      _selectedSearchTypeIndex,
+      _priceRange,
+      _maxPriceNotifier,
+      _isPriceFilterEnabled,
+      _overlayProducts,
+      _overlayIsLoading,
+      _discountTypeNotifier,
+      _searchResultsScrollController,
       _focusOnProductQuantityKey,
-    ]) d.dispose();
+    ])
+      d.dispose();
     _clientPhone1FieldController.dispose();
     _clientPhone2FieldController.dispose();
     _selectProductBloc.close();
@@ -318,9 +353,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   bool hasUnsavedChanges() {
     final anyText = [
-      clientNameController, clientPhone1Controller, clientPhone2Controller,
-      clientAddressController, advanceAmountController, securityAmountController,
-      discountAmountController, descriptionController, runningKilometersController,
+      clientNameController,
+      clientPhone1Controller,
+      clientPhone2Controller,
+      clientAddressController,
+      advanceAmountController,
+      securityAmountController,
+      discountAmountController,
+      taxAmountController,
+      descriptionController,
+      runningKilometersController,
     ].any((c) => c.text.trim().isNotEmpty);
     return _manualExtraRentalDays > 0 ||
         anyText ||
@@ -375,6 +417,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     advanceAmountController.clear();
     securityAmountController.clear();
     discountAmountController.clear();
+    taxAmountController.clear();
     descriptionController.clear();
     selectedProductsNotifier.value = [];
     additionalChargesNotifier.value = [];
@@ -501,8 +544,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     }
   }
 
-
-
   int _calculateRentalDays() => PaymentCalculator.calculateRentalDays(
     pickupDate: pickupDate,
     returnDate: returnDate,
@@ -536,7 +577,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   }
 
   int _calculateBookingTotalPayable() {
-    final discountInput = discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final discountInput =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
     return PaymentCalculator.calculateBookingTotalPayable(
       selectedProducts: selectedProductsNotifier.value,
       additionalCharges: additionalChargesNotifier.value,
@@ -555,7 +597,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       effectiveRentalDays: _getEffectiveRentalDays(),
     );
   }
-
 
   void _loadProductsForService(int? serviceId) {
     _productLoader.load(
@@ -608,43 +649,42 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       child: BlocListener<AddBookingCubit, AddBookingState>(
         listener: _handleAddBookingState,
         child: PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) return;
-        await _handleBackNavigation();
-      },
-      child: Container(
-        color: const Color(0xFFF5F6FA),
-        height: screenHeight,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // New app bar with tabs and shop selector
-              NewBookingAppBar(
-                selectedTab: selectedBookingType.toTabType(),
-                onTabChanged: (tabType) {
-                  _handleTabSwitch(tabType.toBookingType());
-                },
-                onBack: _handleBackNavigation,
-                showSalesTab: _hasSalesFeature,
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) async {
+            if (didPop) return;
+            await _handleBackNavigation();
+          },
+          child: Container(
+            color: const Color(0xFFF5F6FA),
+            height: screenHeight,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  // New app bar with tabs and shop selector
+                  NewBookingAppBar(
+                    selectedTab: selectedBookingType.toTabType(),
+                    onTabChanged: (tabType) {
+                      _handleTabSwitch(tabType.toBookingType());
+                    },
+                    onBack: _handleBackNavigation,
+                    showSalesTab: _hasSalesFeature,
+                  ),
+                  // Main content - no scrolling
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: _buildMainContent(),
+                    ),
+                  ),
+                ],
               ),
-              // Main content - no scrolling
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: _buildMainContent(),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
         ),
       ),
     );
   }
-
 
   Widget _buildMainContent() {
     if (selectedBookingType == BookingType.customWork) {
@@ -661,8 +701,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         clientPhone2Controller: clientPhone2Controller,
         clientAddressController: clientAddressController,
         descriptionController: descriptionController,
+        discountController: discountAmountController,
+        taxController: taxAmountController,
         selectedAdvanceAccount: selectedAdvanceAccount,
-        onAdvanceAccountChanged: (account) => rebuild(() => selectedAdvanceAccount = account),
+        onAdvanceAccountChanged: (account) =>
+            rebuild(() => selectedAdvanceAccount = account),
         selectedProductsNotifier: selectedProductsNotifier,
         clientNameError: _clientNameError,
         onClientIdChanged: (id) => setState(() => selectedClientId = id),
@@ -712,6 +755,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       returnDate: returnDate,
       description: _buildDescriptionWithPaymentSummary(),
       advanceAccountId: selectedAdvanceAccount?.id,
+      discountAmount: discountAmountController.text.trim().toIntOrNull(),
+      taxAmount: taxAmountController.text.trim().toIntOrNull(),
     );
   }
 
@@ -796,6 +841,18 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   bool _shouldMultiplyByDays(MainServiceType? serviceType) =>
       PaymentCalculator.shouldMultiplyByDays(serviceType);
 
+  TaxSummaryEntity _calculateTaxSummary({
+    double productTotal = 0,
+    double additionalCharges = 0,
+    double securityAmount = 0,
+    double discountAmount = 0,
+  }) => context.read<UserCubit>().state!.shopDetails.calculateTaxSummary(
+    productTotal: productTotal,
+    additionalCharges: additionalCharges,
+    securityAmount: securityAmount,
+    discountAmount: discountAmount,
+  );
+
   Widget _buildSummarySection() {
     return BookingSummarySection(
       selectedProductsNotifier: selectedProductsNotifier,
@@ -807,6 +864,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _getEffectiveRentalDays,
+      calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Advance',
       onShowCustomization: () => setState(() => showCustomization = true),
       onConfirm: _handleConfirmBooking,
@@ -823,20 +881,20 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     Color? valueColor,
     bool isBold = false,
     bool isNegative = false,
-  }) =>
-      SummaryAmountRow(
-        label,
-        amount,
-        valueColor: valueColor,
-        isBold: isBold,
-        isNegative: isNegative,
-      );
+  }) => SummaryAmountRow(
+    label,
+    amount,
+    valueColor: valueColor,
+    isBold: isBold,
+    isNegative: isNegative,
+  );
 
   // Actions
 
-  void _addAdditionalCharge() =>
-      AdditionalChargesManager.showAddChargeDialog(
-          context, additionalChargesNotifier);
+  void _addAdditionalCharge() => AdditionalChargesManager.showAddChargeDialog(
+    context,
+    additionalChargesNotifier,
+  );
 
   void _removeCharge(AdditionalChargesEntity charge) =>
       AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
@@ -849,7 +907,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     final products = selectedProductsNotifier.value;
 
-    final productResult = BookingFormValidator.validateProductSelection(products);
+    final productResult = BookingFormValidator.validateProductSelection(
+      products,
+    );
     if (!productResult.isValid) {
       context.showSnackBar(productResult.errors.first, isError: true);
       return;
@@ -896,8 +956,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         type == BookingType.oldBooking
             ? 'Old booking saved successfully!'
             : type == BookingType.sales
-                ? 'Sale created successfully!'
-                : 'Booking created successfully!',
+            ? 'Sale created successfully!'
+            : 'Booking created successfully!',
       );
       _closeScreen();
     }

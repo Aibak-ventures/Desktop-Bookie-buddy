@@ -29,6 +29,9 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       accountName: _readAccountName(json, 'account_name') as String?,
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
+      appliedTaxes: json['tax'] == null
+          ? const []
+          : AppliedTaxModel.listFromJson(json['tax']),
     );
 
 Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
@@ -50,6 +53,7 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
       'account_name': instance.accountName,
       'staff_id': instance.staffId,
       'staff_name': instance.staffName,
+      'tax': instance.appliedTaxes,
     };
 
 _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(

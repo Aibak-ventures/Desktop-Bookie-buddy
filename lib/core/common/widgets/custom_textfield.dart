@@ -39,7 +39,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final bool readOnly;
-
+  final String? suffixText;
   final TextAlign textAlign;
   final String? errorText;
   final Iterable<String>? autofillHints;
@@ -80,6 +80,7 @@ class CustomTextField extends StatelessWidget {
     this.autofillHints,
     this.isDense = false,
     this.contentPadding,
+    this.suffixText,
   });
 
   @override
@@ -145,6 +146,7 @@ class CustomTextField extends StatelessWidget {
         counterText: '',
         labelText: label,
         hintText: hintText,
+        suffixText: suffixText,
         alignLabelWithHint: true,
         prefix: prefix,
         prefixIcon: prefixIcon,

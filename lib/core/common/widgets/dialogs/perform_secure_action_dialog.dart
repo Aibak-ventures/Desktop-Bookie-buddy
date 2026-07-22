@@ -2,12 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
-    hide UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart' hide ShopRole;
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
@@ -42,7 +41,8 @@ Future<void> performSecureActionDialog(
   SecretPasswordLocations location, {
   required VoidCallback? onSuccess,
 }) async {
-  final shopRole = context.read<UserCubit>().state?.shopRole ?? ShopRole.staff;
+  final shopRole =
+      context.read<UserCubit>().state?.shopDetails.shopRole ?? ShopRole.staff;
   final passwordSetting = context
       .read<UserCubit>()
       .state

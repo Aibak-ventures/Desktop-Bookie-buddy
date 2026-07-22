@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -135,8 +135,8 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                       color: transaction.isRefund
                           ? Colors
                                 .transparent // No background for refunds
-                          : AppColors.purple.withValues(alpha: 
-                              0.05,
+                          : AppColors.purple.withValues(
+                              alpha: 0.05,
                             ), // Light purple for payments
                     ),
                     child: Row(

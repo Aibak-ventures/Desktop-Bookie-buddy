@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserShopModel {
 
- int get id; String get name; String get phone; String? get phone2; String get address;@JsonKey(name: 'gst_number') String? get gstNumber; String? get image; String? get place; String? get email; String? get city; String? get state; String? get pincode;@JsonKey(name: 'terms_and_conditions') List<String> get termsAndConditions;
+ int get id; String get name; String get phone; String? get phone2; String get address;@JsonKey(name: 'gst_number') String? get gstNumber; String? get image; String? get place; String? get email; String? get city; String? get state; String? get pincode;@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) ShopRole? get shopRole;@JsonKey(name: 'terms_and_conditions') List<String> get termsAndConditions;@JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) List<TaxConfigurationModel>? get taxConfigurations;
 /// Create a copy of UserShopModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserShopModelCopyWith<UserShopModel> get copyWith => _$UserShopModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&const DeepCollectionEquality().equals(other.termsAndConditions, termsAndConditions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other.termsAndConditions, termsAndConditions)&&const DeepCollectionEquality().equals(other.taxConfigurations, taxConfigurations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,const DeepCollectionEquality().hash(termsAndConditions));
+int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(termsAndConditions),const DeepCollectionEquality().hash(taxConfigurations));
 
 @override
 String toString() {
-  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, termsAndConditions: $termsAndConditions)';
+  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserShopModelCopyWith<$Res>  {
   factory $UserShopModelCopyWith(UserShopModel value, $Res Function(UserShopModel) _then) = _$UserShopModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String phone, String? phone2, String address,@JsonKey(name: 'gst_number') String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode,@JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions
+ int id, String name, String phone, String? phone2, String address,@JsonKey(name: 'gst_number') String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode,@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) ShopRole? shopRole,@JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions,@JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) List<TaxConfigurationModel>? taxConfigurations
 });
 
 
@@ -65,7 +65,7 @@ class _$UserShopModelCopyWithImpl<$Res>
 
 /// Create a copy of UserShopModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? termsAndConditions = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? shopRole = freezed,Object? termsAndConditions = null,Object? taxConfigurations = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -79,8 +79,10 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
-as String?,termsAndConditions: null == termsAndConditions ? _self.termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as String?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
+as ShopRole?,termsAndConditions: null == termsAndConditions ? _self.termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
+as List<String>,taxConfigurations: freezed == taxConfigurations ? _self.taxConfigurations : taxConfigurations // ignore: cast_nullable_to_non_nullable
+as List<TaxConfigurationModel>?,
   ));
 }
 
@@ -165,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson)  ShopRole? shopRole, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions, @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson)  List<TaxConfigurationModel>? taxConfigurations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserShopModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   return orElse();
 
 }
@@ -186,10 +188,10 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson)  ShopRole? shopRole, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions, @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson)  List<TaxConfigurationModel>? taxConfigurations)  $default,) {final _that = this;
 switch (_that) {
 case _UserShopModel():
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +208,10 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String phone,  String? phone2,  String address, @JsonKey(name: 'gst_number')  String? gstNumber,  String? image,  String? place,  String? email,  String? city,  String? state,  String? pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson)  ShopRole? shopRole, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions, @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson)  List<TaxConfigurationModel>? taxConfigurations)?  $default,) {final _that = this;
 switch (_that) {
 case _UserShopModel() when $default != null:
-return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.termsAndConditions);case _:
+return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that.gstNumber,_that.image,_that.place,_that.email,_that.city,_that.state,_that.pincode,_that.shopRole,_that.termsAndConditions,_that.taxConfigurations);case _:
   return null;
 
 }
@@ -221,7 +223,7 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 @JsonSerializable()
 
 class _UserShopModel implements UserShopModel {
-  const _UserShopModel({required this.id, required this.name, required this.phone, this.phone2, required this.address, @JsonKey(name: 'gst_number') this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, @JsonKey(name: 'terms_and_conditions') final  List<String> termsAndConditions = const ['No refund will be given after Booking cancellation.', 'Any damages must be paid by the customer', 'Confirm your Pickup and return dates properly.', 'Make sure all your needs are clear before booking.', 'Security deposit (if applicable) will be refunded after return.', 'Products should be returned on the exact return date, without any damages.']}): _termsAndConditions = termsAndConditions;
+  const _UserShopModel({required this.id, required this.name, required this.phone, this.phone2, required this.address, @JsonKey(name: 'gst_number') this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) this.shopRole, @JsonKey(name: 'terms_and_conditions') final  List<String> termsAndConditions = const ['No refund will be given after Booking cancellation.', 'Any damages must be paid by the customer', 'Confirm your Pickup and return dates properly.', 'Make sure all your needs are clear before booking.', 'Security deposit (if applicable) will be refunded after return.', 'Products should be returned on the exact return date, without any damages.'], @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) final  List<TaxConfigurationModel>? taxConfigurations}): _termsAndConditions = termsAndConditions,_taxConfigurations = taxConfigurations;
   factory _UserShopModel.fromJson(Map<String, dynamic> json) => _$UserShopModelFromJson(json);
 
 @override final  int id;
@@ -236,11 +238,21 @@ class _UserShopModel implements UserShopModel {
 @override final  String? city;
 @override final  String? state;
 @override final  String? pincode;
+@override@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) final  ShopRole? shopRole;
  final  List<String> _termsAndConditions;
 @override@JsonKey(name: 'terms_and_conditions') List<String> get termsAndConditions {
   if (_termsAndConditions is EqualUnmodifiableListView) return _termsAndConditions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_termsAndConditions);
+}
+
+ final  List<TaxConfigurationModel>? _taxConfigurations;
+@override@JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) List<TaxConfigurationModel>? get taxConfigurations {
+  final value = _taxConfigurations;
+  if (value == null) return null;
+  if (_taxConfigurations is EqualUnmodifiableListView) return _taxConfigurations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
 
@@ -257,16 +269,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&const DeepCollectionEquality().equals(other._termsAndConditions, _termsAndConditions));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other._termsAndConditions, _termsAndConditions)&&const DeepCollectionEquality().equals(other._taxConfigurations, _taxConfigurations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,const DeepCollectionEquality().hash(_termsAndConditions));
+int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(_termsAndConditions),const DeepCollectionEquality().hash(_taxConfigurations));
 
 @override
 String toString() {
-  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, termsAndConditions: $termsAndConditions)';
+  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
 }
 
 
@@ -277,7 +289,7 @@ abstract mixin class _$UserShopModelCopyWith<$Res> implements $UserShopModelCopy
   factory _$UserShopModelCopyWith(_UserShopModel value, $Res Function(_UserShopModel) _then) = __$UserShopModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String phone, String? phone2, String address,@JsonKey(name: 'gst_number') String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode,@JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions
+ int id, String name, String phone, String? phone2, String address,@JsonKey(name: 'gst_number') String? gstNumber, String? image, String? place, String? email, String? city, String? state, String? pincode,@JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) ShopRole? shopRole,@JsonKey(name: 'terms_and_conditions') List<String> termsAndConditions,@JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) List<TaxConfigurationModel>? taxConfigurations
 });
 
 
@@ -294,7 +306,7 @@ class __$UserShopModelCopyWithImpl<$Res>
 
 /// Create a copy of UserShopModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? termsAndConditions = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? shopRole = freezed,Object? termsAndConditions = null,Object? taxConfigurations = freezed,}) {
   return _then(_UserShopModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -308,8 +320,10 @@ as String?,email: freezed == email ? _self.email : email // ignore: cast_nullabl
 as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
 as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
-as String?,termsAndConditions: null == termsAndConditions ? _self._termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as String?,shopRole: freezed == shopRole ? _self.shopRole : shopRole // ignore: cast_nullable_to_non_nullable
+as ShopRole?,termsAndConditions: null == termsAndConditions ? _self._termsAndConditions : termsAndConditions // ignore: cast_nullable_to_non_nullable
+as List<String>,taxConfigurations: freezed == taxConfigurations ? _self._taxConfigurations : taxConfigurations // ignore: cast_nullable_to_non_nullable
+as List<TaxConfigurationModel>?,
   ));
 }
 

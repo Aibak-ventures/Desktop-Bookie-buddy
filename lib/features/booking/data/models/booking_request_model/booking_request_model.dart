@@ -75,6 +75,8 @@ abstract class BookingRequestModel with _$BookingRequestModel {
 
     // Use this field when creating old booking with account id.
     @JsonKey(name: 'account_id') int? oldBookingAccountId,
+    // Only use this field when creating an old booking.
+    @JsonKey(name: 'tax_amount') int? taxAmount,
   }) = _BookingRequestModel;
 
   factory BookingRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -114,6 +116,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
             ?.map((e) => BookingPaymentRequestModel.fromEntity(e))
             .toList(),
         oldBookingAccountId: entity.oldBookingAccountId,
+        taxAmount: entity.taxAmount,
       );
 }
 

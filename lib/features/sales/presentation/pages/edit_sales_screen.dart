@@ -505,6 +505,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                   formController: _formController,
                   totalAmountListener: _totalAmountListener,
                   onSave: _handleUpdateSale,
+                  saleDetails: widget.saleDetails,
                 ),
               ],
             ),

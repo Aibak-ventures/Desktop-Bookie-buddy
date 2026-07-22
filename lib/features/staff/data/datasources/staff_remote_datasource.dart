@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_request_model/staff_request_model.dart';
 import 'package:dio/dio.dart';

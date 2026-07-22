@@ -1,35 +1,31 @@
+import 'package:bookie_buddy_web/core/common/models/user_feature_details_model/user_feature_details_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart'
-    show SecretPasswordLocations, UserPasswordSettingRole;
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart'
-    hide UserPasswordSettingRole;
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/shop_settings_model/shop_settings_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
+import 'package:bookie_buddy_web/core/constants/enums/subscription_status_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
-List<UserPasswordSettingsModel> _passwordSettingsFromJson(
-  Map<dynamic, dynamic> json,
-) {
-  final List<UserPasswordSettingsModel> settings = [];
+List<UserPasswordSettingsModel> _passwordSettingsFromJson(List<dynamic> json) {
+  final List<UserPasswordSettingsModel> passwordSettings = [];
   if (json.isEmpty) {
-    return settings;
+    return passwordSettings;
   }
 
-  json.forEach((key, value) {
-    final location = SecretPasswordLocations.fromString(key);
-    if (location == null) return; // Skip unknown locations
-    settings.add(
-      UserPasswordSettingsModel(
-        location: location,
-        role: UserPasswordSettingRole.fromString(value),
-      ),
+  for (final s in json) {
+    final settings = UserPasswordSettingsModel.fromJson(
+      s as Map<String, dynamic>,
     );
-  });
-  return settings;
+    if (settings.location == null) continue; // Skip unknown locations
+    passwordSettings.add(settings);
+  }
+
+  return passwordSettings;
 }
 
 @freezed
@@ -39,8 +35,7 @@ abstract class UserModel with _$UserModel {
     @JsonKey(name: 'full_name') required String firstName,
     @JsonKey(name: 'last_name', defaultValue: '') required String lastName,
     required String phone,
-    @JsonKey(name: 'role', fromJson: ShopRole.fromJson) ShopRole? role,
-    @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson) ShopRole? shopRole,
+    @JsonKey(defaultValue: '') required String email,
     @JsonKey(defaultValue: false) required bool block,
     @JsonKey(name: 'multiple_shops', defaultValue: false)
     required bool haveMultipleShops,
@@ -57,28 +52,19 @@ abstract class UserModel with _$UserModel {
       _$UserModelFromJson(json);
 }
 
-extension UserModelX on UserModel {
-  String get userFullName => '$firstName $lastName'.trim();
-
-  /// Check if user has a specific premium feature
-  bool hasFeature(AppPremiumFeatures feature) {
-    return subscription?.features.contains(feature.name.toUpperCase()) ?? false;
-  }
-}
-
 @freezed
 abstract class UserSubscriptionModel with _$UserSubscriptionModel {
   const factory UserSubscriptionModel({
     required String plan,
-    required String status,
-    @JsonKey(name: 'expiry_date', defaultValue: '') required String expiryDate,
     @JsonKey(
-      name: 'features',
-      defaultValue: const {},
-      fromJson: AppPremiumFeatures.fromList,
-      toJson: AppPremiumFeatures.toJsonList,
+      name: 'status',
+      fromJson: SubscriptionStatus.fromJson,
+      toJson: SubscriptionStatus.toJson,
     )
-    required Set<AppPremiumFeatures> features,
+    required SubscriptionStatus status,
+    @JsonKey(name: 'expiry_date', defaultValue: '') required String expiryDate,
+    @JsonKey(name: 'days_remaining', defaultValue: 0)
+    required int daysRemaining,
     @JsonKey(
       name: 'user_features',
       defaultValue: const {},
@@ -86,6 +72,8 @@ abstract class UserSubscriptionModel with _$UserSubscriptionModel {
       toJson: AppPremiumFeatures.toJsonList,
     )
     required Set<AppPremiumFeatures> userSpecificFeatures,
+    @JsonKey(name: 'features_details', defaultValue: const [])
+    required List<UserFeatureDetailsModel> userFeatureDetails,
   }) = _UserSubscriptionModel;
 
   factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) =>
@@ -95,8 +83,19 @@ abstract class UserSubscriptionModel with _$UserSubscriptionModel {
 @freezed
 abstract class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
   const factory UserPasswordSettingsModel({
-    required SecretPasswordLocations location,
+    @JsonKey(
+      name: 'setting_name',
+      fromJson: SecretPasswordLocations.fromString,
+      toJson: SecretPasswordLocations.toJson,
+    )
+    SecretPasswordLocations? location,
+    @JsonKey(
+      name: 'requires_password_for',
+      fromJson: UserPasswordSettingRole.fromString,
+      toJson: UserPasswordSettingRole.toJson,
+    )
     required UserPasswordSettingRole role,
+    @JsonKey(name: 'description') @Default('') String description,
   }) = _UserPasswordSettingsModel;
 
   factory UserPasswordSettingsModel.fromJson(Map<String, dynamic> json) =>
@@ -104,38 +103,37 @@ abstract class UserPasswordSettingsModel with _$UserPasswordSettingsModel {
 }
 
 extension UserPasswordSettingsModelMapper on UserPasswordSettingsModel {
-  UserPasswordSettingsEntity toEntity() => UserPasswordSettingsEntity(
-        location: location,
-        role: role,
-      );
+  UserPasswordSettingsEntity toEntity() =>
+      UserPasswordSettingsEntity(location: location, role: role);
 }
 
 extension UserSubscriptionModelMapper on UserSubscriptionModel {
   UserSubscriptionEntity toEntity() => UserSubscriptionEntity(
-        plan: plan,
-        status: status,
-        expiryDate: expiryDate,
-        features: features,
-        userSpecificFeatures: userSpecificFeatures,
-      );
+    plan: plan,
+    status: status,
+    expiryDate: expiryDate,
+    daysRemaining: daysRemaining,
+    features: userFeatureDetails.map((e) => e.feature).toSet(),
+    userSpecificFeatures: userSpecificFeatures,
+    userFeatureDetails: userFeatureDetails.map((e) => e.toEntity()).toList(),
+  );
 }
 
 extension UserModelMapper on UserModel {
   UserEntity toEntity() => UserEntity(
-        id: id,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        role: role,
-        shopRole: shopRole,
-        block: block,
-        haveMultipleShops: haveMultipleShops,
-        isNotificationActive: isNotificationActive,
-        subscription: subscription?.toEntity(),
-        passwordSettings: passwordSettings.map((e) => e.toEntity()).toList(),
-        shopSettings: shopSettings.toEntity(),
-        shopDetails: shopDetails.toEntity(),
-      );
+    id: id,
+    firstName: firstName,
+    lastName: lastName,
+    phone: phone,
+    email: email,
+    block: block,
+    haveMultipleShops: haveMultipleShops,
+    isNotificationActive: isNotificationActive,
+    subscription: subscription?.toEntity(),
+    passwordSettings: passwordSettings.map((e) => e.toEntity()).toList(),
+    shopSettings: shopSettings.toEntity(),
+    shopDetails: shopDetails.toEntity(),
+  );
 }
 
 extension UserPasswordSettingsModelX on List<UserPasswordSettingsModel> {
@@ -154,7 +152,11 @@ extension UserPasswordSettingsModelX on List<UserPasswordSettingsModel> {
   ///
   Map<String, dynamic> toCustomJson() {
     final Map<String, dynamic> data = {};
-    forEach((e) => data.addAll({e.location.value: e.role.value}));
+    forEach((e) {
+      if (e.location != null) {
+        data.addAll({e.location!.value: e.role.value});
+      }
+    });
     return data;
   }
 }

@@ -1,6 +1,8 @@
 ﻿
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
@@ -620,6 +622,24 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     effectiveRentalDays: _calculateRentalDays(),
   );
 
+  /// Recalculates against the booking's own frozen tax snapshot (never the
+  /// shop's current live config) so editing amounts after creation stays
+  /// accurate even if the shop's tax rules changed since.
+  TaxSummaryEntity _calculateTaxSummary({
+    double productTotal = 0,
+    double additionalCharges = 0,
+    double securityAmount = 0,
+    double discountAmount = 0,
+  }) => (_originalBooking?.appliedTaxes ??
+          widget.saleDetails?.appliedTaxes ??
+          const [])
+      .calculateTaxSummary(
+    productTotal: productTotal,
+    additionalCharges: additionalCharges,
+    securityAmount: securityAmount,
+    discountAmount: discountAmount,
+  );
+
   Widget _buildSummaryBreakdownCard() {
     return BookingAmountSummary(
       selectedProductsNotifier: selectedProductsNotifier,
@@ -631,6 +651,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
+      calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Paid',
       totalRemainingLabel: 'Balance Amount',
     );
@@ -647,6 +668,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
+      calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Paid',
       totalRemainingLabel: 'Balance Amount',
       onShowCustomization: () => setState(() => showCustomization = true),
