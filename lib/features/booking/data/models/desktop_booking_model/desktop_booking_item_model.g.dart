@@ -20,8 +20,9 @@ _DesktopBookingItemModel _$DesktopBookingItemModelFromJson(
   deliveryStatus: DeliveryStatus.fromString(json['delivery_status']),
   createdAt: json['created_at'] as String,
   bookedItems: json['booked_items'] as String,
-  advanceAmount: (json['advance_amount'] as num).toInt(),
-  remainingAmount: (json['remaining_amount'] as num).toInt(),
+  advanceAmount: (json['advance_amount'] as num?)?.toInt() ?? 0,
+  remainingAmount: (json['remaining_amount'] as num?)?.toInt() ?? 0,
+  totalAmount: (json['total_amount_after_discount'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$DesktopBookingItemModelToJson(
@@ -40,4 +41,5 @@ Map<String, dynamic> _$DesktopBookingItemModelToJson(
   'booked_items': instance.bookedItems,
   'advance_amount': instance.advanceAmount,
   'remaining_amount': instance.remainingAmount,
+  'total_amount_after_discount': instance.totalAmount,
 };

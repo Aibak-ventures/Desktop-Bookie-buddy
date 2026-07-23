@@ -79,6 +79,9 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
         ),
   securityAccountName: json['security_account_name'] as String?,
   securityAccountId: (json['security_account_id'] as num?)?.toInt(),
+  appliedTaxes: json['tax'] == null
+      ? const []
+      : AppliedTaxModel.listFromJson(json['tax']),
 );
 
 Map<String, dynamic> _$BookingDetailsModelToJson(
@@ -120,6 +123,7 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'security_summary': instance.securitySummary,
   'security_account_name': instance.securityAccountName,
   'security_account_id': instance.securityAccountId,
+  'tax': instance.appliedTaxes,
 };
 
 const _$PurchaseModeEnumMap = {

@@ -348,8 +348,18 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   ? ((productTotal + additionalTotal) * discountInput / 100)
                         .round()
                   : discountInput;
+              final taxSummary = _calculateTaxSummary(
+                productTotal: productTotal.toDouble(),
+                additionalCharges: additionalTotal.toDouble(),
+                discountAmount: actualDiscount.toDouble(),
+              );
+              final additionalTaxAmount = taxSummary.additionalTaxAmount
+                  .round();
               final totalPayable =
-                  productTotal + additionalTotal - actualDiscount;
+                  productTotal +
+                  additionalTotal -
+                  actualDiscount +
+                  additionalTaxAmount;
               final remainingAmount = totalPayable - advanceAmount;
 
               return Padding(
@@ -446,6 +456,11 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                   '- Discount',
                                   actualDiscount,
                                   isNegative: true,
+                                ),
+                              for (final tax in taxSummary.appliedTaxes)
+                                _buildSummaryRow(
+                                  tax.formattedTaxLabel,
+                                  tax.amount.round(),
                                 ),
                               const Divider(height: 12, thickness: 1),
                               if (!isSaleType && advanceAmount > 0)

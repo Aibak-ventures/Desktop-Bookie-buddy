@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/models/applied_tax_model/applied_tax_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
@@ -78,6 +79,13 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     SecuritySummaryModel securitySummary,
     @JsonKey(name: 'security_account_name') String? securityAccountName,
     @JsonKey(name: 'security_account_id') int? securityAccountId,
+    // API currently sends a single `tax` object; modeled as a list so that
+    // if the backend later sends multiple applied taxes, only
+    // AppliedTaxModel.listFromJson needs to change — the entity and every
+    // screen that reads `appliedTaxes` already iterate a list.
+    @JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson)
+    @Default([])
+    List<AppliedTaxModel> appliedTaxes,
   }) = _BookingDetailsModel;
 
   factory BookingDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -122,5 +130,6 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     securitySummary: securitySummary.toEntity(),
     securityAccountId: securityAccountId,
     securityAccountName: securityAccountName,
+    appliedTaxes: appliedTaxes.map((e) => e.toEntity()).toList(),
   );
 }

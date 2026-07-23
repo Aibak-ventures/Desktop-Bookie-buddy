@@ -19,5 +19,6 @@ abstract class DesktopBookingItemEntity with _$DesktopBookingItemEntity {
     required String bookedItems,
     required int advanceAmount,
     required int remainingAmount,
+    required int totalAmount,
   }) = _DesktopBookingItemEntity;
 }

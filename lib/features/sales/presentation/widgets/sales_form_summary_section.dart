@@ -1,4 +1,6 @@
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -13,11 +15,18 @@ class SalesFormSummarySection extends StatelessWidget {
   final Listenable totalAmountListener;
   final VoidCallback onSave;
 
+  /// The sale being edited — its frozen `appliedTaxes` snapshot is
+  /// recalculated against the current form amounts (never the shop's live
+  /// tax config) so editing after creation stays accurate even if the
+  /// shop's tax rules changed since.
+  final SaleDetailsEntity saleDetails;
+
   const SalesFormSummarySection({
     super.key,
     required this.formController,
     required this.totalAmountListener,
     required this.onSave,
+    required this.saleDetails,
   });
 
   @override
@@ -42,7 +51,15 @@ class SalesFormSummarySection extends StatelessWidget {
                 0,
                 (sum, p) => sum + (p.amount * p.variant.quantity),
               );
-              final totalPayable = productTotal - discountAmount;
+              final taxSummary = saleDetails.appliedTaxes
+                  .calculateTaxSummary(
+                    productTotal: productTotal.toDouble(),
+                    discountAmount: discountAmount.toDouble(),
+                  );
+              final additionalTaxAmount = taxSummary.additionalTaxAmount
+                  .round();
+              final totalPayable =
+                  productTotal - discountAmount + additionalTaxAmount;
 
               final fields = <SummaryField>[
                 SummaryField(
@@ -54,6 +71,11 @@ class SalesFormSummarySection extends StatelessWidget {
                     label: 'Discount',
                     value: '- ${discountAmount.toCurrency()}',
                     color: const Color(0xFFD30000),
+                  ),
+                for (final tax in taxSummary.appliedTaxes)
+                  SummaryField(
+                    label: tax.formattedTaxLabel,
+                    value: tax.amount.round().toCurrency(),
                   ),
                 SummaryField(
                   label: 'Total',

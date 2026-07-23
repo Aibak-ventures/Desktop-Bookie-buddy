@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/models/applied_tax_model/applied_tax_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
@@ -6,14 +7,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'sale_details_model.freezed.dart';
 part 'sale_details_model.g.dart';
 
-
 int? _readAccountId(Map json, String key) {
   final payments = json['payments'] as List?;
   if (payments == null || payments.isEmpty) return null;
   return (payments.first as Map)['account_id'] as int?;
 }
 
-String? _readAccountName(Map json, String key) {
+dynamic _readAccountName(Map json, String key) {
   final payments = json['payments'] as List?;
   if (payments == null || payments.isEmpty) return null;
   return (payments.first as Map)['account_name'] as String?;
@@ -40,6 +40,12 @@ abstract class SaleDetailsModel with _$SaleDetailsModel {
     String? accountName,
     @JsonKey(name: 'staff_id') int? staffId,
     @JsonKey(name: 'staff_name') String? staffName,
+    // Same `tax` shape as booking/custom work; modeled as a list so a future
+    // multi-tax API response needs no changes beyond
+    // AppliedTaxModel.listFromJson.
+    @JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson)
+    @Default([])
+    List<AppliedTaxModel> appliedTaxes,
   }) = _SaleDetailsModel;
 
   factory SaleDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -88,6 +94,7 @@ extension SaleDetailsModelMapper on SaleDetailsModel {
     accountName: accountName,
     staffId: staffId,
     staffName: staffName,
+    appliedTaxes: appliedTaxes.map((e) => e.toEntity()).toList(),
   );
 }
 

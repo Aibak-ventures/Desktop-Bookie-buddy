@@ -31,8 +31,12 @@ abstract class DesktopBookingItemModel with _$DesktopBookingItemModel {
     DeliveryStatus? deliveryStatus,
     @JsonKey(name: 'created_at') required String createdAt,
     @JsonKey(name: 'booked_items') required String bookedItems,
-    @JsonKey(name: 'advance_amount') required int advanceAmount,
-    @JsonKey(name: 'remaining_amount') required int remainingAmount,
+    @JsonKey(name: 'advance_amount', defaultValue: 0)
+    required int advanceAmount,
+    @JsonKey(name: 'remaining_amount', defaultValue: 0)
+    required int remainingAmount,
+    @JsonKey(name: 'total_amount_after_discount', defaultValue: 0)
+    required int totalAmount,
   }) = _DesktopBookingItemModel;
 
   factory DesktopBookingItemModel.fromJson(Map<String, dynamic> json) =>
@@ -54,6 +58,7 @@ extension DesktopBookingItemModelMapper on DesktopBookingItemModel {
     bookedItems: bookedItems,
     advanceAmount: advanceAmount,
     remainingAmount: remainingAmount,
+    totalAmount: totalAmount,
   );
 }
 

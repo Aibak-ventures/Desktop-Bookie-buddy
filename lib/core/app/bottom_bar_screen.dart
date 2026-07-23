@@ -140,6 +140,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: const StockManagementScreen(),
       ),
+      // const SettingsScreen(), //Currently not using 
     ];
     super.initState();
   }

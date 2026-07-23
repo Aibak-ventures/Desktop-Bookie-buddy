@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SaleDetailsEntity {
 
- int get id; ClientEntity? get client; dynamic get clientPhone; String get address; String get description; String get saleDate; String get createdAt; int get totalAmount; int get discountAmount; int get paidAmount; String get invoiceId; int get balanceDueAmount; List<ProductSaleInfoEntity> get products; int? get accountId; String? get accountName; int? get staffId; String? get staffName;
+ int get id; ClientEntity? get client; dynamic get clientPhone; String get address; String get description; String get saleDate; String get createdAt; int get totalAmount; int get discountAmount; int get paidAmount; String get invoiceId; int get balanceDueAmount; List<ProductSaleInfoEntity> get products; int? get accountId; String? get accountName; int? get staffId; String? get staffName; List<AppliedTaxEntity> get appliedTaxes;
 /// Create a copy of SaleDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SaleDetailsEntityCopyWith<SaleDetailsEntity> get copyWith => _$SaleDetailsEntit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&const DeepCollectionEquality().equals(other.appliedTaxes, appliedTaxes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(products),accountId,accountName,staffId,staffName);
+int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(products),accountId,accountName,staffId,staffName,const DeepCollectionEquality().hash(appliedTaxes));
 
 @override
 String toString() {
-  return 'SaleDetailsEntity(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName)';
+  return 'SaleDetailsEntity(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName, appliedTaxes: $appliedTaxes)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SaleDetailsEntityCopyWith<$Res>  {
   factory $SaleDetailsEntityCopyWith(SaleDetailsEntity value, $Res Function(SaleDetailsEntity) _then) = _$SaleDetailsEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, ClientEntity? client, dynamic clientPhone, String address, String description, String saleDate, String createdAt, int totalAmount, int discountAmount, int paidAmount, String invoiceId, int balanceDueAmount, List<ProductSaleInfoEntity> products, int? accountId, String? accountName, int? staffId, String? staffName
+ int id, ClientEntity? client, dynamic clientPhone, String address, String description, String saleDate, String createdAt, int totalAmount, int discountAmount, int paidAmount, String invoiceId, int balanceDueAmount, List<ProductSaleInfoEntity> products, int? accountId, String? accountName, int? staffId, String? staffName, List<AppliedTaxEntity> appliedTaxes
 });
 
 
@@ -62,7 +62,7 @@ class _$SaleDetailsEntityCopyWithImpl<$Res>
 
 /// Create a copy of SaleDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,Object? appliedTaxes = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,client: freezed == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,8 @@ as List<ProductSaleInfoEntity>,accountId: freezed == accountId ? _self.accountId
 as int?,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
 as String?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,appliedTaxes: null == appliedTaxes ? _self.appliedTaxes : appliedTaxes // ignore: cast_nullable_to_non_nullable
+as List<AppliedTaxEntity>,
   ));
 }
 /// Create a copy of SaleDetailsEntity
@@ -178,10 +179,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName,  List<AppliedTaxEntity> appliedTaxes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SaleDetailsEntity() when $default != null:
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName,_that.appliedTaxes);case _:
   return orElse();
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName,  List<AppliedTaxEntity> appliedTaxes)  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsEntity():
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName,_that.appliedTaxes);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -219,10 +220,10 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  ClientEntity? client,  dynamic clientPhone,  String address,  String description,  String saleDate,  String createdAt,  int totalAmount,  int discountAmount,  int paidAmount,  String invoiceId,  int balanceDueAmount,  List<ProductSaleInfoEntity> products,  int? accountId,  String? accountName,  int? staffId,  String? staffName,  List<AppliedTaxEntity> appliedTaxes)?  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsEntity() when $default != null:
-return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName);case _:
+return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.description,_that.saleDate,_that.createdAt,_that.totalAmount,_that.discountAmount,_that.paidAmount,_that.invoiceId,_that.balanceDueAmount,_that.products,_that.accountId,_that.accountName,_that.staffId,_that.staffName,_that.appliedTaxes);case _:
   return null;
 
 }
@@ -234,7 +235,7 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 
 
 class _SaleDetailsEntity implements SaleDetailsEntity {
-  const _SaleDetailsEntity({required this.id, this.client, this.clientPhone, required this.address, required this.description, required this.saleDate, required this.createdAt, required this.totalAmount, required this.discountAmount, required this.paidAmount, required this.invoiceId, required this.balanceDueAmount, required final  List<ProductSaleInfoEntity> products, this.accountId, this.accountName, this.staffId, this.staffName}): _products = products;
+  const _SaleDetailsEntity({required this.id, this.client, this.clientPhone, required this.address, required this.description, required this.saleDate, required this.createdAt, required this.totalAmount, required this.discountAmount, required this.paidAmount, required this.invoiceId, required this.balanceDueAmount, required final  List<ProductSaleInfoEntity> products, this.accountId, this.accountName, this.staffId, this.staffName, final  List<AppliedTaxEntity> appliedTaxes = const []}): _products = products,_appliedTaxes = appliedTaxes;
   
 
 @override final  int id;
@@ -260,6 +261,13 @@ class _SaleDetailsEntity implements SaleDetailsEntity {
 @override final  String? accountName;
 @override final  int? staffId;
 @override final  String? staffName;
+ final  List<AppliedTaxEntity> _appliedTaxes;
+@override@JsonKey() List<AppliedTaxEntity> get appliedTaxes {
+  if (_appliedTaxes is EqualUnmodifiableListView) return _appliedTaxes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_appliedTaxes);
+}
+
 
 /// Create a copy of SaleDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -271,16 +279,16 @@ _$SaleDetailsEntityCopyWith<_SaleDetailsEntity> get copyWith => __$SaleDetailsEn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&const DeepCollectionEquality().equals(other._appliedTaxes, _appliedTaxes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),accountId,accountName,staffId,staffName);
+int get hashCode => Object.hash(runtimeType,id,client,const DeepCollectionEquality().hash(clientPhone),address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),accountId,accountName,staffId,staffName,const DeepCollectionEquality().hash(_appliedTaxes));
 
 @override
 String toString() {
-  return 'SaleDetailsEntity(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName)';
+  return 'SaleDetailsEntity(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, accountId: $accountId, accountName: $accountName, staffId: $staffId, staffName: $staffName, appliedTaxes: $appliedTaxes)';
 }
 
 
@@ -291,7 +299,7 @@ abstract mixin class _$SaleDetailsEntityCopyWith<$Res> implements $SaleDetailsEn
   factory _$SaleDetailsEntityCopyWith(_SaleDetailsEntity value, $Res Function(_SaleDetailsEntity) _then) = __$SaleDetailsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, ClientEntity? client, dynamic clientPhone, String address, String description, String saleDate, String createdAt, int totalAmount, int discountAmount, int paidAmount, String invoiceId, int balanceDueAmount, List<ProductSaleInfoEntity> products, int? accountId, String? accountName, int? staffId, String? staffName
+ int id, ClientEntity? client, dynamic clientPhone, String address, String description, String saleDate, String createdAt, int totalAmount, int discountAmount, int paidAmount, String invoiceId, int balanceDueAmount, List<ProductSaleInfoEntity> products, int? accountId, String? accountName, int? staffId, String? staffName, List<AppliedTaxEntity> appliedTaxes
 });
 
 
@@ -308,7 +316,7 @@ class __$SaleDetailsEntityCopyWithImpl<$Res>
 
 /// Create a copy of SaleDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? accountId = freezed,Object? accountName = freezed,Object? staffId = freezed,Object? staffName = freezed,Object? appliedTaxes = null,}) {
   return _then(_SaleDetailsEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,client: freezed == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
@@ -327,7 +335,8 @@ as List<ProductSaleInfoEntity>,accountId: freezed == accountId ? _self.accountId
 as int?,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
 as String?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,staffName: freezed == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,appliedTaxes: null == appliedTaxes ? _self._appliedTaxes : appliedTaxes // ignore: cast_nullable_to_non_nullable
+as List<AppliedTaxEntity>,
   ));
 }
 

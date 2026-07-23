@@ -6,6 +6,6 @@ class ExpensesEndpoints {
   static const variantExpenses = '${_root}variant-expenses/';
   static const transactionHistory =
       '${ApiConfig.v4}/expenses/transaction-history/';
-  static const daywiseSummary = '${_root}wallet/daywise-summary/';
+  static const dayWiseSummary = '${_root}wallet/daywise-summary/';
   static const exportTransactionsExcel = '${_root}export-transactions/excel/';
 }

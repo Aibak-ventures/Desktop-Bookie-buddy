@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
@@ -7,6 +8,18 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+/// Signature matching both `UserShopEntityX.calculateTaxSummary` (live shop
+/// config, used when creating) and `AppliedTaxListCalculator.calculateTaxSummary`
+/// (the record's frozen snapshot, used when editing) — callers pass whichever
+/// applies so this widget doesn't need to know which one it's using.
+typedef TaxSummaryCalculator =
+    TaxSummaryEntity Function({
+      double productTotal,
+      double additionalCharges,
+      double securityAmount,
+      double discountAmount,
+    });
 
 /// Standalone reactive summary tile — shows the amount breakdown without any
 /// action buttons. Use this when you only need to display the summary (e.g.
@@ -31,6 +44,11 @@ class BookingAmountSummary extends StatelessWidget {
   /// Header label on the expandable tile.
   final String totalRemainingLabel;
 
+  /// Computes the tax breakdown for the current amounts — pass the shop's
+  /// live `calculateTaxSummary` when creating, or the record's frozen
+  /// `appliedTaxes.calculateTaxSummary` when editing.
+  final TaxSummaryCalculator calculateTaxSummary;
+
   const BookingAmountSummary({
     super.key,
     required this.selectedProductsNotifier,
@@ -42,6 +60,7 @@ class BookingAmountSummary extends StatelessWidget {
     required this.securityMethodLabel,
     required this.isSales,
     required this.calculateRentalDays,
+    required this.calculateTaxSummary,
     this.advanceLabel = 'Paid',
     this.totalRemainingLabel = 'Total Payable Amount',
   });
@@ -90,7 +109,26 @@ class BookingAmountSummary extends StatelessWidget {
             ? ((productTotal + additionalTotal) * discountInput / 100).round()
             : discountInput;
 
-        final totalPayable = productTotal + additionalTotal - discountAmount;
+        final taxSummary = calculateTaxSummary(
+          productTotal: productTotal.toDouble(),
+          additionalCharges: additionalTotal.toDouble(),
+          securityAmount: securityAmount.toDouble(),
+          discountAmount: discountAmount.toDouble(),
+        );
+        final additionalTaxAmount = taxSummary.additionalTaxAmount.round();
+        final taxFields = [
+          for (final tax in taxSummary.appliedTaxes)
+            SummaryField(
+              label: tax.formattedTaxLabel,
+              value: tax.amount.round().toCurrency(),
+            ),
+        ];
+
+        final totalPayable =
+            productTotal +
+            additionalTotal -
+            discountAmount +
+            additionalTaxAmount;
 
         if (isSales) {
           final clampedTotal = totalPayable > 0 ? totalPayable : 0;
@@ -110,6 +148,7 @@ class BookingAmountSummary extends StatelessWidget {
                 value: '- ${discountAmount.toCurrency()}',
                 color: const Color(0xFFD30000),
               ),
+            ...taxFields,
             SummaryField(
               label: 'Total',
               value: clampedTotal.toCurrency(),
@@ -136,7 +175,11 @@ class BookingAmountSummary extends StatelessWidget {
             .clamp(0, 999999999)
             .toInt();
         final pendingTotal =
-            productTotal + securityAmount + additionalTotal - discountAmount;
+            productTotal +
+            securityAmount +
+            additionalTotal -
+            discountAmount +
+            additionalTaxAmount;
         final receivedTotal = advanceAmount + securityAmount;
 
         final summaryPayableFields = <SummaryField>[
@@ -160,6 +203,7 @@ class BookingAmountSummary extends StatelessWidget {
               value: '- ${discountAmount.toCurrency()}',
               color: const Color(0xFFD30000),
             ),
+          ...taxFields,
         ];
 
         final summaryReceivedFields = <SummaryField>[
@@ -244,6 +288,11 @@ class BookingSummarySection extends StatelessWidget {
   final bool isSales;
   final int Function() calculateRentalDays;
 
+  /// Computes the tax breakdown for the current amounts — pass the shop's
+  /// live `calculateTaxSummary` when creating, or the record's frozen
+  /// `appliedTaxes.calculateTaxSummary` when editing.
+  final TaxSummaryCalculator calculateTaxSummary;
+
   /// Optional: customization button (only for dress/costume products)
   final VoidCallback? onShowCustomization;
 
@@ -275,6 +324,7 @@ class BookingSummarySection extends StatelessWidget {
     required this.securityMethodLabel,
     required this.isSales,
     required this.calculateRentalDays,
+    required this.calculateTaxSummary,
     this.advanceLabel = 'Paid',
     this.totalRemainingLabel = 'Total Payable Amount',
     this.onShowCustomization,
@@ -306,6 +356,7 @@ class BookingSummarySection extends StatelessWidget {
             securityMethodLabel: securityMethodLabel,
             isSales: isSales,
             calculateRentalDays: calculateRentalDays,
+            calculateTaxSummary: calculateTaxSummary,
             advanceLabel: advanceLabel,
             totalRemainingLabel: totalRemainingLabel,
           ),

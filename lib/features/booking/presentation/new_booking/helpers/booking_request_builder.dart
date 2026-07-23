@@ -250,6 +250,8 @@ class BookingRequestBuilder {
     required DateTime returnDate,
     required String? description,
     required int? advanceAccountId,
+    int? discountAmount,
+    int? taxAmount,
   }) {
     final requestProducts = products.map((product) {
       final multiplier = PaymentCalculator.getDaysMultiplierForProduct(
@@ -260,10 +262,15 @@ class BookingRequestBuilder {
       return product.copyWith(amount: product.amount * multiplier);
     }).toList();
 
-    final totalAmount = requestProducts.fold<int>(
+    final productTotal = requestProducts.fold<int>(
       0,
       (sum, p) => sum + (p.amount * p.quantity),
     );
+    // Tax here is a flat, already-calculated amount typed by the user for
+    // this historical backfill entry — not computed from the shop's live
+    // tax config, so it's simply added after discount is subtracted.
+    final totalAmount =
+        productTotal - (discountAmount ?? 0) + (taxAmount ?? 0);
 
     return BookingRequestEntity(
       clientId: selectedClientId,
@@ -281,6 +288,8 @@ class BookingRequestBuilder {
       pickupDate: pickupDate.format(),
       returnDate: returnDate.format(),
       advanceAmount: totalAmount,
+      discountAmount: discountAmount,
+      taxAmount: taxAmount,
       deliveryStatus: DeliveryStatus.returned,
       bookingStatus: BookingStatus.completed,
       description: description,

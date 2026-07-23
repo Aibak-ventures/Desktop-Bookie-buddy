@@ -1,8 +1,8 @@
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
@@ -103,14 +103,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     loading: () => const Center(
                       child: CircularProgressIndicator(color: AppColors.purple),
                     ),
-                    loaded: (
-                      product,
-                      bookings,
-                      monthlySummary,
-                      nextPageUrl,
-                      isPaginatingBookings,
-                    ) =>
-                        _buildContent(
+                    loaded:
+                        (
+                          product,
+                          bookings,
+                          monthlySummary,
+                          nextPageUrl,
+                          isPaginatingBookings,
+                        ) => _buildContent(
                           context,
                           product,
                           bookings,
@@ -176,7 +176,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
         children: [
           ProductDetailsHeader(
             product: product,
-            onBack: () => context.read<StockManagementCubit>().hideProductDetails(),
+            onBack: () =>
+                context.read<StockManagementCubit>().hideProductDetails(),
             onDelete: () => _showDeleteProductDialog(product),
             onEdit: () => performSecureActionDialog(
               context,
@@ -448,8 +449,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
                     final quantity =
                         int.tryParse(variantQuantityController.text.trim()) ??
                         0;
-                    final externalBarcode =
-                        externalBarcodeController.text.trim();
+                    final externalBarcode = externalBarcodeController.text
+                        .trim();
 
                     try {
                       await context

@@ -21,6 +21,7 @@ _UserShopModel _$UserShopModelFromJson(
   city: json['city'] as String?,
   state: json['state'] as String?,
   pincode: json['pincode'] as String?,
+  shopRole: ShopRole.fromJson(json['shop_role'] as String?),
   termsAndConditions:
       (json['terms_and_conditions'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -33,6 +34,9 @@ _UserShopModel _$UserShopModelFromJson(
         'Security deposit (if applicable) will be refunded after return.',
         'Products should be returned on the exact return date, without any damages.',
       ],
+  taxConfigurations: TaxConfigurationModel.listFromJson(
+    json['tax_configuration'],
+  ),
 );
 
 Map<String, dynamic> _$UserShopModelToJson(_UserShopModel instance) =>
@@ -49,5 +53,7 @@ Map<String, dynamic> _$UserShopModelToJson(_UserShopModel instance) =>
       'city': instance.city,
       'state': instance.state,
       'pincode': instance.pincode,
+      'shop_role': ShopRole.toJson(instance.shopRole),
       'terms_and_conditions': instance.termsAndConditions,
+      'tax_configuration': instance.taxConfigurations,
     };

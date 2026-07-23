@@ -1,7 +1,9 @@
+import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/show_booking_details_add_payment_dialog.dart';
@@ -34,6 +36,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     final balance = totalAmount - paid - discount;
     final securityAmount = booking.securityAmount ?? 0;
     final isPaymentCompleted = balance <= 0;
+    final appliedTaxes = booking.appliedTaxes.appliedOnly;
+    final totalTaxAmount = appliedTaxes.totalTaxAmount;
 
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
@@ -266,8 +270,13 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                   '- ${discount.toCurrency()}',
                   valueColor: Colors.black87,
                 ),
+                const SizedBox(height: 8),
               ],
               const Divider(height: 24),
+              if (totalTaxAmount > 0) ...[
+                _buildTaxRow(appliedTaxes, totalTaxAmount),
+                const SizedBox(height: 8),
+              ],
               _buildPaymentRow(
                 'Total Payable',
                 (totalAmount - discount).toCurrency(),
@@ -377,6 +386,35 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               refunds: booking.refunds,
               canDeletePayments: !isCancelled && !isCompleted,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTaxRow(List<AppliedTaxEntity> appliedTaxes, int totalTaxAmount) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            const Text(
+              'Tax amount',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.black87,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TaxAllInfoButton(taxes: appliedTaxes),
+          ],
+        ),
+        Text(
+          totalTaxAmount.toCurrency(),
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
           ),
         ),
       ],
