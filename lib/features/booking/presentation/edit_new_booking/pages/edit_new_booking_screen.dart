@@ -29,6 +29,7 @@ import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
@@ -350,22 +351,29 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       loading: () {
         GlobalLoadingOverlay.show(context);
       },
-      success: (isBooking) {
+      success: (isBooking) async {
         GlobalLoadingOverlay.hide();
         if (!mounted) return;
-        // Sales send the invoice as part of the update request (send_invoice
-        // field). Bookings use a partial PATCH that doesn't carry it, so fire
-        // the dedicated send-invoice call here when the user opted in.
-        if (isBooking && sendPdfToWhatsApp && widget.bookingDetails != null) {
-          final bookingId = widget.bookingDetails!.id;
-          Future.microtask(() async {
-            try {
-              await getIt<SendInvoiceUseCase>()(bookingId, true);
-            } catch (e) {
-              log('Failed to send invoice to WhatsApp: $e');
+
+        if (sendPdfToWhatsApp) {
+          try {
+            if (isBooking && widget.bookingDetails != null) {
+              await getIt<SendInvoiceUseCase>()(
+                widget.bookingDetails!.id,
+                true,
+              );
+            } else if (!isBooking && widget.saleDetails != null) {
+              await getIt<SendSaleInvoiceUsecase>()(
+                widget.saleDetails!.id,
+                sendWhatsApp: true,
+              );
             }
-          });
+          } catch (e) {
+            log('Failed to send invoice to WhatsApp: $e');
+          }
         }
+
+        if (!mounted) return;
         context.showSnackBar(
           isBooking ? 'Booking updated successfully!' : 'Sale updated successfully!',
         );
