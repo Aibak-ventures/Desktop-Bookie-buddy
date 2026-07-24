@@ -20,6 +20,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
@@ -27,6 +28,7 @@ import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
@@ -129,7 +131,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final _discountTypeNotifier = ValueNotifier<bool>(false);
   BookingStatus? bookingStatus; // Track booking status
   String? bookingCompletedDate; // Store completed date
-  bool sendPdfToWhatsApp = true;
+  // Opt-in: only (re)send the invoice to WhatsApp when the user ticks the box.
+  bool sendPdfToWhatsApp = false;
 
   // Products/Services
   final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
@@ -350,6 +353,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       success: (isBooking) {
         GlobalLoadingOverlay.hide();
         if (!mounted) return;
+        // Sales send the invoice as part of the update request (send_invoice
+        // field). Bookings use a partial PATCH that doesn't carry it, so fire
+        // the dedicated send-invoice call here when the user opted in.
+        if (isBooking && sendPdfToWhatsApp && widget.bookingDetails != null) {
+          final bookingId = widget.bookingDetails!.id;
+          Future.microtask(() async {
+            try {
+              await getIt<SendInvoiceUseCase>()(bookingId, true);
+            } catch (e) {
+              log('Failed to send invoice to WhatsApp: $e');
+            }
+          });
+        }
         context.showSnackBar(
           isBooking ? 'Booking updated successfully!' : 'Sale updated successfully!',
         );
@@ -744,7 +760,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Pickup time',
                     value: pickupTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: true),
                   ),
@@ -765,7 +781,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Return time',
                     value: returnTime?.format(context) ?? '',
                     onTap: () => _selectTime(isPickup: false),
                   ),
@@ -991,6 +1007,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 ),
                 const SizedBox(height: 16),
                 _buildSummaryBreakdownCard(),
+                _buildWhatsAppOption(),
                 const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
@@ -1447,6 +1464,44 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           },
         ),
       ],
+    );
+  }
+
+  /// Opt-in checkbox to (re)send the invoice PDF to the client's WhatsApp on
+  /// save. Hidden when the shop doesn't have the WhatsApp feature.
+  Widget _buildWhatsAppOption() {
+    if (!context.read<UserCubit>().hasFeature(
+      AppPremiumFeatures.whatsappMessage,
+    )) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: Checkbox(
+              value: sendPdfToWhatsApp,
+              onChanged: (v) => rebuild(() => sendPdfToWhatsApp = v ?? false),
+              activeColor: Colors.black87,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            'Send invoice to whatsapp',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ],
+      ),
     );
   }
 

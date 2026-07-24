@@ -54,6 +54,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   final Map<int, List<FocusNode>> _rowElementFocusNodes = {};
   /// Tracks active sub-element index within a row: 0=qtyMinus, 1=qtyInput, 2=qtyPlus, 3=daysMinus, 4=daysPlus, 5=price
   final Map<int, int> _rowActiveElement = {};
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     for (final nodes in _rowElementFocusNodes.values) {
       for (final node in nodes) node.dispose();
     }
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -90,6 +92,13 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       _rowActiveElement[targetKey] = 1;
       _getQuantityFocusNode(targetKey).requestFocus();
     });
+    // Also scroll to the target product
+    final targetProduct = widget.selectedProductsNotifier.value
+        .where((p) => _quantityKey(p) == targetKey)
+        .firstOrNull;
+    if (targetProduct != null) {
+      _scrollToProduct(targetProduct);
+    }
     widget.focusTargetProductKey?.value = null;
   }
 
@@ -211,6 +220,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           );
         }
         return ListView.builder(
+          controller: _scrollController,
           padding: EdgeInsets.zero,
           itemCount: products.length,
           itemBuilder: (context, index) => _buildProductRow(products[index]),
@@ -717,6 +727,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       final nextKey = _quantityKey(nextProduct);
       _rowActiveElement[nextKey] = 0;
       _getRowElementFocusNode(nextKey, 0).requestFocus();
+      _scrollToProduct(nextProduct);
       return;
     }
     widget.onNavigateToClientDetails?.call();
@@ -732,6 +743,22 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       () => List.generate(5, (_) => FocusNode()),
     );
     return nodes[elementIndex];
+  }
+
+  void _scrollToProduct(ProductSelectedEntity product) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final key = _quantityKey(product);
+      final context = _rowFocusNodes[key]?.context;
+      if (context != null && context.mounted) {
+        Scrollable.ensureVisible(
+          context,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          alignment: 0.15,
+        );
+      }
+    });
   }
 
   void _focusElementInRow(ProductSelectedEntity product, int elementIndex) {
@@ -751,6 +778,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       case 5:
         _startEditingPrice(product);
     }
+    _scrollToProduct(product);
   }
 
   void _focusPrevProductRow(ProductSelectedEntity product) {
@@ -781,6 +809,18 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     widget.onNavigateToClientDetails?.call();
   }
 
+  /// Element ids that can actually receive focus in a row, in visual
+  /// left-to-right order. The days controls (3 = minus, 4 = plus) only exist
+  /// for bookings when [ProductListTableWidget.showDayControls] is true — on the
+  /// edit screen and for sales they're absent, so left/right navigation must
+  /// skip them instead of focusing a node that isn't in the tree.
+  /// Ids: 0 qtyMinus, 1 qtyInput, 2 qtyPlus, 3 daysMinus, 4 daysPlus, 5 price.
+  List<int> _navigableElements() {
+    final isSales = widget.selectedBookingType == BookingType.sales;
+    final hasDays = !isSales && widget.showDayControls;
+    return [0, 1, 2, if (hasDays) 3, if (hasDays) 4, 5];
+  }
+
   KeyEventResult _handleRowKeyEvent(ProductSelectedEntity product, KeyEvent event) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final key = _quantityKey(product);
@@ -789,12 +829,12 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
 
     if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
         event.logicalKey == LogicalKeyboardKey.numpad6) {
-      final currentElement = _rowActiveElement[key] ?? 1;
-      if (currentElement < 5) {
-        _focusElementInRow(product, currentElement + 1);
+      final elements = _navigableElements();
+      final idx = elements.indexOf(_rowActiveElement[key] ?? 1);
+      if (idx != -1 && idx + 1 < elements.length) {
+        _focusElementInRow(product, elements[idx + 1]);
       } else if (currentIndex != -1 && currentIndex + 1 < products.length) {
-        final next = products[currentIndex + 1];
-        _focusElementInRow(next, 0);
+        _focusElementInRow(products[currentIndex + 1], elements.first);
       } else {
         widget.onNavigateToClientDetails?.call();
       }
@@ -802,25 +842,45 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
         event.logicalKey == LogicalKeyboardKey.numpad4) {
-      final currentElement = _rowActiveElement[key] ?? 1;
-      if (currentElement > 0) {
-        _focusElementInRow(product, currentElement - 1);
+      final elements = _navigableElements();
+      final idx = elements.indexOf(_rowActiveElement[key] ?? 1);
+      if (idx > 0) {
+        _focusElementInRow(product, elements[idx - 1]);
       } else if (currentIndex > 0) {
-        final prev = products[currentIndex - 1];
-        _focusElementInRow(prev, 5);
+        _focusElementInRow(products[currentIndex - 1], elements.last);
       } else {
         // Stay at the first element of first row
-        _focusElementInRow(product, 0);
+        _focusElementInRow(product, elements.first);
       }
       return KeyEventResult.handled;
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowDown ||
         event.logicalKey == LogicalKeyboardKey.numpad2) {
+      // On the quantity input or the days stepper, Up/Down adjust the value
+      // (Up = increase, Down = decrease) instead of moving between rows.
+      final active = _rowActiveElement[key] ?? 1;
+      if (active == 1) {
+        _decrementQuantity(product);
+        return KeyEventResult.handled;
+      }
+      if (active == 3 || active == 4) {
+        widget.onDecrementRentalDays();
+        return KeyEventResult.handled;
+      }
       _focusNextProductRow(product);
       return KeyEventResult.handled;
     }
     if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
         event.logicalKey == LogicalKeyboardKey.numpad8) {
+      final active = _rowActiveElement[key] ?? 1;
+      if (active == 1) {
+        _incrementQuantity(product);
+        return KeyEventResult.handled;
+      }
+      if (active == 3 || active == 4) {
+        widget.onIncrementRentalDays();
+        return KeyEventResult.handled;
+      }
       _focusPrevProductRow(product);
       return KeyEventResult.handled;
     }

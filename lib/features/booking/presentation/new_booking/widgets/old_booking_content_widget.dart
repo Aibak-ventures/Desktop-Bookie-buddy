@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-class OldBookingContentWidget extends StatelessWidget {
+class OldBookingContentWidget extends StatefulWidget {
   final Widget dateSection;
   final Widget serviceSection;
   final TextEditingController clientNameController;
@@ -60,6 +60,30 @@ class OldBookingContentWidget extends StatelessWidget {
   });
 
   @override
+  State<OldBookingContentWidget> createState() =>
+      _OldBookingContentWidgetState();
+}
+
+class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
+  // Focus chain so Enter/Next moves through the client fields in order:
+  // name → phone 1 → phone 2 → address → notes.
+  final _nameFocusNode = FocusNode();
+  final _phone1FocusNode = FocusNode();
+  final _phone2FocusNode = FocusNode();
+  final _addressFocusNode = FocusNode();
+  final _notesFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _phone1FocusNode.dispose();
+    _phone2FocusNode.dispose();
+    _addressFocusNode.dispose();
+    _notesFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,9 +93,9 @@ class OldBookingContentWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              dateSection,
+              widget.dateSection,
               const SizedBox(height: 16),
-              Expanded(child: serviceSection),
+              Expanded(child: widget.serviceSection),
             ],
           ),
         ),
@@ -82,6 +106,7 @@ class OldBookingContentWidget extends StatelessWidget {
   }
 
   Widget _buildRightPanel(BuildContext context) {
+    const fieldSpacing = OldBookingContentWidget._fieldSpacing;
     return Container(
       color: Colors.white,
       child: Column(
@@ -105,74 +130,80 @@ class OldBookingContentWidget extends StatelessWidget {
                     listener: (context, state) {
                       if (state.selectedClient != null) {
                         final client = state.selectedClient!;
-                        clientNameController.text = client.name;
+                        widget.clientNameController.text = client.name;
                         BookingPhonePopulator.setPhoneFieldValue(
-                          phone1FieldController,
-                          clientPhone1Controller,
+                          widget.phone1FieldController,
+                          widget.clientPhone1Controller,
                           phoneNumber: client.phone1 > 0 ? client.phone1.toString() : null,
                           e164: client.phone1E164,
                         );
                         BookingPhonePopulator.setPhoneFieldValue(
-                          phone2FieldController,
-                          clientPhone2Controller,
+                          widget.phone2FieldController,
+                          widget.clientPhone2Controller,
                           phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
                           e164: client.phone2E164,
                         );
-                        onClientIdChanged(client.id);
+                        widget.onClientIdChanged(client.id);
                       }
                     },
                     child: ClientSearchNameField(
-                      nameController: clientNameController,
-                      errorText: clientNameError,
+                      nameController: widget.clientNameController,
+                      errorText: widget.clientNameError,
                       hitText: 'Type or search name',
+                      focusNode: _nameFocusNode,
+                      onSubmitName: () => _phone1FocusNode.requestFocus(),
                     ),
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   CustomPhoneNumberField(
-                    controller: phone1FieldController,
+                    controller: widget.phone1FieldController,
                     hintText: 'Client Phone',
-                    textInputAction: TextInputAction.next,
+                    focusNode: _phone1FocusNode,
+                    nextFocusNode: _phone2FocusNode,
                     onChanged: (phone) {
                       final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
-                      onCachePhoneE164(
+                      widget.onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
                       );
-                      if (clientPhone1Controller.text != digits) {
-                        clientPhone1Controller.value = TextEditingValue(
+                      if (widget.clientPhone1Controller.text != digits) {
+                        widget.clientPhone1Controller.value = TextEditingValue(
                           text: digits,
                           selection: TextSelection.collapsed(offset: digits.length),
                         );
                       }
                     },
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   CustomPhoneNumberField(
-                    controller: phone2FieldController,
+                    controller: widget.phone2FieldController,
                     hintText: 'Client Phone 2 (Optional)',
                     isRequired: false,
-                    textInputAction: TextInputAction.next,
+                    focusNode: _phone2FocusNode,
+                    nextFocusNode: _addressFocusNode,
                     onChanged: (phone) {
                       final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
-                      onCachePhoneE164(
+                      widget.onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
                       );
-                      if (clientPhone2Controller.text != digits) {
-                        clientPhone2Controller.value = TextEditingValue(
+                      if (widget.clientPhone2Controller.text != digits) {
+                        widget.clientPhone2Controller.value = TextEditingValue(
                           text: digits,
                           selection: TextSelection.collapsed(offset: digits.length),
                         );
                       }
                     },
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: clientAddressController,
+                    controller: widget.clientAddressController,
                     hint: 'Place / Address',
                     prefixIcon: Icons.location_on,
+                    focusNode: _addressFocusNode,
+                    nextFocusNode: _notesFocusNode,
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   Container(
                     height: 80,
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -181,7 +212,8 @@ class OldBookingContentWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: TextField(
-                      controller: descriptionController,
+                      controller: widget.descriptionController,
+                      focusNode: _notesFocusNode,
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       expands: true,
@@ -194,23 +226,23 @@ class OldBookingContentWidget extends StatelessWidget {
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: discountController,
+                    controller: widget.discountController,
                     hint: 'Discount amount (Optional)',
                     isNumber: true,
                   ),
-                  const SizedBox(height: _fieldSpacing),
+                  const SizedBox(height: fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: taxController,
+                    controller: widget.taxController,
                     hint: 'Tax Amount (Optional)',
                     isNumber: true,
                     prefixIcon: Icons.currency_rupee_sharp,
                   ),
-                  const SizedBox(height: _fieldSpacing * 2),
+                  const SizedBox(height: fieldSpacing * 2),
                   AccountSelectionField(
-                    selectedAccount: selectedAdvanceAccount,
-                    onChanged: onAdvanceAccountChanged,
+                    selectedAccount: widget.selectedAdvanceAccount,
+                    onChanged: widget.onAdvanceAccountChanged,
                     label: 'Payment Option',
                   ),
                   const SizedBox(height: 16),
@@ -244,20 +276,20 @@ class OldBookingContentWidget extends StatelessWidget {
                 const SizedBox(height: 4),
                 ListenableBuilder(
                   listenable: Listenable.merge([
-                    selectedProductsNotifier,
-                    discountController,
-                    taxController,
+                    widget.selectedProductsNotifier,
+                    widget.discountController,
+                    widget.taxController,
                   ]),
                   builder: (context, _) {
-                    final products = selectedProductsNotifier.value;
+                    final products = widget.selectedProductsNotifier.value;
                     final productTotal = products.fold<int>(
                       0,
-                      (sum, p) => sum + (p.amount * p.quantity * getDaysMultiplier(p)),
+                      (sum, p) => sum + (p.amount * p.quantity * widget.getDaysMultiplier(p)),
                     );
                     final discountAmount =
-                        discountController.text.trim().toIntOrNull() ?? 0;
+                        widget.discountController.text.trim().toIntOrNull() ?? 0;
                     final taxAmount =
-                        taxController.text.trim().toIntOrNull() ?? 0;
+                        widget.taxController.text.trim().toIntOrNull() ?? 0;
                     final total = productTotal - discountAmount + taxAmount;
                     return Text(
                       total.toCurrency(),
@@ -273,7 +305,7 @@ class OldBookingContentWidget extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: onConfirm,
+                    onPressed: widget.onConfirm,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6132E4),
                       foregroundColor: Colors.white,

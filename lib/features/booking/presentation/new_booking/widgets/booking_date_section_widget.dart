@@ -253,7 +253,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Pickup time',
                     value: pickupTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: true),
                     focusNode: _pickupTimeFocusNode,
@@ -284,7 +284,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                 Expanded(
                   flex: 2,
                   child: BookingTimePickerField(
-                    label: 'time',
+                    label: 'Return time',
                     value: returnTime?.format(context) ?? '--:--',
                     onTap: () => _selectTime(isPickup: false),
                     focusNode: _returnTimeFocusNode,

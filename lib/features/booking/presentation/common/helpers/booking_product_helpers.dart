@@ -91,25 +91,15 @@ class BookingProductHelpers {
     );
   }
 
-  static ProductSelectedEntity fromBookedItem(
-    ProductInfoEntity item, {
-    int rentalDays = 1,
-  }) {
-    final int amount;
-
-    if (item.quantity > 0 && rentalDays > 0) {
-      amount =
-          item.amount ~/
-          (item.quantity *
-              (item.mainServiceType.requiresDateRange ? rentalDays : 1));
-    } else {
-      amount = item.amount;
-    }
+  static ProductSelectedEntity fromBookedItem(ProductInfoEntity item,
+      {int rentalDays = 1}) {
     return ProductSelectedEntity(
       variant: item.copyWith(),
       measurements: item.measurements,
       quantity: item.quantity,
-      amount: amount,
+      amount: (item.quantity > 0 && rentalDays > 0)
+          ? item.amount ~/ (item.quantity * rentalDays)
+          : item.amount,
     );
   }
 }

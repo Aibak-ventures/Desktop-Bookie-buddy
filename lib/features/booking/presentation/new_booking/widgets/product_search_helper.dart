@@ -463,12 +463,36 @@ extension ProductSearchBuilders on NewBookingScreenState {
       },
       onArrowDown: () {
         if (index + 1 < itemCount) {
-          _getOverlayItemFocusNode(index + 1).requestFocus();
+          final nextNode = _getOverlayItemFocusNode(index + 1);
+          nextNode.requestFocus();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final ctx = nextNode.context;
+            if (ctx != null && ctx.mounted) {
+              Scrollable.ensureVisible(
+                ctx,
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOut,
+                alignment: 0.15,
+              );
+            }
+          });
         }
       },
       onArrowUp: () {
         if (index > 0) {
-          _getOverlayItemFocusNode(index - 1).requestFocus();
+          final prevNode = _getOverlayItemFocusNode(index - 1);
+          prevNode.requestFocus();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final ctx = prevNode.context;
+            if (ctx != null && ctx.mounted) {
+              Scrollable.ensureVisible(
+                ctx,
+                duration: const Duration(milliseconds: 150),
+                curve: Curves.easeOut,
+                alignment: 0.15,
+              );
+            }
+          });
         } else {
           _productSearchFocusNode.requestFocus();
         }

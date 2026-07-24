@@ -18,7 +18,8 @@ extension SalesFlowBuilders on NewBookingScreenState {
                     controller: _clientPhone1FieldController,
                     hintText: 'Client Phone (WP)',
                     isRequired: false,
-                    textInputAction: TextInputAction.done,
+                    focusNode: _clientPhone1FocusNode,
+                    nextFocusNode: _clientAddressFocusNode,
                     onChanged: (phone) {
                       final digits = phone.nsn.replaceAll(
                         RegExp(r'[^0-9]'),
