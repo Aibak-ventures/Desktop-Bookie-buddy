@@ -1476,11 +1476,15 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   /// Opt-in checkbox to (re)send the invoice PDF to the client's WhatsApp on
-  /// save. Hidden when the shop doesn't have the WhatsApp feature.
+  /// save. Only visible when the shop has the feature AND the user has made
+  /// changes to the form.
   Widget _buildWhatsAppOption() {
     if (!context.read<UserCubit>().hasFeature(
       AppPremiumFeatures.whatsappMessage,
     )) {
+      return const SizedBox.shrink();
+    }
+    if (!_hasAnyFormChanges()) {
       return const SizedBox.shrink();
     }
     return Padding(
