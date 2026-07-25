@@ -690,4 +690,50 @@ class BookingRemoteDatasource {
       throw e;
     }
   }
+
+  Future<CustomResponseModel> updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.bookings.updateSecurityRefund(bookingId),
+        data: {
+          if (refundAmount != null) 'refund_amount': refundAmount,
+          if (deductionAmount != null) 'deduction_amount': deductionAmount,
+          'account_id': accountId,
+          if (refundAmount != null && note != null) 'refund_reason': note,
+          if (deductionAmount != null && note != null) 'deduction_reason': note,
+        },
+      );
+
+      log(
+        'update security refund response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating security refund: $e', stackTrace: stack);
+      throw e;
+    }
+  }
+
+  Future<CustomResponseModel> deleteSecurityRefundedPayment({
+    required int refundId,
+  }) async {
+    try {
+      final response = await _dio.delete(
+        ApiEndpoints.bookings.deleteSecurityRefundedPayment(refundId: refundId),
+      );
+      log(
+        'delete security refunded payment response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error deleting security refunded payment: $e', stackTrace: stack);
+      throw e;
+    }
+  }
 }

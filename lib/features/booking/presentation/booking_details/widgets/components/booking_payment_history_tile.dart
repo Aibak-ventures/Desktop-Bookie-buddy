@@ -5,12 +5,11 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 
 // Unified transaction entry for display
 class TransactionEntry {
@@ -159,145 +158,47 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                       transaction.isRefund &&
                       transaction.id != null;
 
-                  return Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.purple.withValues(
-                        alpha: 0.05,
-                      ), // Light purple for payments
-                    ),
-                    child: Row(
-                      children: [
-                        // Date
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            transaction.dateTime.formatToUiDate(),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: transaction.isRefund
-                                  ? Colors
-                                        .red
-                                        .shade700 // Red for refunds
-                                  : Colors.black87,
-                            ),
-                          ),
-                        ),
-                        // Time
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            transaction.dateTime.formatToUiTime(),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: transaction.isRefund
-                                  ? Colors
-                                        .red
-                                        .shade700 // Red for refunds
-                                  : Colors.black87,
-                            ),
-                          ),
-                        ),
-                        // Payment Icon
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            transaction.accountName ?? 'Payment',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        // Amount
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            transaction.isRefund
-                                ? '-${transaction.amount.toCurrency()}'
-                                : transaction.amount.toCurrency(),
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: transaction.isRefund
-                                  ? Colors
-                                        .red
-                                        .shade700 // Red for refunds
-                                  : Colors.black87,
-                            ),
-                          ),
-                        ),
+                  return PaymentTransactionRow(
+                    dateTime: transaction.dateTime,
+                    accountName: transaction.accountName ?? 'Payment',
+                    amount: transaction.amount,
+                    isNegative: transaction.isRefund,
+                    canDelete: canDeleteThisPayment || canDeleteThisRefund,
+                    deleteLabel: canDeleteThisRefund
+                        ? 'Delete refund'
+                        : 'Delete payment',
+                    onDelete: () {
+                      if (transaction.paymentType ==
+                          BookingPaymentHistoryPaymentType.security) {
+                        context.showSnackBar(
+                          'Security deposit payments cannot be deleted',
+                          title: 'Action not allowed',
+                          isError: true,
+                        );
+                        return;
+                      }
 
-                        PopupMenuButton<String>(
-                          tooltip: 'More options',
-                          enabled: canDeleteThisPayment || canDeleteThisRefund,
-                          icon: const Icon(
-                            Icons.more_vert,
-                            size: 18,
-                            color: Colors.black54,
-                          ),
-                          onSelected: (value) {
-                            if (value == 'delete') {
-                              if (transaction.paymentType ==
-                                  BookingPaymentHistoryPaymentType.security) {
-                                context.showSnackBar(
-                                  'Security deposit payments cannot be deleted',
-                                  title: 'Action not allowed',
-                                  isError: true,
-                                );
-                                return;
-                              }
+                      if (canDeleteThisRefund) {
+                        _onDeleteRefundPressed(context, transaction);
+                        return;
+                      }
 
-                              if (canDeleteThisRefund) {
-                                _onDeleteRefundPressed(context, transaction);
-                                return;
-                              }
+                      final (
+                        totalPaid: totalPaid,
+                        totalRefunded: totalRefunded,
+                      ) = _getTotalsWithoutSecurity(transactions);
+                      // payment cannot be deleted if this payment decreases balance below 0
+                      if ((totalPaid - transaction.amount) < totalRefunded) {
+                        context.showSnackBar(
+                          'Payment cannot be deleted, balance cannot be less than 0',
+                          title: 'Action not allowed',
+                          isError: true,
+                        );
+                        return;
+                      }
 
-                              final (
-                                totalPaid: totalPaid,
-                                totalRefunded: totalRefunded,
-                              ) = _getTotalsWithoutSecurity(
-                                transactions,
-                              );
-                              // payment cannot be deleted if this payment decreases balance below 0
-                              if ((totalPaid - transaction.amount) <
-                                  totalRefunded) {
-                                context.showSnackBar(
-                                  'Payment cannot be deleted, balance cannot be less than 0',
-                                  title: 'Action not allowed',
-                                  isError: true,
-                                );
-                                return;
-                              }
-
-                              _onDeletePaymentPressed(context, transaction);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem<String>(
-                              value: 'delete',
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.red,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    canDeleteThisRefund
-                                        ? 'Delete refund'
-                                        : 'Delete payment',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      _onDeletePaymentPressed(context, transaction);
+                    },
                   );
                 },
                 separatorBuilder: (context, index) => Divider(

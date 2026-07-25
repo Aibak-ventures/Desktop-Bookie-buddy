@@ -15,6 +15,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
@@ -59,10 +60,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteBooking: getIt(),
               addRefund: getIt(),
               deleteRefund: getIt(),
+              updateSecurityRefund: getIt(),
+              deleteSecurityRefundedPayment: getIt(),
             ),
           ),
           BlocProvider(
             create: (context) => BookingDetailsPaymentHistoryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(
@@ -89,10 +95,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteBooking: getIt(),
               addRefund: getIt(),
               deleteRefund: getIt(),
+              updateSecurityRefund: getIt(),
+              deleteSecurityRefundedPayment: getIt(),
             ),
           ),
           BlocProvider(
             create: (context) => BookingDetailsPaymentHistoryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
           ),
           BlocProvider(
             create: (context) =>
@@ -122,10 +133,15 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteBooking: getIt(),
               addRefund: getIt(),
               deleteRefund: getIt(),
+              updateSecurityRefund: getIt(),
+              deleteSecurityRefundedPayment: getIt(),
             ),
           ),
           BlocProvider(
             create: (context) => BookingDetailsPaymentHistoryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
           ),
           BlocProvider(
             create: (context) => AllBookingBloc(

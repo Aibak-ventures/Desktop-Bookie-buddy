@@ -46,4 +46,18 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int bookingId,
     required int refundId,
   }) = _DeleteRefund;
+
+  const factory BookingDetailsEvent.updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  }) = _UpdateSecurityRefund;
+
+  const factory BookingDetailsEvent.deleteSecurityRefundedPayment({
+    required int bookingId,
+    required int paymentId,
+    required SecurityPaymentHistoryType securityPaymentType,
+  }) = _DeleteSecurityRefundedPayment;
 }

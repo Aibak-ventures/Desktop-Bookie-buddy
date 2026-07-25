@@ -103,4 +103,14 @@ abstract interface class IBookingRepository {
 
   //
   Future<void> deleteRefund({required int bookingId, required int refundId});
+
+  Future<void> updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  });
+
+  Future<void> deleteSecurityRefundedPayment({required int refundId});
 }

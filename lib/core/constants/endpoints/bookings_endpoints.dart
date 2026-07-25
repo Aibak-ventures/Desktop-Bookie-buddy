@@ -31,4 +31,9 @@ class BookingsEndpoints {
   static String addRefund(int bookingId) => '${bookingsV5}refund/$bookingId/';
   static String deleteRefund({required int bookingId, required int refundId}) =>
       '${bookingsV5}refund/$bookingId/$refundId/';
+
+  static String updateSecurityRefund(int bookingId) =>
+      '${bookingsV5}security-adjustment/$bookingId/';
+  static String deleteSecurityRefundedPayment({required int refundId}) =>
+      '${bookingsV5}delete-security-adjustment/$refundId/';
 }

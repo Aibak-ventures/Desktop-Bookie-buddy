@@ -51,20 +51,23 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
     Emitter<AllBookingState> emit,
   ) async {
     try {
-      await _updateDeliveryStatus(event.bookingId, event.deliveryStatus);
-
       // Update the local state instead of reloading
-      if (state is _Loaded) {
-        final s = state as _Loaded;
-        final updatedBookings = s.bookings.map((booking) {
-          if (booking.id == event.bookingId) {
-            return booking.copyWith(deliveryStatus: event.deliveryStatus);
-          }
-          return booking;
-        }).toList();
+      log('updating delivery status in local state');
 
-        emit(s.copyWith(bookings: updatedBookings));
+      final s = state is _Loaded ? state as _Loaded : null;
+      if (s == null) {
+        log('state is null, cancelling update');
+        return;
       }
+
+      final updatedBookings = s.bookings.map((booking) {
+        if (booking.id == event.bookingId) {
+          return booking.copyWith(deliveryStatus: event.deliveryStatus);
+        }
+        return booking;
+      }).toList();
+
+      emit(s.copyWith(bookings: updatedBookings));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       if (state is _Loaded) {

@@ -2,6 +2,8 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_refund_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_security_refund_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_security_refunded_payment_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/bloc/add_booking_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/data/repositories/booking_repository_impl.dart';
@@ -138,6 +140,16 @@ class BookingDependencies {
 
     if (!getIt.isRegistered<DeleteRefundUseCase>()) {
       getIt.registerLazySingleton(() => DeleteRefundUseCase(getIt()));
+    }
+
+    if (!getIt.isRegistered<UpdateSecurityRefundUseCase>()) {
+      getIt.registerLazySingleton(() => UpdateSecurityRefundUseCase(getIt()));
+    }
+
+    if (!getIt.isRegistered<DeleteSecurityRefundedPaymentUseCase>()) {
+      getIt.registerLazySingleton(
+        () => DeleteSecurityRefundedPaymentUseCase(getIt()),
+      );
     }
 
     if (!getIt.isRegistered<AddBookingCubit>()) {

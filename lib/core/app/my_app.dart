@@ -16,6 +16,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
@@ -82,6 +83,8 @@ class _MyAppState extends State<MyApp> {
             deleteBooking: getIt.get(),
             addRefund: getIt(),
             deleteRefund: getIt(),
+            updateSecurityRefund: getIt(),
+            deleteSecurityRefundedPayment: getIt(),
           ),
         ),
         BlocProvider(
@@ -104,6 +107,9 @@ class _MyAppState extends State<MyApp> {
           )..add(const DashboardEvent.loadDashboardData()),
         ),
         BlocProvider(create: (context) => BookingDetailsPaymentHistoryCubit()),
+        BlocProvider(
+          create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
+        ),
         BlocProvider(
           create: (context) => ProductBloc(
             getProducts: getIt.get(),

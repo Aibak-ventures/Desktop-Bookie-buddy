@@ -8,6 +8,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -170,9 +171,14 @@ class CarouselDashboard extends StatelessWidget {
                 deleteBooking: getIt.get(),
                 addRefund: getIt.get(),
                 deleteRefund: getIt.get(),
+                updateSecurityRefund: getIt.get(),
+                deleteSecurityRefundedPayment: getIt.get(),
               ),
             ),
             BlocProvider(create: (_) => BookingDetailsPaymentHistoryCubit()),
+            BlocProvider(
+              create: (_) => BookingDetailsSecurityRefundHistoryCubit(),
+            ),
             BlocProvider(
               create: (_) => AllSalesBloc(getSalesUseCase: getIt.get()),
             ),

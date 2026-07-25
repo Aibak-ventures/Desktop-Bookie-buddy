@@ -8,6 +8,8 @@ import 'package:bookie_buddy_web/features/booking/data/models/security_summary_m
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_details_security_refund_history_model/booking_details_security_refund_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_security_payment_model/booking_security_payment_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_model.freezed.dart';
@@ -77,6 +79,11 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'security_summary')
     @Default(SecuritySummaryModel.empty)
     SecuritySummaryModel securitySummary,
+    @JsonKey(name: 'security_adjustments')
+    @Default([])
+    List<BookingDetailsSecurityRefundHistoryModel> securityTransactionHistory,
+    @JsonKey(name: 'security_amount_is_paid') @Default(false) bool isSecurityPaid,
+    @JsonKey(name: 'security') BookingSecurityPaymentModel? securityPayment,
     @JsonKey(name: 'security_account_name') String? securityAccountName,
     @JsonKey(name: 'security_account_id') int? securityAccountId,
     // API currently sends a single `tax` object; modeled as a list so that
@@ -128,6 +135,11 @@ extension BookingDetailsModelMapper on BookingDetailsModel {
     totalRefunded: totalRefunded,
     refundableBalance: refundableBalance,
     securitySummary: securitySummary.toEntity(),
+    securityTransactionHistory: securityTransactionHistory
+        .map((e) => e.toEntity())
+        .toList(),
+    isSecurityPaid: isSecurityPaid,
+    securityPayment: securityPayment?.toEntity(),
     securityAccountId: securityAccountId,
     securityAccountName: securityAccountName,
     appliedTaxes: appliedTaxes.map((e) => e.toEntity()).toList(),

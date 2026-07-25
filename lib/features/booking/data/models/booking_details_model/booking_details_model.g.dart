@@ -77,6 +77,21 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
       : SecuritySummaryModel.fromJson(
           json['security_summary'] as Map<String, dynamic>,
         ),
+  securityTransactionHistory:
+      (json['security_adjustments'] as List<dynamic>?)
+          ?.map(
+            (e) => BookingDetailsSecurityRefundHistoryModel.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList() ??
+      const [],
+  isSecurityPaid: json['security_amount_is_paid'] as bool? ?? false,
+  securityPayment: json['security'] == null
+      ? null
+      : BookingSecurityPaymentModel.fromJson(
+          json['security'] as Map<String, dynamic>,
+        ),
   securityAccountName: json['security_account_name'] as String?,
   securityAccountId: (json['security_account_id'] as num?)?.toInt(),
   appliedTaxes: json['tax'] == null
@@ -121,6 +136,9 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'total_refunded': instance.totalRefunded,
   'refundable_balance': instance.refundableBalance,
   'security_summary': instance.securitySummary,
+  'security_adjustments': instance.securityTransactionHistory,
+  'security_amount_is_paid': instance.isSecurityPaid,
+  'security': instance.securityPayment,
   'security_account_name': instance.securityAccountName,
   'security_account_id': instance.securityAccountId,
   'tax': instance.appliedTaxes,

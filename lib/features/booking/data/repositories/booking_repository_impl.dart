@@ -635,4 +635,50 @@ class BookingRepositoryImpl implements IBookingRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.updateSecurityRefund(
+          bookingId: bookingId,
+          refundAmount: refundAmount,
+          deductionAmount: deductionAmount,
+          accountId: accountId,
+          note: note,
+        ),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error updating security refund: ${response.devMessage}');
+      throw response.message ?? 'Failed to update security refund';
+    } catch (e, stack) {
+      log('Error updating security refund: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteSecurityRefundedPayment({required int refundId}) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.deleteSecurityRefundedPayment(refundId: refundId),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error deleting security refunded payment: ${response.devMessage}');
+      throw response.message ?? 'Failed to delete security refunded payment';
+    } catch (e, stack) {
+      log('Error deleting security refunded payment: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

@@ -10,8 +10,10 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widge
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_header_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_items_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_payment_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_security_refund_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
@@ -130,6 +132,11 @@ class BookingDetailsDrawer extends StatelessWidget {
             if (paymentHistoryCubit.isExpanded) {
               paymentHistoryCubit.collapsePaymentHistory();
             }
+            final securityHistoryCubit = context
+                .read<BookingDetailsSecurityRefundHistoryCubit>();
+            if (securityHistoryCubit.isExpanded) {
+              securityHistoryCubit.collapseHistory();
+            }
           },
           success: (message, didPop, needRefresh) {
             context.showSnackBar(message);
@@ -207,6 +214,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                         BookingDetailsCustomerSection(booking: booking),
                         const SizedBox(height: 20),
                         BookingDetailsPaymentSection(booking: booking),
+                        const SizedBox(height: 20),
+                        BookingDetailsSecurityRefundSection(booking: booking),
                         const SizedBox(height: 20),
                         BookingDetailsDocumentsSection(booking: booking),
                         const SizedBox(height: 80),
