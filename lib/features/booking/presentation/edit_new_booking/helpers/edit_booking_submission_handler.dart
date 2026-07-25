@@ -73,6 +73,9 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     if (widget.bookingDetails != null) {
       final partialUpdate = _buildPartialUpdateRequest();
+      if (sendPdfToWhatsApp) {
+        partialUpdate['send_invoice'] = true;
+      }
 
       final currentDocs = documentsNotifier.value;
       final originalDocPaths =

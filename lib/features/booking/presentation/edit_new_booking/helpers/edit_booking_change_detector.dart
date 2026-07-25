@@ -1,6 +1,20 @@
 ﻿part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingChangeDetector on EditNewBookingScreenState {
+  /// Returns true when any field on the form differs from its original value.
+  bool _hasAnyFormChanges() {
+    if (_haveDatesChanged()) return true;
+    if (_hasClientChanged()) return true;
+    if (_hasStaffChanged()) return true;
+    if (_haveAmountsChanged()) return true;
+    if (_hasRunningKmChanged()) return true;
+    if (_hasDeliveryStatusChanged()) return true;
+    if (_haveAdditionalChargesChanged()) return true;
+    if (_haveProductsChanged()) return true;
+    if (_haveDocumentsChanged()) return true;
+    if (_hasDescriptionChanged()) return true;
+    return false;
+  }
   // ---------------------------------------------------------------------------
   // Unsaved-changes guard
   // ---------------------------------------------------------------------------
@@ -124,5 +138,32 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     }
 
     return false;
+  }
+
+  bool _haveProductsChanged() {
+    final currentCount = selectedProductsNotifier.value.length;
+    final originalCount = _originalBooking?.bookedItems.length ?? 0;
+    if (currentCount != originalCount) return true;
+
+    final currentIds = selectedProductsNotifier.value
+        .map((p) => '${p.variant.variantId ?? p.variant.id}:${p.quantity}')
+        .toSet();
+    final originalIds = (_originalBooking?.bookedItems ?? [])
+        .map((b) => '${b.variantId}:${b.quantity}')
+        .toSet();
+    return currentIds != originalIds;
+  }
+
+  bool _haveDocumentsChanged() {
+    final currentPaths = documentsNotifier.value.map((d) => d.path).toSet();
+    final originalPaths =
+        _originalDocuments?.map((d) => d.path).toSet() ?? {};
+    return currentPaths != originalPaths;
+  }
+
+  bool _hasDescriptionChanged() {
+    final current = descriptionController.text.trim();
+    final original = _originalBooking?.description ?? '';
+    return current != original;
   }
 }
