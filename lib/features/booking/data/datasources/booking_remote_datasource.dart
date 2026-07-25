@@ -86,9 +86,7 @@ class BookingRemoteDatasource {
       } else if (value is Map) {
         (value as Map<String, dynamic>).forEach((subKey, subValue) {
           if (subValue != null) {
-            formData.fields.add(
-              MapEntry('$key[$subKey]', subValue.toString()),
-            );
+            formData.fields.add(MapEntry('$key[$subKey]', subValue.toString()));
           }
         });
       } else {
@@ -401,32 +399,6 @@ class BookingRemoteDatasource {
     }
   }
 
-  Future<CustomResponseModel> addRefund({
-    required int bookingId,
-    required int amount,
-    required int accountId,
-    String? refundReason,
-  }) async {
-    try {
-      final response = await _dio.post(
-        ApiEndpoints.bookings.addRefund(bookingId),
-        data: {
-          'amount': amount,
-          'account_id': accountId,
-          if (refundReason != null) 'refund_reason': refundReason,
-        },
-      );
-
-      log(
-        'add refund response: ${response.realUri.toString()}, data: ${response.data}',
-      );
-      return CustomResponseModel.fromJson(response.data);
-    } catch (e, stack) {
-      log('Error adding refund: $e', stackTrace: stack);
-      rethrow;
-    }
-  }
-
   Future<CustomResponseModel> fetchBookingsPagination({
     required LoadBookingType status,
     required int page,
@@ -668,6 +640,54 @@ class BookingRemoteDatasource {
     } catch (e, stack) {
       log('Error fetching booking invoice PDF: $e', stackTrace: stack);
       rethrow;
+    }
+  }
+
+  /// Add refund to a booking
+  Future<CustomResponseModel> addRefund({
+    required int bookingId,
+    required int amount,
+    required int accountId,
+    String? refundReason,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.bookings.addRefund(bookingId),
+        data: {
+          'amount': amount,
+          'account_id': accountId,
+          'refund_reason': ?refundReason,
+        },
+      );
+
+      log(
+        'add refund response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error adding refund: $e', stackTrace: stack);
+      throw e;
+    }
+  }
+
+  Future<CustomResponseModel> deleteRefund({
+    required int bookingId,
+    required int refundId,
+  }) async {
+    try {
+      final response = await _dio.delete(
+        ApiEndpoints.bookings.deleteRefund(
+          bookingId: bookingId,
+          refundId: refundId,
+        ),
+      );
+      log(
+        'delete refund response: ${response.realUri.toString()}, data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error deleting refund: $e', stackTrace: stack);
+      throw e;
     }
   }
 }

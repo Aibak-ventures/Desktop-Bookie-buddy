@@ -168,6 +168,8 @@ class CarouselDashboard extends StatelessWidget {
                 deletePayment: getIt.get(),
                 cancelBooking: getIt.get(),
                 deleteBooking: getIt.get(),
+                addRefund: getIt.get(),
+                deleteRefund: getIt.get(),
               ),
             ),
             BlocProvider(create: (_) => BookingDetailsPaymentHistoryCubit()),

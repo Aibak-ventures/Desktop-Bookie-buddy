@@ -57,6 +57,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deletePayment: getIt(),
               cancelBooking: getIt(),
               deleteBooking: getIt(),
+              addRefund: getIt(),
+              deleteRefund: getIt(),
             ),
           ),
           BlocProvider(
@@ -85,6 +87,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deletePayment: getIt(),
               cancelBooking: getIt(),
               deleteBooking: getIt(),
+              addRefund: getIt(),
+              deleteRefund: getIt(),
             ),
           ),
           BlocProvider(
@@ -116,6 +120,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deletePayment: getIt(),
               cancelBooking: getIt(),
               deleteBooking: getIt(),
+              addRefund: getIt(),
+              deleteRefund: getIt(),
             ),
           ),
           BlocProvider(
@@ -140,7 +146,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: const StockManagementScreen(),
       ),
-      // const SettingsScreen(), //Currently not using 
+      // const SettingsScreen(), //Currently not using
     ];
     super.initState();
   }

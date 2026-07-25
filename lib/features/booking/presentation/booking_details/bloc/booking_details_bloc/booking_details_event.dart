@@ -34,4 +34,16 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
 
   const factory BookingDetailsEvent.deleteBooking(int bookingId) =
       _DeleteBooking;
+
+  const factory BookingDetailsEvent.addRefund({
+    required int bookingId,
+    required int amount,
+    required int accountId,
+    String? refundReason,
+  }) = _AddRefund;
+
+  const factory BookingDetailsEvent.deleteRefund({
+    required int bookingId,
+    required int refundId,
+  }) = _DeleteRefund;
 }

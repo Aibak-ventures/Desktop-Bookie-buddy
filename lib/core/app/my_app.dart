@@ -80,6 +80,8 @@ class _MyAppState extends State<MyApp> {
             deletePayment: getIt.get(),
             cancelBooking: getIt.get(),
             deleteBooking: getIt.get(),
+            addRefund: getIt(),
+            deleteRefund: getIt(),
           ),
         ),
         BlocProvider(
