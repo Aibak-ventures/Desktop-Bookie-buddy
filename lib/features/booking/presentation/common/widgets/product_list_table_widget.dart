@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/pa
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,10 +18,13 @@ class ProductListTableWidget extends StatefulWidget {
   final FocusNode clientNameFocusNode;
   final VoidCallback onIncrementRentalDays;
   final VoidCallback onDecrementRentalDays;
+
   /// When false, the Days column shows the count only (no +/− controls).
   final bool showDayControls;
+
   /// When set to a product key, auto-focuses that product's quantity field.
   final ValueNotifier<int?>? focusTargetProductKey;
+
   /// Called when navigation reaches the end of the product list.
   final VoidCallback? onNavigateToClientDetails;
 
@@ -48,10 +52,13 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   final _inlinePriceFocusNode = FocusNode();
   final Map<int, TextEditingController> _quantityControllers = {};
   final Map<int, FocusNode> _quantityFocusNodes = {};
+
   /// Row-level focus nodes for keyboard navigation
   final Map<int, FocusNode> _rowFocusNodes = {};
+
   /// Element focus nodes for each product row: [qtyMinus, qtyPlus, daysMinus, daysPlus, price]
   final Map<int, List<FocusNode>> _rowElementFocusNodes = {};
+
   /// Tracks active sub-element index within a row: 0=qtyMinus, 1=qtyInput, 2=qtyPlus, 3=daysMinus, 4=daysPlus, 5=price
   final Map<int, int> _rowActiveElement = {};
   final ScrollController _scrollController = ScrollController();
@@ -229,10 +236,6 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     );
   }
 
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) {
-    return PaymentCalculator.shouldMultiplyByDays(serviceType);
-  }
-
   Widget _buildProductRow(ProductSelectedEntity product) {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
@@ -240,11 +243,15 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
-    final fullImageUrl = product.variant.image ?? product.variant.thumbnailImage;
+    final fullImageUrl =
+        product.variant.image ?? product.variant.thumbnailImage;
     final effectiveDaysMultiplier =
-        (!isSales && _shouldMultiplyByDays(product.variant.mainServiceType))
-        ? (rentalDays > 0 ? rentalDays : 1)
-        : 1;
+        PaymentCalculator.getDaysMultiplierForProduct(
+          bookingType: widget.selectedBookingType,
+          effectiveRentalDays: rentalDays,
+          product: product,
+        );
+
     final hasVariants = _hasAnyProductWithVariants();
     final productKey = _quantityKey(product);
 
@@ -395,8 +402,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                           product.variant.remainingStock != null
                               ? '${product.variant.remainingStock} left'
                               : product.variant.stock != null
-                                  ? '${product.variant.stock} left'
-                                  : '-',
+                              ? '${product.variant.stock} left'
+                              : '-',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -421,7 +428,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                     onKeyEvent: (_, event) {
                       if (event is KeyDownEvent &&
                           (event.logicalKey == LogicalKeyboardKey.enter ||
-                              event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                              event.logicalKey ==
+                                  LogicalKeyboardKey.numpadEnter)) {
                         _decrementQuantity(product);
                         return KeyEventResult.handled;
                       }
@@ -461,11 +469,16 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
-                          borderSide: const BorderSide(color: Color(0xFF6132E4)),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF6132E4),
+                          ),
                         ),
                       ),
-                      onSubmitted: (value) =>
-                          _saveTypedQuantity(product, value, advanceToPrice: true),
+                      onSubmitted: (value) => _saveTypedQuantity(
+                        product,
+                        value,
+                        advanceToPrice: true,
+                      ),
                       onTapOutside: (_) => _saveTypedQuantity(
                         product,
                         _getQuantityController(product).text,
@@ -478,7 +491,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                     onKeyEvent: (_, event) {
                       if (event is KeyDownEvent &&
                           (event.logicalKey == LogicalKeyboardKey.enter ||
-                              event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                              event.logicalKey ==
+                                  LogicalKeyboardKey.numpadEnter)) {
                         _incrementQuantity(product);
                         return KeyEventResult.handled;
                       }
@@ -511,8 +525,10 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             focusNode: _getRowElementFocusNode(productKey, 2),
                             onKeyEvent: (_, event) {
                               if (event is KeyDownEvent &&
-                                  (event.logicalKey == LogicalKeyboardKey.enter ||
-                                      event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                                  (event.logicalKey ==
+                                          LogicalKeyboardKey.enter ||
+                                      event.logicalKey ==
+                                          LogicalKeyboardKey.numpadEnter)) {
                                 widget.onDecrementRentalDays();
                                 return KeyEventResult.handled;
                               }
@@ -538,8 +554,10 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             focusNode: _getRowElementFocusNode(productKey, 3),
                             onKeyEvent: (_, event) {
                               if (event is KeyDownEvent &&
-                                  (event.logicalKey == LogicalKeyboardKey.enter ||
-                                      event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                                  (event.logicalKey ==
+                                          LogicalKeyboardKey.enter ||
+                                      event.logicalKey ==
+                                          LogicalKeyboardKey.numpadEnter)) {
                                 widget.onIncrementRentalDays();
                                 return KeyEventResult.handled;
                               }
@@ -591,7 +609,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide(color: Colors.grey.shade400),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade400,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
@@ -609,7 +629,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                       onKeyEvent: (_, event) {
                         if (event is KeyDownEvent &&
                             (event.logicalKey == LogicalKeyboardKey.enter ||
-                                event.logicalKey == LogicalKeyboardKey.numpadEnter)) {
+                                event.logicalKey ==
+                                    LogicalKeyboardKey.numpadEnter)) {
                           _startEditingPrice(product);
                           return KeyEventResult.handled;
                         }
@@ -644,7 +665,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             Expanded(
               child: Center(
                 child: Text(
-                  '${product.amount * product.quantity * effectiveDaysMultiplier}',
+                  ((product.amount * product.quantity) *
+                          effectiveDaysMultiplier)
+                      .toCurrency(),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -680,9 +703,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         width: compact ? 20 : 18,
         height: compact ? 20 : 18,
         decoration: BoxDecoration(
-          color: isDisabled
-              ? Colors.grey.shade300
-              : const Color(0xFFF3F0FF),
+          color: isDisabled ? Colors.grey.shade300 : const Color(0xFFF3F0FF),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Icon(
@@ -821,11 +842,16 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     return [0, 1, 2, if (hasDays) 3, if (hasDays) 4, 5];
   }
 
-  KeyEventResult _handleRowKeyEvent(ProductSelectedEntity product, KeyEvent event) {
+  KeyEventResult _handleRowKeyEvent(
+    ProductSelectedEntity product,
+    KeyEvent event,
+  ) {
     if (event is! KeyDownEvent) return KeyEventResult.ignored;
     final key = _quantityKey(product);
     final products = widget.selectedProductsNotifier.value;
-    final currentIndex = products.indexWhere((item) => _quantityKey(item) == key);
+    final currentIndex = products.indexWhere(
+      (item) => _quantityKey(item) == key,
+    );
 
     if (event.logicalKey == LogicalKeyboardKey.arrowRight ||
         event.logicalKey == LogicalKeyboardKey.numpad6) {
@@ -912,8 +938,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           BookingProductHelpers.productKey(product),
     );
     if (index != -1) {
-      _quantityControllers[_quantityKey(product)]?.text =
-          updatedProducts[index].quantity.toString();
+      _quantityControllers[_quantityKey(product)]?.text = updatedProducts[index]
+          .quantity
+          .toString();
     }
   }
 
@@ -925,7 +952,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     );
     if (identical(updatedProducts, currentProducts)) return;
 
-    final removedItem = updatedProducts.length < currentProducts.length &&
+    final removedItem =
+        updatedProducts.length < currentProducts.length &&
         !updatedProducts.any(
           (item) =>
               BookingProductHelpers.productKey(item) ==
@@ -957,8 +985,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final parsedQuantity = int.tryParse(value.trim());
 
     if (parsedQuantity == null || parsedQuantity <= 0) {
-      _quantityControllers[_quantityKey(product)]?.text =
-          product.quantity.toString();
+      _quantityControllers[_quantityKey(product)]?.text = product.quantity
+          .toString();
       context.showSnackBar('Quantity must be greater than 0', isError: true);
       return;
     }
@@ -971,14 +999,14 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     );
 
     if (result.hasError) {
-      _quantityControllers[_quantityKey(product)]?.text =
-          product.quantity.toString();
+      _quantityControllers[_quantityKey(product)]?.text = product.quantity
+          .toString();
       context.showSnackBar(result.errorMessage!, isError: true);
       return;
     }
 
-    _quantityControllers[_quantityKey(product)]?.text =
-        parsedQuantity.toString();
+    _quantityControllers[_quantityKey(product)]?.text = parsedQuantity
+        .toString();
     widget.selectedProductsNotifier.value = result.products;
     _quantityFocusNodes[_quantityKey(product)]?.unfocus();
     final updatedIndex = result.products.indexWhere(
@@ -1040,19 +1068,20 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     _quantityControllers.remove(key)?.dispose();
     _quantityFocusNodes.remove(key)?.dispose();
     _removeRowFocusNodes(key);
-    widget.selectedProductsNotifier.value = SelectedProductsManager.removeProduct(
-      currentProducts: products,
-      product: product,
-    );
+    widget.selectedProductsNotifier.value =
+        SelectedProductsManager.removeProduct(
+          currentProducts: products,
+          product: product,
+        );
   }
 
   void _updateProductPrice(ProductSelectedEntity product, int newPrice) {
     widget.selectedProductsNotifier.value =
         SelectedProductsManager.updateProductPrice(
-      currentProducts: widget.selectedProductsNotifier.value,
-      product: product,
-      newPrice: newPrice,
-    );
+          currentProducts: widget.selectedProductsNotifier.value,
+          product: product,
+          newPrice: newPrice,
+        );
   }
 
   String _getVariantDisplayText(ProductSelectedEntity product) {

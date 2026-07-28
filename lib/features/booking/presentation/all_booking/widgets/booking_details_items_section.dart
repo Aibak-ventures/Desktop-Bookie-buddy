@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Item details section for [BookingDetailsDrawer].
@@ -134,7 +135,7 @@ class BookingDetailsItemsSection extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '₹ ${item.amount}',
+                            item.amount.toCurrency(),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -150,99 +151,103 @@ class BookingDetailsItemsSection extends StatelessWidget {
                     const Divider(height: 1),
                     const SizedBox(height: 8),
                     // Separate running_kilometers from other measurements
-                    Builder(builder: (context) {
-                      final runningKm = item.measurements
-                          .where((m) => m.key == 'running_kilometers')
-                          .firstOrNull;
-                      final otherMeasurements = item.measurements
-                          .where((m) => m.key != 'running_kilometers')
-                          .toList();
+                    Builder(
+                      builder: (context) {
+                        final runningKm = item.measurements
+                            .where((m) => m.key == 'running_kilometers')
+                            .firstOrNull;
+                        final otherMeasurements = item.measurements
+                            .where((m) => m.key != 'running_kilometers')
+                            .toList();
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Kilometer section (if running_kilometers exists)
-                          if (runningKm != null) ...[
-                            Text(
-                              'Kilometer',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade700,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
-                                border:
-                                    Border.all(color: Colors.grey.shade300),
-                              ),
-                              child: Text(
-                                runningKm.value,
-                                style: const TextStyle(
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Kilometer section (if running_kilometers exists)
+                            if (runningKm != null) ...[
+                              Text(
+                                'Kilometer',
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.black87,
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                            if (otherMeasurements.isNotEmpty)
-                              const SizedBox(height: 8),
-                          ],
-                          // Other measurements section
-                          if (otherMeasurements.isNotEmpty) ...[
-                            Text(
-                              'Customization Measurements:',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade700,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 6),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                ),
+                                child: Text(
+                                  runningKm.value,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black87,
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 6),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              children:
-                                  otherMeasurements.map((measurement) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                        color: Colors.grey.shade300),
-                                  ),
-                                  child: Text(
-                                    '${measurement.name.replaceAll('_', ' ')}: ${measurement.value}',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.black87,
+                              if (otherMeasurements.isNotEmpty)
+                                const SizedBox(height: 8),
+                            ],
+                            // Other measurements section
+                            if (otherMeasurements.isNotEmpty) ...[
+                              Text(
+                                'Customization Measurements:',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                children: otherMeasurements.map((measurement) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '${measurement.name.replaceAll('_', ' ')}: ${measurement.value}',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
                           ],
-                        ],
-                      );
-                    }),
+                        );
+                      },
+                    ),
                   ],
                 ],
               ),
             );
           }),
           // Location details — shown once if any item is a vehicle
-          if (booking.bookedItems
-                  .any((item) => item.mainServiceType.isVehicle) &&
+          if (booking.bookedItems.any(
+                (item) => item.mainServiceType.isVehicle,
+              ) &&
               (booking.otherDetails.locationStart != null ||
                   booking.otherDetails.locationFrom != null ||
                   booking.otherDetails.locationTo != null)) ...[
@@ -259,8 +264,11 @@ class BookingDetailsItemsSection extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.location_on_outlined,
-                          size: 16, color: Colors.blue.shade700),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 16,
+                        color: Colors.blue.shade700,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         'Location Details',
@@ -276,17 +284,22 @@ class BookingDetailsItemsSection extends StatelessWidget {
                   if (booking.otherDetails.locationStart != null) ...[
                     Row(
                       children: [
-                        Text('Start',
-                            style: TextStyle(
-                                fontSize: 11, color: Colors.grey.shade600)),
+                        Text(
+                          'Start',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             booking.otherDetails.locationStart!,
                             style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ],
@@ -296,17 +309,22 @@ class BookingDetailsItemsSection extends StatelessWidget {
                   if (booking.otherDetails.locationFrom != null) ...[
                     Row(
                       children: [
-                        Text('From',
-                            style: TextStyle(
-                                fontSize: 11, color: Colors.grey.shade600)),
+                        Text(
+                          'From',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             booking.otherDetails.locationFrom!,
                             style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ],
@@ -316,17 +334,22 @@ class BookingDetailsItemsSection extends StatelessWidget {
                   if (booking.otherDetails.locationTo != null) ...[
                     Row(
                       children: [
-                        Text('To',
-                            style: TextStyle(
-                                fontSize: 11, color: Colors.grey.shade600)),
+                        Text(
+                          'To',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             booking.otherDetails.locationTo!,
                             style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
                       ],
@@ -352,8 +375,11 @@ class BookingDetailsItemsSection extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.note_alt_outlined,
-                          size: 16, color: Colors.amber.shade700),
+                      Icon(
+                        Icons.note_alt_outlined,
+                        size: 16,
+                        color: Colors.amber.shade700,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         'Notes',

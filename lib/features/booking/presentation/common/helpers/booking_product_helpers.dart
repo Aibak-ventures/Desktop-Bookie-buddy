@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
@@ -90,15 +91,20 @@ class BookingProductHelpers {
     );
   }
 
-  static ProductSelectedEntity fromBookedItem(ProductInfoEntity item,
-      {int rentalDays = 1}) {
+  static ProductSelectedEntity fromBookedItem(
+    ProductInfoEntity item, {
+    int rentalDays = 1,
+  }) {
+    final effectiveRentalDays =
+        (item.mainServiceType.requiresDateRange && rentalDays > 0
+        ? rentalDays
+        : 1);
+    final effectiveQty = item.quantity > 0 ? item.quantity : 1;
     return ProductSelectedEntity(
       variant: item.copyWith(),
       measurements: item.measurements,
       quantity: item.quantity,
-      amount: (item.quantity > 0 && rentalDays > 0)
-          ? item.amount ~/ (item.quantity * rentalDays)
-          : item.amount,
+      amount: item.amount ~/ (effectiveQty * effectiveRentalDays),
     );
   }
 }

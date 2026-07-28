@@ -190,8 +190,13 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       final runningKm = runningKilometersController.text.trim();
       updates['variants'] = products.map((p) {
         final variantId = p.variant.variantId ?? p.variant.id;
-        final rentalDays = _calculateRentalDays();
-        final lineAmount = p.amount * p.quantity * rentalDays;
+        final effectiveRentalDays = PaymentCalculator.getDaysMultiplierForProduct(
+          product: p,
+          bookingType: selectedBookingType,
+          effectiveRentalDays: _calculateRentalDays(),
+        );
+
+        final lineAmount = (p.amount * p.quantity) * effectiveRentalDays;
         final variantData = <String, dynamic>{
           'id': variantId,
           'quantity': p.quantity,
