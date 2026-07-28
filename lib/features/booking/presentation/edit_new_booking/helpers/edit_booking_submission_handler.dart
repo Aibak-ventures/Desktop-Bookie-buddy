@@ -190,11 +190,12 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       final runningKm = runningKilometersController.text.trim();
       updates['variants'] = products.map((p) {
         final variantId = p.variant.variantId ?? p.variant.id;
-        final effectiveRentalDays = PaymentCalculator.getDaysMultiplierForProduct(
-          product: p,
-          bookingType: selectedBookingType,
-          effectiveRentalDays: _calculateRentalDays(),
-        );
+        final effectiveRentalDays =
+            PaymentCalculator.getDaysMultiplierForProduct(
+              product: p,
+              bookingType: selectedBookingType,
+              effectiveRentalDays: _calculateRentalDays(),
+            );
 
         final lineAmount = (p.amount * p.quantity) * effectiveRentalDays;
         final variantData = <String, dynamic>{
@@ -249,30 +250,19 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   /// Extracted to avoid duplicating this logic between the date-changed and
   /// cooling-only-changed branches of [_buildPartialUpdateRequest].
   void _appendCoolingPeriodFields(Map<String, dynamic> updates) {
-    if (coolingPeriodDays > 0) {
+    if (coolingPeriodDays >= 0) {
       if (coolingPeriodMode.isAfter) {
         updates['cooling_period_end'] = returnDate
             .add(Duration(days: coolingPeriodDays))
             .format()
-            .appendTimeToDate(
-              time: returnTime,
-              time24HourAsString: returnTime == null ? '23:59:00' : null,
-            );
+            .appendTimeToDate(time24HourAsString: '23:59:59');
       } else {
         updates['cooling_period_end'] = pickupDate
             .subtract(Duration(days: coolingPeriodDays))
             .format()
-            .appendTimeToDate(
-              time: returnTime,
-              time24HourAsString: returnTime == null ? '23:59:00' : null,
-            );
+            .appendTimeToDate(time24HourAsString: '00:00:00');
       }
       updates['cooling_period_type'] = coolingPeriodMode.value.toLowerCase();
-    } else {
-      updates['cooling_period_end'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
-      );
     }
   }
 

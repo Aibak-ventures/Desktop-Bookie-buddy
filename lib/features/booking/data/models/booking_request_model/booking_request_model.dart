@@ -71,8 +71,6 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     bool sendPdfToWhatsApp,
     @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
     @JsonKey(name: 'security_account_id') int? securityPaymentAccountId,
-   
-
     // Use this field when creating old booking with account id.
     @JsonKey(name: 'account_id') int? oldBookingAccountId,
     // Only use this field when creating an old booking.
@@ -154,18 +152,14 @@ extension BookingRequestModelX on BookingRequestModel {
     }
 
     if (coolingPeriodDate != null) {
-      final isBefore = coolingPeriodType == 'BEFORE';
+      final isBefore = coolingPeriodType?.toLowerCase() == 'before';
       if (isBefore) {
         json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
           time24HourAsString: '00:00:00',
         );
-      } else if (returnTime != null) {
-        json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
-          time: returnTime,
-        );
       } else {
         json['cooling_period_end'] = coolingPeriodDate!.appendTimeToDate(
-          time24HourAsString: '23:59:00',
+          time24HourAsString: '23:59:59',
         );
       }
     }
