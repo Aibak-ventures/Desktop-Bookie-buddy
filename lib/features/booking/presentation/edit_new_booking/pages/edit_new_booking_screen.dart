@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
@@ -6,6 +6,7 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.d
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
@@ -124,6 +125,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
   AccountEntity? selectedSecurityAccount;
+  bool isSecurityPaid = true;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool isDiscountPercentage = false;
   final _discountTypeNotifier = ValueNotifier<bool>(false);
@@ -211,6 +213,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? _originalClientAddress;
   int? _originalStaffId;
   int? _originalSecurityAmount;
+  bool? _originalIsSecurityPaid;
   int? _originalDiscountAmount;
   List<AdditionalChargesEntity>? _originalAdditionalCharges;
   List<DocumentFileEntity>?
@@ -704,6 +707,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSecurityPaid: isSecurityPaid,
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
@@ -721,6 +725,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSecurityPaid: isSecurityPaid,
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
@@ -1322,7 +1327,34 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         rebuild(() => selectedSecurityAccount = account),
                     label: 'Security Payment Option',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Checkbox(
+                          value: isSecurityPaid,
+                          onChanged: (v) =>
+                              rebuild(() => isSecurityPaid = v ?? false),
+                          activeColor: AppColors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Security deposit paid',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
                 ],
               );
             }

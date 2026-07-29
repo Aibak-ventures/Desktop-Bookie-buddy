@@ -35,6 +35,11 @@ class BookingAmountSummary extends StatelessWidget {
   /// Display name for the security payment method.
   final String securityMethodLabel;
 
+  /// Whether the security deposit has been collected. When false, the
+  /// deposit is still shown as owed in the payable breakdown but excluded
+  /// from the received/paid breakdown and the balance calculation.
+  final bool isSecurityPaid;
+
   final bool isSales;
   final int Function() calculateRentalDays;
 
@@ -58,6 +63,7 @@ class BookingAmountSummary extends StatelessWidget {
     required this.isDiscountPercentage,
     required this.securityAmountController,
     required this.securityMethodLabel,
+    this.isSecurityPaid = true,
     required this.isSales,
     required this.calculateRentalDays,
     required this.calculateTaxSummary,
@@ -171,16 +177,20 @@ class BookingAmountSummary extends StatelessWidget {
           );
         }
 
-        final netRemaining = (totalPayable - advanceAmount)
-            .clamp(0, 999999999)
-            .toInt();
+        final receivedSecurityAmount = isSecurityPaid ? securityAmount : 0;
+        final outstandingSecurityAmount =
+            securityAmount - receivedSecurityAmount;
+        final netRemaining =
+            (totalPayable + outstandingSecurityAmount - advanceAmount)
+                .clamp(0, 999999999)
+                .toInt();
         final pendingTotal =
             productTotal +
             securityAmount +
             additionalTotal -
             discountAmount +
             additionalTaxAmount;
-        final receivedTotal = advanceAmount + securityAmount;
+        final receivedTotal = advanceAmount + receivedSecurityAmount;
 
         final summaryPayableFields = <SummaryField>[
           SummaryField(
@@ -189,7 +199,7 @@ class BookingAmountSummary extends StatelessWidget {
           ),
           if (securityAmount > 0)
             SummaryField(
-              label: 'Security Deposit',
+              label: isSecurityPaid ? 'Security Deposit ✓' : 'Security Deposit',
               value: securityAmount.toCurrency(),
             ),
           if (additionalTotal > 0)
@@ -213,7 +223,7 @@ class BookingAmountSummary extends StatelessWidget {
               value: advanceAmount.toCurrency(),
               valueStyle: const TextStyle(fontSize: 13),
             ),
-          if (securityAmount > 0)
+          if (securityAmount > 0 && isSecurityPaid)
             SummaryField(
               label: 'Security Deposit ($securityMethodLabel)',
               value: securityAmount.toCurrency(),
@@ -259,7 +269,7 @@ class BookingAmountSummary extends StatelessWidget {
         return ExpandableSummaryTile(
           totalLabel: totalRemainingLabel,
           totalValue: netRemaining.toCurrency(),
-          subLabel: advanceAmount > 0
+          subLabel: advanceAmount > 0 || receivedSecurityAmount > 0
               ? 'paid ${receivedTotal.toCurrency()}'
               : null,
           fields: allFields,
@@ -284,6 +294,9 @@ class BookingSummarySection extends StatelessWidget {
   /// payment method label). Evaluated at widget-creation time via parent
   /// setState — updates are reflected on the next listenable rebuild.
   final String securityMethodLabel;
+
+  /// Whether the security deposit has been collected.
+  final bool isSecurityPaid;
 
   final bool isSales;
   final int Function() calculateRentalDays;
@@ -322,6 +335,7 @@ class BookingSummarySection extends StatelessWidget {
     required this.isDiscountPercentage,
     required this.securityAmountController,
     required this.securityMethodLabel,
+    this.isSecurityPaid = true,
     required this.isSales,
     required this.calculateRentalDays,
     required this.calculateTaxSummary,
@@ -354,6 +368,7 @@ class BookingSummarySection extends StatelessWidget {
             isDiscountPercentage: isDiscountPercentage,
             securityAmountController: securityAmountController,
             securityMethodLabel: securityMethodLabel,
+            isSecurityPaid: isSecurityPaid,
             isSales: isSales,
             calculateRentalDays: calculateRentalDays,
             calculateTaxSummary: calculateTaxSummary,

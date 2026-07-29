@@ -19,6 +19,7 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     if (descriptionController.text.trim().isNotEmpty) return true;
     if (_hasRunningKmChanged()) return true;
     if (_hasDeliveryStatusChanged()) return true;
+    if (isSecurityPaid != (_originalIsSecurityPaid ?? true)) return true;
     return false;
   }
 
@@ -94,7 +95,8 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
         : discountInput;
 
     return currentSecurity != (_originalSecurityAmount ?? 0) ||
-        currentDiscount != (_originalDiscountAmount ?? 0);
+        currentDiscount != (_originalDiscountAmount ?? 0) ||
+        isSecurityPaid != (_originalIsSecurityPaid ?? true);
   }
 
   bool _hasRunningKmChanged() {

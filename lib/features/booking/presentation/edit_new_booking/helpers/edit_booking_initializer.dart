@@ -104,6 +104,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     if (booking.securityAmount != null && booking.securityAmount! > 0) {
       securityAmountController.text = booking.securityAmount.toString();
     }
+    isSecurityPaid = booking.isSecurityPaid;
     // selectedSecurityAccount is auto-selected via initialAccountId in AccountSelectionField
     if (booking.discountAmount != null && booking.discountAmount! > 0) {
       discountAmountController.text = booking.discountAmount.toString();
@@ -318,6 +319,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     _originalStaffId = booking.staffId;
 
     _originalSecurityAmount = booking.securityAmount;
+    _originalIsSecurityPaid = booking.isSecurityPaid;
     _originalDiscountAmount = booking.discountAmount;
 
     // Store deep copy of additional charges

@@ -221,7 +221,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (securityAmount > 0) ...[
+              if (securityAmount > 0 && booking.showSecurityInPayments) ...[
                 if (booking.securityAccountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -260,12 +260,20 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                   const SizedBox(height: 8),
 
                 _buildPaymentRow(
-                  'Security amount',
+                  booking.isSecurityPaid
+                      ? 'Security amount'
+                      : 'Security amount (Unpaid)',
                   securityAmount.toCurrency(),
+                  valueColor: booking.isSecurityPaid
+                      ? null
+                      : Colors.grey.shade500,
+                  labelColor: booking.isSecurityPaid
+                      ? null
+                      : Colors.grey.shade500,
                 ),
                 const SizedBox(height: 8),
               ],
-              _buildPaymentRow('Product total', '₹$productTotal'),
+              _buildPaymentRow('Product total', productTotal.toCurrency()),
               const SizedBox(height: 8),
 
               if (additionalTotal > 0) ...[
@@ -529,6 +537,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     String value, {
     bool isBold = false,
     Color? valueColor,
+    Color? labelColor,
     double? fontSize,
   }) {
     return Row(
@@ -538,7 +547,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: fontSize ?? 13,
-            color: Colors.black87,
+            color: labelColor ?? Colors.black87,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
           ),
         ),

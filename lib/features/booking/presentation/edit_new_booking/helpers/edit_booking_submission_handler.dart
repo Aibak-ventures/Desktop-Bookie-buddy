@@ -159,9 +159,13 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Amounts
     if (_haveAmountsChanged()) {
-      updates['security_amount'] = securityAmountController.text
+      final secAmtChanged = securityAmountController.text
           .trim()
           .toIntOrNull();
+      updates['security_amount'] = secAmtChanged;
+      updates['security_amount_is_paid'] = secAmtChanged != null && secAmtChanged > 0
+          ? isSecurityPaid
+          : null;
       final discountInput =
           discountAmountController.text.trim().toIntOrNull() ?? 0;
       final productBase = _getDiscountProductBase();

@@ -54,6 +54,7 @@ class BookingRequestBuilder {
     required DateTime returnDate,
     required int? advanceAmount,
     required int? securityAmount,
+    required bool isSecurityPaid,
     required int? securityAccountId,
     required AccountEntity? advanceAccount,
     required DeliveryStatus deliveryStatus,
@@ -147,6 +148,9 @@ class BookingRequestBuilder {
       coolingPeriodType: coolingPeriodDays > 0 ? coolingPeriodMode : null,
       advanceAmount: advanceAmount,
       securityAmount: securityAmount,
+      isSecurityPaid: securityAmount != null && securityAmount > 0
+          ? isSecurityPaid
+          : null,
       securityPaymentAccountId: securityAmount != null
           ? securityAccountId
           : null,

@@ -23,6 +23,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     String? coolingPeriodDate,
     int? advanceAmount,
     int? securityAmount,
+    bool? isSecurityPaid,
     int? discountAmount,
     String? purchaseMode,
     String? description,

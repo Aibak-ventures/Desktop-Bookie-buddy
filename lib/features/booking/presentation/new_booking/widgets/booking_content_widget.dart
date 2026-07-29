@@ -666,7 +666,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   ),
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
-                  // Security Payment Method - show when security amount has value
+                  // Security Payment Method + Paid checkbox - show when security amount has value
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: securityAmountController,
                     builder: (context, value, child) {
@@ -674,11 +674,46 @@ extension BookingFlowBuilders on NewBookingScreenState {
                           value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
                       if (hasSecurityAmount) {
-                        return AccountSelectionField(
-                          selectedAccount: selectedSecurityAccount,
-                          onChanged: (account) =>
-                              rebuild(() => selectedSecurityAccount = account),
-                          label: 'Security Payment Option',
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AccountSelectionField(
+                              selectedAccount: selectedSecurityAccount,
+                              onChanged: (account) => rebuild(
+                                () => selectedSecurityAccount = account,
+                              ),
+                              label: 'Security Payment Option',
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: Checkbox(
+                                    value: isSecurityPaid,
+                                    onChanged: (v) => rebuild(
+                                      () => isSecurityPaid = v ?? false,
+                                    ),
+                                    activeColor: AppColors.purple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Security deposit paid',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                         );
                       }
                       return const SizedBox.shrink();
