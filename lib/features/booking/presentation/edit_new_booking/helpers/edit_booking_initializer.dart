@@ -15,9 +15,12 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       // When pickupDate is null from the API, estimate from returnDate - 1 day
       // so _calculateRentalDays() and date pickers show reasonable values
       // instead of defaulting to DateTime.now().
-      log('⚠️ booking.pickupDate is null — estimating pickupDate from returnDate');
-      pickupDate = booking.returnDate.parseToDateTime()
-          .subtract(const Duration(days: 1));
+      log(
+        '⚠️ booking.pickupDate is null — estimating pickupDate from returnDate',
+      );
+      pickupDate = booking.returnDate.parseToDateTime().subtract(
+        const Duration(days: 1),
+      );
     }
     returnDate = booking.returnDate.parseToDateTime();
 
@@ -39,25 +42,21 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       coolingPeriodDate = booking.coolingPeriodDate!.parseToDateTime();
       final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
       // Use booking's cooling period type if available, otherwise use shop settings
-      final bookingCoolingMode = booking.coolingPeriodType?.toLowerCase();
-      if (bookingCoolingMode == 'before') {
-        coolingPeriodMode = CoolingPeriodMode.before;
-        coolingPeriodDays = pickupDate.difference(coolingDate).inDays.abs();
-      } else if (bookingCoolingMode == 'after') {
-        coolingPeriodMode = CoolingPeriodMode.after;
-        coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
+      final CoolingPeriodMode coolingPeriodMode;
+      if (booking.coolingPeriodType != null) {
+        coolingPeriodMode = booking.coolingPeriodType!;
       } else {
         // Fall back to shop settings
-        final shopCoolingMode =
+        coolingPeriodMode =
             context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
             CoolingPeriodMode.after;
-        coolingPeriodMode = shopCoolingMode;
-        if (shopCoolingMode.isBefore) {
-          coolingPeriodDays = pickupDate.difference(coolingDate).inDays.abs();
-        } else {
-          coolingPeriodDays = coolingDate.difference(returnDate).inDays.abs();
-        }
       }
+      coolingPeriodDays = BookingDateCalculator.coolingPeriodDaysFromDate(
+        pickupDate: pickupDate,
+        returnDate: returnDate,
+        coolingDate: coolingDate,
+        mode: coolingPeriodMode,
+      );
       log(
         '🔧 Cooling period: $coolingPeriodDays days (mode: ${coolingPeriodMode.value}, Return: $returnDate, Cooling: $coolingDate)',
       );
@@ -102,11 +101,11 @@ extension EditBookingInitializer on EditNewBookingScreenState {
 
     // Set payment details
     advanceAmountController.text = booking.paidAmount.toString();
-    if (booking.securityAmount != null) {
+    if (booking.securityAmount != null && booking.securityAmount! > 0) {
       securityAmountController.text = booking.securityAmount.toString();
     }
     // selectedSecurityAccount is auto-selected via initialAccountId in AccountSelectionField
-    if (booking.discountAmount != null) {
+    if (booking.discountAmount != null && booking.discountAmount! > 0) {
       discountAmountController.text = booking.discountAmount.toString();
     }
     deliveryStatus = booking.deliveryStatus;
@@ -214,7 +213,9 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       BookingPhonePopulator.setPhoneFieldValue(
         _clientPhone1FieldController,
         clientPhone1Controller,
-        phoneNumber: saleClient.phone1 > 0 ? saleClient.phone1.toString() : null,
+        phoneNumber: saleClient.phone1 > 0
+            ? saleClient.phone1.toString()
+            : null,
         e164: saleClient.phone1E164,
       );
     } else if (sale.clientPhone != null) {

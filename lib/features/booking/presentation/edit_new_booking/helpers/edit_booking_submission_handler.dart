@@ -111,13 +111,11 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Dates — sent only when changed or when cooling settings changed
     if (_haveDatesChanged()) {
-      updates['pickup_date'] = pickupDate.format().appendTimeToDate(
-        time: pickupTime,
-        time24HourAsString: pickupTime == null ? '00:00:00' : null,
+      updates['pickup_date'] = pickupDate.format().appendPickupTime(
+        pickupTime,
       );
-      updates['return_date'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
+      updates['return_date'] = returnDate.format().appendReturnTime(
+        returnTime,
       );
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
@@ -126,9 +124,8 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       _appendCoolingPeriodFields(updates);
     } else if (hasCoolingSettingsChanged) {
       // Cooling period changed but dates didn't — still send return_date + cooling fields
-      updates['return_date'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
+      updates['return_date'] = returnDate.format().appendReturnTime(
+        returnTime,
       );
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
@@ -251,18 +248,13 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   /// cooling-only-changed branches of [_buildPartialUpdateRequest].
   void _appendCoolingPeriodFields(Map<String, dynamic> updates) {
     if (coolingPeriodDays >= 0) {
-      if (coolingPeriodMode.isAfter) {
-        updates['cooling_period_end'] = returnDate
-            .add(Duration(days: coolingPeriodDays))
-            .format()
-            .appendTimeToDate(time24HourAsString: '23:59:59');
-      } else {
-        updates['cooling_period_end'] = pickupDate
-            .subtract(Duration(days: coolingPeriodDays))
-            .format()
-            .appendTimeToDate(time24HourAsString: '00:00:00');
-      }
-      updates['cooling_period_type'] = coolingPeriodMode.value.toLowerCase();
+      final boundaryDate = coolingPeriodMode.isAfter
+          ? returnDate.add(Duration(days: coolingPeriodDays))
+          : pickupDate.subtract(Duration(days: coolingPeriodDays));
+      updates['cooling_period_end'] = boundaryDate.format().appendTimeToDate(
+        time24HourAsString: coolingPeriodMode.coolingBoundaryTime,
+      );
+      updates['cooling_period_type'] = coolingPeriodMode.value;
     }
   }
 

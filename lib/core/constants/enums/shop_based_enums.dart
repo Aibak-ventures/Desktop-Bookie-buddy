@@ -1,3 +1,5 @@
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
+
 enum UserPasswordSettingRole {
   all('ALL', 'All'),
   none('NONE', 'None'),
@@ -109,39 +111,45 @@ enum AddButtonDefaultAction {
 }
 
 enum CoolingPeriodMode {
-  after('AFTER', 'After Return (Maintenance)'),
-  before('BEFORE', 'Before Pickup (Preparation)');
+  after('after', 'After Return (Maintenance)'),
+  before('before', 'Before Pickup (Preparation)');
 
   const CoolingPeriodMode(this.value, this.label);
 
   final String value;
   final String label;
 
-  /// Convert from string to CoolingPeriodMode enum
-  static CoolingPeriodMode fromString(String? value) {
-    if (value == null) {
-      return CoolingPeriodMode.after;
-    }
-    return CoolingPeriodMode.values.firstWhere(
-      (e) => e.value == value.toUpperCase(),
-      orElse: () => CoolingPeriodMode.after,
-    );
-  }
-
   static CoolingPeriodMode fromJson(String? value) {
     if (value == null) {
       return CoolingPeriodMode.after;
     }
     return CoolingPeriodMode.values.firstWhere(
-      (e) => e.value == value,
+      (e) => e.value == value.toLowerCase(),
       orElse: () => CoolingPeriodMode.after,
     );
   }
 
-  String toJson() => value;
+  static CoolingPeriodMode? tryFromJson(String? value) {
+    if (value == null) {
+      return null;
+    }
+    return CoolingPeriodMode.values.firstWhereOrNull(
+      (e) => e.value == value.toLowerCase(),
+    );
+  }
+
+  static String toJson(CoolingPeriodMode mode) => mode.value;
+  static String? tryToJson(CoolingPeriodMode? mode) => mode?.value;
 
   bool get isAfter => this == CoolingPeriodMode.after;
   bool get isBefore => this == CoolingPeriodMode.before;
+
+  /// Fixed boundary time-of-day for the cooling_period_end timestamp —
+  /// single source of truth shared by every place that builds a booking
+  /// submission payload. "Before" uses the earliest instant of the day so
+  /// it always stays strictly ahead of pickup; "after" uses the latest
+  /// instant so it always stays at/after return.
+  String get coolingBoundaryTime => isBefore ? '00:00:00' : '23:59:59';
 }
 
 enum AppMainFeatureType {

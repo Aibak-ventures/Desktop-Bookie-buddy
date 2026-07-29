@@ -65,10 +65,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(booking.bookedDate),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),
@@ -106,10 +103,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _formatAvailableFromDate(booking),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),
@@ -144,8 +138,9 @@ class BookingDetailsDatesSection extends StatelessWidget {
 
       if (isEndOfDay || isStartOfDay) return dateLabel;
 
-      final hour12 =
-          date.hour == 0 ? 12 : (date.hour > 12 ? date.hour - 12 : date.hour);
+      final hour12 = date.hour == 0
+          ? 12
+          : (date.hour > 12 ? date.hour - 12 : date.hour);
       final period = date.hour >= 12 ? 'PM' : 'AM';
       final time =
           '${hour12.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} $period';
@@ -166,7 +161,13 @@ class BookingDetailsDatesSection extends StatelessWidget {
 
   String _formatAvailableFromDate(BookingDetailsEntity booking) {
     final coolingDateStr = booking.coolingPeriodDate;
-    if (coolingDateStr == null || coolingDateStr.isEmpty) {
+    final isBeforeMode = booking.coolingPeriodType?.isBefore ?? false;
+
+    // "Before" cooling only blocks the window ahead of pickup — it has no
+    // effect on when the product becomes available again after this
+    // booking, so fall back to return date + 1 day just like the
+    // no-cooling-period case.
+    if (coolingDateStr == null || coolingDateStr.isEmpty || isBeforeMode) {
       if (booking.returnDate.isNotEmpty) {
         try {
           final returnDate = booking.returnDate.parseToDateTime();

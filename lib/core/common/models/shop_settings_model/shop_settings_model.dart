@@ -14,6 +14,7 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
       name: 'cooling_period_mode',
       fromJson: CoolingPeriodMode.fromJson,
       defaultValue: CoolingPeriodMode.after,
+      toJson: CoolingPeriodMode.toJson,
     )
     required CoolingPeriodMode coolingPeriodMode,
     @JsonKey(
@@ -32,9 +33,9 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
 
 extension ShopSettingsModelMapper on ShopSettingsModel {
   ShopSettingsEntity toEntity() => ShopSettingsEntity(
-        coolingPeriodDuration: coolingPeriodDuration,
-        coolingPeriodMode: coolingPeriodMode,
-        addButtonDefaultAction: addButtonDefaultAction,
-        searchClient: searchClient,
-      );
+    coolingPeriodDuration: coolingPeriodDuration,
+    coolingPeriodMode: coolingPeriodMode,
+    addButtonDefaultAction: addButtonDefaultAction,
+    searchClient: searchClient,
+  );
 }

@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
@@ -23,7 +24,7 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     String? pickupTime,
     String? returnTime,
     String? coolingPeriodDate,
-    String? coolingPeriodType,
+    CoolingPeriodMode? coolingPeriodType,
     required int totalAmount,
     int? discountAmount,
     required int paidAmount,
@@ -86,7 +87,8 @@ extension BookingDetailsEntityX on BookingDetailsEntity {
     if (securitySummary.securityAmount <= 0) return false;
 
     final noRefundOrDeduction =
-        securitySummary.totalRefunded <= 0 && securitySummary.totalDeducted <= 0;
+        securitySummary.totalRefunded <= 0 &&
+        securitySummary.totalDeducted <= 0;
 
     if (bookingStatus == BookingStatus.completed && noRefundOrDeduction) {
       return true;

@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -445,9 +446,33 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       }
       searchType ??= 'name';
 
-    final effectiveReturnDate = bookingType == BookingType.booking
-        ? form.returnDate.add(Duration(days: form.coolingPeriodDays)).format()
-        : form.returnDate.format();
+    final isBooking = bookingType == BookingType.booking;
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+      pickupDate: form.pickupDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: form.pickupDate,
+      pickupTime: form.pickupTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+      returnDate: form.returnDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: form.returnDate,
+      returnTime: form.returnTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     form.selectProductBloc.add(
       SelectProductEvent.searchProducts(
@@ -458,10 +483,10 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             ? form.priceRange.value.start.round()
             : null,
         endPrice: hasPriceFilter ? form.priceRange.value.end.round() : null,
-        pickupDate: form.pickupDate.format(),
+        pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
-        pickupTime: form.pickupTime,
-        returnTime: form.returnTime,
+        pickupTime: effectivePickupTime,
+        returnTime: effectiveReturnTime,
         useAvailableProductsApi: bookingType == BookingType.booking,
         isSales: isSales,
       ),
@@ -564,17 +589,41 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
         ? null
         : serviceId;
 
-    final effectiveReturnDate = bookingType == BookingType.booking
-        ? form.returnDate.add(Duration(days: form.coolingPeriodDays)).format()
-        : form.returnDate.format();
+    final isBooking = bookingType == BookingType.booking;
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+      pickupDate: form.pickupDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: form.pickupDate,
+      pickupTime: form.pickupTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+      returnDate: form.returnDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: form.returnDate,
+      returnTime: form.returnTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     form.selectProductBloc.add(
       SelectProductEvent.loadProducts(
         serviceId: serviceIdToUse,
-        pickupDate: form.pickupDate.format(),
+        pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
-        pickupTime: form.pickupTime,
-        returnTime: form.returnTime,
+        pickupTime: effectivePickupTime,
+        returnTime: effectiveReturnTime,
         useAvailableProductsApi: bookingType == BookingType.booking,
         isSales: isSales,
       ),
@@ -594,16 +643,40 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     if (variantIds.isEmpty) return;
 
     try {
-      final effectiveReturnDate = bookingType == BookingType.booking
-          ? form.returnDate.add(Duration(days: form.coolingPeriodDays)).format()
-          : form.returnDate.format();
+      final isBooking = bookingType == BookingType.booking;
+      final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+        pickupDate: form.pickupDate,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+        pickupDate: form.pickupDate,
+        pickupTime: form.pickupTime,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+        returnDate: form.returnDate,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+        returnDate: form.returnDate,
+        returnTime: form.returnTime,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
 
       final notFoundIds = await getIt<CheckVariantAvailabilityUseCase>()(
         variantIds: variantIds,
-        pickupDate: form.pickupDate.format(),
+        pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
-        pickupTime: form.pickupTime,
-        returnTime: form.returnTime,
+        pickupTime: effectivePickupTime,
+        returnTime: effectiveReturnTime,
         bookingId: bookingId,
       );
 
@@ -904,9 +977,33 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
         ? null
         : form.selectedServiceId;
 
-    final effectiveReturnDate = bookingType == BookingType.booking
-        ? returnDate.add(Duration(days: form.coolingPeriodDays)).format()
-        : returnDate.format();
+    final isBooking = bookingType == BookingType.booking;
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+      pickupDate: pickupDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+      returnDate: returnDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: returnDate,
+      returnTime: returnTime,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: form.coolingPeriodDays,
+      isBooking: isBooking,
+    );
 
     form.overlayIsLoading.value = true;
     if (form.searchOverlayEntry == null) {
@@ -924,10 +1021,10 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
         endPrice: form.isPriceFilterEnabled.value
             ? form.priceRange.value.end.round()
             : null,
-        pickupDate: pickupDate.format(),
+        pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
-        pickupTime: pickupTime,
-        returnTime: returnTime,
+        pickupTime: effectivePickupTime,
+        returnTime: effectiveReturnTime,
         useAvailableProductsApi: bookingType == BookingType.booking,
         isSales: isSales,
       ),
@@ -994,24 +1091,23 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     context.showSnackBar(message, isError: true);
   }
 
+  /// Single source of truth for the shop's configured cooling-period mode.
+  CoolingPeriodMode currentCoolingPeriodMode() =>
+      context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
+      CoolingPeriodMode.after;
+
   /// Recalculates [form.coolingPeriodDate] after pickup/return date changes.
   void recalculateCoolingPeriodDate({
     required DateTime pickupDate,
     required DateTime returnDate,
     required int coolingPeriodDays,
   }) {
-    final coolingMode =
-        context.read<UserCubit>().state?.shopSettings.coolingPeriodMode ??
-        CoolingPeriodMode.after;
-    if (coolingMode.isAfter) {
-      form.coolingPeriodDate = returnDate.add(
-        Duration(days: coolingPeriodDays),
-      );
-    } else {
-      form.coolingPeriodDate = pickupDate.subtract(
-        Duration(days: coolingPeriodDays),
-      );
-    }
+    form.coolingPeriodDate = BookingDateCalculator.coolingPeriodDate(
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      mode: currentCoolingPeriodMode(),
+      coolingDays: coolingPeriodDays,
+    );
   }
 
   void resetForm() {
@@ -1060,9 +1156,4 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       ),
     );
   }
-}
-
-extension CoolingPeriodModeX on CoolingPeriodMode? {
-  bool get isAfter => this == CoolingPeriodMode.after;
-  bool get isBefore => this == CoolingPeriodMode.before;
 }

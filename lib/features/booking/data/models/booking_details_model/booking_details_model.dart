@@ -82,7 +82,9 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'security_adjustments')
     @Default([])
     List<BookingDetailsSecurityRefundHistoryModel> securityTransactionHistory,
-    @JsonKey(name: 'security_amount_is_paid') @Default(false) bool isSecurityPaid,
+    @JsonKey(name: 'security_amount_is_paid')
+    @Default(false)
+    bool isSecurityPaid,
     @JsonKey(name: 'security') BookingSecurityPaymentModel? securityPayment,
     @JsonKey(name: 'security_account_name') String? securityAccountName,
     @JsonKey(name: 'security_account_id') int? securityAccountId,

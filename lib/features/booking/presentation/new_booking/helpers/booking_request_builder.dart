@@ -115,9 +115,7 @@ class BookingRequestBuilder {
         : null;
 
     // --- Cooling period ---
-    final coolingPeriodType = coolingPeriodDays > 0
-        ? coolingPeriodMode.value.toLowerCase()
-        : null;
+
     final DateTime effectiveReturnDate = returnDate;
     final DateTime? effectiveCoolingPeriodDate;
 
@@ -146,7 +144,7 @@ class BookingRequestBuilder {
       pickupDate: pickupDate.format(),
       returnDate: effectiveReturnDate.format(),
       coolingPeriodDate: effectiveCoolingPeriodDate?.format(),
-      coolingPeriodType: coolingPeriodType,
+      coolingPeriodType: coolingPeriodDays > 0 ? coolingPeriodMode : null,
       advanceAmount: advanceAmount,
       securityAmount: securityAmount,
       securityPaymentAccountId: securityAmount != null

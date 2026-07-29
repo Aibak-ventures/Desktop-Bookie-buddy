@@ -50,7 +50,10 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
             (e) => AdditionalChargesModel.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
-      coolingPeriodType: json['cooling_period_type'] as String?,
+      coolingPeriodType: $enumDecodeNullable(
+        _$CoolingPeriodModeEnumMap,
+        json['cooling_period_type'],
+      ),
       securityPaymentAccountId: (json['security_account_id'] as num?)?.toInt(),
       oldBookingAccountId: (json['account_id'] as num?)?.toInt(),
       taxAmount: (json['tax_amount'] as num?)?.toInt(),
@@ -79,7 +82,9 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'details': ?instance.otherDetails,
   'additional_charges': ?instance.additionalCharges,
   'send_invoice': instance.sendPdfToWhatsApp,
-  'cooling_period_type': ?instance.coolingPeriodType,
+  'cooling_period_type': ?CoolingPeriodMode.tryToJson(
+    instance.coolingPeriodType,
+  ),
   'security_account_id': ?instance.securityPaymentAccountId,
   'account_id': ?instance.oldBookingAccountId,
   'tax_amount': ?instance.taxAmount,
@@ -97,4 +102,9 @@ const _$BookingStatusEnumMap = {
   BookingStatus.upcoming: 'upcoming',
   BookingStatus.completed: 'completed',
   BookingStatus.cancelled: 'cancelled',
+};
+
+const _$CoolingPeriodModeEnumMap = {
+  CoolingPeriodMode.after: 'after',
+  CoolingPeriodMode.before: 'before',
 };
