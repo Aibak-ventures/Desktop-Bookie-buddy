@@ -32,7 +32,9 @@ class ShopRemoteDatasource {
           shopId: shopId,
         ),
       );
-      log('Get All Shop Summary Response: ${response.realUri} ,${response.data}');
+      log(
+        'Get All Shop Summary Response: ${response.realUri} ,${response.data}',
+      );
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Get All Shop Summary Error: $e', stackTrace: stack);

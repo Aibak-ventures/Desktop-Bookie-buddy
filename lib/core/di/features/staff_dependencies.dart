@@ -14,22 +14,31 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 class StaffDependencies {
   static void register() {
     getIt.registerLazySingleton(
-        () => StaffRemoteDatasource(dio: DioClient.dio));
+      () => StaffRemoteDatasource(dio: DioClient.dio),
+    );
     getIt.registerLazySingleton<IStaffRepository>(
-        () => StaffRepositoryImpl(getIt()));
+      () => StaffRepositoryImpl(getIt()),
+    );
     getIt.registerLazySingleton(
-        () => GetStaffsUseCase(getIt<IStaffRepository>()));
+      () => GetStaffsUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => AddStaffUseCase(getIt<IStaffRepository>()));
+      () => AddStaffUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => EditStaffUseCase(getIt<IStaffRepository>()));
+      () => EditStaffUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => DeleteStaffUseCase(getIt<IStaffRepository>()));
+      () => DeleteStaffUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => GetStaffAnalyticsReportUseCase(getIt<IStaffRepository>()));
+      () => GetStaffAnalyticsReportUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => GetStaffMonthlyBookingsUseCase(getIt<IStaffRepository>()));
+      () => GetStaffMonthlyBookingsUseCase(getIt<IStaffRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => GetStaffMonthlySalesUseCase(getIt<IStaffRepository>()));
+      () => GetStaffMonthlySalesUseCase(getIt<IStaffRepository>()),
+    );
   }
 }

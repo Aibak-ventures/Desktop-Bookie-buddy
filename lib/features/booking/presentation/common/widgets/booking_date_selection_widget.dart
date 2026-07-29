@@ -345,5 +345,4 @@ class BookingDateSelectionWidget extends StatelessWidget {
       ],
     );
   }
-
 }

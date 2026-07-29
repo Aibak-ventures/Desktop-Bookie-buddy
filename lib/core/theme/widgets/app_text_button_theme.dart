@@ -6,14 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppTextButtonTheme {
   static final TextButtonThemeData lightTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: 5.radiusBorder,
-      ),
+      shape: RoundedRectangleBorder(borderRadius: 5.radiusBorder),
       iconColor: AppColors.purple,
-      textStyle: TextStyle(
-        color: AppColors.purple,
-        fontSize: 14.sp,
-      ),
+      textStyle: TextStyle(color: AppColors.purple, fontSize: 14.sp),
     ),
   );
 }

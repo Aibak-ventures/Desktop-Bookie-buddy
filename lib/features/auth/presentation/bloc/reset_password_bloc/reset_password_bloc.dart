@@ -11,13 +11,15 @@ part 'reset_password_bloc.freezed.dart';
 class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   final ChangeAccountPasswordUseCase _changePassword;
   ResetPasswordBloc({required ChangeAccountPasswordUseCase changePassword})
-      : _changePassword = changePassword,
-        super(const _Initial()) {
+    : _changePassword = changePassword,
+      super(const _Initial()) {
     on<_ResetPassword>(_onResetPassword);
   }
 
   Future<void> _onResetPassword(
-      _ResetPassword event, Emitter<ResetPasswordState> emit) async {
+    _ResetPassword event,
+    Emitter<ResetPasswordState> emit,
+  ) async {
     emit(const _Submitted());
 
     try {

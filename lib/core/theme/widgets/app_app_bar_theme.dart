@@ -15,9 +15,6 @@ class AppAppBarTheme {
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
     ),
-    titleTextStyle: TextStyle(
-      fontSize: 22.sp,
-      color: AppColors.black,
-    ),
+    titleTextStyle: TextStyle(fontSize: 22.sp, color: AppColors.black),
   );
 }

@@ -15,9 +15,9 @@ class EditBookingCubit extends Cubit<EditBookingState> {
   EditBookingCubit({
     required UpdateBookingPartialUseCase updateBookingPartial,
     required UpdateSaleUseCase updateSale,
-  })  : _updateBookingPartial = updateBookingPartial,
-        _updateSale = updateSale,
-        super(const EditBookingState.initial());
+  }) : _updateBookingPartial = updateBookingPartial,
+       _updateSale = updateSale,
+       super(const EditBookingState.initial());
 
   Future<void> updateBooking(
     int bookingId,

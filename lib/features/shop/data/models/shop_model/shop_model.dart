@@ -12,10 +12,7 @@ abstract class ShopModel with _$ShopModel {
     String? place,
     required String phone,
     String? email,
-    @JsonKey(
-      defaultValue: 'Address not available',
-    )
-    required String address,
+    @JsonKey(defaultValue: 'Address not available') required String address,
     @JsonKey(name: 'pincode') String? pincode,
     @JsonKey(name: 'subscription_status') String? subscriptionStatus,
     @JsonKey(name: 'img') String? image,
@@ -27,14 +24,14 @@ abstract class ShopModel with _$ShopModel {
 
 extension ShopModelMapper on ShopModel {
   ShopEntity toEntity() => ShopEntity(
-        id: id,
-        name: name,
-        place: place,
-        phone: phone,
-        email: email,
-        address: address,
-        pincode: pincode,
-        subscriptionStatus: subscriptionStatus,
-        image: image,
-      );
+    id: id,
+    name: name,
+    place: place,
+    phone: phone,
+    email: email,
+    address: address,
+    pincode: pincode,
+    subscriptionStatus: subscriptionStatus,
+    image: image,
+  );
 }

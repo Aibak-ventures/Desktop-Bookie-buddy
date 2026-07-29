@@ -149,12 +149,7 @@ class ResponsiveHelper {
   }
 }
 
-enum ScreenType {
-  mobile,
-  tablet,
-  desktop,
-  largeDesktop,
-}
+enum ScreenType { mobile, tablet, desktop, largeDesktop }
 
 /// Widget that builds different layouts based on screen size
 /// Responsive breakpoint widget for conditional rendering

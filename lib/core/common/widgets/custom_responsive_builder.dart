@@ -13,7 +13,7 @@ enum DeviceScreenType {
 
 class CustomResponsiveBuilder extends StatelessWidget {
   final Widget Function(BuildContext context, DeviceScreenType deviceType)
-      builder;
+  builder;
 
   const CustomResponsiveBuilder({super.key, required this.builder});
 

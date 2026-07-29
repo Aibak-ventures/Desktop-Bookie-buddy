@@ -446,52 +446,53 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
       }
       searchType ??= 'name';
 
-    final isBooking = bookingType == BookingType.booking;
-    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
-      pickupDate: form.pickupDate,
-      mode: currentCoolingPeriodMode(),
-      coolingDays: form.coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
-      pickupDate: form.pickupDate,
-      pickupTime: form.pickupTime,
-      mode: currentCoolingPeriodMode(),
-      coolingDays: form.coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
-      returnDate: form.returnDate,
-      mode: currentCoolingPeriodMode(),
-      coolingDays: form.coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
-      returnDate: form.returnDate,
-      returnTime: form.returnTime,
-      mode: currentCoolingPeriodMode(),
-      coolingDays: form.coolingPeriodDays,
-      isBooking: isBooking,
-    );
+      final isBooking = bookingType == BookingType.booking;
+      final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+        pickupDate: form.pickupDate,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+        pickupDate: form.pickupDate,
+        pickupTime: form.pickupTime,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
+        returnDate: form.returnDate,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
+      final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+        returnDate: form.returnDate,
+        returnTime: form.returnTime,
+        mode: currentCoolingPeriodMode(),
+        coolingDays: form.coolingPeriodDays,
+        isBooking: isBooking,
+      );
 
-    form.selectProductBloc.add(
-      SelectProductEvent.searchProducts(
-        serviceId: serviceIdToUse,
-        query: hasSearchQuery ? query : null,
-        type: hasSearchQuery ? searchType : null,
-        startPrice: hasPriceFilter
-            ? form.priceRange.value.start.round()
-            : null,
-        endPrice: hasPriceFilter ? form.priceRange.value.end.round() : null,
-        pickupDate: effectivePickupDate.format(),
-        returnDate: effectiveReturnDate,
-        pickupTime: effectivePickupTime,
-        returnTime: effectiveReturnTime,
-        useAvailableProductsApi: bookingType == BookingType.booking,
-        isSales: isSales,
-      ),
-    );
-  }}
+      form.selectProductBloc.add(
+        SelectProductEvent.searchProducts(
+          serviceId: serviceIdToUse,
+          query: hasSearchQuery ? query : null,
+          type: hasSearchQuery ? searchType : null,
+          startPrice: hasPriceFilter
+              ? form.priceRange.value.start.round()
+              : null,
+          endPrice: hasPriceFilter ? form.priceRange.value.end.round() : null,
+          pickupDate: effectivePickupDate.format(),
+          returnDate: effectiveReturnDate,
+          pickupTime: effectivePickupTime,
+          returnTime: effectiveReturnTime,
+          useAvailableProductsApi: bookingType == BookingType.booking,
+          isSales: isSales,
+        ),
+      );
+    }
+  }
 
   void showLocalFilteredResults(BookingType bookingType, String rawQuery) {
     if (!mounted) return;
@@ -632,7 +633,10 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     checkSelectedProductsAvailability(bookingType);
   }
 
-  void checkSelectedProductsAvailability(BookingType bookingType, {int? bookingId}) async {
+  void checkSelectedProductsAvailability(
+    BookingType bookingType, {
+    int? bookingId,
+  }) async {
     final selectedProducts = form.selectedProductsNotifier.value;
     if (selectedProducts.isEmpty) return;
 

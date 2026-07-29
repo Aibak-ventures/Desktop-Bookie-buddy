@@ -1,4 +1,4 @@
-﻿part of '../pages/edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
@@ -111,12 +111,8 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Dates — sent only when changed or when cooling settings changed
     if (_haveDatesChanged()) {
-      updates['pickup_date'] = pickupDate.format().appendPickupTime(
-        pickupTime,
-      );
-      updates['return_date'] = returnDate.format().appendReturnTime(
-        returnTime,
-      );
+      updates['pickup_date'] = pickupDate.format().appendPickupTime(pickupTime);
+      updates['return_date'] = returnDate.format().appendReturnTime(returnTime);
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
       if (returnTime != null)
@@ -124,9 +120,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       _appendCoolingPeriodFields(updates);
     } else if (hasCoolingSettingsChanged) {
       // Cooling period changed but dates didn't — still send return_date + cooling fields
-      updates['return_date'] = returnDate.format().appendReturnTime(
-        returnTime,
-      );
+      updates['return_date'] = returnDate.format().appendReturnTime(returnTime);
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
       if (returnTime != null)

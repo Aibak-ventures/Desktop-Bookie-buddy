@@ -52,8 +52,7 @@ class _StockManagementFilterDialogState
   @override
   void initState() {
     super.initState();
-    _tempSearchTypeIndex =
-        ValueNotifier(widget.initialSearchTypeIndex);
+    _tempSearchTypeIndex = ValueNotifier(widget.initialSearchTypeIndex);
     _tempPriceRange = ValueNotifier(widget.initialPriceRange);
     _tempIsPriceEnabled = ValueNotifier(widget.initialIsPriceEnabled);
   }
@@ -247,8 +246,9 @@ class _StockManagementFilterDialogState
                   value: isEnabled,
                   onChanged: (value) => _tempIsPriceEnabled.value = value,
                   activeThumbColor: const Color(0xFF6132E4),
-                  activeTrackColor:
-                      const Color(0xFF6132E4).withValues(alpha: 0.3),
+                  activeTrackColor: const Color(
+                    0xFF6132E4,
+                  ).withValues(alpha: 0.3),
                   inactiveThumbColor: Colors.grey.shade400,
                   inactiveTrackColor: Colors.grey.shade200,
                 ),
@@ -306,33 +306,29 @@ class _StockManagementFilterDialogState
   Widget _buildPriceSlider() {
     return ValueListenableBuilder<RangeValues>(
       valueListenable: _tempPriceRange,
-      builder: (context, range, child) =>
-          ValueListenableBuilder<double>(
-            valueListenable: widget.maxPriceNotifier,
-            builder: (context, currentMaxPrice, child) => SliderTheme(
-              data: SliderThemeData(
-                activeTrackColor: const Color(0xFF6132E4),
-                inactiveTrackColor: Colors.grey.shade200,
-                thumbColor: const Color(0xFF6132E4),
-                overlayColor:
-                    const Color(0xFF6132E4).withValues(alpha: 0.2),
-                trackHeight: 4,
-                thumbShape:
-                    const RoundSliderThumbShape(enabledThumbRadius: 8),
-                overlayShape:
-                    const RoundSliderOverlayShape(overlayRadius: 16),
-              ),
-              child: RangeSlider(
-                values: range,
-                min: 0,
-                max: currentMaxPrice,
-                divisions: 20,
-                onChanged: (RangeValues newRange) {
-                  _tempPriceRange.value = newRange;
-                },
-              ),
-            ),
+      builder: (context, range, child) => ValueListenableBuilder<double>(
+        valueListenable: widget.maxPriceNotifier,
+        builder: (context, currentMaxPrice, child) => SliderTheme(
+          data: SliderThemeData(
+            activeTrackColor: const Color(0xFF6132E4),
+            inactiveTrackColor: Colors.grey.shade200,
+            thumbColor: const Color(0xFF6132E4),
+            overlayColor: const Color(0xFF6132E4).withValues(alpha: 0.2),
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
           ),
+          child: RangeSlider(
+            values: range,
+            min: 0,
+            max: currentMaxPrice,
+            divisions: 20,
+            onChanged: (RangeValues newRange) {
+              _tempPriceRange.value = newRange;
+            },
+          ),
+        ),
+      ),
     );
   }
 
@@ -379,8 +375,7 @@ class _StockManagementFilterDialogState
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () {
-                final newMax =
-                    double.tryParse(_maxPriceController.text.trim());
+                final newMax = double.tryParse(_maxPriceController.text.trim());
                 if (newMax != null && newMax > 0) {
                   widget.maxPriceNotifier.value = newMax;
                   _tempPriceRange.value = RangeValues(0, newMax);
@@ -452,11 +447,8 @@ class _StockManagementFilterDialogState
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA),
-        borderRadius:
-            const BorderRadius.vertical(bottom: Radius.circular(20)),
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade200, width: 1),
-        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+        border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
       ),
       child: Row(
         children: [
@@ -464,8 +456,10 @@ class _StockManagementFilterDialogState
             child: OutlinedButton(
               onPressed: () {
                 _tempSearchTypeIndex.value = 0;
-                _tempPriceRange.value =
-                    RangeValues(0, widget.maxPriceNotifier.value);
+                _tempPriceRange.value = RangeValues(
+                  0,
+                  widget.maxPriceNotifier.value,
+                );
                 _tempIsPriceEnabled.value = false;
               },
               style: OutlinedButton.styleFrom(
@@ -504,8 +498,7 @@ class _StockManagementFilterDialogState
                 backgroundColor: const Color(0xFF6132E4),
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shadowColor:
-                    const Color(0xFF6132E4).withValues(alpha: 0.3),
+                shadowColor: const Color(0xFF6132E4).withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -589,8 +582,7 @@ class _QuickFilterChip extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color:
-                  isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+              color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isSelected
@@ -603,8 +595,7 @@ class _QuickFilterChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 color: isSelected ? Colors.white : Colors.grey.shade700,
-                fontWeight:
-                    isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ),

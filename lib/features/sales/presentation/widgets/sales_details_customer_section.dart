@@ -61,8 +61,10 @@ class SalesDetailsCustomerSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+        ),
         Text(
           value,
           style: const TextStyle(
@@ -79,8 +81,10 @@ class SalesDetailsCustomerSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label,
-            style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+        ),
         Row(
           children: [
             Text(
@@ -102,11 +106,14 @@ class SalesDetailsCustomerSection extends StatelessWidget {
             const SizedBox(width: 8),
             InkWell(
               onTap: () async {
-                final uri =
-                    Uri.parse('https://wa.me/${phone.toWaPhone}');
+                final uri = Uri.parse('https://wa.me/${phone.toWaPhone}');
                 if (await canLaunchUrl(uri)) await launchUrl(uri);
               },
-              child: Icon(Icons.message, size: 18, color: Colors.green.shade600),
+              child: Icon(
+                Icons.message,
+                size: 18,
+                color: Colors.green.shade600,
+              ),
             ),
           ],
         ),

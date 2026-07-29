@@ -47,7 +47,8 @@ class BookingProductRowWidget extends StatelessWidget {
     final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
-    final fullImageUrl = product.variant.image ?? product.variant.thumbnailImage;
+    final fullImageUrl =
+        product.variant.image ?? product.variant.thumbnailImage;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -70,10 +71,10 @@ class BookingProductRowWidget extends StatelessWidget {
                   child: GestureDetector(
                     onTap: hasImage
                         ? () => ZoomableImageDialog.show(
-                              context,
-                              imageUrl: fullImageUrl ?? imageUrl,
-                              title: product.variant.name,
-                            )
+                            context,
+                            imageUrl: fullImageUrl ?? imageUrl,
+                            title: product.variant.name,
+                          )
                         : null,
                     child: Container(
                       width: 48,

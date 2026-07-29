@@ -92,7 +92,7 @@ class _GlassSidebarState extends State<GlassSidebar> {
                 _navItemExpanded(1, Icons.dashboard_outlined, 'Dashboard'),
                 _navItemExpanded(2, Icons.list_alt, 'Orders'),
                 _navItemExpanded(3, Icons.bar_chart_outlined, 'Stocks'),
-                // _navItemExpanded(4, Icons.settings_outlined, 'Settings'), //Currently not using 
+                // _navItemExpanded(4, Icons.settings_outlined, 'Settings'), //Currently not using
               ],
             ),
           ),
@@ -142,8 +142,9 @@ class _GlassSidebarState extends State<GlassSidebar> {
     return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
-        final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+        final firstLetter = userName.isNotEmpty
+            ? userName[0].toUpperCase()
+            : 'U';
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -180,8 +181,9 @@ class _GlassSidebarState extends State<GlassSidebar> {
     return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, user) {
         final userName = user?.firstName ?? 'User';
-        final firstLetter =
-            userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+        final firstLetter = userName.isNotEmpty
+            ? userName[0].toUpperCase()
+            : 'U';
         return _buildAvatar(firstLetter, 40);
       },
     );
@@ -334,7 +336,11 @@ class _GlassSidebarState extends State<GlassSidebar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.logout_rounded, color: Colors.red.shade400, size: 20),
+                Icon(
+                  Icons.logout_rounded,
+                  color: Colors.red.shade400,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Logout',

@@ -12,15 +12,11 @@ class SelectedProductsMutationResult {
   final List<ProductSelectedEntity> products;
   final String? errorMessage;
 
-  const SelectedProductsMutationResult._(
-    this.products,
-    this.errorMessage,
-  );
+  const SelectedProductsMutationResult._(this.products, this.errorMessage);
 
   const SelectedProductsMutationResult.success(
     List<ProductSelectedEntity> products,
-  )
-      : this._(products, null);
+  ) : this._(products, null);
 
   const SelectedProductsMutationResult.failure(
     List<ProductSelectedEntity> products,
@@ -92,11 +88,14 @@ class SelectedProductsManager {
   }) {
     final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
-      (item) => BookingProductHelpers.productKey(item) == BookingProductHelpers.productKey(product),
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     if (index == -1) return currentProducts;
 
-    final availableStock = product.variant.remainingStock ?? product.variant.stock ?? 999;
+    final availableStock =
+        product.variant.remainingStock ?? product.variant.stock ?? 999;
     if (!ProductStockValidator.canIncreaseQuantity(
       bookingType: bookingType,
       currentQuantity: products[index].quantity,
@@ -117,7 +116,9 @@ class SelectedProductsManager {
   }) {
     final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
-      (item) => BookingProductHelpers.productKey(item) == BookingProductHelpers.productKey(product),
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     if (index == -1) return currentProducts;
 
@@ -144,7 +145,8 @@ class SelectedProductsManager {
       );
     }
 
-    final availableStock = product.variant.remainingStock ?? product.variant.stock ?? 999;
+    final availableStock =
+        product.variant.remainingStock ?? product.variant.stock ?? 999;
     if (!ProductStockValidator.canSetQuantity(
       bookingType: bookingType,
       quantity: quantity,
@@ -158,9 +160,12 @@ class SelectedProductsManager {
 
     final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
-      (item) => BookingProductHelpers.productKey(item) == BookingProductHelpers.productKey(product),
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
-    if (index == -1) return SelectedProductsMutationResult.success(currentProducts);
+    if (index == -1)
+      return SelectedProductsMutationResult.success(currentProducts);
 
     products[index] = products[index].copyWith(quantity: quantity);
     return SelectedProductsMutationResult.success(products);
@@ -172,7 +177,9 @@ class SelectedProductsManager {
   }) {
     final products = List<ProductSelectedEntity>.from(currentProducts);
     products.removeWhere(
-      (item) => BookingProductHelpers.productKey(item) == BookingProductHelpers.productKey(product),
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     return products;
   }
@@ -184,7 +191,9 @@ class SelectedProductsManager {
   }) {
     final products = List<ProductSelectedEntity>.from(currentProducts);
     final index = products.indexWhere(
-      (item) => BookingProductHelpers.productKey(item) == BookingProductHelpers.productKey(product),
+      (item) =>
+          BookingProductHelpers.productKey(item) ==
+          BookingProductHelpers.productKey(product),
     );
     if (index == -1) return currentProducts;
 

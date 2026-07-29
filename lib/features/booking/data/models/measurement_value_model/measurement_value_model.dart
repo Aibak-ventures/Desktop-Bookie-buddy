@@ -37,10 +37,6 @@ extension MeasurementValueModelMapper on MeasurementValueModel {
 }
 
 extension MeasurementValueEntityMapper on MeasurementValueEntity {
-  MeasurementValueModel toModel() => MeasurementValueModel(
-    name: name,
-    key: key,
-    value: value,
-    gender: gender,
-  );
+  MeasurementValueModel toModel() =>
+      MeasurementValueModel(name: name, key: key, value: value, gender: gender);
 }

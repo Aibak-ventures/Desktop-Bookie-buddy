@@ -12,8 +12,8 @@ part 'staff_search_cubit.freezed.dart';
 class StaffSearchCubit extends Cubit<StaffSearchState> {
   final GetStaffsUseCase _getStaffs;
   StaffSearchCubit({required GetStaffsUseCase getStaffs})
-      : _getStaffs = getStaffs,
-        super(const StaffSearchState());
+    : _getStaffs = getStaffs,
+      super(const StaffSearchState());
 
   void selectStaff(StaffEntity staff) {
     log('Selected staff: ${staff.name}');

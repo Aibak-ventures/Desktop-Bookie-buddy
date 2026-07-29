@@ -63,7 +63,9 @@ class ProductSearchCubit extends Cubit<ProductSearchState> {
         query: s.searchQuery,
       );
       log('data: ${result.data.length}, next page url: ${result.nextPageUrl}');
-      log('Updated Suggestions Count: ${s.suggestions.length + result.data.length}');
+      log(
+        'Updated Suggestions Count: ${s.suggestions.length + result.data.length}',
+      );
 
       emit(
         s.copyWith(

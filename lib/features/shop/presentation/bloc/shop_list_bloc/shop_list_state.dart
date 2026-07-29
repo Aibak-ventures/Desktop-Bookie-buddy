@@ -7,6 +7,7 @@ abstract class ShopListState with _$ShopListState {
     required List<ShopEntity> shops,
     required int? currentShopId,
   }) = _Loaded;
-  const factory ShopListState.changeSuccess(ShopEntity newShop) = _ChangeSuccess;
+  const factory ShopListState.changeSuccess(ShopEntity newShop) =
+      _ChangeSuccess;
   const factory ShopListState.error(String error) = _Error;
 }

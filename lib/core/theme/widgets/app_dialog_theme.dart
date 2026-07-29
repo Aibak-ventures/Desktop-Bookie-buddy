@@ -10,9 +10,6 @@ class AppDialogTheme {
       color: AppColors.black,
       fontWeight: FontWeight.w400,
     ),
-    contentTextStyle: TextStyle(
-      fontSize: 16.sp,
-      color: AppColors.black54,
-    ),
+    contentTextStyle: TextStyle(fontSize: 16.sp, color: AppColors.black54),
   );
 }

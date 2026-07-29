@@ -17,9 +17,6 @@ abstract class StaffModel with _$StaffModel {
 }
 
 extension StaffModelMapper on StaffModel {
-  StaffEntity toEntity() => StaffEntity(
-        id: id,
-        name: name,
-        phoneNumber: phoneNumber,
-      );
+  StaffEntity toEntity() =>
+      StaffEntity(id: id, name: name, phoneNumber: phoneNumber);
 }

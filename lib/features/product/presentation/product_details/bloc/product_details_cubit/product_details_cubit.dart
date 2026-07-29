@@ -52,7 +52,9 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
           log('Error loading bookings: $e');
           return null;
         }),
-        _getProductGrowthData(productId).then<dynamic>((v) => v).catchError((e) {
+        _getProductGrowthData(productId).then<dynamic>((v) => v).catchError((
+          e,
+        ) {
           log('Error loading monthly summary: $e');
           return <ProductMonthlyDataEntity>[];
         }),
@@ -72,7 +74,11 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
       );
     } catch (e) {
       log('Error loading product details: $e');
-      emit(ProductDetailsState.error(message: 'An error occurred: ${e.toString()}'));
+      emit(
+        ProductDetailsState.error(
+          message: 'An error occurred: ${e.toString()}',
+        ),
+      );
     }
   }
 
@@ -101,10 +107,15 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     );
   }
 
-  Future<void> loadMoreBookings(int productId, int page, {String? status}) async {
+  Future<void> loadMoreBookings(
+    int productId,
+    int page, {
+    String? status,
+  }) async {
     state.maybeMap(
       loaded: (loadedState) {
-        if (loadedState.isPaginatingBookings || loadedState.nextPageUrl == null) return;
+        if (loadedState.isPaginatingBookings || loadedState.nextPageUrl == null)
+          return;
 
         emit(
           ProductDetailsState.loaded(
@@ -151,7 +162,11 @@ class ProductDetailsCubit extends Cubit<ProductDetailsState> {
     required int stock,
   }) async {
     try {
-      await _addProductVariants(productId: productId, attribute: attribute, stock: stock);
+      await _addProductVariants(
+        productId: productId,
+        attribute: attribute,
+        stock: stock,
+      );
       await loadProductDetails(productId);
     } catch (e) {
       log('Error adding product variant: $e');

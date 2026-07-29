@@ -52,18 +52,32 @@ class SalesFormProductTableRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     color: Colors.grey.shade100,
                     border: Border.all(color: Colors.grey.shade200),
-                    image: (product.variant.thumbnailImage ?? product.variant.image) != null &&
-                            (product.variant.thumbnailImage ?? product.variant.image)!.isNotEmpty
+                    image:
+                        (product.variant.thumbnailImage ??
+                                    product.variant.image) !=
+                                null &&
+                            (product.variant.thumbnailImage ??
+                                    product.variant.image)!
+                                .isNotEmpty
                         ? DecorationImage(
-                            image: NetworkImage(product.variant.thumbnailImage ?? product.variant.image!),
+                            image: NetworkImage(
+                              product.variant.thumbnailImage ??
+                                  product.variant.image!,
+                            ),
                             fit: BoxFit.cover,
                           )
                         : null,
                   ),
-                  child: (product.variant.thumbnailImage ?? product.variant.image) == null ||
+                  child:
+                      (product.variant.thumbnailImage ??
+                                  product.variant.image) ==
+                              null ||
                           product.variant.image!.isEmpty
-                      ? const Icon(Icons.image_not_supported,
-                          size: 20, color: Colors.grey)
+                      ? const Icon(
+                          Icons.image_not_supported,
+                          size: 20,
+                          color: Colors.grey,
+                        )
                       : null,
                 ),
                 const SizedBox(width: 16),
@@ -115,9 +129,10 @@ class SalesFormProductTableRow extends StatelessWidget {
                   child: Text(
                     '${product.quantity}',
                     style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -145,19 +160,25 @@ class SalesFormProductTableRow extends StatelessWidget {
                           ],
                           textAlign: TextAlign.right,
                           style: const TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.w500),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
                           decoration: InputDecoration(
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 0),
+                              horizontal: 8,
+                              vertical: 0,
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400),
+                              borderSide: BorderSide(
+                                color: Colors.grey.shade400,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
                               borderSide: const BorderSide(
-                                  color: Color(0xFF6132E4)),
+                                color: Color(0xFF6132E4),
+                              ),
                             ),
                           ),
                           onSubmitted: (_) => onSaveEditing(),
@@ -174,15 +195,19 @@ class SalesFormProductTableRow extends StatelessWidget {
                             child: Text(
                               '${product.amount}',
                               style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xFF2D3436),
-                                  fontWeight: FontWeight.w500),
+                                fontSize: 14,
+                                color: Color(0xFF2D3436),
+                                fontWeight: FontWeight.w500,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Icon(Icons.edit_outlined,
-                              size: 16, color: Color(0xFF6132E4)),
+                          const Icon(
+                            Icons.edit_outlined,
+                            size: 16,
+                            color: Color(0xFF6132E4),
+                          ),
                         ],
                       ),
                     ),
@@ -196,9 +221,10 @@ class SalesFormProductTableRow extends StatelessWidget {
               child: Text(
                 '${product.amount * product.quantity}',
                 style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF2D3436)),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D3436),
+                ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),

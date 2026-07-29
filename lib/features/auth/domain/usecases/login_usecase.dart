@@ -4,9 +4,9 @@ class LoginUseCase {
   final IAuthRepository _repository;
   LoginUseCase(this._repository);
 
-  Future<void> call(
-          {required String phone,
-          required String password,
-          String? fcmToken}) =>
-      _repository.login(phone: phone, password: password, fcmToken: fcmToken);
+  Future<void> call({
+    required String phone,
+    required String password,
+    String? fcmToken,
+  }) => _repository.login(phone: phone, password: password, fcmToken: fcmToken);
 }

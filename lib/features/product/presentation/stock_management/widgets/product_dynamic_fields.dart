@@ -52,7 +52,11 @@ class ProductDynamicFields extends StatelessWidget {
         width: 280,
         child: CustomTextField(
           label:
-              '${mainServiceType.isVehicle ? 'Vehicle' : mainServiceType.isMaterial ? 'Material' : 'Product'} Name *',
+              '${mainServiceType.isVehicle
+                  ? 'Vehicle'
+                  : mainServiceType.isMaterial
+                  ? 'Material'
+                  : 'Product'} Name *',
           controller: nameController,
           validator: AppInputValidators.productName,
         ),
@@ -375,8 +379,7 @@ class ProductDynamicFields extends StatelessWidget {
                 ? null
                 : AppInputValidators.category(
                     value,
-                    fieldName:
-                        mainServiceType.isVehicle ? 'Brand' : 'Category',
+                    fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
                     isRequired: false,
                   ),
           ),

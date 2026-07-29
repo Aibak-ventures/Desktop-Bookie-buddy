@@ -10,7 +10,9 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 class TaxAndComplianceDependencies {
   static void register() {
     getIt
-      ..registerLazySingleton(() => TaxConfigurationRemoteDatasource(DioClient.dio))
+      ..registerLazySingleton(
+        () => TaxConfigurationRemoteDatasource(DioClient.dio),
+      )
       ..registerLazySingleton<ITaxConfigurationRepository>(
         () => TaxConfigurationRepositoryImpl(getIt()),
       )

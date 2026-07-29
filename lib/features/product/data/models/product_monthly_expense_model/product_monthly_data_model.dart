@@ -19,9 +19,9 @@ abstract class ProductMonthlyDataModel with _$ProductMonthlyDataModel {
 
 extension ProductMonthlyDataModelMapper on ProductMonthlyDataModel {
   ProductMonthlyDataEntity toEntity() => ProductMonthlyDataEntity(
-        year: year,
-        month: month,
-        totalExpense: totalExpense,
-        totalEarned: totalEarned,
-      );
+    year: year,
+    month: month,
+    totalExpense: totalExpense,
+    totalEarned: totalEarned,
+  );
 }

@@ -27,11 +27,11 @@ abstract class DashboardCustomWorkModel with _$DashboardCustomWorkModel {
 
 extension DashboardCustomWorkModelMapper on DashboardCustomWorkModel {
   DashboardCustomWorkEntity toEntity() => DashboardCustomWorkEntity(
-        id: id,
-        tailorName: tailorName,
-        pickupDate: pickupDate,
-        status: status,
-        products: products,
-        staffColor: staffColor,
-      );
+    id: id,
+    tailorName: tailorName,
+    pickupDate: pickupDate,
+    status: status,
+    products: products,
+    staffColor: staffColor,
+  );
 }

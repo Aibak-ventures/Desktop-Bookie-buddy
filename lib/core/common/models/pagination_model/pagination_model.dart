@@ -21,17 +21,15 @@ abstract class PaginationModel<T> with _$PaginationModel<T> {
     Map<String, dynamic> json,
     T Function(Object? json) itemFromJson, {
     List<T> Function(List<T> data)? listFromJson,
-    List<T> Function(
-      dynamic dataJson,
-      T Function(Object? json) itemFromJson,
-    )? customJsonParser,
+    List<T> Function(dynamic dataJson, T Function(Object? json) itemFromJson)?
+    customJsonParser,
   }) {
     final result = customJsonParser != null
         ? customJsonParser(json['data'], itemFromJson)
         : (json['data'] as List<dynamic>?)
-                ?.map((item) => itemFromJson(item))
-                .toList() ??
-            <T>[];
+                  ?.map((item) => itemFromJson(item))
+                  .toList() ??
+              <T>[];
 
     return PaginationModel<T>(
       data: listFromJson != null ? listFromJson(result) : result,

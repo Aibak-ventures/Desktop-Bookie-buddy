@@ -60,8 +60,10 @@ class SalesDetailsItemsSection extends StatelessWidget {
                                   item.image!,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.image,
-                                          color: Colors.grey.shade400),
+                                      Icon(
+                                        Icons.image,
+                                        color: Colors.grey.shade400,
+                                      ),
                                 ),
                               ),
                             ),
@@ -88,13 +90,17 @@ class SalesDetailsItemsSection extends StatelessWidget {
                             Text(
                               'Size : ${item.variantAttribute}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                           if (item.color != null && item.color!.isNotEmpty)
                             Text(
                               'Colour : ${item.color}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                         ] else if (item.mainServiceType ==
                             MainServiceType.vehicle) ...[
@@ -102,14 +108,18 @@ class SalesDetailsItemsSection extends StatelessWidget {
                             Text(
                               'Model : ${item.model}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                           if (item.category != null &&
                               item.category!.isNotEmpty)
                             Text(
                               'Brand : ${item.category}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                         ] else if (item.mainServiceType ==
                             MainServiceType.gadgets) ...[
@@ -118,13 +128,17 @@ class SalesDetailsItemsSection extends StatelessWidget {
                             Text(
                               'Serial Number : ${item.variantAttribute}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                           if (item.color != null && item.color!.isNotEmpty)
                             Text(
                               'Colour : ${item.color}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                         ] else if (item.mainServiceType ==
                             MainServiceType.equipment) ...[
@@ -133,7 +147,9 @@ class SalesDetailsItemsSection extends StatelessWidget {
                             Text(
                               'Category : ${item.category}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                         ] else ...[
                           if (item.category != null &&
@@ -141,13 +157,17 @@ class SalesDetailsItemsSection extends StatelessWidget {
                             Text(
                               'Category : ${item.category}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                           if (item.color != null && item.color!.isNotEmpty)
                             Text(
                               'Colour : ${item.color}',
                               style: TextStyle(
-                                  fontSize: 12, color: Colors.grey.shade600),
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
                         ],
                       ],
@@ -159,7 +179,9 @@ class SalesDetailsItemsSection extends StatelessWidget {
                       Text(
                         'Qty : ${item.quantity}',
                         style: const TextStyle(
-                            fontSize: 12, color: Colors.black54),
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(

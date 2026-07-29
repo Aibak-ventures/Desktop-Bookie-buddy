@@ -11,8 +11,9 @@ import 'package:stream_transform/stream_transform.dart';
 /// This is useful in scenarios where you want to limit the rate at which
 /// events are processed, ensuring that only the first event in the given
 /// time frame is handled.
-EventTransformer<E> throttleDroppable<E>(
-    [Duration duration = const Duration(milliseconds: 500)]) {
+EventTransformer<E> throttleDroppable<E>([
+  Duration duration = const Duration(milliseconds: 500),
+]) {
   return (events, mapper) =>
       droppable<E>().call(events.throttle(duration), mapper);
 }
@@ -26,8 +27,9 @@ EventTransformer<E> throttleDroppable<E>(
 /// processed only after a certain period of inactivity, such as user input
 /// in a search field where you want to wait until the user has stopped
 /// typing before performing a search.
-EventTransformer<E> debounceDroppable<E>(
-    [Duration duration = const Duration(milliseconds: 300)]) {
+EventTransformer<E> debounceDroppable<E>([
+  Duration duration = const Duration(milliseconds: 300),
+]) {
   return (events, mapper) =>
       droppable<E>().call(events.debounce(duration), mapper);
 }

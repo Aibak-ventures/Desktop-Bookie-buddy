@@ -7,9 +7,8 @@ class CustomSizedBoxHeight extends StatelessWidget {
   const CustomSizedBoxHeight(this._height, {super.key});
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        height: context.screenHeight * _height,
-      );
+  Widget build(BuildContext context) =>
+      SizedBox(height: context.screenHeight * _height);
 }
 
 class CustomSizedBoxWidth extends StatelessWidget {
@@ -18,7 +17,6 @@ class CustomSizedBoxWidth extends StatelessWidget {
   const CustomSizedBoxWidth(this.width, {super.key});
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-        width: context.getProportionateScreenWidth(width),
-      );
+  Widget build(BuildContext context) =>
+      SizedBox(width: context.getProportionateScreenWidth(width));
 }

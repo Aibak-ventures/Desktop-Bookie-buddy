@@ -18,48 +18,48 @@ class AppTheme {
 
   ///
   static ThemeData lightTheme() => ThemeData(
-        // app bar theme
-        appBarTheme: AppAppBarTheme.lightTheme,
+    // app bar theme
+    appBarTheme: AppAppBarTheme.lightTheme,
 
-        // primary color
-        primaryColor: Colors.white,
+    // primary color
+    primaryColor: Colors.white,
 
-        // app font
-        fontFamily: _fontFamily,
+    // app font
+    fontFamily: _fontFamily,
 
-        // scaffold background color
-        scaffoldBackgroundColor: AppColors.white,
+    // scaffold background color
+    scaffoldBackgroundColor: AppColors.white,
 
-        // checkbox theme
-        checkboxTheme: AppCheckboxTheme.lightTheme,
+    // checkbox theme
+    checkboxTheme: AppCheckboxTheme.lightTheme,
 
-        // text button theme
-        textButtonTheme: AppTextButtonTheme.lightTheme,
+    // text button theme
+    textButtonTheme: AppTextButtonTheme.lightTheme,
 
-        // elevated button theme
-        elevatedButtonTheme: AppElevatedButtonTheme.lightTheme,
+    // elevated button theme
+    elevatedButtonTheme: AppElevatedButtonTheme.lightTheme,
 
-        // outlined button theme
-        outlinedButtonTheme: AppOutlinedButtonTheme.lightTheme,
+    // outlined button theme
+    outlinedButtonTheme: AppOutlinedButtonTheme.lightTheme,
 
-        // icon button theme
-        iconButtonTheme: AppIconButtonTheme.lightTheme,
+    // icon button theme
+    iconButtonTheme: AppIconButtonTheme.lightTheme,
 
-        // popup menu theme
-        popupMenuTheme: AppPopupMenuTheme.lightTheme,
+    // popup menu theme
+    popupMenuTheme: AppPopupMenuTheme.lightTheme,
 
-        // radio button theme
-        radioTheme: AppRadioTheme.lightTheme,
+    // radio button theme
+    radioTheme: AppRadioTheme.lightTheme,
 
-        // date picker theme
-        datePickerTheme: AppDatePickerTheme.lightTheme,
+    // date picker theme
+    datePickerTheme: AppDatePickerTheme.lightTheme,
 
-        // dropdown menu theme
-        dropdownMenuTheme: AppDropdownMenuTheme.lightTheme,
+    // dropdown menu theme
+    dropdownMenuTheme: AppDropdownMenuTheme.lightTheme,
 
-        // dialog theme
-        dialogTheme: AppDialogTheme.lightTheme,
-      );
+    // dialog theme
+    dialogTheme: AppDialogTheme.lightTheme,
+  );
 
   //Dark Theme is not complete
   static const _darkColor = Color.fromARGB(255, 48, 47, 47);

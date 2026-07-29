@@ -12,13 +12,12 @@ class CheckVariantAvailabilityUseCase {
     int? bookingId,
     TimeOfDay? pickupTime,
     TimeOfDay? returnTime,
-  }) =>
-      _repository.checkVariantAvailability(
-        pickupDate: pickupDate,
-        returnDate: returnDate,
-        variantIds: variantIds,
-        bookingId: bookingId,
-        pickupTime: pickupTime,
-        returnTime: returnTime,
-      );
+  }) => _repository.checkVariantAvailability(
+    pickupDate: pickupDate,
+    returnDate: returnDate,
+    variantIds: variantIds,
+    bookingId: bookingId,
+    pickupTime: pickupTime,
+    returnTime: returnTime,
+  );
 }

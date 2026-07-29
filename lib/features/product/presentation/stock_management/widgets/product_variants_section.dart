@@ -451,9 +451,7 @@ class _ProductVariantsSectionState extends State<ProductVariantsSection> {
           Row(
             children: [
               Icon(
-                _editingVariant != null
-                    ? Icons.edit
-                    : Icons.add_circle_outline,
+                _editingVariant != null ? Icons.edit : Icons.add_circle_outline,
                 color: AppColors.purple,
                 size: 20,
               ),

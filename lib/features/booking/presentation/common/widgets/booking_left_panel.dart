@@ -12,7 +12,8 @@ class BookingLeftPanel extends StatelessWidget {
   final void Function(
     ProductSelectedEntity product,
     List<MeasurementValueEntity> measurements,
-  ) onSaveCustomization;
+  )
+  onSaveCustomization;
 
   const BookingLeftPanel({
     super.key,

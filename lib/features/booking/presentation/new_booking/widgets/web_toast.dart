@@ -22,7 +22,8 @@ class WebToast extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: 320),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: color ??
+          color:
+              color ??
               (isError ? const Color(0xFFFFF0F0) : const Color(0xFFF0FFF5)),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
@@ -47,15 +48,17 @@ class WebToast extends StatelessWidget {
             Flexible(
               child: Text(
                 message,
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             const SizedBox(width: 10),
             GestureDetector(
               onTap: onClose,
               child: const Icon(Icons.close, size: 16),
-            )
+            ),
           ],
         ),
       ),

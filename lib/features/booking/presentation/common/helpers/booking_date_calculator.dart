@@ -67,11 +67,11 @@ class BookingDateCalculator {
     required int coolingDays,
     required bool isBooking,
   }) => effectivePickupDate(
-        pickupDate: pickupDate,
-        mode: mode,
-        coolingDays: coolingDays,
-        isBooking: isBooking,
-      ).format();
+    pickupDate: pickupDate,
+    mode: mode,
+    coolingDays: coolingDays,
+    isBooking: isBooking,
+  ).format();
 
   /// Returns the effective return date used for product-availability checks.
   ///
@@ -95,11 +95,11 @@ class BookingDateCalculator {
     required int coolingDays,
     required bool isBooking,
   }) => effectiveReturnDate(
-        returnDate: returnDate,
-        mode: mode,
-        coolingDays: coolingDays,
-        isBooking: isBooking,
-      ).format();
+    returnDate: returnDate,
+    mode: mode,
+    coolingDays: coolingDays,
+    isBooking: isBooking,
+  ).format();
 
   /// Returns the return time to use for availability/search checks.
   ///

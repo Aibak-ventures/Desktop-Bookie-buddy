@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 class AppRadioTheme {
   static final lightTheme = RadioThemeData(
-    fillColor: WidgetStateColor.resolveWith(
-      (states) => AppColors.purple,
-    ),
+    fillColor: WidgetStateColor.resolveWith((states) => AppColors.purple),
   );
 }

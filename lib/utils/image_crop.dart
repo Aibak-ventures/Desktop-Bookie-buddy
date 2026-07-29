@@ -10,35 +10,31 @@ Future<String?> cropImage({
   int compressQuality = 90,
 }) async {
   final cFile = await ImageCropper().cropImage(
-      sourcePath: sourcePath,
-      aspectRatio: const CropAspectRatio(
-        ratioX: 1,
-        ratioY: 1,
+    sourcePath: sourcePath,
+    aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+    compressFormat: ImageCompressFormat.png,
+    compressQuality: compressQuality,
+    uiSettings: [
+      AndroidUiSettings(
+        toolbarTitle: 'Cropper',
+        toolbarColor: AppColors.purple,
+        toolbarWidgetColor: AppColors.white,
+        activeControlsWidgetColor: AppColors.purple,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+        ],
       ),
-      compressFormat: ImageCompressFormat.png,
-      compressQuality: compressQuality,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Cropper',
-          toolbarColor: AppColors.purple,
-          toolbarWidgetColor: AppColors.white,
-          activeControlsWidgetColor: AppColors.purple,
-          aspectRatioPresets: [
-            CropAspectRatioPreset.original,
-            CropAspectRatioPreset.square,
-          ],
-        ),
-        IOSUiSettings(
-          title: 'Cropper',
-          aspectRatioPresets: [
-            CropAspectRatioPreset.original,
-            CropAspectRatioPreset.square,
-          ],
-        ),
-        WebUiSettings(
-          context: context,
-        ),
-      ]);
+      IOSUiSettings(
+        title: 'Cropper',
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+        ],
+      ),
+      WebUiSettings(context: context),
+    ],
+  );
 
   if (cFile != null) {
     log('Image cropped: ${cFile.path}');

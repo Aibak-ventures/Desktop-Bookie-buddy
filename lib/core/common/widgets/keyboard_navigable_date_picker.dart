@@ -71,25 +71,35 @@ class _KeyboardNavigableDatePickerState
   bool _isInRange(DateTime date) =>
       !date.isBefore(_firstDate) && !date.isAfter(_lastDate);
 
-  bool get _canGoPrevious =>
-      DateTime(_displayedMonth.year, _displayedMonth.month, 1)
-          .isAfter(DateTime(_firstDate.year, _firstDate.month, 1));
+  bool get _canGoPrevious => DateTime(
+    _displayedMonth.year,
+    _displayedMonth.month,
+    1,
+  ).isAfter(DateTime(_firstDate.year, _firstDate.month, 1));
 
-  bool get _canGoNext =>
-      DateTime(_displayedMonth.year, _displayedMonth.month, 1)
-          .isBefore(DateTime(_lastDate.year, _lastDate.month, 1));
+  bool get _canGoNext => DateTime(
+    _displayedMonth.year,
+    _displayedMonth.month,
+    1,
+  ).isBefore(DateTime(_lastDate.year, _lastDate.month, 1));
 
   void _goToPreviousMonth() {
     if (!_canGoPrevious) return;
     setState(() {
-      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month - 1);
+      _displayedMonth = DateTime(
+        _displayedMonth.year,
+        _displayedMonth.month - 1,
+      );
     });
   }
 
   void _goToNextMonth() {
     if (!_canGoNext) return;
     setState(() {
-      _displayedMonth = DateTime(_displayedMonth.year, _displayedMonth.month + 1);
+      _displayedMonth = DateTime(
+        _displayedMonth.year,
+        _displayedMonth.month + 1,
+      );
     });
   }
 
@@ -194,9 +204,9 @@ class _KeyboardNavigableDatePickerState
               child: Center(
                 child: Text(
                   day,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -239,17 +249,17 @@ class _KeyboardNavigableDatePickerState
               decoration: BoxDecoration(
                 color: isSelected
                     ? (widget.selectedColor ??
-                        Theme.of(context).colorScheme.primary)
+                          Theme.of(context).colorScheme.primary)
                     : isFocused
-                        ? Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.2)
-                        : null,
+                    ? Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.2)
+                    : null,
                 borderRadius: BorderRadius.circular(8),
                 border: isToday
                     ? Border.all(
-                        color: widget.selectedColor ??
+                        color:
+                            widget.selectedColor ??
                             Theme.of(context).colorScheme.primary,
                         width: 2,
                       )
@@ -262,8 +272,8 @@ class _KeyboardNavigableDatePickerState
                     color: !isInRange
                         ? Theme.of(context).disabledColor
                         : isSelected
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : null,
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : null,
                     fontWeight: isFocused || isToday ? FontWeight.bold : null,
                   ),
                 ),

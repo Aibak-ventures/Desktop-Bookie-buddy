@@ -31,8 +31,8 @@ class BookingProductLoader {
   final Debouncer _debouncer;
 
   BookingProductLoader({required SelectProductBloc selectProductBloc})
-      : _bloc = selectProductBloc,
-        _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
+    : _bloc = selectProductBloc,
+      _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
 
   /// Schedules a debounced product-list load.
   ///

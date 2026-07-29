@@ -60,11 +60,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     )
-                  : Icon(
-                      Icons.image,
-                      size: 80,
-                      color: Colors.grey.shade400,
-                    ),
+                  : Icon(Icons.image, size: 80, color: Colors.grey.shade400),
             ),
             const SizedBox(height: 16),
 
@@ -299,7 +295,8 @@ class ProductDetailsLeftPanel extends StatelessWidget {
                           ? product.effectiveRegistrationNumber!
                           : 'N/A',
                       style: TextStyle(
-                        color: product.effectiveRegistrationNumber != null &&
+                        color:
+                            product.effectiveRegistrationNumber != null &&
                                 product.effectiveRegistrationNumber!.isNotEmpty
                             ? Colors.black
                             : Colors.grey.shade400,

@@ -10,12 +10,11 @@ class UpdateVariantUseCase {
     required String? updatedAttribute,
     required int? updatedStock,
     String? externalQrCode,
-  }) =>
-      _repository.updateVariant(
-        productId: productId,
-        variantId: variantId,
-        updatedAttribute: updatedAttribute,
-        updatedStock: updatedStock,
-        externalQrCode: externalQrCode,
-      );
+  }) => _repository.updateVariant(
+    productId: productId,
+    variantId: variantId,
+    updatedAttribute: updatedAttribute,
+    updatedStock: updatedStock,
+    externalQrCode: externalQrCode,
+  );
 }

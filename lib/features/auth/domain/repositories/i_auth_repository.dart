@@ -1,7 +1,10 @@
 abstract interface class IAuthRepository {
   // login
-  Future<void> login(
-      {required String phone, required String password, String? fcmToken});
+  Future<void> login({
+    required String phone,
+    required String password,
+    String? fcmToken,
+  });
 
   // secret login
   Future<void> secretLogin(String password);

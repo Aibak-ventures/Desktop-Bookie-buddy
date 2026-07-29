@@ -8,9 +8,11 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 class DashboardDependencies {
   static void register() {
     getIt.registerLazySingleton(
-        () => DashboardRemoteDatasource(dio: DioClient.dio));
+      () => DashboardRemoteDatasource(dio: DioClient.dio),
+    );
     getIt.registerLazySingleton<IDashboardRepository>(
-        () => DashboardRepositoryImpl(getIt()));
+      () => DashboardRepositoryImpl(getIt()),
+    );
     getIt.registerLazySingleton(
       () => GetDashboardDesktopDataUseCase(getIt<IDashboardRepository>()),
     );

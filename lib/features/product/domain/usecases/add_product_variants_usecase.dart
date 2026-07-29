@@ -8,10 +8,9 @@ class AddProductVariantsUseCase {
     required int productId,
     required String attribute,
     required int stock,
-  }) =>
-      _repository.addProductVariants(
-        productId: productId,
-        attribute: attribute,
-        stock: stock,
-      );
+  }) => _repository.addProductVariants(
+    productId: productId,
+    attribute: attribute,
+    stock: stock,
+  );
 }

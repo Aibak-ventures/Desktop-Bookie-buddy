@@ -23,14 +23,16 @@ class CustomProductSearchField extends StatefulWidget {
     String selectedType,
     RangeValues priceRange,
     bool isPriceEnabled,
-  ) onChanged;
+  )
+  onChanged;
   final void Function(
     int type,
     RangeValues priceRange,
     bool isPriceEnabled,
     String searchQuery,
     String searchType,
-  ) onApply;
+  )
+  onApply;
   final MainServiceType mainServiceType;
 
   @override
@@ -70,10 +72,12 @@ class _CustomProductSearchFieldState extends State<CustomProductSearchField> {
       'Name',
       widget.mainServiceType.secondaryAttributeLabel ?? 'Color',
       widget.mainServiceType.isMultiVariantProductType
-          ? widget.mainServiceType
-              .variantAttributeLabel // "Size" for dress, "Serial Number" for gadget
-          : widget.mainServiceType
-              .categoryFieldLabel, // "Brand" for vehicle, "Category" for others
+          ? widget
+                .mainServiceType
+                .variantAttributeLabel // "Size" for dress, "Serial Number" for gadget
+          : widget
+                .mainServiceType
+                .categoryFieldLabel, // "Brand" for vehicle, "Category" for others
       'Model',
     ];
   }
@@ -83,64 +87,64 @@ class _CustomProductSearchFieldState extends State<CustomProductSearchField> {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
-        valueListenable: selectedSearchTypeIndexNotifier,
-        builder: (context, selectedSearchTypeIndex, child) => CustomSearchField(
-          hintText:
-              'Search ${searchTypes2[selectedSearchTypeIndex].toLowerCase()}...',
-          searchController: widget.searchController,
-          suffixIcon: ValueListenableBuilder<bool>(
-            valueListenable: widget.isPriceFilterEnabled,
-            builder: (context, isFilterEnabled, child) => IconButton(
-              icon: Icon(
-                Icons.tune,
-                color: isFilterEnabled ? AppColors.purple : AppColors.grey600,
-              ),
-              onPressed: () {
-                if (widget.mainServiceType.isDress &&
-                    (widget.priceRangeNotifier.value.start == 0 &&
-                        widget.priceRangeNotifier.value.end == 80000)) {
-                  maxPriceNotifier.value = 30000;
-                  widget.priceRangeNotifier.value = RangeValues(
-                    0,
-                    maxPriceNotifier.value,
-                  );
-                }
+    valueListenable: selectedSearchTypeIndexNotifier,
+    builder: (context, selectedSearchTypeIndex, child) => CustomSearchField(
+      hintText:
+          'Search ${searchTypes2[selectedSearchTypeIndex].toLowerCase()}...',
+      searchController: widget.searchController,
+      suffixIcon: ValueListenableBuilder<bool>(
+        valueListenable: widget.isPriceFilterEnabled,
+        builder: (context, isFilterEnabled, child) => IconButton(
+          icon: Icon(
+            Icons.tune,
+            color: isFilterEnabled ? AppColors.purple : AppColors.grey600,
+          ),
+          onPressed: () {
+            if (widget.mainServiceType.isDress &&
+                (widget.priceRangeNotifier.value.start == 0 &&
+                    widget.priceRangeNotifier.value.end == 80000)) {
+              maxPriceNotifier.value = 30000;
+              widget.priceRangeNotifier.value = RangeValues(
+                0,
+                maxPriceNotifier.value,
+              );
+            }
 
-                showSearchTypeBottomSheet(
-                  context: context,
-                  searchTypes: searchTypes2,
-                  selectedSearchTypeIndex: selectedSearchTypeIndexNotifier,
-                  onTap: (type, index) {
-                    selectedSearchTypeIndexNotifier.value = index;
-                    // context.pop();
-                  },
-                  isPriceFilterEnabledNotifier: widget.isPriceFilterEnabled,
-                  maxPriceNotifier: maxPriceNotifier,
-                  minPrice: 0,
-                  priceRange: widget.priceRangeNotifier,
-                  onPriceChanged: (range) {},
-                  onApply: (type, range, isPriceEnabled) {
-                    widget.isPriceFilterEnabled.value = isPriceEnabled;
-                    widget.onApply(
-                      type,
-                      range,
-                      isPriceEnabled,
-                      widget.searchController.text,
-                      searchTypes[selectedSearchTypeIndex].toLowerCase(),
-                    );
-                  },
+            showSearchTypeBottomSheet(
+              context: context,
+              searchTypes: searchTypes2,
+              selectedSearchTypeIndex: selectedSearchTypeIndexNotifier,
+              onTap: (type, index) {
+                selectedSearchTypeIndexNotifier.value = index;
+                // context.pop();
+              },
+              isPriceFilterEnabledNotifier: widget.isPriceFilterEnabled,
+              maxPriceNotifier: maxPriceNotifier,
+              minPrice: 0,
+              priceRange: widget.priceRangeNotifier,
+              onPriceChanged: (range) {},
+              onApply: (type, range, isPriceEnabled) {
+                widget.isPriceFilterEnabled.value = isPriceEnabled;
+                widget.onApply(
+                  type,
+                  range,
+                  isPriceEnabled,
+                  widget.searchController.text,
+                  searchTypes[selectedSearchTypeIndex].toLowerCase(),
                 );
               },
-            ),
-          ),
-          onChanged: (query) {
-            widget.onChanged(
-              query,
-              searchTypes[selectedSearchTypeIndex].toLowerCase(),
-              widget.priceRangeNotifier.value,
-              widget.isPriceFilterEnabled.value,
             );
           },
         ),
-      );
+      ),
+      onChanged: (query) {
+        widget.onChanged(
+          query,
+          searchTypes[selectedSearchTypeIndex].toLowerCase(),
+          widget.priceRangeNotifier.value,
+          widget.isPriceFilterEnabled.value,
+        );
+      },
+    ),
+  );
 }

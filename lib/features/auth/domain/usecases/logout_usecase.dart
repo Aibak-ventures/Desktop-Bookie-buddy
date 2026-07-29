@@ -5,5 +5,6 @@ class LogoutUseCase {
 
   LogoutUseCase(this._repository);
 
-  Future<void> call({String? fcmToken}) => _repository.logout(fcmToken: fcmToken);
+  Future<void> call({String? fcmToken}) =>
+      _repository.logout(fcmToken: fcmToken);
 }

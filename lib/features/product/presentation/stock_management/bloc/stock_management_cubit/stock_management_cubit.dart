@@ -29,11 +29,11 @@ class StockManagementCubit extends Cubit<StockManagementState> {
     required SearchAndFilterProductsUseCase searchAndFilterProducts,
     required SearchAllProductsUseCase searchAllProducts,
     required DeleteProductUseCase deleteProduct,
-  })  : _getProducts = getProducts,
-        _searchAndFilterProducts = searchAndFilterProducts,
-        _searchAllProducts = searchAllProducts,
-        _deleteProduct = deleteProduct,
-        super(const StockManagementState.initial());
+  }) : _getProducts = getProducts,
+       _searchAndFilterProducts = searchAndFilterProducts,
+       _searchAllProducts = searchAllProducts,
+       _deleteProduct = deleteProduct,
+       super(const StockManagementState.initial());
 
   Future<void> loadProducts({
     int? serviceId,
@@ -63,50 +63,58 @@ class StockManagementCubit extends Cubit<StockManagementState> {
         _uniqueCategories.clear();
       } else {
         state.maybeWhen(
-          loaded: (products, totalProducts, totalCategories, nextPageUrl,
-              isPaginating, selectedServiceId, currentQuery, selectedProductId) {
-            emit(StockManagementState.loaded(
-              products: products,
-              totalProducts: totalProducts,
-              totalCategories: totalCategories,
-              nextPageUrl: nextPageUrl,
-              isPaginating: true,
-              selectedServiceId: selectedServiceId,
-              searchQuery: currentQuery,
-              selectedProductId: selectedProductId,
-            ));
-          },
+          loaded:
+              (
+                products,
+                totalProducts,
+                totalCategories,
+                nextPageUrl,
+                isPaginating,
+                selectedServiceId,
+                currentQuery,
+                selectedProductId,
+              ) {
+                emit(
+                  StockManagementState.loaded(
+                    products: products,
+                    totalProducts: totalProducts,
+                    totalCategories: totalCategories,
+                    nextPageUrl: nextPageUrl,
+                    isPaginating: true,
+                    selectedServiceId: selectedServiceId,
+                    searchQuery: currentQuery,
+                    selectedProductId: selectedProductId,
+                  ),
+                );
+              },
           orElse: () {},
         );
       }
 
       final int? apiServiceId =
           (resolvedServiceId == null || resolvedServiceId == -1)
-              ? null
-              : resolvedServiceId;
+          ? null
+          : resolvedServiceId;
 
       final paginationModel = (apiServiceId == null)
-          ? await _searchAllProducts(
-              query: resolvedSearchQuery,
-              page: page,
-            )
+          ? await _searchAllProducts(query: resolvedSearchQuery, page: page)
           : (resolvedSearchQuery.isEmpty &&
-                  resolvedStartPrice == null &&
-                  resolvedEndPrice == null)
-              ? await _getProducts(
-                  serviceId: apiServiceId,
-                  page: page,
-                  includeInStockOnly: false,
-                )
-              : await _searchAndFilterProducts(
-                  serviceId: apiServiceId,
-                  query: resolvedSearchQuery,
-                  type: resolvedSearchType ?? 'name',
-                  startPrice: resolvedStartPrice,
-                  endPrice: resolvedEndPrice,
-                  page: page,
-                  includeInStockOnly: false,
-                );
+                resolvedStartPrice == null &&
+                resolvedEndPrice == null)
+          ? await _getProducts(
+              serviceId: apiServiceId,
+              page: page,
+              includeInStockOnly: false,
+            )
+          : await _searchAndFilterProducts(
+              serviceId: apiServiceId,
+              query: resolvedSearchQuery,
+              type: resolvedSearchType ?? 'name',
+              startPrice: resolvedStartPrice,
+              endPrice: resolvedEndPrice,
+              page: page,
+              includeInStockOnly: false,
+            );
 
       final productList = paginationModel.data;
       final nextPageUrl = paginationModel.nextPageUrl;
@@ -120,30 +128,43 @@ class StockManagementCubit extends Cubit<StockManagementState> {
       final totalCategories = _uniqueCategories.length;
 
       if (page == 1) {
-        emit(StockManagementState.loaded(
-          products: productList,
-          totalProducts: totalProducts,
-          totalCategories: totalCategories,
-          nextPageUrl: nextPageUrl,
-          isPaginating: false,
-          selectedServiceId: resolvedServiceId ?? -1,
-          searchQuery: resolvedSearchQuery,
-        ));
+        emit(
+          StockManagementState.loaded(
+            products: productList,
+            totalProducts: totalProducts,
+            totalCategories: totalCategories,
+            nextPageUrl: nextPageUrl,
+            isPaginating: false,
+            selectedServiceId: resolvedServiceId ?? -1,
+            searchQuery: resolvedSearchQuery,
+          ),
+        );
       } else {
         state.maybeWhen(
-          loaded: (existingProducts, _, __, ___, ____, _____, ______,
-              selectedProductId) {
-            emit(StockManagementState.loaded(
-              products: [...existingProducts, ...productList],
-              totalProducts: totalProducts,
-              totalCategories: totalCategories,
-              nextPageUrl: nextPageUrl,
-              isPaginating: false,
-              selectedServiceId: resolvedServiceId ?? -1,
-              searchQuery: resolvedSearchQuery,
-              selectedProductId: selectedProductId,
-            ));
-          },
+          loaded:
+              (
+                existingProducts,
+                _,
+                __,
+                ___,
+                ____,
+                _____,
+                ______,
+                selectedProductId,
+              ) {
+                emit(
+                  StockManagementState.loaded(
+                    products: [...existingProducts, ...productList],
+                    totalProducts: totalProducts,
+                    totalCategories: totalCategories,
+                    nextPageUrl: nextPageUrl,
+                    isPaginating: false,
+                    selectedServiceId: resolvedServiceId ?? -1,
+                    searchQuery: resolvedSearchQuery,
+                    selectedProductId: selectedProductId,
+                  ),
+                );
+              },
           orElse: () {},
         );
       }
@@ -155,21 +176,31 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
   Future<void> loadNextPage() async {
     await state.maybeWhen(
-      loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedServiceId, searchQuery, selectedProductId) async {
-        if (nextPageUrl != null && !isPaginating) {
-          final uri = Uri.parse(nextPageUrl);
-          final page = int.tryParse(uri.queryParameters['page'] ?? '1') ?? 1;
-          await loadProducts(
-            serviceId: _activeServiceId,
-            searchQuery: _activeSearchQuery,
-            searchType: _activeSearchType,
-            startPrice: _activeStartPrice,
-            endPrice: _activeEndPrice,
-            page: page,
-          );
-        }
-      },
+      loaded:
+          (
+            products,
+            totalProducts,
+            totalCategories,
+            nextPageUrl,
+            isPaginating,
+            selectedServiceId,
+            searchQuery,
+            selectedProductId,
+          ) async {
+            if (nextPageUrl != null && !isPaginating) {
+              final uri = Uri.parse(nextPageUrl);
+              final page =
+                  int.tryParse(uri.queryParameters['page'] ?? '1') ?? 1;
+              await loadProducts(
+                serviceId: _activeServiceId,
+                searchQuery: _activeSearchQuery,
+                searchType: _activeSearchType,
+                startPrice: _activeStartPrice,
+                endPrice: _activeEndPrice,
+                page: page,
+              );
+            }
+          },
       orElse: () async {},
     );
   }
@@ -187,9 +218,14 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
   Future<void> searchProducts(String query) async {
     await state.maybeWhen(
-      loaded: (_, __, ___, ____, _____, selectedServiceId, ______, _______) async {
-        await loadProducts(serviceId: selectedServiceId, searchQuery: query, page: 1);
-      },
+      loaded:
+          (_, __, ___, ____, _____, selectedServiceId, ______, _______) async {
+            await loadProducts(
+              serviceId: selectedServiceId,
+              searchQuery: query,
+              page: 1,
+            );
+          },
       orElse: () async {
         await loadProducts(searchQuery: query, page: 1);
       },
@@ -198,38 +234,60 @@ class StockManagementCubit extends Cubit<StockManagementState> {
 
   void showProductDetails(int productId) {
     state.maybeWhen(
-      loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedServiceId, searchQuery, _) {
-        emit(StockManagementState.loaded(
-          products: products,
-          totalProducts: totalProducts,
-          totalCategories: totalCategories,
-          nextPageUrl: nextPageUrl,
-          isPaginating: isPaginating,
-          selectedServiceId: selectedServiceId,
-          searchQuery: searchQuery,
-          selectedProductId: productId,
-        ));
-      },
+      loaded:
+          (
+            products,
+            totalProducts,
+            totalCategories,
+            nextPageUrl,
+            isPaginating,
+            selectedServiceId,
+            searchQuery,
+            _,
+          ) {
+            emit(
+              StockManagementState.loaded(
+                products: products,
+                totalProducts: totalProducts,
+                totalCategories: totalCategories,
+                nextPageUrl: nextPageUrl,
+                isPaginating: isPaginating,
+                selectedServiceId: selectedServiceId,
+                searchQuery: searchQuery,
+                selectedProductId: productId,
+              ),
+            );
+          },
       orElse: () {},
     );
   }
 
   void hideProductDetails() {
     state.maybeWhen(
-      loaded: (products, totalProducts, totalCategories, nextPageUrl,
-          isPaginating, selectedServiceId, searchQuery, _) {
-        emit(StockManagementState.loaded(
-          products: products,
-          totalProducts: totalProducts,
-          totalCategories: totalCategories,
-          nextPageUrl: nextPageUrl,
-          isPaginating: isPaginating,
-          selectedServiceId: selectedServiceId,
-          searchQuery: searchQuery,
-          selectedProductId: null,
-        ));
-      },
+      loaded:
+          (
+            products,
+            totalProducts,
+            totalCategories,
+            nextPageUrl,
+            isPaginating,
+            selectedServiceId,
+            searchQuery,
+            _,
+          ) {
+            emit(
+              StockManagementState.loaded(
+                products: products,
+                totalProducts: totalProducts,
+                totalCategories: totalCategories,
+                nextPageUrl: nextPageUrl,
+                isPaginating: isPaginating,
+                selectedServiceId: selectedServiceId,
+                searchQuery: searchQuery,
+                selectedProductId: null,
+              ),
+            );
+          },
       orElse: () {},
     );
   }

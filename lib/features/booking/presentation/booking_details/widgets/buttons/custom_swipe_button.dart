@@ -111,7 +111,8 @@ class _CustomSwipeButtonState extends State<CustomSwipeButton>
       // Legacy flags mode: detect transitions for reset
       if (widget.controller == null) {
         final failureJustOccurred = !oldWidget.isFailure && widget.isFailure;
-        final backToIdle = !widget.isLoading &&
+        final backToIdle =
+            !widget.isLoading &&
             !widget.isSuccess &&
             !widget.isFailure &&
             (oldWidget.isLoading || oldWidget.isSuccess || oldWidget.isFailure);
@@ -182,8 +183,10 @@ class _CustomSwipeButtonState extends State<CustomSwipeButton>
             : trackWidth;
         // Estimate thumb width: padding (24) + icon (24) + horizontal margin (16) ~ 64
         const estimatedThumbTotal = 64.0;
-        _maxDrag =
-            (effectiveWidth - estimatedThumbTotal).clamp(0, double.infinity);
+        _maxDrag = (effectiveWidth - estimatedThumbTotal).clamp(
+          0,
+          double.infinity,
+        );
 
         final bgColor = _isSuccess
             ? (widget.successColor ?? Colors.green)
@@ -202,10 +205,7 @@ class _CustomSwipeButtonState extends State<CustomSwipeButton>
           child: Container(
             width: effectiveWidth,
             height: widget.height,
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: baseRadius,
-            ),
+            decoration: BoxDecoration(color: bgColor, borderRadius: baseRadius),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -245,7 +245,8 @@ class _CustomSwipeButtonState extends State<CustomSwipeButton>
                 Positioned(
                   left: _dragPosition,
                   child: IgnorePointer(
-                    ignoring: _isLoading ||
+                    ignoring:
+                        _isLoading ||
                         _isSuccess, // disable drag while busy/success
                     child: GestureDetector(
                       onHorizontalDragUpdate: (details) {
@@ -278,18 +279,15 @@ class _CustomSwipeButtonState extends State<CustomSwipeButton>
                           color: widget.thumbColor ?? AppColors.purple,
                           borderRadius: baseRadius,
                           boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black38,
-                              blurRadius: 5,
-                            ),
+                            BoxShadow(color: Colors.black38, blurRadius: 5),
                           ],
                         ),
                         child: Icon(
                           _isLoading
                               ? Icons.hourglass_top_rounded
                               : _isSuccess
-                                  ? Icons.check
-                                  : Icons.arrow_forward,
+                              ? Icons.check
+                              : Icons.arrow_forward,
                           color: Colors.white,
                         ),
                       ),

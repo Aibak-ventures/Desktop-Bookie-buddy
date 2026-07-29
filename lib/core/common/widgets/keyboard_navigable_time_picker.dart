@@ -139,16 +139,13 @@ class _KeyboardNavigableTimePickerState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Select time',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Select time', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               'Use ← → to move, ↑ ↓ to change, Enter to confirm',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).hintColor,
-                  ),
+                color: Theme.of(context).hintColor,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -156,10 +153,7 @@ class _KeyboardNavigableTimePickerState
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildSegment(
-                  index: 0,
-                  text: _hour.toString().padLeft(2, '0'),
-                ),
+                _buildSegment(index: 0, text: _hour.toString().padLeft(2, '0')),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
@@ -228,9 +222,9 @@ class _KeyboardNavigableTimePickerState
             child: Text(
               text,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: isFocused ? _accent : null,
-                  ),
+                fontWeight: FontWeight.w600,
+                color: isFocused ? _accent : null,
+              ),
             ),
           ),
           IconButton(

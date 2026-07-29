@@ -12,7 +12,10 @@ class ProductMapper {
   }) {
     return bookedItems
         .map(
-          (item) => BookingProductHelpers.fromBookedItem(item, rentalDays: rentalDays),
+          (item) => BookingProductHelpers.fromBookedItem(
+            item,
+            rentalDays: rentalDays,
+          ),
         )
         .toList(growable: false);
   }
@@ -21,32 +24,34 @@ class ProductMapper {
     required List<ProductSelectedEntity> currentProducts,
     required List<ProductEntity> freshProducts,
   }) {
-    return currentProducts.map((selectedProduct) {
-      for (final freshProduct in freshProducts) {
-        final matchingVariant = freshProduct.variants.firstWhere(
-          (variant) => variant.id == selectedProduct.variant.variantId,
-          orElse: () => const ProductVariantEntity(
-            id: 0,
-            attribute: '',
-            stock: 0,
-            remainingStock: null,
-            price: null,
-            salePrice: null,
-          ),
-        );
+    return currentProducts
+        .map((selectedProduct) {
+          for (final freshProduct in freshProducts) {
+            final matchingVariant = freshProduct.variants.firstWhere(
+              (variant) => variant.id == selectedProduct.variant.variantId,
+              orElse: () => const ProductVariantEntity(
+                id: 0,
+                attribute: '',
+                stock: 0,
+                remainingStock: null,
+                price: null,
+                salePrice: null,
+              ),
+            );
 
-        if (matchingVariant.id != 0) {
-          return selectedProduct.copyWith(
-            variant: selectedProduct.variant.copyWith(
-              stock: matchingVariant.stock,
-              remainingStock: matchingVariant.remainingStock,
-            ),
-          );
-        }
-      }
+            if (matchingVariant.id != 0) {
+              return selectedProduct.copyWith(
+                variant: selectedProduct.variant.copyWith(
+                  stock: matchingVariant.stock,
+                  remainingStock: matchingVariant.remainingStock,
+                ),
+              );
+            }
+          }
 
-      return selectedProduct;
-    }).toList(growable: false);
+          return selectedProduct;
+        })
+        .toList(growable: false);
   }
 
   static List<ProductSelectedEntity> updateMeasurements({
@@ -63,7 +68,9 @@ class ProductMapper {
     if (index == -1) return currentProducts;
 
     final updatedProducts = List<ProductSelectedEntity>.from(currentProducts);
-    updatedProducts[index] = updatedProduct.copyWith(measurements: measurements);
+    updatedProducts[index] = updatedProduct.copyWith(
+      measurements: measurements,
+    );
     return updatedProducts;
   }
 }

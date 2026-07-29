@@ -655,39 +655,45 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         initialMaxPrice: _maxPriceNotifier.value,
         initialIsPriceFilterEnabled: _isPriceFilterEnabled.value,
         computeSearchTypes: computeTypes,
-        onApply: ({
-          required int? serviceId,
-          required int searchTypeIndex,
-          required RangeValues priceRange,
-          required double maxPrice,
-          required bool isPriceFilterEnabled,
-        }) {
-          MainServiceType? serviceType;
-          List<String> newSearchTypes = ['Name', 'Category', 'Model', 'Color'];
-          if (serviceId != null &&
-              serviceId != -1 &&
-              filteredServices.isNotEmpty) {
-            serviceType = MainServiceType.fromString(
-              filteredServices
-                  .firstWhere(
-                    (s) => s.id == serviceId,
-                    orElse: () => filteredServices.first,
-                  )
-                  .mainServiceName,
-            );
-            newSearchTypes = computeTypes(serviceId);
-          }
-          setState(() {
-            _selectedServiceId = serviceId;
-            _currentServiceType = serviceType;
-            _searchTypes = newSearchTypes;
-            _selectedSearchTypeIndex.value = searchTypeIndex;
-            _isPriceFilterEnabled.value = isPriceFilterEnabled;
-            _priceRange.value = priceRange;
-            _maxPriceNotifier.value = maxPrice;
-          });
-          _applyProductFilters();
-        },
+        onApply:
+            ({
+              required int? serviceId,
+              required int searchTypeIndex,
+              required RangeValues priceRange,
+              required double maxPrice,
+              required bool isPriceFilterEnabled,
+            }) {
+              MainServiceType? serviceType;
+              List<String> newSearchTypes = [
+                'Name',
+                'Category',
+                'Model',
+                'Color',
+              ];
+              if (serviceId != null &&
+                  serviceId != -1 &&
+                  filteredServices.isNotEmpty) {
+                serviceType = MainServiceType.fromString(
+                  filteredServices
+                      .firstWhere(
+                        (s) => s.id == serviceId,
+                        orElse: () => filteredServices.first,
+                      )
+                      .mainServiceName,
+                );
+                newSearchTypes = computeTypes(serviceId);
+              }
+              setState(() {
+                _selectedServiceId = serviceId;
+                _currentServiceType = serviceType;
+                _searchTypes = newSearchTypes;
+                _selectedSearchTypeIndex.value = searchTypeIndex;
+                _isPriceFilterEnabled.value = isPriceFilterEnabled;
+                _priceRange.value = priceRange;
+                _maxPriceNotifier.value = maxPrice;
+              });
+              _applyProductFilters();
+            },
       ),
     );
   }
@@ -866,17 +872,17 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                       color: Colors.grey.shade200,
                                     ),
                                     itemBuilder: (_, i) => OverlaySearchItem(
-                                          product: productList[i],
-                                          isSales: true,
-                                          onAddProduct: (variant) {
-                                            _removeSearchOverlay();
-                                            _serviceSearchController.clear();
-                                            _addProductFromSearchWithVariant(
-                                              productList[i],
-                                              variant,
-                                            );
-                                          },
-                                        ),
+                                      product: productList[i],
+                                      isSales: true,
+                                      onAddProduct: (variant) {
+                                        _removeSearchOverlay();
+                                        _serviceSearchController.clear();
+                                        _addProductFromSearchWithVariant(
+                                          productList[i],
+                                          variant,
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                             ],

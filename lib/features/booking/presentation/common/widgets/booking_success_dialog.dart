@@ -135,7 +135,8 @@ void showBookingSuccessDialog({
                                 downloadsDir.createSync(recursive: true);
                               }
                               final fileName = 'sale_invoice_$id.pdf';
-                              final filePath = '${downloadsDir.path}\\$fileName';
+                              final filePath =
+                                  '${downloadsDir.path}\\$fileName';
                               await File(filePath).writeAsBytes(pdfBytes);
                               await launchUrl(Uri.file(filePath));
                               context.showSnackBar(
@@ -161,7 +162,8 @@ void showBookingSuccessDialog({
                                 downloadsDir.createSync(recursive: true);
                               }
                               final fileName = 'booking_invoice_$id.pdf';
-                              final filePath = '${downloadsDir.path}\\$fileName';
+                              final filePath =
+                                  '${downloadsDir.path}\\$fileName';
                               await File(filePath).writeAsBytes(pdfBytes);
                               await launchUrl(Uri.file(filePath));
                               context.showSnackBar(

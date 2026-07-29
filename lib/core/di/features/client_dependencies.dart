@@ -12,18 +12,25 @@ import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 class ClientDependencies {
   static void register() {
     getIt.registerLazySingleton(
-        () => ClientRemoteDatasource(dio: DioClient.dio));
+      () => ClientRemoteDatasource(dio: DioClient.dio),
+    );
     getIt.registerLazySingleton<IClientRepository>(
-        () => ClientRepositoryImpl(getIt()));
+      () => ClientRepositoryImpl(getIt()),
+    );
     getIt.registerLazySingleton(
-        () => GetClientsUseCase(getIt<IClientRepository>()));
+      () => GetClientsUseCase(getIt<IClientRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => GetClientByIdUseCase(getIt<IClientRepository>()));
+      () => GetClientByIdUseCase(getIt<IClientRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => AddClientUseCase(getIt<IClientRepository>()));
+      () => AddClientUseCase(getIt<IClientRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => UpdateClientUseCase(getIt<IClientRepository>()));
+      () => UpdateClientUseCase(getIt<IClientRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => DeleteClientUseCase(getIt<IClientRepository>()));
+      () => DeleteClientUseCase(getIt<IClientRepository>()),
+    );
   }
 }

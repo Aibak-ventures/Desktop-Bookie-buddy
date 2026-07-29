@@ -34,7 +34,9 @@ class BookingFormControllers {
   final selectedPaymentMethods = ValueNotifier<List<PaymentMethod>>([
     PaymentMethod.upi,
   ]);
-  final securityPaymentMethod = ValueNotifier<PaymentMethod>(PaymentMethod.cash);
+  final securityPaymentMethod = ValueNotifier<PaymentMethod>(
+    PaymentMethod.cash,
+  );
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
 
   // ── Description / service / location ────────────────────────────────────────

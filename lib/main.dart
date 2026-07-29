@@ -17,7 +17,7 @@ void main() async {
     // Filter out the RawKeyboard assertion error which is a known framework issue
     final isKeyboardError =
         details.exception.toString().contains('RawKeyDownEvent') ||
-            details.exception.toString().contains('_keysPressed.isNotEmpty');
+        details.exception.toString().contains('_keysPressed.isNotEmpty');
 
     if (!isKeyboardError) {
       // Report all other errors normally

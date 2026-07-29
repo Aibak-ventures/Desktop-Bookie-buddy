@@ -75,11 +75,7 @@ class StockManagementSearchBar extends StatelessWidget {
               if (selectedServiceId != -1)
                 IconButton(
                   onPressed: onFilterTap,
-                  icon: Icon(
-                    Icons.tune,
-                    color: Colors.grey.shade600,
-                    size: 20,
-                  ),
+                  icon: Icon(Icons.tune, color: Colors.grey.shade600, size: 20),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),

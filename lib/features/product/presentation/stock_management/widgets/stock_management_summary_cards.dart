@@ -13,35 +13,40 @@ class StockManagementSummaryCards extends StatelessWidget {
     return BlocBuilder<StockManagementCubit, StockManagementState>(
       builder: (context, state) {
         return state.maybeWhen(
-          loaded: (
-            _,
-            totalProducts,
-            totalCategories,
-            __,
-            ___,
-            ____,
-            _____,
-            ______,
-          ) {
-            final serviceCount =
-                context.read<ServiceBloc>().getServices().length;
-            return Row(
-              children: [
-                _SummaryCard(
-                  title: 'Total Products',
-                  value: NumberFormat('#,###').format(totalProducts),
-                ),
-                const SizedBox(width: 16),
-                _SummaryCard(
-                  title: 'Total Categories',
-                  value: serviceCount.toString(),
-                ),
-              ],
-            );
-          },
+          loaded:
+              (
+                _,
+                totalProducts,
+                totalCategories,
+                __,
+                ___,
+                ____,
+                _____,
+                ______,
+              ) {
+                final serviceCount = context
+                    .read<ServiceBloc>()
+                    .getServices()
+                    .length;
+                return Row(
+                  children: [
+                    _SummaryCard(
+                      title: 'Total Products',
+                      value: NumberFormat('#,###').format(totalProducts),
+                    ),
+                    const SizedBox(width: 16),
+                    _SummaryCard(
+                      title: 'Total Categories',
+                      value: serviceCount.toString(),
+                    ),
+                  ],
+                );
+              },
           orElse: () {
-            final serviceCount =
-                context.read<ServiceBloc>().getServices().length;
+            final serviceCount = context
+                .read<ServiceBloc>()
+                .getServices()
+                .length;
             return Row(
               children: [
                 SizedBox(

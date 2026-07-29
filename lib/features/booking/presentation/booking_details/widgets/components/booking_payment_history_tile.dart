@@ -186,7 +186,9 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                       final (
                         totalPaid: totalPaid,
                         totalRefunded: totalRefunded,
-                      ) = _getTotalsWithoutSecurity(transactions);
+                      ) = _getTotalsWithoutSecurity(
+                        transactions,
+                      );
                       // payment cannot be deleted if this payment decreases balance below 0
                       if ((totalPaid - transaction.amount) < totalRefunded) {
                         context.showSnackBar(

@@ -38,9 +38,7 @@ class DocumentViewerDialog extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.purpleLight,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                border: Border(
-                  bottom: BorderSide(color: Colors.grey.shade300),
-                ),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
               ),
               child: Row(
                 children: [
@@ -83,11 +81,10 @@ class DocumentViewerDialog extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
               decoration: BoxDecoration(
                 color: Colors.grey.shade50,
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(16)),
-                border: Border(
-                  top: BorderSide(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(16),
                 ),
+                border: Border(top: BorderSide(color: Colors.grey.shade300)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -98,7 +95,9 @@ class DocumentViewerDialog extends StatelessWidget {
                     label: Text('Open in New Tab'),
                     style: OutlinedButton.styleFrom(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 20.w, vertical: 12.h),
+                        horizontal: 20.w,
+                        vertical: 12.h,
+                      ),
                       side: BorderSide(color: AppColors.purple),
                       foregroundColor: AppColors.purple,
                     ),
@@ -112,7 +111,9 @@ class DocumentViewerDialog extends StatelessWidget {
                       backgroundColor: AppColors.purple,
                       foregroundColor: Colors.white,
                       padding: EdgeInsets.symmetric(
-                          horizontal: 20.w, vertical: 12.h),
+                        horizontal: 20.w,
+                        vertical: 12.h,
+                      ),
                     ),
                   ),
                 ],
@@ -154,11 +155,7 @@ class DocumentViewerDialog extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            _getFileIcon(),
-            size: 80.sp,
-            color: AppColors.purple,
-          ),
+          Icon(_getFileIcon(), size: 80.sp, color: AppColors.purple),
           SizedBox(height: 24.h),
           Text(
             documentName,
@@ -172,18 +169,12 @@ class DocumentViewerDialog extends StatelessWidget {
           SizedBox(height: 12.h),
           Text(
             'Preview not available for this file type',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey),
           ),
           SizedBox(height: 24.h),
           Text(
             'Click "Open in New Tab" to view or "Download" to save',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600),
           ),
         ],
       ),
