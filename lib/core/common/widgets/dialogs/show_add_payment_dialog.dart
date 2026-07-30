@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math' as math;
+
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
@@ -30,6 +32,7 @@ typedef PaymentDialogSubmitCallback =
       required PaymentTransactionType transactionType,
       String? reason,
       String? paymentDate,
+      required bool useSecurityRefund,
     });
 
 /// Generic add-payment / add-refund dialog. Feature-agnostic: the caller
@@ -45,6 +48,7 @@ void showAddPaymentDialog({
   PaymentTransactionType defaultType = PaymentTransactionType.payment,
   num? refundableAmount,
   DateTime? minPaymentDate,
+  num? securityBalanceAmount,
   required PaymentDialogSubmitCallback onSubmit,
 }) {
   final TextEditingController textController = TextEditingController();
@@ -58,18 +62,27 @@ void showAddPaymentDialog({
   final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
     DateTime.now(),
   );
+  final ValueNotifier<bool> useSecurityRefundNotifier = ValueNotifier(false);
+  final bool showSecurityCheckbox =
+      securityBalanceAmount != null && securityBalanceAmount > 0;
 
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (dialogCtx) => ValueListenableBuilder<PaymentTransactionType>(
-      valueListenable: transactionTypeNotifier,
-      builder: (context, transactionType, _) {
+    builder: (dialogCtx) => ListenableBuilder(
+      listenable: Listenable.merge([
+        transactionTypeNotifier,
+        useSecurityRefundNotifier,
+      ]),
+      builder: (context, _) {
+        final transactionType = transactionTypeNotifier.value;
         final isRefund = transactionType.isRefund;
         final accentColor = isRefund ? AppColors.red : AppColors.purple;
         final maxAllowedAmount = isRefund
             ? (refundableAmount ?? balanceAmount)
-            : balanceAmount;
+            : (useSecurityRefundNotifier.value
+                  ? math.min(balanceAmount, securityBalanceAmount!)
+                  : balanceAmount);
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
@@ -215,6 +228,29 @@ void showAddPaymentDialog({
                   keyboardType: TextInputType.number,
                 ),
 
+                if (showSecurityCheckbox && !isRefund) ...[
+                  const SizedBox(height: 10),
+                  CheckboxListTile(
+                    value: useSecurityRefundNotifier.value,
+                    onChanged: (value) {
+                      if (value == null) return;
+                      useSecurityRefundNotifier.value = value;
+                      textController.text = value
+                          ? math
+                                .min(balanceAmount, securityBalanceAmount)
+                                .toString()
+                          : '';
+                    },
+                    contentPadding: EdgeInsets.zero,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    dense: true,
+                    title: const Text(
+                      'Use security deposit',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ),
+                ],
+
                 const SizedBox(height: 20),
                 ValueListenableBuilder<AccountEntity?>(
                   valueListenable: selectedAccountNotifier,
@@ -321,6 +357,8 @@ void showAddPaymentDialog({
                             paymentDate: isRefund
                                 ? null
                                 : paymentDateNotifier.value.format(),
+                            useSecurityRefund:
+                                !isRefund && useSecurityRefundNotifier.value,
                           );
 
                           if (error == null) {

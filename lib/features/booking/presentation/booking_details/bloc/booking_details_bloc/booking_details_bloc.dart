@@ -148,6 +148,13 @@ class BookingDetailsBloc
       log(
         '📤 Updating payment: ${event.amount} for booking ${event.bookingId}',
       );
+      if (event.useSecurityRefund) {
+        await _updateSecurityRefund(
+          bookingId: event.bookingId,
+          refundAmount: event.amount,
+          accountId: event.accountId,
+        );
+      }
       await _updatePayment(
         bookingId: event.bookingId,
         amount: event.amount,

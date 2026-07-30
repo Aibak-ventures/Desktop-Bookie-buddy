@@ -134,12 +134,14 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                           required transactionType,
                                           reason,
                                           paymentDate,
+                                          required useSecurityRefund,
                                         }) => _submitTransaction(
                                           context: context,
                                           amount: amount,
                                           account: account,
                                           transactionType: transactionType,
                                           reason: reason,
+                                          useSecurityRefund: useSecurityRefund,
                                         ),
                                   );
                                 },
@@ -190,6 +192,9 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                               refundableAmount: refundableAmount,
                               minPaymentDate: booking.bookedDate
                                   .parseToDateTime(),
+                              securityBalanceAmount: booking.isSecurityPaid
+                                  ? booking.remainingSecurityBalance
+                                  : null,
                               onSubmit:
                                   ({
                                     required amount,
@@ -197,6 +202,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                     required transactionType,
                                     reason,
                                     paymentDate,
+                                    required useSecurityRefund,
                                   }) => _submitTransaction(
                                     context: context,
                                     amount: amount,
@@ -204,6 +210,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                     transactionType: transactionType,
                                     reason: reason,
                                     paymentDate: paymentDate,
+                                    useSecurityRefund: useSecurityRefund,
                                   ),
                             );
                           },
@@ -472,6 +479,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     required PaymentTransactionType transactionType,
     String? reason,
     String? paymentDate,
+    bool useSecurityRefund = false,
   }) async {
     final bloc = context.read<BookingDetailsBloc>();
 
@@ -488,6 +496,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               amount: amount,
               accountId: account.id,
               paymentDate: paymentDate,
+              useSecurityRefund: useSecurityRefund,
             ),
     );
 
