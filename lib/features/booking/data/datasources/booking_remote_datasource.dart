@@ -163,11 +163,17 @@ class BookingRemoteDatasource {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   }) async {
     try {
       final response = await _dio.post(
         '${ApiEndpoints.bookings.addPayment}$bookingId/',
-        data: {'amount': amount, 'account_id': accountId},
+        data: {
+          'amount': amount,
+          'account_id': accountId,
+          if (paymentDate != null && paymentDate.isNotEmpty)
+            'payment_date': paymentDate,
+        },
       );
 
       log(

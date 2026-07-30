@@ -152,6 +152,7 @@ class BookingDetailsBloc
         bookingId: event.bookingId,
         amount: event.amount,
         accountId: event.accountId,
+        paymentDate: event.paymentDate,
       );
 
       log('✅ Payment updated, refetching booking details...');

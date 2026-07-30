@@ -19,6 +19,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   }) = _UpdatePayment;
 
   const factory BookingDetailsEvent.deletePayment({

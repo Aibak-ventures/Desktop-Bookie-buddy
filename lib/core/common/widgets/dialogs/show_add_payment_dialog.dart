@@ -5,10 +5,12 @@ import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entit
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:flutter/material.dart';
 
 /// The kind of transaction being added through [showAddPaymentDialog].
@@ -27,6 +29,7 @@ typedef PaymentDialogSubmitCallback =
       required AccountEntity account,
       required PaymentTransactionType transactionType,
       String? reason,
+      String? paymentDate,
     });
 
 /// Generic add-payment / add-refund dialog. Feature-agnostic: the caller
@@ -41,6 +44,7 @@ void showAddPaymentDialog({
   bool showTypeSelector = false,
   PaymentTransactionType defaultType = PaymentTransactionType.payment,
   num? refundableAmount,
+  DateTime? minPaymentDate,
   required PaymentDialogSubmitCallback onSubmit,
 }) {
   final TextEditingController textController = TextEditingController();
@@ -50,6 +54,9 @@ void showAddPaymentDialog({
       ValueNotifier(defaultType);
   final ValueNotifier<AccountEntity?> selectedAccountNotifier = ValueNotifier(
     null,
+  );
+  final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
+    DateTime.now(),
   );
 
   showDialog(
@@ -89,6 +96,62 @@ void showAddPaymentDialog({
                   fontSize: 14,
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              // payment date / paid date
+              ValueListenableBuilder<DateTime>(
+                valueListenable: paymentDateNotifier,
+                builder: (context, paymentDate, _) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        size: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                      const SizedBox(width: 4),
+                      InkWell(
+                        focusColor: AppColors.purple,
+                        onTap: isRefund
+                            ? null
+                            : () async {
+                                final now = DateTime.now();
+                                final firstDate =
+                                    minPaymentDate != null &&
+                                        !minPaymentDate.isAfter(now)
+                                    ? minPaymentDate
+                                    : DateTime(now.year - 5);
+                                final initialDate =
+                                    paymentDate.isBefore(firstDate)
+                                    ? firstDate
+                                    : (paymentDate.isAfter(now)
+                                          ? now
+                                          : paymentDate);
+                                final picked = await showKeyboardDatePicker(
+                                  context: context,
+                                  initialDate: initialDate,
+                                  firstDate: firstDate,
+                                  lastDate: now,
+                                );
+                                if (picked != null) {
+                                  paymentDateNotifier.value = picked;
+                                }
+                              },
+                        child: Text(
+                          'Paid on ${paymentDate.format()}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.grey.shade400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -134,6 +197,7 @@ void showAddPaymentDialog({
                   ),
                   const SizedBox(height: 12),
                 ],
+
                 Text(
                   'Amount',
                   style: TextStyle(
@@ -150,6 +214,7 @@ void showAddPaymentDialog({
                   validator: AppInputValidators.amount,
                   keyboardType: TextInputType.number,
                 ),
+
                 const SizedBox(height: 20),
                 ValueListenableBuilder<AccountEntity?>(
                   valueListenable: selectedAccountNotifier,
@@ -253,6 +318,9 @@ void showAddPaymentDialog({
                             reason: reasonController.text.isEmpty
                                 ? null
                                 : reasonController.text,
+                            paymentDate: isRefund
+                                ? null
+                                : paymentDateNotifier.value.format(),
                           );
 
                           if (error == null) {

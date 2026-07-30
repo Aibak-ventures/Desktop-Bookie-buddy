@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/b
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -132,6 +133,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                           required account,
                                           required transactionType,
                                           reason,
+                                          paymentDate,
                                         }) => _submitTransaction(
                                           context: context,
                                           amount: amount,
@@ -186,18 +188,22 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                               balanceAmount: balance,
                               showTypeSelector: isRefundable,
                               refundableAmount: refundableAmount,
+                              minPaymentDate: booking.bookedDate
+                                  .parseToDateTime(),
                               onSubmit:
                                   ({
                                     required amount,
                                     required account,
                                     required transactionType,
                                     reason,
+                                    paymentDate,
                                   }) => _submitTransaction(
                                     context: context,
                                     amount: amount,
                                     account: account,
                                     transactionType: transactionType,
                                     reason: reason,
+                                    paymentDate: paymentDate,
                                   ),
                             );
                           },
@@ -465,6 +471,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     required AccountEntity account,
     required PaymentTransactionType transactionType,
     String? reason,
+    String? paymentDate,
   }) async {
     final bloc = context.read<BookingDetailsBloc>();
 
@@ -480,6 +487,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               bookingId: booking.id,
               amount: amount,
               accountId: account.id,
+              paymentDate: paymentDate,
             ),
     );
 

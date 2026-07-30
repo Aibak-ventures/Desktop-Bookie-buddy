@@ -28,6 +28,7 @@ abstract interface class IBookingRepository {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   });
 
   Future<void> deletePayment(int paymentId);

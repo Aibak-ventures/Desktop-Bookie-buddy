@@ -151,6 +151,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   }) async {
     try {
       final response = await safeApiCall(
@@ -158,6 +159,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           bookingId: bookingId,
           amount: amount,
           accountId: accountId,
+          paymentDate: paymentDate,
         ),
       );
       if (response.status.isSuccess) {
