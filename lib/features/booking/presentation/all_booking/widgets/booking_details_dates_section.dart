@@ -1,5 +1,4 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -93,7 +92,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Available from',
+                      'Cooling Period',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey,
@@ -102,7 +101,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatAvailableFromDate(booking),
+                      _formatDate(booking.coolingPeriodDate),
                       style: const TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
@@ -156,34 +155,6 @@ class BookingDetailsDatesSection extends StatelessWidget {
       return dateStr.formatToUiDate();
     } catch (e) {
       return dateStr;
-    }
-  }
-
-  String _formatAvailableFromDate(BookingDetailsEntity booking) {
-    final coolingDateStr = booking.coolingPeriodDate;
-    final isBeforeMode = booking.coolingPeriodType?.isBefore ?? false;
-
-    // "Before" cooling only blocks the window ahead of pickup — it has no
-    // effect on when the product becomes available again after this
-    // booking, so fall back to return date + 1 day just like the
-    // no-cooling-period case.
-    if (coolingDateStr == null || coolingDateStr.isEmpty || isBeforeMode) {
-      if (booking.returnDate.isNotEmpty) {
-        try {
-          final returnDate = booking.returnDate.parseToDateTime();
-          return returnDate.add(const Duration(days: 1)).format();
-        } catch (e) {
-          return 'N/A';
-        }
-      }
-      return 'N/A';
-    }
-    try {
-      final coolingDate = coolingDateStr.parseToDateTime();
-      final availableDate = coolingDate.add(const Duration(days: 1));
-      return availableDate.format();
-    } catch (e) {
-      return coolingDateStr;
     }
   }
 }

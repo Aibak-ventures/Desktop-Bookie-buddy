@@ -221,7 +221,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
   int _originalCoolingPeriodDays = 0; // Track original cooling period
-  CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
+  CoolingPeriodMode? _originalCoolingPeriodMode;
   int? _originalRentalDays; // Rental days computed from original booking entity
   bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
 

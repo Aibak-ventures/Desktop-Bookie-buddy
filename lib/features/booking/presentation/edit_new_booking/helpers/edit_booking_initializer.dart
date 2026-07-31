@@ -42,7 +42,6 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       coolingPeriodDate = booking.coolingPeriodDate!.parseToDateTime();
       final coolingDate = booking.coolingPeriodDate!.parseToDateTime();
       // Use booking's cooling period type if available, otherwise use shop settings
-      final CoolingPeriodMode coolingPeriodMode;
       if (booking.coolingPeriodType != null) {
         coolingPeriodMode = booking.coolingPeriodType!;
       } else {

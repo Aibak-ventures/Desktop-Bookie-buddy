@@ -153,16 +153,29 @@ void showAddPaymentDialog({
                                   paymentDateNotifier.value = picked;
                                 }
                               },
-                        child: Text(
-                          'Paid on ${paymentDate.format()}',
+                        child: Text.rich(
+                          TextSpan(
+                            text: 'Paid on ',
+                            children: [
+                              TextSpan(
+                                text: paymentDate.format(),
+                                style: TextStyle(
+                                  color: AppColors.purple,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: Colors.grey.shade400,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey.shade600,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Colors.grey.shade400,
                           ),
                         ),
                       ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.edit, size: 14, color: AppColors.purple),
                     ],
                   ),
                 ),
