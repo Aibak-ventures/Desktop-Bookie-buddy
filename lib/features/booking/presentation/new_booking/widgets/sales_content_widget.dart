@@ -1,4 +1,4 @@
-﻿part of '../pages/new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
 extension SalesFlowBuilders on NewBookingScreenState {
   Widget _buildSalesSinglePanel() {
@@ -87,7 +87,8 @@ extension SalesFlowBuilders on NewBookingScreenState {
                       maxLines: null,
                       expands: true,
                       textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _confirmStepButtonFocusNode.requestFocus(),
+                      onSubmitted: (_) =>
+                          _confirmStepButtonFocusNode.requestFocus(),
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Notes',
@@ -104,7 +105,9 @@ extension SalesFlowBuilders on NewBookingScreenState {
                     hint: 'Discount amount',
                     isNumber: true,
                   ),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing + 8),
+                  const SizedBox(
+                    height: NewBookingScreenState._fieldSpacing + 8,
+                  ),
 
                   // Payment Method
                   _buildPaymentMethodSection(),

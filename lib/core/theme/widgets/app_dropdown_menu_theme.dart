@@ -6,10 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppDropdownMenuTheme {
   static final lightTheme = DropdownMenuThemeData(
-    textStyle: TextStyle(
-      color: AppColors.black,
-      fontSize: 16.sp,
-    ),
+    textStyle: TextStyle(color: AppColors.black, fontSize: 16.sp),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: const TextStyle(
         color: AppColors.grey,
@@ -22,8 +19,9 @@ class AppDropdownMenuTheme {
       border: _borderBuilder(),
     ),
     menuStyle: MenuStyle(
-      padding:
-          WidgetStateProperty.all(const EdgeInsets.all(10)), // 👉 popup padding
+      padding: WidgetStateProperty.all(
+        const EdgeInsets.all(10),
+      ), // 👉 popup padding
       backgroundColor: WidgetStateProperty.all(AppColors.white),
       surfaceTintColor: WidgetStateProperty.all(AppColors.white),
     ),
@@ -32,9 +30,7 @@ class AppDropdownMenuTheme {
   static OutlineInputBorder _borderBuilder() {
     return OutlineInputBorder(
       borderRadius: 5.radiusBorder,
-      borderSide: BorderSide(
-        color: AppColors.grey400,
-      ),
+      borderSide: BorderSide(color: AppColors.grey400),
     );
   }
 }

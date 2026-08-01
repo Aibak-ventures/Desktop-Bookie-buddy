@@ -19,7 +19,9 @@ class ShopRepositoryImpl implements IShopRepository {
       final response = await safeApiCall(_datasource.fetchShops);
       if (response.status.isSuccess) {
         return (response.data as List)
-            .map((e) => ShopModel.fromJson(e as Map<String, dynamic>).toEntity())
+            .map(
+              (e) => ShopModel.fromJson(e as Map<String, dynamic>).toEntity(),
+            )
             .toList();
       }
       log('Get Shops Error: ${response.devMessage}');

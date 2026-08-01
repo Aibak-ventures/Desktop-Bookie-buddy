@@ -42,10 +42,7 @@ class _UpdateAvailableDialog extends StatelessWidget {
             const SizedBox(height: 16),
             const Text(
               'New Update Available',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             const Text(

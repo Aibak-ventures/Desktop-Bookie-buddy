@@ -52,10 +52,11 @@ class AdditionalChargesManager {
               final name = nameController.text.trim();
               final amount = int.tryParse(amountController.text);
 
-              final chargeResult = BookingFormValidator.validateAdditionalCharge(
-                name: name,
-                amount: amount,
-              );
+              final chargeResult =
+                  BookingFormValidator.validateAdditionalCharge(
+                    name: name,
+                    amount: amount,
+                  );
               if (!chargeResult.isValid) {
                 context.showSnackBar(chargeResult.errors.first, isError: true);
                 return;

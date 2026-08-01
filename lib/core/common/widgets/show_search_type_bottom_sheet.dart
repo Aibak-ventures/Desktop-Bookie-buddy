@@ -16,15 +16,13 @@ void showSearchTypeBottomSheet({
   required ValueNotifier<double> maxPriceNotifier,
   required void Function(RangeValues range) onPriceChanged,
   required ValueNotifier<bool> isPriceFilterEnabledNotifier,
-  required void Function(
-    int type,
-    RangeValues range,
-    bool isPriceEnabled,
-  ) onApply,
+  required void Function(int type, RangeValues range, bool isPriceEnabled)
+  onApply,
 }) {
   final TextEditingController maxPriceController = TextEditingController();
-  final isPriceFilterEnabledWidgetNotifier =
-      ValueNotifier(isPriceFilterEnabledNotifier.value);
+  final isPriceFilterEnabledWidgetNotifier = ValueNotifier(
+    isPriceFilterEnabledNotifier.value,
+  );
 
   showDialog(
     context: context,
@@ -35,10 +33,7 @@ void showSearchTypeBottomSheet({
       elevation: 0,
       child: Container(
         width: 500,
-        constraints: const BoxConstraints(
-          maxWidth: 500,
-          maxHeight: 700,
-        ),
+        constraints: const BoxConstraints(maxWidth: 500, maxHeight: 700),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -155,8 +150,9 @@ void showSearchTypeBottomSheet({
                                   boxShadow: isSelected
                                       ? [
                                           BoxShadow(
-                                            color: const Color(0xFF6132E4)
-                                                .withValues(alpha: 0.3),
+                                            color: const Color(
+                                              0xFF6132E4,
+                                            ).withValues(alpha: 0.3),
                                             blurRadius: 8,
                                             offset: const Offset(0, 4),
                                           ),
@@ -218,20 +214,21 @@ void showSearchTypeBottomSheet({
                           valueListenable: isPriceFilterEnabledWidgetNotifier,
                           builder: (context, isEnabled, child) =>
                               Transform.scale(
-                            scale: 0.85,
-                            child: Switch(
-                              value: isEnabled,
-                              onChanged: (value) {
-                                isPriceFilterEnabledWidgetNotifier.value =
-                                    value;
-                              },
-                              activeThumbColor: const Color(0xFF6132E4),
-                              activeTrackColor:
-                                  const Color(0xFF6132E4).withValues(alpha: 0.3),
-                              inactiveThumbColor: Colors.grey.shade400,
-                              inactiveTrackColor: Colors.grey.shade200,
-                            ),
-                          ),
+                                scale: 0.85,
+                                child: Switch(
+                                  value: isEnabled,
+                                  onChanged: (value) {
+                                    isPriceFilterEnabledWidgetNotifier.value =
+                                        value;
+                                  },
+                                  activeThumbColor: const Color(0xFF6132E4),
+                                  activeTrackColor: const Color(
+                                    0xFF6132E4,
+                                  ).withValues(alpha: 0.3),
+                                  inactiveThumbColor: Colors.grey.shade400,
+                                  inactiveTrackColor: Colors.grey.shade200,
+                                ),
+                              ),
                         ),
                       ],
                     ),
@@ -265,87 +262,106 @@ void showSearchTypeBottomSheet({
                                         valueListenable: maxPriceNotifier,
                                         builder:
                                             (context, currentMaxPrice, child) {
-                                          maxPriceController.text =
-                                              currentMaxPrice
-                                                  .toInt()
-                                                  .toString();
-                                          return Container(
-                                            width: 130,
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 14,
-                                              vertical: 10,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFFF8F9FA),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Colors.grey.shade300,
-                                                width: 1,
-                                              ),
-                                            ),
-                                            child: TextField(
-                                              controller: maxPriceController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              onTapOutside: (_) {
-                                                FocusScope.of(context)
-                                                    .unfocus();
-                                              },
-                                              inputFormatters: [
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Inter',
-                                              ),
-                                              decoration: const InputDecoration(
-                                                border: InputBorder.none,
-                                                contentPadding: EdgeInsets.zero,
-                                                isDense: true,
-                                                prefixText: '₹ ',
-                                                prefixStyle: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(0xFF6132E4),
+                                              maxPriceController.text =
+                                                  currentMaxPrice
+                                                      .toInt()
+                                                      .toString();
+                                              return Container(
+                                                width: 130,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 14,
+                                                      vertical: 10,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(
+                                                    0xFFF8F9FA,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                    color: Colors.grey.shade300,
+                                                    width: 1,
+                                                  ),
                                                 ),
-                                              ),
-                                              onChanged: (value) {
-                                                if (value.isNotEmpty) {
-                                                  final newMaxPrice =
-                                                      double.tryParse(value) ??
+                                                child: TextField(
+                                                  controller:
+                                                      maxPriceController,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onTapOutside: (_) {
+                                                    FocusScope.of(
+                                                      context,
+                                                    ).unfocus();
+                                                  },
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Inter',
+                                                  ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        isDense: true,
+                                                        prefixText: '₹ ',
+                                                        prefixStyle: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          color: Color(
+                                                            0xFF6132E4,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  onChanged: (value) {
+                                                    if (value.isNotEmpty) {
+                                                      final newMaxPrice =
+                                                          double.tryParse(
+                                                            value,
+                                                          ) ??
                                                           currentMaxPrice;
-                                                  if (newMaxPrice > minPrice) {
-                                                    maxPriceNotifier.value =
-                                                        newMaxPrice;
-                                                    if (priceRange.value.end >
-                                                        newMaxPrice) {
-                                                      if (priceRange
-                                                              .value.start >
-                                                          newMaxPrice) {
-                                                        priceRange.value =
-                                                            RangeValues(
-                                                          0,
-                                                          newMaxPrice,
-                                                        );
-                                                      } else {
-                                                        priceRange.value =
-                                                            RangeValues(
-                                                          priceRange
-                                                              .value.start,
-                                                          newMaxPrice,
-                                                        );
+                                                      if (newMaxPrice >
+                                                          minPrice) {
+                                                        maxPriceNotifier.value =
+                                                            newMaxPrice;
+                                                        if (priceRange
+                                                                .value
+                                                                .end >
+                                                            newMaxPrice) {
+                                                          if (priceRange
+                                                                  .value
+                                                                  .start >
+                                                              newMaxPrice) {
+                                                            priceRange.value =
+                                                                RangeValues(
+                                                                  0,
+                                                                  newMaxPrice,
+                                                                );
+                                                          } else {
+                                                            priceRange.value =
+                                                                RangeValues(
+                                                                  priceRange
+                                                                      .value
+                                                                      .start,
+                                                                  newMaxPrice,
+                                                                );
+                                                          }
+                                                          onPriceChanged(
+                                                            priceRange.value,
+                                                          );
+                                                        }
                                                       }
-                                                      onPriceChanged(
-                                                          priceRange.value);
                                                     }
-                                                  }
-                                                }
-                                              },
-                                            ),
-                                          );
-                                        },
+                                                  },
+                                                ),
+                                              );
+                                            },
                                       ),
                                     ],
                                   ),
@@ -367,17 +383,21 @@ void showSearchTypeBottomSheet({
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                const Color(0xFF6132E4)
-                                                    .withValues(alpha: 0.1),
-                                                const Color(0xFF6132E4)
-                                                    .withValues(alpha: 0.05),
+                                                const Color(
+                                                  0xFF6132E4,
+                                                ).withValues(alpha: 0.1),
+                                                const Color(
+                                                  0xFF6132E4,
+                                                ).withValues(alpha: 0.05),
                                               ],
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             border: Border.all(
-                                              color: const Color(0xFF6132E4)
-                                                  .withValues(alpha: 0.3),
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -392,7 +412,8 @@ void showSearchTypeBottomSheet({
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
+                                            horizontal: 12,
+                                          ),
                                           child: Icon(
                                             Icons.arrow_forward,
                                             size: 18,
@@ -407,17 +428,21 @@ void showSearchTypeBottomSheet({
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                const Color(0xFF6132E4)
-                                                    .withValues(alpha: 0.1),
-                                                const Color(0xFF6132E4)
-                                                    .withValues(alpha: 0.05),
+                                                const Color(
+                                                  0xFF6132E4,
+                                                ).withValues(alpha: 0.1),
+                                                const Color(
+                                                  0xFF6132E4,
+                                                ).withValues(alpha: 0.05),
                                               ],
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             border: Border.all(
-                                              color: const Color(0xFF6132E4)
-                                                  .withValues(alpha: 0.3),
+                                              color: const Color(
+                                                0xFF6132E4,
+                                              ).withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -441,75 +466,90 @@ void showSearchTypeBottomSheet({
                                     valueListenable: priceRange,
                                     builder: (context, range, child) =>
                                         ValueListenableBuilder<double>(
-                                      valueListenable: maxPriceNotifier,
-                                      builder:
-                                          (context, currentMaxPrice, child) =>
-                                              SliderTheme(
-                                        data: SliderThemeData(
-                                          activeTrackColor:
-                                              const Color(0xFF6132E4),
-                                          inactiveTrackColor:
-                                              Colors.grey.shade200,
-                                          thumbColor: const Color(0xFF6132E4),
-                                          overlayColor: const Color(0xFF6132E4)
-                                              .withValues(alpha: 0.2),
-                                          trackHeight: 4,
-                                          thumbShape:
-                                              const RoundSliderThumbShape(
-                                            enabledThumbRadius: 8,
-                                          ),
-                                          overlayShape:
-                                              const RoundSliderOverlayShape(
-                                            overlayRadius: 16,
-                                          ),
+                                          valueListenable: maxPriceNotifier,
+                                          builder:
+                                              (
+                                                context,
+                                                currentMaxPrice,
+                                                child,
+                                              ) => SliderTheme(
+                                                data: SliderThemeData(
+                                                  activeTrackColor: const Color(
+                                                    0xFF6132E4,
+                                                  ),
+                                                  inactiveTrackColor:
+                                                      Colors.grey.shade200,
+                                                  thumbColor: const Color(
+                                                    0xFF6132E4,
+                                                  ),
+                                                  overlayColor: const Color(
+                                                    0xFF6132E4,
+                                                  ).withValues(alpha: 0.2),
+                                                  trackHeight: 4,
+                                                  thumbShape:
+                                                      const RoundSliderThumbShape(
+                                                        enabledThumbRadius: 8,
+                                                      ),
+                                                  overlayShape:
+                                                      const RoundSliderOverlayShape(
+                                                        overlayRadius: 16,
+                                                      ),
+                                                ),
+                                                child: RangeSlider(
+                                                  values: range,
+                                                  min: minPrice,
+                                                  max: currentMaxPrice,
+                                                  divisions: 20,
+                                                  onChanged:
+                                                      (RangeValues newRange) {
+                                                        priceRange.value =
+                                                            newRange;
+                                                        onPriceChanged(
+                                                          newRange,
+                                                        );
+                                                      },
+                                                ),
+                                              ),
                                         ),
-                                        child: RangeSlider(
-                                          values: range,
-                                          min: minPrice,
-                                          max: currentMaxPrice,
-                                          divisions: 20,
-                                          onChanged: (RangeValues newRange) {
-                                            priceRange.value = newRange;
-                                            onPriceChanged(newRange);
-                                          },
-                                        ),
-                                      ),
-                                    ),
                                   ),
 
                                   // Min-Max Labels
                                   ValueListenableBuilder<double>(
                                     valueListenable: maxPriceNotifier,
                                     builder:
-                                        (context, currentMaxPrice, child) =>
-                                            Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            minPrice.toCurrency(),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey.shade600,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Inter',
-                                            ),
+                                        (
+                                          context,
+                                          currentMaxPrice,
+                                          child,
+                                        ) => Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
                                           ),
-                                          Text(
-                                            currentMaxPrice.toCurrency(),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey.shade600,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Inter',
-                                            ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                minPrice.toCurrency(),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey.shade600,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                              Text(
+                                                currentMaxPrice.toCurrency(),
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey.shade600,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
                                   ),
 
                                   const SizedBox(height: 20),
@@ -529,8 +569,7 @@ void showSearchTypeBottomSheet({
                                   ValueListenableBuilder<double>(
                                     valueListenable: maxPriceNotifier,
                                     builder: (context, currentMaxPrice, child) {
-                                      final quickFilters =
-                                          generateQuickFilters(
+                                      final quickFilters = generateQuickFilters(
                                         minPrice,
                                         currentMaxPrice,
                                       );
@@ -539,13 +578,14 @@ void showSearchTypeBottomSheet({
                                         spacing: 8,
                                         runSpacing: 8,
                                         children: quickFilters
-                                            .map((filter) =>
-                                                _buildQuickFilterChip(
-                                                  filter['label'],
-                                                  filter['range'],
-                                                  priceRange,
-                                                  onPriceChanged,
-                                                ))
+                                            .map(
+                                              (filter) => _buildQuickFilterChip(
+                                                filter['label'],
+                                                filter['range'],
+                                                priceRange,
+                                                onPriceChanged,
+                                              ),
+                                            )
                                             .toList(),
                                       );
                                     },
@@ -578,10 +618,13 @@ void showSearchTypeBottomSheet({
                     child: OutlinedButton(
                       onPressed: () {
                         selectedSearchTypeIndex.value = 0;
-                        priceRange.value =
-                            RangeValues(minPrice, maxPriceNotifier.value);
+                        priceRange.value = RangeValues(
+                          minPrice,
+                          maxPriceNotifier.value,
+                        );
                         onPriceChanged(
-                            RangeValues(minPrice, maxPriceNotifier.value));
+                          RangeValues(minPrice, maxPriceNotifier.value),
+                        );
                         isPriceFilterEnabledWidgetNotifier.value = false;
                       },
                       style: OutlinedButton.styleFrom(
@@ -622,7 +665,9 @@ void showSearchTypeBottomSheet({
                         backgroundColor: const Color(0xFF6132E4),
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shadowColor: const Color(0xFF6132E4).withValues(alpha: 0.3),
+                        shadowColor: const Color(
+                          0xFF6132E4,
+                        ).withValues(alpha: 0.3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -654,41 +699,36 @@ void showSearchTypeBottomSheet({
   );
 }
 
-
 Widget _buildQuickFilterChip(
   String label,
   RangeValues range,
   ValueNotifier<RangeValues> currentRange,
   void Function(RangeValues) onChanged,
-) =>
-    ValueListenableBuilder<RangeValues>(
-      valueListenable: currentRange,
-      builder: (context, current, child) {
-        final isSelected =
-            current.start == range.start && current.end == range.end;
+) => ValueListenableBuilder<RangeValues>(
+  valueListenable: currentRange,
+  builder: (context, current, child) {
+    final isSelected = current.start == range.start && current.end == range.end;
 
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.purple : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: isSelected ? AppColors.purple : AppColors.grey300,
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? Colors.white : Colors.grey.shade700,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ).onTap(
-          () {
-            currentRange.value = range;
-            onChanged(range);
-          },
-        );
-      },
-    );
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.purple : Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isSelected ? AppColors.purple : AppColors.grey300,
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: isSelected ? Colors.white : Colors.grey.shade700,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+        ),
+      ),
+    ).onTap(() {
+      currentRange.value = range;
+      onChanged(range);
+    });
+  },
+);

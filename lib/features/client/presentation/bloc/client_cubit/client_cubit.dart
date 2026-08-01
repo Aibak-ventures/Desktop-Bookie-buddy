@@ -17,15 +17,15 @@ class ClientCubit extends Cubit<ClientState> {
   ClientCubit({
     required GetClientsUseCase getClients,
     required GetClientByIdUseCase getClientById,
-  })  : _getClients = getClients,
-        _getClientById = getClientById,
-        super(
-          const ClientState(
-            selectedClient: null,
-            suggestions: [],
-            searchQuery: '',
-          ),
-        );
+  }) : _getClients = getClients,
+       _getClientById = getClientById,
+       super(
+         const ClientState(
+           selectedClient: null,
+           suggestions: [],
+           searchQuery: '',
+         ),
+       );
 
   ClientEntity? _clientModel;
   // Tracks whether a v4 fetch is already in flight to prevent duplicate calls.

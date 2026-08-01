@@ -86,10 +86,7 @@ class _WebSnackBarState extends State<_WebSnackBar>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(1, 0), // Slide in from right
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -117,8 +114,9 @@ class _WebSnackBarState extends State<_WebSnackBar>
             constraints: const BoxConstraints(maxWidth: 320),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color:
-                  widget.isError ? Colors.red.shade600 : Colors.green.shade600,
+              color: widget.isError
+                  ? Colors.red.shade600
+                  : Colors.green.shade600,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(

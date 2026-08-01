@@ -12,15 +12,9 @@ class FailedAuthException extends AuthException {
 }
 
 class UserNotFoundException extends AuthException {
-  UserNotFoundException([
-    super.message = 'User not found',
-    super.errorCode,
-  ]);
+  UserNotFoundException([super.message = 'User not found', super.errorCode]);
 }
 
 class TokenExpiredException extends AuthException {
-  TokenExpiredException([
-    super.message = 'Token expired',
-    super.errorCode,
-  ]);
+  TokenExpiredException([super.message = 'Token expired', super.errorCode]);
 }

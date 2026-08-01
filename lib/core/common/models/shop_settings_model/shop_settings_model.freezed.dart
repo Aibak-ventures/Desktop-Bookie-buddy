@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShopSettingsModel {
 
-@JsonKey(name: 'cooling_days', defaultValue: 0) int get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after) CoolingPeriodMode get coolingPeriodMode;@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction get addButtonDefaultAction;@JsonKey(name: 'search_client', defaultValue: false) bool get searchClient;
+@JsonKey(name: 'cooling_days', defaultValue: 0) int get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode get coolingPeriodMode;@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction get addButtonDefaultAction;@JsonKey(name: 'search_client', defaultValue: false) bool get searchClient;
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ShopSettingsModelCopyWith<$Res>  {
   factory $ShopSettingsModelCopyWith(ShopSettingsModel value, $Res Function(ShopSettingsModel) _then) = _$ShopSettingsModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
+@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel() when $default != null:
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
@@ -177,7 +177,7 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel():
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
@@ -197,7 +197,7 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel() when $default != null:
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
@@ -212,11 +212,11 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 @JsonSerializable()
 
 class _ShopSettingsModel implements ShopSettingsModel {
-  const _ShopSettingsModel({@JsonKey(name: 'cooling_days', defaultValue: 0) required this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after) required this.coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) required this.addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false) required this.searchClient});
+  const _ShopSettingsModel({@JsonKey(name: 'cooling_days', defaultValue: 0) required this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) required this.coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) required this.addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false) required this.searchClient});
   factory _ShopSettingsModel.fromJson(Map<String, dynamic> json) => _$ShopSettingsModelFromJson(json);
 
 @override@JsonKey(name: 'cooling_days', defaultValue: 0) final  int coolingPeriodDuration;
-@override@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after) final  CoolingPeriodMode coolingPeriodMode;
+@override@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) final  CoolingPeriodMode coolingPeriodMode;
 @override@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) final  AddButtonDefaultAction addButtonDefaultAction;
 @override@JsonKey(name: 'search_client', defaultValue: false) final  bool searchClient;
 
@@ -253,7 +253,7 @@ abstract mixin class _$ShopSettingsModelCopyWith<$Res> implements $ShopSettingsM
   factory _$ShopSettingsModelCopyWith(_ShopSettingsModel value, $Res Function(_ShopSettingsModel) _then) = __$ShopSettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
+@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
 });
 
 

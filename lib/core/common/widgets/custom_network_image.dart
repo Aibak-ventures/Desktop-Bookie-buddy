@@ -33,14 +33,20 @@ class CustomNetworkImage extends StatelessWidget {
   final Widget Function(BuildContext context, String url)? placeholder;
 
   final Widget Function(BuildContext context, String url, Object error)?
-      errorWidget;
+  errorWidget;
 
   final Widget Function(
-      BuildContext context, ImageProvider<Object> imageProvider)? imageBuilder;
+    BuildContext context,
+    ImageProvider<Object> imageProvider,
+  )?
+  imageBuilder;
 
   final Widget Function(
-          BuildContext context, String url, DownloadProgress progress)?
-      progressIndicatorBuilder;
+    BuildContext context,
+    String url,
+    DownloadProgress progress,
+  )?
+  progressIndicatorBuilder;
 
   final BoxFit fit;
 

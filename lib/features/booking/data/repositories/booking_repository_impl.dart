@@ -94,20 +94,20 @@ class BookingRepositoryImpl implements IBookingRepository {
         if (saleData.description != null) 'description': saleData.description,
         'send_invoice': saleData.sendPdfToWhatsApp,
         'variants': (saleData.products ?? [])
-            .map((p) => {
-                  'id': p.variant.variantId,
-                  'quantity': p.quantity,
-                  'amount': p.amount * p.quantity,
-                })
+            .map(
+              (p) => {
+                'id': p.variant.variantId,
+                'quantity': p.quantity,
+                'amount': p.amount * p.quantity,
+              },
+            )
             .toList(),
         'paid_amount': saleData.paidAmount ?? 0,
         if (saleData.accountId != null) 'account_id': saleData.accountId,
         'discount': saleData.discountAmount ?? 0,
         'decrease_stock': saleData.stockCountDecrease ?? true,
       };
-      final response = await safeApiCall(
-        () => _datasource.createSale(map),
-      );
+      final response = await safeApiCall(() => _datasource.createSale(map));
       if (response.status.isSuccess) {
         if (response.data is Map) {
           final data = response.data as Map;
@@ -151,6 +151,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   }) async {
     try {
       final response = await safeApiCall(
@@ -158,6 +159,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           bookingId: bookingId,
           amount: amount,
           accountId: accountId,
+          paymentDate: paymentDate,
         ),
       );
       if (response.status.isSuccess) {
@@ -584,6 +586,100 @@ class BookingRepositoryImpl implements IBookingRepository {
       return await _datasource.getInvoicePdfBytes(bookingId);
     } catch (e, stack) {
       log('Error getting invoice PDF: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> addRefund({
+    required int bookingId,
+    required int amount,
+    required int accountId,
+    String? refundReason,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.addRefund(
+          bookingId: bookingId,
+          amount: amount,
+          accountId: accountId,
+          refundReason: refundReason,
+        ),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error adding refund: ${response.devMessage}');
+      throw response.message ?? 'Failed to add refund';
+    } catch (e, stack) {
+      log('Error adding refund: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteRefund({
+    required int bookingId,
+    required int refundId,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () =>
+            _datasource.deleteRefund(bookingId: bookingId, refundId: refundId),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error deleting refund: ${response.devMessage}');
+      throw response.message ?? 'Failed to delete refund';
+    } catch (e, stack) {
+      log('Error deleting refund: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.updateSecurityRefund(
+          bookingId: bookingId,
+          refundAmount: refundAmount,
+          deductionAmount: deductionAmount,
+          accountId: accountId,
+          note: note,
+        ),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error updating security refund: ${response.devMessage}');
+      throw response.message ?? 'Failed to update security refund';
+    } catch (e, stack) {
+      log('Error updating security refund: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteSecurityRefundedPayment({required int refundId}) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.deleteSecurityRefundedPayment(refundId: refundId),
+      );
+      if (response.status.isSuccess) {
+        return;
+      }
+      log('Error deleting security refunded payment: ${response.devMessage}');
+      throw response.message ?? 'Failed to delete security refunded payment';
+    } catch (e, stack) {
+      log('Error deleting security refunded payment: $e', stackTrace: stack);
       rethrow;
     }
   }

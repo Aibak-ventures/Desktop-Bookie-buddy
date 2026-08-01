@@ -11,13 +11,13 @@ dynamic _idCustomRead(Map json, String key) => json[key] ?? json['product_id'];
 
 dynamic _readProductImage(Map json, String key) =>
     (json['product_image'] as String?)?.isNotEmpty == true
-        ? json['product_image']
-        : (json['product_thumbnail'] as String?);
+    ? json['product_image']
+    : (json['product_thumbnail'] as String?);
 
 dynamic _readProductThumbnail(Map json, String key) =>
     (json['product_thumbnail'] as String?)?.isNotEmpty == true
-        ? json['product_thumbnail']
-        : (json['product_image'] as String?);
+    ? json['product_thumbnail']
+    : (json['product_image'] as String?);
 
 List<MeasurementValueModel> _parseMeasurements(dynamic json) {
   if (json is Map<String, dynamic>) {

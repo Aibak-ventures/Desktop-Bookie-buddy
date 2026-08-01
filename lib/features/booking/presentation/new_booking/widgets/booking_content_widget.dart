@@ -1,4 +1,4 @@
-﻿part of '../pages/new_booking_screen.dart';
+part of '../pages/new_booking_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -595,17 +595,23 @@ extension BookingFlowBuilders on NewBookingScreenState {
                             'Locations',
                             optional: true,
                           ),
-                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
+                          const SizedBox(
+                            height: NewBookingScreenState._fieldSpacing,
+                          ),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: startLocationController,
                             hint: 'Start location',
                           ),
-                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
+                          const SizedBox(
+                            height: NewBookingScreenState._fieldSpacing,
+                          ),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: pickupLocationController,
                             hint: 'Pickup location',
                           ),
-                          const SizedBox(height: NewBookingScreenState._fieldSpacing),
+                          const SizedBox(
+                            height: NewBookingScreenState._fieldSpacing,
+                          ),
                           BookingTextFieldBuilder.buildRightPanelTextField(
                             controller: destinationLocationController,
                             hint: 'Destination',
@@ -660,7 +666,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   ),
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
-                  // Security Payment Method - show when security amount has value
+                  // Security Payment Method + Paid checkbox - show when security amount has value
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: securityAmountController,
                     builder: (context, value, child) {
@@ -668,10 +674,46 @@ extension BookingFlowBuilders on NewBookingScreenState {
                           value.text.trim().isNotEmpty &&
                           (int.tryParse(value.text.trim()) ?? 0) > 0;
                       if (hasSecurityAmount) {
-                        return AccountSelectionField(
-                          selectedAccount: selectedSecurityAccount,
-                          onChanged: (account) => rebuild(() => selectedSecurityAccount = account),
-                          label: 'Security Payment Option',
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AccountSelectionField(
+                              selectedAccount: selectedSecurityAccount,
+                              onChanged: (account) => rebuild(
+                                () => selectedSecurityAccount = account,
+                              ),
+                              label: 'Security Payment Option',
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: Checkbox(
+                                    value: isSecurityPaid,
+                                    onChanged: (v) => rebuild(
+                                      () => isSecurityPaid = v ?? false,
+                                    ),
+                                    activeColor: AppColors.purple,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Security deposit paid',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                          ],
                         );
                       }
                       return const SizedBox.shrink();
@@ -744,12 +786,16 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                           .trim()
                                           .toIntOrNull() ??
                                       0;
-                                  final total = PaymentCalculator.getDiscountProductBase(
-                                    selectedProducts: selectedProductsNotifier.value,
-                                    additionalCharges: additionalChargesNotifier.value,
-                                    bookingType: selectedBookingType,
-                                    effectiveRentalDays: _getEffectiveRentalDays(),
-                                  );
+                                  final total =
+                                      PaymentCalculator.getDiscountProductBase(
+                                        selectedProducts:
+                                            selectedProductsNotifier.value,
+                                        additionalCharges:
+                                            additionalChargesNotifier.value,
+                                        bookingType: selectedBookingType,
+                                        effectiveRentalDays:
+                                            _getEffectiveRentalDays(),
+                                      );
                                   if (input > 0 && total > 0) {
                                     if (switchToPercent) {
                                       // amount → percentage
@@ -854,7 +900,9 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFF6132E4,
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
@@ -884,7 +932,9 @@ extension BookingFlowBuilders on NewBookingScreenState {
                               color: const Color(0xFFF8F9FA),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: const Color(0xFF6132E4).withValues(alpha: 0.2),
+                                color: const Color(
+                                  0xFF6132E4,
+                                ).withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                               boxShadow: [

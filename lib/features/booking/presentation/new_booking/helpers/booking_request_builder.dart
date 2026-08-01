@@ -54,6 +54,7 @@ class BookingRequestBuilder {
     required DateTime returnDate,
     required int? advanceAmount,
     required int? securityAmount,
+    required bool isSecurityPaid,
     required int? securityAccountId,
     required AccountEntity? advanceAccount,
     required DeliveryStatus deliveryStatus,
@@ -115,25 +116,21 @@ class BookingRequestBuilder {
         : null;
 
     // --- Cooling period ---
-    final coolingPeriodType = coolingPeriodDays > 0
-        ? coolingPeriodMode.value.toLowerCase()
-        : null;
-    final DateTime effectiveReturnDate;
+
+    final DateTime effectiveReturnDate = returnDate;
     final DateTime? effectiveCoolingPeriodDate;
+
     if (coolingPeriodDays > 0) {
       if (coolingPeriodMode.isAfter) {
-        effectiveReturnDate = returnDate;
-        effectiveCoolingPeriodDate = returnDate.add(
-          Duration(days: coolingPeriodDays),
-        );
+        effectiveCoolingPeriodDate = returnDate
+            .add(Duration(days: coolingPeriodDays))
+            .dateOnly;
       } else {
-        effectiveReturnDate = returnDate;
-        effectiveCoolingPeriodDate = pickupDate.subtract(
-          Duration(days: coolingPeriodDays),
-        );
+        effectiveCoolingPeriodDate = pickupDate
+            .subtract(Duration(days: coolingPeriodDays))
+            .dateOnly;
       }
     } else {
-      effectiveReturnDate = returnDate;
       effectiveCoolingPeriodDate = null;
     }
 
@@ -148,10 +145,15 @@ class BookingRequestBuilder {
       pickupDate: pickupDate.format(),
       returnDate: effectiveReturnDate.format(),
       coolingPeriodDate: effectiveCoolingPeriodDate?.format(),
-      coolingPeriodType: coolingPeriodType,
+      coolingPeriodType: coolingPeriodDays > 0 ? coolingPeriodMode : null,
       advanceAmount: advanceAmount,
       securityAmount: securityAmount,
-      securityPaymentAccountId: securityAmount != null ? securityAccountId : null,
+      isSecurityPaid: securityAmount != null && securityAmount > 0
+          ? isSecurityPaid
+          : null,
+      securityPaymentAccountId: securityAmount != null
+          ? securityAccountId
+          : null,
       discountAmount: actualDiscount,
       purchaseMode: 'normal',
       payments: !hasAdvance
@@ -165,7 +167,9 @@ class BookingRequestBuilder {
       deliveryStatus: deliveryStatus,
       products: requestProducts,
       otherDetails: otherDetails,
-      additionalCharges: additionalCharges.isNotEmpty ? additionalCharges : null,
+      additionalCharges: additionalCharges.isNotEmpty
+          ? additionalCharges
+          : null,
       description: description,
       pickupTime: pickupTime,
       returnTime: returnTime,
@@ -211,7 +215,9 @@ class BookingRequestBuilder {
     final discount = isDiscountPercentage
         ? (grossTotal * discountInput / 100).round()
         : discountInput;
-    final finalTotal = (grossTotal - discount) > 0 ? (grossTotal - discount) : 0;
+    final finalTotal = (grossTotal - discount) > 0
+        ? (grossTotal - discount)
+        : 0;
 
     return SalesRequestEntity(
       staffId: staffId,
@@ -269,8 +275,7 @@ class BookingRequestBuilder {
     // Tax here is a flat, already-calculated amount typed by the user for
     // this historical backfill entry — not computed from the shop's live
     // tax config, so it's simply added after discount is subtracted.
-    final totalAmount =
-        productTotal - (discountAmount ?? 0) + (taxAmount ?? 0);
+    final totalAmount = productTotal - (discountAmount ?? 0) + (taxAmount ?? 0);
 
     return BookingRequestEntity(
       clientId: selectedClientId,

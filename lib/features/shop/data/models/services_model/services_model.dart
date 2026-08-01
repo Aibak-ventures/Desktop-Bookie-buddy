@@ -23,10 +23,10 @@ abstract class ServicesModel with _$ServicesModel {
 
 extension ServicesModelMapper on ServicesModel {
   ServiceEntity toEntity() => ServiceEntity(
-        id: id,
-        name: name,
-        description: description,
-        icon: icon,
-        mainServiceName: mainServiceName,
-      );
+    id: id,
+    name: name,
+    description: description,
+    icon: icon,
+    mainServiceName: mainServiceName,
+  );
 }

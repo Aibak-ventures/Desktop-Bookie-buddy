@@ -22,8 +22,6 @@ extension BookingDetailsStateX on BookingDetailsState {
   bool get isFailure => this is _Failed;
   bool get isError => this is _Error;
 
-  BookingDetailsEntity? get booking => maybeWhen(
-        loaded: (booking) => booking,
-        orElse: () => null,
-      );
+  BookingDetailsEntity? get booking =>
+      maybeWhen(loaded: (booking) => booking, orElse: () => null);
 }

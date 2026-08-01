@@ -52,7 +52,11 @@ class ProductDynamicFields extends StatelessWidget {
         width: 280,
         child: CustomTextField(
           label:
-              '${mainServiceType.isVehicle ? 'Vehicle' : mainServiceType.isMaterial ? 'Material' : 'Product'} Name *',
+              '${mainServiceType.isVehicle
+                  ? 'Vehicle'
+                  : mainServiceType.isMaterial
+                  ? 'Material'
+                  : 'Product'} Name *',
           controller: nameController,
           validator: AppInputValidators.productName,
         ),
@@ -319,9 +323,7 @@ class ProductDynamicFields extends StatelessWidget {
     } else {
       // DEFAULT (Vehicles, Gadgets, Equipment, etc.)
       commonFields.addAll([
-        // Gadgets manage stock through individual serial-number variants, so the
-        // single quantity field is hidden for them.
-        if (!mainServiceType.isGadget)
+        if (mainServiceType.showQuantityInDynamicFields)
           SizedBox(
             width: 280,
             child: CustomTextField(
@@ -375,8 +377,7 @@ class ProductDynamicFields extends StatelessWidget {
                 ? null
                 : AppInputValidators.category(
                     value,
-                    fieldName:
-                        mainServiceType.isVehicle ? 'Brand' : 'Category',
+                    fieldName: mainServiceType.isVehicle ? 'Brand' : 'Category',
                     isRequired: false,
                   ),
           ),

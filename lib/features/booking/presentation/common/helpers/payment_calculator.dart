@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 /// All methods are static and side-effect free for easy testing.
 class PaymentCalculator {
   /// Calculate number of days between pickup and return dates.
-  /// 
+  ///
   /// Business logic:
   /// - Below 24 hours = 1 day
   /// - Every started 24-hour block = +1 day
   /// - Considers time component for accurate calculation
   /// - Return date must be after pickup date (enforced)
-  /// 
+  ///
   /// Defaults:
   /// - Pickup time: 23:59 (if not specified)
   /// - Return time: 00:00 (if not specified)
@@ -61,7 +61,7 @@ class PaymentCalculator {
   }
 
   /// Get effective rental days including manually added extra days.
-  /// 
+  ///
   /// Always returns at least 1 day.
   /// Example: 3 base days + 2 manual = 5 total
   static int getEffectiveRentalDays({
@@ -80,7 +80,7 @@ class PaymentCalculator {
   }
 
   /// Get the days multiplier for a specific product.
-  /// 
+  ///
   /// - Sales mode: always returns 1 (no date multiplication)
   /// - Non-rental items: always returns 1
   /// - Rental items in booking mode: returns effective rental days
@@ -95,9 +95,9 @@ class PaymentCalculator {
   }
 
   /// Calculate the product base amount for discount calculation.
-  /// 
+  ///
   /// This is: (products with day multiplier) + (additional charges)
-  /// 
+  ///
   /// Used to determine the amount before discount is applied.
   static int getDiscountProductBase({
     required List<ProductSelectedEntity> selectedProducts,
@@ -108,7 +108,7 @@ class PaymentCalculator {
     final productTotal = selectedProducts.fold<int>(0, (sum, p) {
       final daysMultiplier =
           (bookingType != BookingType.sales &&
-                  shouldMultiplyByDays(p.variant.mainServiceType))
+              shouldMultiplyByDays(p.variant.mainServiceType))
           ? (effectiveRentalDays > 0 ? effectiveRentalDays : 1)
           : 1;
       return sum + (p.amount * p.quantity * daysMultiplier);
@@ -121,13 +121,13 @@ class PaymentCalculator {
   }
 
   /// Calculate the total amount payable after discount.
-  /// 
+  ///
   /// Flow:
   /// 1. Calculate product total (with day multiplier)
   /// 2. Add additional charges
   /// 3. Apply discount (fixed or percentage)
   /// 4. Return final amount
-  /// 
+  ///
   /// Edge cases:
   /// - Negative totals clamped to 0 (handled at UI level)
   /// - Percentage discount rounded to nearest integer
@@ -143,10 +143,12 @@ class PaymentCalculator {
     final productTotal = selectedProducts.fold<int>(0, (sum, product) {
       final effectiveDaysMultiplier =
           (bookingType != BookingType.sales &&
-                  shouldMultiplyByDays(product.variant.mainServiceType))
+              shouldMultiplyByDays(product.variant.mainServiceType))
           ? (effectiveRentalDays > 0 ? effectiveRentalDays : 1)
           : 1;
-      return sum + (product.amount * product.quantity * effectiveDaysMultiplier);
+
+      return sum +
+          ((product.amount * product.quantity) * effectiveDaysMultiplier);
     });
     final additionalTotal = additionalCharges.fold<int>(
       0,
@@ -161,13 +163,13 @@ class PaymentCalculator {
   }
 
   /// Round a number to a meaningful price point.
-  /// 
+  ///
   /// Scaling:
   /// - < 100: round to nearest 10
   /// - < 1000: round to nearest 100
   /// - < 10000: round to nearest 1000
   /// - >= 10000: round to nearest 5000
-  /// 
+  ///
   /// Used for generating price range quick filters.
   static double roundToMeaningfulNumber(double value) {
     if (value < 100) {
@@ -182,16 +184,16 @@ class PaymentCalculator {
   }
 
   /// Generate dynamic quick filter chips for price range selection.
-  /// 
+  ///
   /// Creates 4-5 meaningful price ranges based on max price:
   /// - Under 10% of max
   /// - 10-25% range
   /// - 25-50% range
   /// - 50-75% range
   /// - Above 75% of max
-  /// 
+  ///
   /// Falls back to 4 equal divisions if dynamic ranges are too similar.
-  /// 
+  ///
   /// Returns list of maps with 'label' and 'range' (RangeValues) keys.
   static List<Map<String, dynamic>> generateQuickFilters({
     required double minPrice,

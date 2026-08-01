@@ -13,8 +13,8 @@ class SplashInitializationUseCase {
   SplashInitializationUseCase({
     required SharedPreferenceHelper prefs,
     required SessionStorage sessionStorage,
-  })  : _prefs = prefs,
-        _sessionStorage = sessionStorage;
+  }) : _prefs = prefs,
+       _sessionStorage = sessionStorage;
 
   final SharedPreferenceHelper _prefs;
   final SessionStorage _sessionStorage;
@@ -28,9 +28,9 @@ class SplashInitializationUseCase {
     final initialScreen = !(onboarding ?? false)
         ? const OnboardingScreen()
         : _sessionStorage.refreshToken != null &&
-                _sessionStorage.accessToken != null
-            ? const BottomBarScreen()
-            : const LoginScreen();
+              _sessionStorage.accessToken != null
+        ? const BottomBarScreen()
+        : const LoginScreen();
 
     navigatorKey.currentContext!.pushReplacement(initialScreen);
   }

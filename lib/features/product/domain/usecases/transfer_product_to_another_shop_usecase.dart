@@ -9,11 +9,10 @@ class TransferProductToAnotherShopUseCase {
     required int toShopId,
     required int transferQuantity,
     int? toProductId,
-  }) =>
-      _repository.transferProductToAnotherShop(
-        fromVariantId: fromVariantId,
-        toShopId: toShopId,
-        transferQuantity: transferQuantity,
-        toProductId: toProductId,
-      );
+  }) => _repository.transferProductToAnotherShop(
+    fromVariantId: fromVariantId,
+    toShopId: toShopId,
+    transferQuantity: transferQuantity,
+    toProductId: toProductId,
+  );
 }

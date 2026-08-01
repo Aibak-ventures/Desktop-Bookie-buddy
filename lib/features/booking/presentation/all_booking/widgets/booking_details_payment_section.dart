@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_add_payment_dialog.dart';
+import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/show_booking_details_add_payment_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_payment_history_tile.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -38,7 +43,10 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     final isPaymentCompleted = balance <= 0;
     final appliedTaxes = booking.appliedTaxes.appliedOnly;
     final totalTaxAmount = appliedTaxes.totalTaxAmount;
-
+    final refundableAmount = paid - securityAmount <= 0
+        ? 0
+        : paid - securityAmount;
+    final isRefundable = refundableAmount > 0;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
 
@@ -66,68 +74,108 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                     ),
                   ),
                   if (isCancelled)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.red.shade400,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.cancel,
-                            color: Colors.red.shade700,
-                            size: 16,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 8,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
                           ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Cancelled',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.red.shade700,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.red.shade400,
+                              width: 2,
                             ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ],
-                      ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.cancel,
+                                color: Colors.red.shade700,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'Cancelled',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.red.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     )
                   else if (isCompleted || isPaymentCompleted)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade50,
-                        border: Border.all(color: Colors.green.shade200),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.check_circle,
-                            color: Colors.green.shade700,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Completed',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                    GestureDetector(
+                      onTap: !isRefundable
+                          ? null
+                          : () {
+                              performSecureActionDialog(
+                                context,
+                                SecretPasswordLocations.bookingPayment,
+                                onSuccess: () {
+                                  showAddPaymentDialog(
+                                    context: context,
+                                    balanceAmount: balance,
+                                    defaultType: PaymentTransactionType.refund,
+                                    refundableAmount: refundableAmount,
+                                    onSubmit:
+                                        ({
+                                          required amount,
+                                          required account,
+                                          required transactionType,
+                                          reason,
+                                          paymentDate,
+                                          required useSecurityRefund,
+                                        }) => _submitTransaction(
+                                          context: context,
+                                          amount: amount,
+                                          account: account,
+                                          transactionType: transactionType,
+                                          reason: reason,
+                                          useSecurityRefund: useSecurityRefund,
+                                        ),
+                                  );
+                                },
+                              );
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          border: Border.all(color: Colors.green.shade200),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
                               color: Colors.green.shade700,
+                              size: 16,
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 6),
+                            Text(
+                              'Completed',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   else
@@ -137,10 +185,33 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                           context,
                           SecretPasswordLocations.bookingPayment,
                           onSuccess: () {
-                            showBookingDetailsAddPaymentDialog(
+                            showAddPaymentDialog(
                               context: context,
-                              id: booking.id,
                               balanceAmount: balance,
+                              showTypeSelector: isRefundable,
+                              refundableAmount: refundableAmount,
+                              minPaymentDate: booking.bookedDate
+                                  .parseToDateTime(),
+                              securityBalanceAmount: booking.isSecurityPaid
+                                  ? booking.remainingSecurityBalance
+                                  : null,
+                              onSubmit:
+                                  ({
+                                    required amount,
+                                    required account,
+                                    required transactionType,
+                                    reason,
+                                    paymentDate,
+                                    required useSecurityRefund,
+                                  }) => _submitTransaction(
+                                    context: context,
+                                    amount: amount,
+                                    account: account,
+                                    transactionType: transactionType,
+                                    reason: reason,
+                                    paymentDate: paymentDate,
+                                    useSecurityRefund: useSecurityRefund,
+                                  ),
                             );
                           },
                         );
@@ -163,7 +234,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (securityAmount > 0) ...[
+              if (securityAmount > 0 && booking.showSecurityInPayments) ...[
                 if (booking.securityAccountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -202,12 +273,20 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                   const SizedBox(height: 8),
 
                 _buildPaymentRow(
-                  'Security amount',
+                  booking.isSecurityPaid
+                      ? 'Security amount'
+                      : 'Security amount (Unpaid)',
                   securityAmount.toCurrency(),
+                  valueColor: booking.isSecurityPaid
+                      ? null
+                      : Colors.grey.shade500,
+                  labelColor: booking.isSecurityPaid
+                      ? null
+                      : Colors.grey.shade500,
                 ),
                 const SizedBox(height: 8),
               ],
-              _buildPaymentRow('Product total', '₹$productTotal'),
+              _buildPaymentRow('Product total', productTotal.toCurrency()),
               const SizedBox(height: 8),
 
               if (additionalTotal > 0) ...[
@@ -385,10 +464,59 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               paymentHistory: paymentHistory,
               refunds: booking.refunds,
               canDeletePayments: !isCancelled && !isCompleted,
+              canDeleteRefunds: true,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Future<String?> _submitTransaction({
+    required BuildContext context,
+    required int amount,
+    required AccountEntity account,
+    required PaymentTransactionType transactionType,
+    String? reason,
+    String? paymentDate,
+    bool useSecurityRefund = false,
+  }) async {
+    final bloc = context.read<BookingDetailsBloc>();
+
+    bloc.add(
+      transactionType.isRefund
+          ? BookingDetailsEvent.addRefund(
+              bookingId: booking.id,
+              amount: amount,
+              accountId: account.id,
+              refundReason: reason,
+            )
+          : BookingDetailsEvent.updatePayment(
+              bookingId: booking.id,
+              amount: amount,
+              accountId: account.id,
+              paymentDate: paymentDate,
+              useSecurityRefund: useSecurityRefund,
+            ),
+    );
+
+    final state = await bloc.stream
+        .firstWhere(
+          (state) => state.maybeWhen(
+            loaded: (_) => true,
+            failed: (_) => true,
+            orElse: () => false,
+          ),
+        )
+        .timeout(
+          const Duration(seconds: 30),
+          onTimeout: () => throw TimeoutException('Request timed out'),
+        );
+
+    return state.maybeWhen(
+      loaded: (_) => null,
+      failed: (error) => error,
+      orElse: () => null,
     );
   }
 
@@ -426,6 +554,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     String value, {
     bool isBold = false,
     Color? valueColor,
+    Color? labelColor,
     double? fontSize,
   }) {
     return Row(
@@ -435,7 +564,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: fontSize ?? 13,
-            color: Colors.black87,
+            color: labelColor ?? Colors.black87,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
           ),
         ),

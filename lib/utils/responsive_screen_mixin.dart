@@ -25,8 +25,9 @@ mixin ResponsiveScreenMixin on Widget {
 
   Widget buildResponsiveScreen(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          ResponsiveHelper.isDesktop(context) ? desktopBackgroundColor : null,
+      backgroundColor: ResponsiveHelper.isDesktop(context)
+          ? desktopBackgroundColor
+          : null,
       appBar: ResponsiveHelper.isMobile(context)
           ? AppBar(
               automaticallyImplyLeading: showBackButton,
@@ -49,10 +50,7 @@ mixin ResponsiveScreenMixin on Widget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFF8F9FA),
-            Color(0xFFE9ECEF),
-          ],
+          colors: [Color(0xFFF8F9FA), Color(0xFFE9ECEF)],
         ),
       ),
       child: Column(
@@ -61,10 +59,7 @@ mixin ResponsiveScreenMixin on Widget {
           if (!ResponsiveHelper.isMobile(context))
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 40,
-                vertical: 40,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
               child: Row(
                 children: [
                   if (showBackButton) ...[
@@ -81,7 +76,9 @@ mixin ResponsiveScreenMixin on Widget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                      color: Theme.of(
+                        context,
+                      ).primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -155,10 +152,7 @@ mixin ResponsiveScreenMixin on Widget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFF8F9FA),
-            Color(0xFFE9ECEF),
-          ],
+          colors: [Color(0xFFF8F9FA), Color(0xFFE9ECEF)],
         ),
       ),
       child: Column(
@@ -166,10 +160,7 @@ mixin ResponsiveScreenMixin on Widget {
           // Header Section
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 80,
-              vertical: 60,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 60),
             child: Row(
               children: [
                 if (showBackButton) ...[
@@ -187,7 +178,9 @@ mixin ResponsiveScreenMixin on Widget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(

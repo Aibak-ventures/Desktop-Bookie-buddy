@@ -20,10 +20,10 @@ class AddBookingCubit extends Cubit<AddBookingState> {
     required AddBookingUseCase addBooking,
     required CreateSaleBookingUseCase createSale,
     required CreateOldBookingUseCase createOldBooking,
-  })  : _addBooking = addBooking,
-        _createSale = createSale,
-        _createOldBooking = createOldBooking,
-        super(const AddBookingState.initial());
+  }) : _addBooking = addBooking,
+       _createSale = createSale,
+       _createOldBooking = createOldBooking,
+       super(const AddBookingState.initial());
 
   Future<void> submitBooking(
     BookingRequestEntity request, {

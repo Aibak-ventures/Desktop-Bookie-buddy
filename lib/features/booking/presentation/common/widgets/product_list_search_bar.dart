@@ -117,8 +117,7 @@ class ProductListSearchBarWidget extends StatelessWidget {
               filterText = searchTypes![searchTypeIndex];
             }
             if (isPriceEnabled) {
-              filterText =
-                  filterText != null ? '$filterText | Price' : 'Price';
+              filterText = filterText != null ? '$filterText | Price' : 'Price';
             }
 
             return _wrapWithKeyboardNav(
@@ -184,7 +183,9 @@ class ProductListSearchBarWidget extends StatelessWidget {
                       color: Color(0xFF6132E4),
                     ),
                   ),
-                  backgroundColor: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                  backgroundColor: const Color(
+                    0xFF6132E4,
+                  ).withValues(alpha: 0.1),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),

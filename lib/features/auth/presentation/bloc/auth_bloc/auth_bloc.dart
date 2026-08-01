@@ -11,8 +11,8 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase _loginUseCase;
   AuthBloc({required LoginUseCase loginUseCase})
-      : _loginUseCase = loginUseCase,
-        super(const _Initial()) {
+    : _loginUseCase = loginUseCase,
+      super(const _Initial()) {
     on<_LoginRequested>((event, emit) async {
       emit(const AuthState.loading());
       try {

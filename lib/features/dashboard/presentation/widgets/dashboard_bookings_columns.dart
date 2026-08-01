@@ -37,8 +37,7 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
             upcoming.position.pixels >=
                 upcoming.position.maxScrollExtent - 200) ||
         (returns.hasClients &&
-            returns.position.pixels >=
-                returns.position.maxScrollExtent - 200);
+            returns.position.pixels >= returns.position.maxScrollExtent - 200);
 
     if (!nearBottom) return;
     _tryLoadNextPage();
@@ -119,51 +118,52 @@ class _DashboardBookingsColumnsState extends State<DashboardBookingsColumns> {
                 ),
               ],
             ),
-            loaded: (
-              upcomingGrouped,
-              returnsGrouped,
-              carouselData,
-              nextPageUrl,
-              __,
-              ___,
-              isPaginating,
-            ) {
-              final upcomingCount = carouselData.upcomingCount;
-              final returnsCount = carouselData.alterationBookingCount;
+            loaded:
+                (
+                  upcomingGrouped,
+                  returnsGrouped,
+                  carouselData,
+                  nextPageUrl,
+                  __,
+                  ___,
+                  isPaginating,
+                ) {
+                  final upcomingCount = carouselData.upcomingCount;
+                  final returnsCount = carouselData.alterationBookingCount;
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: _BookingColumn(
-                      title: 'Upcoming Bookings',
-                      icon: Icons.schedule,
-                      groupedBookings: upcomingGrouped,
-                      totalCount: upcomingCount,
-                      color: const Color(0xFF667eea),
-                      useReturnDate: false,
-                      scrollController: _upcomingScrollController,
-                      isPaginating: isPaginating,
-                      hasMore: nextPageUrl != null,
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: _BookingColumn(
-                      title: 'Returns Booking',
-                      icon: Icons.assignment_return,
-                      groupedBookings: returnsGrouped,
-                      totalCount: returnsCount,
-                      color: const Color(0xFFff8a00),
-                      useReturnDate: true,
-                      scrollController: _returnsScrollController,
-                      isPaginating: isPaginating,
-                      hasMore: nextPageUrl != null,
-                    ),
-                  ),
-                ],
-              );
-            },
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: _BookingColumn(
+                          title: 'Upcoming Bookings',
+                          icon: Icons.schedule,
+                          groupedBookings: upcomingGrouped,
+                          totalCount: upcomingCount,
+                          color: const Color(0xFF667eea),
+                          useReturnDate: false,
+                          scrollController: _upcomingScrollController,
+                          isPaginating: isPaginating,
+                          hasMore: nextPageUrl != null,
+                        ),
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: _BookingColumn(
+                          title: 'Returns Booking',
+                          icon: Icons.assignment_return,
+                          groupedBookings: returnsGrouped,
+                          totalCount: returnsCount,
+                          color: const Color(0xFFff8a00),
+                          useReturnDate: true,
+                          scrollController: _returnsScrollController,
+                          isPaginating: isPaginating,
+                          hasMore: nextPageUrl != null,
+                        ),
+                      ),
+                    ],
+                  );
+                },
             orElse: () => const SizedBox.shrink(),
           );
         },

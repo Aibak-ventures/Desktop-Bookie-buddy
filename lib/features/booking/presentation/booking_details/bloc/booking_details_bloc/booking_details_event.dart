@@ -19,6 +19,8 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
+    @Default(false) bool useSecurityRefund,
   }) = _UpdatePayment;
 
   const factory BookingDetailsEvent.deletePayment({
@@ -34,4 +36,30 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
 
   const factory BookingDetailsEvent.deleteBooking(int bookingId) =
       _DeleteBooking;
+
+  const factory BookingDetailsEvent.addRefund({
+    required int bookingId,
+    required int amount,
+    required int accountId,
+    String? refundReason,
+  }) = _AddRefund;
+
+  const factory BookingDetailsEvent.deleteRefund({
+    required int bookingId,
+    required int refundId,
+  }) = _DeleteRefund;
+
+  const factory BookingDetailsEvent.updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  }) = _UpdateSecurityRefund;
+
+  const factory BookingDetailsEvent.deleteSecurityRefundedPayment({
+    required int bookingId,
+    required int paymentId,
+    required SecurityPaymentHistoryType securityPaymentType,
+  }) = _DeleteSecurityRefundedPayment;
 }

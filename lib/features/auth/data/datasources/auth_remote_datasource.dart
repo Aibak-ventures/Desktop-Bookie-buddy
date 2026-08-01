@@ -19,10 +19,10 @@ class AuthRemoteDatasource {
     required SharedPreferenceHelper prefs,
     required TokenRefreshManager tokenRefreshManager,
     required SessionStorage sessionStorage,
-  })  : _dio = dio,
-        _prefs = prefs,
-        _tokenRefreshManager = tokenRefreshManager,
-        _sessionStorage = sessionStorage;
+  }) : _dio = dio,
+       _prefs = prefs,
+       _tokenRefreshManager = tokenRefreshManager,
+       _sessionStorage = sessionStorage;
 
   Future<CustomResponseModel> userLogin({
     required String phone,

@@ -1,4 +1,4 @@
-﻿part of '../pages/edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
@@ -114,14 +114,8 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Dates — sent only when changed or when cooling settings changed
     if (_haveDatesChanged()) {
-      updates['pickup_date'] = pickupDate.format().appendTimeToDate(
-        time: pickupTime,
-        time24HourAsString: pickupTime == null ? '00:00:00' : null,
-      );
-      updates['return_date'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
-      );
+      updates['pickup_date'] = pickupDate.format().appendPickupTime(pickupTime);
+      updates['return_date'] = returnDate.format().appendReturnTime(returnTime);
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
       if (returnTime != null)
@@ -129,10 +123,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       _appendCoolingPeriodFields(updates);
     } else if (hasCoolingSettingsChanged) {
       // Cooling period changed but dates didn't — still send return_date + cooling fields
-      updates['return_date'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
-      );
+      updates['return_date'] = returnDate.format().appendReturnTime(returnTime);
       if (pickupTime != null)
         updates['pickup_time'] = pickupTime!.formatToTime();
       if (returnTime != null)
@@ -171,9 +162,13 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Amounts
     if (_haveAmountsChanged()) {
-      updates['security_amount'] = securityAmountController.text
+      final secAmtChanged = securityAmountController.text
           .trim()
           .toIntOrNull();
+      updates['security_amount'] = secAmtChanged;
+      updates['security_amount_is_paid'] = secAmtChanged != null && secAmtChanged > 0
+          ? isSecurityPaid
+          : null;
       final discountInput =
           discountAmountController.text.trim().toIntOrNull() ?? 0;
       final productBase = _getDiscountProductBase();
@@ -193,8 +188,14 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       final runningKm = runningKilometersController.text.trim();
       updates['variants'] = products.map((p) {
         final variantId = p.variant.variantId ?? p.variant.id;
-        final rentalDays = _calculateRentalDays();
-        final lineAmount = p.amount * p.quantity * rentalDays;
+        final effectiveRentalDays =
+            PaymentCalculator.getDaysMultiplierForProduct(
+              product: p,
+              bookingType: selectedBookingType,
+              effectiveRentalDays: _calculateRentalDays(),
+            );
+
+        final lineAmount = (p.amount * p.quantity) * effectiveRentalDays;
         final variantData = <String, dynamic>{
           'id': variantId,
           'quantity': p.quantity,
@@ -247,30 +248,14 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   /// Extracted to avoid duplicating this logic between the date-changed and
   /// cooling-only-changed branches of [_buildPartialUpdateRequest].
   void _appendCoolingPeriodFields(Map<String, dynamic> updates) {
-    if (coolingPeriodDays > 0) {
-      if (coolingPeriodMode.isAfter) {
-        updates['cooling_period_end'] = returnDate
-            .add(Duration(days: coolingPeriodDays))
-            .format()
-            .appendTimeToDate(
-              time: returnTime,
-              time24HourAsString: returnTime == null ? '23:59:00' : null,
-            );
-      } else {
-        updates['cooling_period_end'] = pickupDate
-            .subtract(Duration(days: coolingPeriodDays))
-            .format()
-            .appendTimeToDate(
-              time: returnTime,
-              time24HourAsString: returnTime == null ? '23:59:00' : null,
-            );
-      }
-      updates['cooling_period_type'] = coolingPeriodMode.value.toLowerCase();
-    } else {
-      updates['cooling_period_end'] = returnDate.format().appendTimeToDate(
-        time: returnTime,
-        time24HourAsString: returnTime == null ? '23:59:00' : null,
+    if (coolingPeriodDays >= 0) {
+      final boundaryDate = coolingPeriodMode.isAfter
+          ? returnDate.add(Duration(days: coolingPeriodDays))
+          : pickupDate.subtract(Duration(days: coolingPeriodDays));
+      updates['cooling_period_end'] = boundaryDate.format().appendTimeToDate(
+        time24HourAsString: coolingPeriodMode.coolingBoundaryTime,
       );
+      updates['cooling_period_type'] = coolingPeriodMode.value;
     }
   }
 

@@ -10,7 +10,8 @@ abstract class SelectProductEvent with _$SelectProductEvent {
     TimeOfDay? returnTime,
     @Default(true) bool useAvailableProductsApi,
     @Default(false) bool isSales,
-    int? bookingId, // For edit mode - to check availability excluding current booking
+    int?
+    bookingId, // For edit mode - to check availability excluding current booking
     List<int>? variantIds, // For edit mode - variants already in bookie
   }) = _LoadProducts;
   const factory SelectProductEvent.loadNextPageProducts() =

@@ -49,17 +49,16 @@ class BookingFormValidator {
     required int? selectedStaffId,
     required String staffName,
     required bool isSalesMode,
-  }) =>
-      BookingValidationHelper.validateClientDetailsPanel(
-        clientName: clientName,
-        phone1: phone1,
-        phone2: phone2,
-        address: address,
-        documentsCount: documentsCount,
-        selectedStaffId: selectedStaffId,
-        staffName: staffName,
-        isSalesMode: isSalesMode,
-      );
+  }) => BookingValidationHelper.validateClientDetailsPanel(
+    clientName: clientName,
+    phone1: phone1,
+    phone2: phone2,
+    address: address,
+    documentsCount: documentsCount,
+    selectedStaffId: selectedStaffId,
+    staffName: staffName,
+    isSalesMode: isSalesMode,
+  );
 
   // ---------------------------------------------------------------------------
   // Payment (Step 1 → confirm gate)
@@ -124,10 +123,7 @@ class BookingFormValidator {
 
   /// Returns true when [returnTime] is strictly later than [pickupTime].
   /// Used for same-day bookings where both times are on the same date.
-  static bool isReturnAfterPickup(
-    TimeOfDay pickupTime,
-    TimeOfDay returnTime,
-  ) =>
+  static bool isReturnAfterPickup(TimeOfDay pickupTime, TimeOfDay returnTime) =>
       (returnTime.hour * 60 + returnTime.minute) >
       (pickupTime.hour * 60 + pickupTime.minute);
 

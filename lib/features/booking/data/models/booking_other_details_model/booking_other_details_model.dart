@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,7 +17,12 @@ abstract class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
     @JsonKey(name: 'location_from') String? locationFrom,
     @JsonKey(name: 'location_to') String? locationTo,
     @JsonKey(name: 'end') String? end,
-    @JsonKey(name: 'cooling_period_type') String? coolingPeriodType,
+    @JsonKey(
+      name: 'cooling_period_type',
+      fromJson: CoolingPeriodMode.tryFromJson,
+      toJson: CoolingPeriodMode.tryToJson,
+    )
+    CoolingPeriodMode? coolingPeriodType,
   }) = _BookingOtherDetailsModel;
 
   factory BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =>

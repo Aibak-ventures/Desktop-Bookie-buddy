@@ -6,10 +6,7 @@ class SwitchShopUseCase {
 
   SwitchShopUseCase(this._repository);
 
-  Future<UserEntity> call({
-    required int shopId,
-    String? fcmToken,
-  }) async {
+  Future<UserEntity> call({required int shopId, String? fcmToken}) async {
     if (fcmToken != null) {
       await _repository.updateFCMTokenWhenShopSwitching(
         token: fcmToken,

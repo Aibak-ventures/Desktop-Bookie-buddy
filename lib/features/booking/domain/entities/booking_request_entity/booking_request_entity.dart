@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_request_entity/booking_payment_request_entity.dart';
@@ -22,6 +23,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     String? coolingPeriodDate,
     int? advanceAmount,
     int? securityAmount,
+    bool? isSecurityPaid,
     int? discountAmount,
     String? purchaseMode,
     String? description,
@@ -35,7 +37,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     TimeOfDay? returnTime,
     @Default(false) bool sendPdfToWhatsApp,
     String? runningKilometers,
-    String? coolingPeriodType,
+    CoolingPeriodMode? coolingPeriodType,
     int? securityPaymentAccountId,
     List<BookingPaymentRequestEntity>? payments,
     int? oldBookingAccountId,

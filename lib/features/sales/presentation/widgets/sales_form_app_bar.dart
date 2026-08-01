@@ -35,7 +35,11 @@ class SalesFormAppBar extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.arrow_back_ios, size: 14, color: Colors.grey.shade600),
+                  Icon(
+                    Icons.arrow_back_ios,
+                    size: 14,
+                    color: Colors.grey.shade600,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     'Back',
@@ -67,7 +71,11 @@ class SalesFormAppBar extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.receipt_long, color: Color(0xFF6132E4), size: 14),
+                const Icon(
+                  Icons.receipt_long,
+                  color: Color(0xFF6132E4),
+                  size: 14,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   '#$invoiceId',

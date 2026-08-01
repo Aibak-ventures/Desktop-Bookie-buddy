@@ -4,10 +4,7 @@ class DownloadBookingInvoiceUseCase {
   final IBookingRepository _repository;
   DownloadBookingInvoiceUseCase(this._repository);
 
-  Future<String> call({
-    required int bookingId,
-    required String fileName,
-  }) =>
+  Future<String> call({required int bookingId, required String fileName}) =>
       _repository.downloadBookingInvoice(
         bookingId: bookingId,
         fileName: fileName,

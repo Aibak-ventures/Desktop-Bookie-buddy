@@ -17,7 +17,5 @@ abstract class StockManagementState with _$StockManagementState {
     int? selectedProductId,
   }) = _Loaded;
 
-  const factory StockManagementState.error({
-    required String message,
-  }) = _Error;
+  const factory StockManagementState.error({required String message}) = _Error;
 }

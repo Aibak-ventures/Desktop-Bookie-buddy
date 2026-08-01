@@ -24,8 +24,7 @@ class BookingPaymentSummaryPanel extends StatefulWidget {
       _BookingPaymentSummaryPanelState();
 }
 
-class _BookingPaymentSummaryPanelState
-    extends State<BookingPaymentSummaryPanel>
+class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
     with BookingFormMixin<BookingPaymentSummaryPanel> {
   static const double _fieldSpacing = 8.0;
 
@@ -174,11 +173,14 @@ class _BookingPaymentSummaryPanelState
                       return Row(
                         children: [
                           Expanded(
-                            child: BookingTextFieldBuilder.buildRightPanelTextField(
-                              controller: form.discountAmountController,
-                              hint: isPercent ? 'Discount %' : 'Discount amount',
-                              isNumber: true,
-                            ),
+                            child:
+                                BookingTextFieldBuilder.buildRightPanelTextField(
+                                  controller: form.discountAmountController,
+                                  hint: isPercent
+                                      ? 'Discount %'
+                                      : 'Discount amount',
+                                  isNumber: true,
+                                ),
                           ),
                           const SizedBox(width: 8),
                           PopupMenuButton<String>(
@@ -272,7 +274,9 @@ class _BookingPaymentSummaryPanelState
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFF6132E4,
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
@@ -539,7 +543,9 @@ class _BookingPaymentSummaryPanelState
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+              color: isSelected
+                  ? const Color(0xFF6132E4)
+                  : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
@@ -553,7 +559,9 @@ class _BookingPaymentSummaryPanelState
               Icon(
                 icon,
                 size: 18,
-                color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                color: isSelected
+                    ? const Color(0xFF6132E4)
+                    : Colors.grey.shade700,
               ),
               const SizedBox(width: 6),
               Text(
@@ -561,12 +569,18 @@ class _BookingPaymentSummaryPanelState
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade700,
+                  color: isSelected
+                      ? const Color(0xFF6132E4)
+                      : Colors.grey.shade700,
                 ),
               ),
               if (isSelected) ...[
                 const SizedBox(width: 4),
-                const Icon(Icons.check_circle, size: 14, color: Color(0xFF6132E4)),
+                const Icon(
+                  Icons.check_circle,
+                  size: 14,
+                  color: Color(0xFF6132E4),
+                ),
               ],
             ],
           ),

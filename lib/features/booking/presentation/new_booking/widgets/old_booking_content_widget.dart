@@ -30,7 +30,8 @@ class OldBookingContentWidget extends StatefulWidget {
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
   final String? clientNameError;
   final void Function(int? clientId) onClientIdChanged;
-  final void Function({required String rawPhoneNumber, required String? e164}) onCachePhoneE164;
+  final void Function({required String rawPhoneNumber, required String? e164})
+  onCachePhoneE164;
   final int Function(ProductSelectedEntity product) getDaysMultiplier;
   final VoidCallback onConfirm;
 
@@ -134,13 +135,17 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                         BookingPhonePopulator.setPhoneFieldValue(
                           widget.phone1FieldController,
                           widget.clientPhone1Controller,
-                          phoneNumber: client.phone1 > 0 ? client.phone1.toString() : null,
+                          phoneNumber: client.phone1 > 0
+                              ? client.phone1.toString()
+                              : null,
                           e164: client.phone1E164,
                         );
                         BookingPhonePopulator.setPhoneFieldValue(
                           widget.phone2FieldController,
                           widget.clientPhone2Controller,
-                          phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
+                          phoneNumber: (client.phone2 ?? 0) > 0
+                              ? client.phone2.toString()
+                              : null,
                           e164: client.phone2E164,
                         );
                         widget.onClientIdChanged(client.id);
@@ -161,7 +166,10 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                     focusNode: _phone1FocusNode,
                     nextFocusNode: _phone2FocusNode,
                     onChanged: (phone) {
-                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      final digits = phone.nsn.replaceAll(
+                        RegExp(r'[^0-9]'),
+                        '',
+                      );
                       widget.onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
@@ -169,7 +177,9 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                       if (widget.clientPhone1Controller.text != digits) {
                         widget.clientPhone1Controller.value = TextEditingValue(
                           text: digits,
-                          selection: TextSelection.collapsed(offset: digits.length),
+                          selection: TextSelection.collapsed(
+                            offset: digits.length,
+                          ),
                         );
                       }
                     },
@@ -182,7 +192,10 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                     focusNode: _phone2FocusNode,
                     nextFocusNode: _addressFocusNode,
                     onChanged: (phone) {
-                      final digits = phone.nsn.replaceAll(RegExp(r'[^0-9]'), '');
+                      final digits = phone.nsn.replaceAll(
+                        RegExp(r'[^0-9]'),
+                        '',
+                      );
                       widget.onCachePhoneE164(
                         rawPhoneNumber: digits,
                         e164: phoneNumberToE164(phone),
@@ -190,7 +203,9 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                       if (widget.clientPhone2Controller.text != digits) {
                         widget.clientPhone2Controller.value = TextEditingValue(
                           text: digits,
-                          selection: TextSelection.collapsed(offset: digits.length),
+                          selection: TextSelection.collapsed(
+                            offset: digits.length,
+                          ),
                         );
                       }
                     },
@@ -206,7 +221,10 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                   const SizedBox(height: fieldSpacing),
                   Container(
                     height: 80,
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
                       borderRadius: BorderRadius.circular(8),
@@ -284,10 +302,13 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                     final products = widget.selectedProductsNotifier.value;
                     final productTotal = products.fold<int>(
                       0,
-                      (sum, p) => sum + (p.amount * p.quantity * widget.getDaysMultiplier(p)),
+                      (sum, p) =>
+                          sum +
+                          (p.amount * p.quantity * widget.getDaysMultiplier(p)),
                     );
                     final discountAmount =
-                        widget.discountController.text.trim().toIntOrNull() ?? 0;
+                        widget.discountController.text.trim().toIntOrNull() ??
+                        0;
                     final taxAmount =
                         widget.taxController.text.trim().toIntOrNull() ?? 0;
                     final total = productTotal - discountAmount + taxAmount;
@@ -317,7 +338,10 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                     ),
                     child: const Text(
                       'Save Old Booking',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),

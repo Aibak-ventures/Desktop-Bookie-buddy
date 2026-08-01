@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ZoomableImageDialog extends StatelessWidget {
-  const ZoomableImageDialog({
-    super.key,
-    required this.imageUrl,
-    this.title,
-  });
+  const ZoomableImageDialog({super.key, required this.imageUrl, this.title});
 
   final String imageUrl;
   final String? title;
@@ -88,22 +84,22 @@ class ZoomableImageDialog extends StatelessWidget {
                           fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) =>
                               const Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.broken_image_outlined,
-                                  color: Colors.white54,
-                                  size: 56,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.broken_image_outlined,
+                                      color: Colors.white54,
+                                      size: 56,
+                                    ),
+                                    SizedBox(height: 12),
+                                    Text(
+                                      'Failed to load image',
+                                      style: TextStyle(color: Colors.white70),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 12),
-                                Text(
-                                  'Failed to load image',
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
                         ),
                       ),
                     ),

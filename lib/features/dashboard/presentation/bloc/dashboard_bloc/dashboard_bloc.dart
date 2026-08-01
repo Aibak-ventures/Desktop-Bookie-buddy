@@ -120,10 +120,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         activeShop: activeShop,
       );
 
-      final upcomingGrouped = _groupData(
-        entity.upcoming,
-        useReturnDate: false,
-      );
+      final upcomingGrouped = _groupData(entity.upcoming, useReturnDate: false);
       final returnsGrouped = _groupData(
         entity.ongoingBookings,
         useReturnDate: true,

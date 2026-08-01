@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
@@ -125,6 +126,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   AccountEntity? selectedAdvanceAccount;
   AccountEntity? selectedSecurityAccount;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  bool isSecurityPaid = true;
   bool sendPdfToWhatsApp = false;
   bool decreaseStockForPastDate = false;
   bool isDiscountPercentage = false;
@@ -416,6 +418,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     _manualExtraRentalDays = 0;
     advanceAmountController.clear();
     securityAmountController.clear();
+    isSecurityPaid = true;
     discountAmountController.clear();
     taxAmountController.clear();
     descriptionController.clear();
@@ -862,6 +865,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSecurityPaid: isSecurityPaid,
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _getEffectiveRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
@@ -988,6 +992,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       returnDate: returnDate,
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
+      isSecurityPaid: isSecurityPaid,
       securityAccountId: selectedSecurityAccount?.id,
       advanceAccount: selectedAdvanceAccount,
       deliveryStatus: deliveryStatus,

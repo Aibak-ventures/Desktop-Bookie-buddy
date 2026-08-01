@@ -79,13 +79,12 @@ extension NumPadding on num {
     bool right = false,
     bool top = false,
     bool bottom = false,
-  }) =>
-      EdgeInsets.only(
-        left: left ? w : 0,
-        right: right ? w : 0,
-        top: top ? w : 0,
-        bottom: bottom ? w : 0,
-      );
+  }) => EdgeInsets.only(
+    left: left ? w : 0,
+    right: right ? w : 0,
+    top: top ? w : 0,
+    bottom: bottom ? w : 0,
+  );
 }
 
 extension RecordX on (num, num) {

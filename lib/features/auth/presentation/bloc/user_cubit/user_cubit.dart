@@ -22,12 +22,12 @@ class UserCubit extends Cubit<UserEntity?> {
     required SwitchShopUseCase switchShop,
     required RegisterFCMTokenUseCase registerFCMToken,
     required IUserRepository userRepository,
-  })  : _getUser = getUser,
-        _logout = logout,
-        _switchShop = switchShop,
-        _registerFCMToken = registerFCMToken,
-        _userRepository = userRepository,
-        super(null);
+  }) : _getUser = getUser,
+       _logout = logout,
+       _switchShop = switchShop,
+       _registerFCMToken = registerFCMToken,
+       _userRepository = userRepository,
+       super(null);
 
   Future<void> loadUserData() async {
     try {
@@ -78,6 +78,6 @@ class UserCubit extends Cubit<UserEntity?> {
 
   bool hasFeature(AppPremiumFeatures feature, {bool isUserSpecific = false}) =>
       isUserSpecific
-          ? userSpecificPremiumFeatures.contains(feature)
-          : shopPremiumFeatures.contains(feature);
+      ? userSpecificPremiumFeatures.contains(feature)
+      : shopPremiumFeatures.contains(feature);
 }

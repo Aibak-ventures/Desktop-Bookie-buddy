@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingOtherDetailsModel {
 
-@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type') String? get coolingPeriodType;
+@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? get coolingPeriodType;
 /// Create a copy of BookingOtherDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $BookingOtherDetailsModelCopyWith<$Res>  {
   factory $BookingOtherDetailsModelCopyWith(BookingOtherDetailsModel value, $Res Function(BookingOtherDetailsModel) _then) = _$BookingOtherDetailsModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'location_start') String? locationStart,@JsonKey(name: 'location_from') String? locationFrom,@JsonKey(name: 'location_to') String? locationTo,@JsonKey(name: 'end') String? end,@JsonKey(name: 'cooling_period_type') String? coolingPeriodType
+@JsonKey(name: 'location_start') String? locationStart,@JsonKey(name: 'location_from') String? locationFrom,@JsonKey(name: 'location_to') String? locationTo,@JsonKey(name: 'end') String? end,@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? coolingPeriodType
 });
 
 
@@ -72,7 +72,7 @@ as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : location
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,
+as CoolingPeriodMode?,
   ));
 }
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type')  String? coolingPeriodType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson)  CoolingPeriodMode? coolingPeriodType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsModel() when $default != null:
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -178,7 +178,7 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type')  String? coolingPeriodType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson)  CoolingPeriodMode? coolingPeriodType)  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsModel():
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -198,7 +198,7 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type')  String? coolingPeriodType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'location_start')  String? locationStart, @JsonKey(name: 'location_from')  String? locationFrom, @JsonKey(name: 'location_to')  String? locationTo, @JsonKey(name: 'end')  String? end, @JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson)  CoolingPeriodMode? coolingPeriodType)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsModel() when $default != null:
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -213,14 +213,14 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false, createToJson: true)
 class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
-  const _BookingOtherDetailsModel({@JsonKey(name: 'location_start') this.locationStart, @JsonKey(name: 'location_from') this.locationFrom, @JsonKey(name: 'location_to') this.locationTo, @JsonKey(name: 'end') this.end, @JsonKey(name: 'cooling_period_type') this.coolingPeriodType});
+  const _BookingOtherDetailsModel({@JsonKey(name: 'location_start') this.locationStart, @JsonKey(name: 'location_from') this.locationFrom, @JsonKey(name: 'location_to') this.locationTo, @JsonKey(name: 'end') this.end, @JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) this.coolingPeriodType});
   factory _BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) => _$BookingOtherDetailsModelFromJson(json);
 
 @override@JsonKey(name: 'location_start') final  String? locationStart;
 @override@JsonKey(name: 'location_from') final  String? locationFrom;
 @override@JsonKey(name: 'location_to') final  String? locationTo;
 @override@JsonKey(name: 'end') final  String? end;
-@override@JsonKey(name: 'cooling_period_type') final  String? coolingPeriodType;
+@override@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) final  CoolingPeriodMode? coolingPeriodType;
 
 /// Create a copy of BookingOtherDetailsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$BookingOtherDetailsModelCopyWith<$Res> implements $Bookin
   factory _$BookingOtherDetailsModelCopyWith(_BookingOtherDetailsModel value, $Res Function(_BookingOtherDetailsModel) _then) = __$BookingOtherDetailsModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'location_start') String? locationStart,@JsonKey(name: 'location_from') String? locationFrom,@JsonKey(name: 'location_to') String? locationTo,@JsonKey(name: 'end') String? end,@JsonKey(name: 'cooling_period_type') String? coolingPeriodType
+@JsonKey(name: 'location_start') String? locationStart,@JsonKey(name: 'location_from') String? locationFrom,@JsonKey(name: 'location_to') String? locationTo,@JsonKey(name: 'end') String? end,@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? coolingPeriodType
 });
 
 
@@ -279,7 +279,7 @@ as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : location
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,
+as CoolingPeriodMode?,
   ));
 }
 

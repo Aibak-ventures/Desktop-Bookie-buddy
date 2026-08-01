@@ -10,10 +10,13 @@ class ShopDependencies {
   static void register() {
     getIt.registerLazySingleton(() => ShopRemoteDatasource(dio: DioClient.dio));
     getIt.registerLazySingleton<IShopRepository>(
-        () => ShopRepositoryImpl(getIt()));
+      () => ShopRepositoryImpl(getIt()),
+    );
     getIt.registerLazySingleton(
-        () => GetShopsUseCase(getIt<IShopRepository>()));
+      () => GetShopsUseCase(getIt<IShopRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => GetShopServicesUseCase(getIt<IShopRepository>()));
+      () => GetShopServicesUseCase(getIt<IShopRepository>()),
+    );
   }
 }

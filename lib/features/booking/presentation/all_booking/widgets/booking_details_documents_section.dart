@@ -57,7 +57,11 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
 
                 return InkWell(
                   onTap: () => _showDocumentModal(
-                      context, docUrl, index + 1, booking.client.phone1.toString()),
+                    context,
+                    docUrl,
+                    index + 1,
+                    booking.client.phone1.toString(),
+                  ),
                   child: Container(
                     width: 100,
                     height: 100,
@@ -72,13 +76,19 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.picture_as_pdf,
-                                    size: 40, color: Colors.red.shade400),
+                                Icon(
+                                  Icons.picture_as_pdf,
+                                  size: 40,
+                                  color: Colors.red.shade400,
+                                ),
                                 const SizedBox(height: 4),
-                                Text('PDF ${index + 1}',
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.grey.shade700)),
+                                Text(
+                                  'PDF ${index + 1}',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade700,
+                                  ),
+                                ),
                               ],
                             )
                           : Image.network(
@@ -86,17 +96,23 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.image,
-                                      size: 32, color: Colors.grey.shade400),
-                                  const SizedBox(height: 4),
-                                  Text('Doc ${index + 1}',
-                                      style: TextStyle(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.image,
+                                        size: 32,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Doc ${index + 1}',
+                                        style: TextStyle(
                                           fontSize: 10,
-                                          color: Colors.grey.shade600)),
-                                ],
-                              ),
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                             ),
                     ),
                   ),
@@ -110,7 +126,11 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
   }
 
   void _showDocumentModal(
-      BuildContext context, String docUrl, int docNumber, String? phone) {
+    BuildContext context,
+    String docUrl,
+    int docNumber,
+    String? phone,
+  ) {
     final isPdf = docUrl.toLowerCase().endsWith('.pdf');
 
     showDialog(
@@ -129,13 +149,18 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                     ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.picture_as_pdf,
-                              size: 100, color: Colors.red.shade400),
+                          Icon(
+                            Icons.picture_as_pdf,
+                            size: 100,
+                            color: Colors.red.shade400,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             'PDF Document $docNumber',
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 18),
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           const Text(
@@ -148,8 +173,10 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                         onTap: () async {
                           final uri = Uri.parse(docUrl);
                           if (await canLaunchUrl(uri)) {
-                            await launchUrl(uri,
-                                mode: LaunchMode.externalApplication);
+                            await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
                           }
                         },
                         child: InteractiveViewer(
@@ -158,17 +185,22 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) =>
                                 const Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.error,
-                                      size: 64, color: Colors.white54),
-                                  SizedBox(height: 16),
-                                  Text('Failed to load image',
-                                      style: TextStyle(color: Colors.white70)),
-                                ],
-                              ),
-                            ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.error,
+                                        size: 64,
+                                        color: Colors.white54,
+                                      ),
+                                      SizedBox(height: 16),
+                                      Text(
+                                        'Failed to load image',
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                           ),
                         ),
                       ),
@@ -194,36 +226,44 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                                   subtitle: const Text('Share via WhatsApp'),
                                   onTap: () async {
                                     Navigator.of(ctx).pop();
-                                    final encoded =
-                                        Uri.encodeComponent(docUrl);
+                                    final encoded = Uri.encodeComponent(docUrl);
                                     Uri uri;
                                     if (phone != null &&
                                         phone.trim().isNotEmpty) {
                                       final plain = phone.replaceAll(
-                                          RegExp(r"[^0-9+]"), '');
+                                        RegExp(r"[^0-9+]"),
+                                        '',
+                                      );
                                       uri = Uri.parse(
-                                          'https://wa.me/$plain?text=$encoded');
+                                        'https://wa.me/$plain?text=$encoded',
+                                      );
                                     } else {
                                       uri = Uri.parse(
-                                          'https://api.whatsapp.com/send?text=$encoded');
+                                        'https://api.whatsapp.com/send?text=$encoded',
+                                      );
                                     }
                                     if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri,
-                                          mode: LaunchMode.externalApplication);
+                                      await launchUrl(
+                                        uri,
+                                        mode: LaunchMode.externalApplication,
+                                      );
                                     }
                                   },
                                 ),
                                 ListTile(
                                   leading: const Icon(Icons.print),
                                   title: const Text('Print'),
-                                  subtitle:
-                                      const Text('Open document to print'),
+                                  subtitle: const Text(
+                                    'Open document to print',
+                                  ),
                                   onTap: () async {
                                     Navigator.of(ctx).pop();
                                     final uri = Uri.parse(docUrl);
                                     if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri,
-                                          mode: LaunchMode.externalApplication);
+                                      await launchUrl(
+                                        uri,
+                                        mode: LaunchMode.externalApplication,
+                                      );
                                     }
                                   },
                                 ),
@@ -238,8 +278,11 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                           ),
                         );
                       },
-                      icon: const Icon(Icons.download,
-                          color: Colors.white, size: 28),
+                      icon: const Icon(
+                        Icons.download,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.black45,
                         padding: const EdgeInsets.all(12),
@@ -248,8 +291,11 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
                     const SizedBox(width: 8),
                     IconButton(
                       onPressed: () => Navigator.of(dialogContext).pop(),
-                      icon: const Icon(Icons.close,
-                          color: Colors.white, size: 28),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.black45,
                         padding: const EdgeInsets.all(12),

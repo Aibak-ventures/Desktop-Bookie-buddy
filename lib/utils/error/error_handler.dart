@@ -13,10 +13,7 @@ class ErrorHandler {
       return AuthFailure(e.message);
     }
     if (e is NetworkException) {
-      return NetworkFailure(
-        e.message,
-        e.errorCode,
-      );
+      return NetworkFailure(e.message, e.errorCode);
     }
     if (e is BookingException) {
       return BookingFailure(e.message);
@@ -35,15 +32,18 @@ class ErrorHandler {
     switch (dioError.type) {
       case DioExceptionType.connectionTimeout:
         return const DioFailure(
-            'The connection is taking too long. Please try again.');
+          'The connection is taking too long. Please try again.',
+        );
       case DioExceptionType.sendTimeout:
         return const DioFailure(
-            'The request is taking too long to send. Check your internet.');
+          'The request is taking too long to send. Check your internet.',
+        );
       case DioExceptionType.receiveTimeout:
         return const DioFailure('Waiting too long for a response. Try again.');
       case DioExceptionType.badCertificate:
         return const DioFailure(
-            'Secure connection failed. Please contact support.');
+          'Secure connection failed. Please contact support.',
+        );
       case DioExceptionType.badResponse:
         final statusCode = dioError.response?.statusCode;
         final message = _mapStatusCodeToMessage(statusCode);
@@ -52,7 +52,8 @@ class ErrorHandler {
         return const DioFailure('The request was cancelled. Try again.');
       case DioExceptionType.connectionError:
         return const DioFailure(
-            "Couldn't connect to the server. Please check your internet.");
+          "Couldn't connect to the server. Please check your internet.",
+        );
       case DioExceptionType.unknown:
         return const DioFailure('Something went wrong. Please try again.');
     }
