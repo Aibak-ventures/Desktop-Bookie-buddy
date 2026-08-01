@@ -97,7 +97,6 @@ class _BookingsNamespace {
   String get bookingsV5 => BookingsEndpoints.bookingsV5;
   String get desktopList => BookingsEndpoints.desktopList;
   String get addPayment => BookingsEndpoints.addPayment;
-  String addRefund(int bookingId) => BookingsEndpoints.addRefund(bookingId);
   String get updateDetails => BookingsEndpoints.updateDetails;
   String get updateDeliveryStatus => BookingsEndpoints.updateDeliveryStatus;
   String get updateBookingStatus => BookingsEndpoints.updateBookingStatus;
@@ -111,6 +110,17 @@ class _BookingsNamespace {
   String downloadBookingInvoice(int bookingId) =>
       BookingsEndpoints.downloadBookingInvoice(bookingId);
   String clientById(int id) => BookingsEndpoints.clientById(id); // Added
+
+  String addRefund(int bookingId) => BookingsEndpoints.addRefund(bookingId);
+
+  String deleteRefund({required int bookingId, required int refundId}) =>
+      BookingsEndpoints.deleteRefund(bookingId: bookingId, refundId: refundId);
+
+  String updateSecurityRefund(int bookingId) =>
+      BookingsEndpoints.updateSecurityRefund(bookingId);
+
+  String deleteSecurityRefundedPayment({required int refundId}) =>
+      BookingsEndpoints.deleteSecurityRefundedPayment(refundId: refundId);
 }
 
 class _SalesNamespace {

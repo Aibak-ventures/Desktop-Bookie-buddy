@@ -27,9 +27,8 @@ abstract class AllBookingEvent with _$AllBookingEvent {
     required DeliveryStatus deliveryStatus,
   }) = _UpdateDeliveryStatus;
 
-  const factory AllBookingEvent.deleteBooking({
-    required int bookingId,
-  }) = _DeleteBooking;
+  const factory AllBookingEvent.deleteBooking({required int bookingId}) =
+      _DeleteBooking;
 
   const factory AllBookingEvent.markAsCompleted({
     required int bookingId,

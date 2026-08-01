@@ -13,8 +13,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final GetShopServicesUseCase _getShopServices;
 
   ServiceBloc({required GetShopServicesUseCase getShopServices})
-      : _getShopServices = getShopServices,
-        super(const _Loading()) {
+    : _getShopServices = getShopServices,
+      super(const _Loading()) {
     on<_LoadServices>((event, emit) async {
       if (!event.force) {
         if (state is _Loaded) {

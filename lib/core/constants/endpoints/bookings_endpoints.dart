@@ -21,11 +21,19 @@ class BookingsEndpoints {
   static const cancelBooking = '${bookingsV5}cancel-booking/';
 
   // Dynamic methods
-  static String addRefund(int bookingId) => '${bookingsV5}refund/$bookingId/';
   static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
   static String sendBookingInvoice(int bookingId) =>
       '${bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)
   static String downloadBookingInvoice(int bookingId) =>
       '${bookingsV5}send-invoice/$bookingId/'; // Same endpoint for download
   static String clientById(int id) => '${clientsV4}$id/';
+
+  static String addRefund(int bookingId) => '${bookingsV5}refund/$bookingId/';
+  static String deleteRefund({required int bookingId, required int refundId}) =>
+      '${bookingsV5}refund/$bookingId/$refundId/';
+
+  static String updateSecurityRefund(int bookingId) =>
+      '${bookingsV5}security-adjustment/$bookingId/';
+  static String deleteSecurityRefundedPayment({required int refundId}) =>
+      '${bookingsV5}delete-security-adjustment/$refundId/';
 }

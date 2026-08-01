@@ -86,7 +86,7 @@ class BookingSelectedProductsListWidget extends StatelessWidget {
             final rentalDays = !isSales ? calculateRentalDays() : 0;
             final effectiveDaysMultiplier =
                 (!isSales &&
-                        shouldMultiplyByDays(product.variant.mainServiceType))
+                    shouldMultiplyByDays(product.variant.mainServiceType))
                 ? (rentalDays > 0 ? rentalDays : 1)
                 : 1;
 
@@ -100,13 +100,14 @@ class BookingSelectedProductsListWidget extends StatelessWidget {
               inlinePriceController: form.inlinePriceController,
               inlinePriceFocusNode: form.inlinePriceFocusNode,
               quantityController: getQuantityController?.call(product),
-              quantityFocusNode: getQuantityFocusNode != null && getQuantityKey != null 
-                  ? getQuantityFocusNode!(getQuantityKey!(product)) 
+              quantityFocusNode:
+                  getQuantityFocusNode != null && getQuantityKey != null
+                  ? getQuantityFocusNode!(getQuantityKey!(product))
                   : null,
               onDecrement: () => onDecrement(product),
               onIncrement: () => onIncrement(product),
-              onSaveTypedQuantity: onSaveTypedQuantity != null 
-                  ? (value) => onSaveTypedQuantity!(product, value) 
+              onSaveTypedQuantity: onSaveTypedQuantity != null
+                  ? (value) => onSaveTypedQuantity!(product, value)
                   : null,
               onStartEditingPrice: () => onStartEditingPrice(product),
               onSaveEditingPrice: () => onSaveEditingPrice(product),

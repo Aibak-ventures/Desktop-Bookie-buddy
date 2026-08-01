@@ -30,7 +30,8 @@ class CompleteElevatedButton extends StatelessWidget {
 
     final isBookingCompleted =
         booking?.bookingStatus == BookingStatus.completed;
-    final balanceAmount = (booking?.totalAmount ?? 0) -
+    final balanceAmount =
+        (booking?.totalAmount ?? 0) -
         (booking?.paidAmount ?? 0) -
         (booking?.discountAmount ?? 0);
 
@@ -71,15 +72,15 @@ class CompleteElevatedButton extends StatelessWidget {
                 onCancel: () => swipeButtonController?.reset(),
                 onConfirm: () async {
                   context.read<BookingDetailsBloc>().add(
-                        BookingDetailsEvent.updateBookingStatus(
-                          bookingId: booking.id,
-                          bookingStatus: BookingStatus.completed,
-                        ),
-                      );
+                    BookingDetailsEvent.updateBookingStatus(
+                      bookingId: booking.id,
+                      bookingStatus: BookingStatus.completed,
+                    ),
+                  );
 
                   context.read<BookingSelectionCubit>().markModified(
-                        shouldRefresh: true,
-                      );
+                    shouldRefresh: true,
+                  );
                 },
               );
             },

@@ -28,6 +28,7 @@ abstract interface class IBookingRepository {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   });
 
   Future<void> deletePayment(int paymentId);
@@ -92,4 +93,25 @@ abstract interface class IBookingRepository {
   Future<void> sendInvoice(int bookingId, bool sendWhatsApp);
 
   Future<Uint8List> getInvoicePdfBytes(int bookingId);
+
+  //
+  Future<void> addRefund({
+    required int bookingId,
+    required int amount,
+    required int accountId,
+    String? refundReason,
+  });
+
+  //
+  Future<void> deleteRefund({required int bookingId, required int refundId});
+
+  Future<void> updateSecurityRefund({
+    required int bookingId,
+    int? refundAmount,
+    int? deductionAmount,
+    required int accountId,
+    String? note,
+  });
+
+  Future<void> deleteSecurityRefundedPayment({required int refundId});
 }

@@ -111,11 +111,7 @@ class ProductDetailsRightPanel extends StatelessWidget {
             child: TabBarView(
               controller: tabController,
               children: [
-                _buildBookingsList(
-                  context,
-                  bookings,
-                  'No upcoming bookings',
-                ),
+                _buildBookingsList(context, bookings, 'No upcoming bookings'),
                 _buildBookingsList(
                   context,
                   bookings,

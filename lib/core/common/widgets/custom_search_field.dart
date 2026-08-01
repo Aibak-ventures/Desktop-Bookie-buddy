@@ -23,9 +23,7 @@ class CustomSearchField extends StatelessWidget {
   final String hintText;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
-  final void Function(
-    String query,
-  )? onChanged;
+  final void Function(String query)? onChanged;
   final void Function()? suffixFunction;
   final bool isSuffixHidden;
   final FocusNode? focusNode;
@@ -34,55 +32,48 @@ class CustomSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: padding,
-        child: TextField(
-          controller: searchController,
-          onTapOutside: (_) => context.hideKeyboard(),
-          focusNode: focusNode,
-          textInputAction: TextInputAction.search,
-          decoration: InputDecoration(
-            hintText: hintText,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            prefixIcon: Icon(
-              LucideIcons.search500,
-              size: 24.sp,
-            ),
-            // Padding(
-            //   padding: 12.padding, // Adjust as needed
-            //   child: SvgPicture.asset(
-            //     AppIcons.searchSvg,
-            //     height: 20,
-            //     width: 20,
-            //   ),
-            // ),
-            suffixIcon: ValueListenableBuilder<TextEditingValue>(
-              valueListenable: searchController,
-              builder: (context, value, _) {
-                final isEmpty = value.text.trim().isEmpty;
-                return suffixIcon ??
-                    (isEmpty
-                        ? const SizedBox.shrink()
-                        : IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: suffixFunction ?? searchController.clear,
-                          ));
-              },
-            ),
-          ),
-          onChanged: (query) {
-            if (onChanged != null) {
-              debouncer.run(() => onChanged!(query.trim()));
-            }
-          },
-          onSubmitted: (query) {
-            if (onChanged != null) {
-              debouncer.run(
-                () => onChanged!(query.trim()),
-              );
-            }
+    padding: padding,
+    child: TextField(
+      controller: searchController,
+      onTapOutside: (_) => context.hideKeyboard(),
+      focusNode: focusNode,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+        prefixIcon: Icon(LucideIcons.search500, size: 24.sp),
+        // Padding(
+        //   padding: 12.padding, // Adjust as needed
+        //   child: SvgPicture.asset(
+        //     AppIcons.searchSvg,
+        //     height: 20,
+        //     width: 20,
+        //   ),
+        // ),
+        suffixIcon: ValueListenableBuilder<TextEditingValue>(
+          valueListenable: searchController,
+          builder: (context, value, _) {
+            final isEmpty = value.text.trim().isEmpty;
+            return suffixIcon ??
+                (isEmpty
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: suffixFunction ?? searchController.clear,
+                      ));
           },
         ),
-      );
+      ),
+      onChanged: (query) {
+        if (onChanged != null) {
+          debouncer.run(() => onChanged!(query.trim()));
+        }
+      },
+      onSubmitted: (query) {
+        if (onChanged != null) {
+          debouncer.run(() => onChanged!(query.trim()));
+        }
+      },
+    ),
+  );
 }

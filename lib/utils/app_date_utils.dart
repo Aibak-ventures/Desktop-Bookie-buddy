@@ -21,7 +21,7 @@ class AppDateUtils {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     if (month > 12) return months.last;
     if (month < 1) return months.first;

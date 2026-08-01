@@ -87,8 +87,9 @@ class _ImageCropDialogState extends State<ImageCropDialog> {
     final availableHeight = screenSize.height * 0.8 - reservedHeight;
     final availableWidth = screenSize.width * 0.7;
 
-    final maxDisplaySize =
-        availableWidth < availableHeight ? availableWidth : availableHeight;
+    final maxDisplaySize = availableWidth < availableHeight
+        ? availableWidth
+        : availableHeight;
     final displaySize = maxDisplaySize < 300 ? 300.0 : maxDisplaySize;
 
     return Dialog(

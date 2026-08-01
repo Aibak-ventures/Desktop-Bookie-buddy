@@ -1,5 +1,4 @@
-﻿
-import 'dart:developer';
+﻿import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
@@ -7,6 +6,7 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.d
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
@@ -92,8 +92,7 @@ class EditNewBookingScreen extends StatefulWidget {
   });
 
   @override
-  State<EditNewBookingScreen> createState() =>
-      EditNewBookingScreenState();
+  State<EditNewBookingScreen> createState() => EditNewBookingScreenState();
 }
 
 class EditNewBookingScreenState extends State<EditNewBookingScreen> {
@@ -127,6 +126,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final securityAmountController = TextEditingController();
   final discountAmountController = TextEditingController();
   AccountEntity? selectedSecurityAccount;
+  bool isSecurityPaid = true;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   bool isDiscountPercentage = false;
   final _discountTypeNotifier = ValueNotifier<bool>(false);
@@ -214,6 +214,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? _originalClientAddress;
   int? _originalStaffId;
   int? _originalSecurityAmount;
+  bool? _originalIsSecurityPaid;
   int? _originalDiscountAmount;
   List<AdditionalChargesEntity>? _originalAdditionalCharges;
   List<DocumentFileEntity>?
@@ -221,7 +222,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
   int _originalCoolingPeriodDays = 0; // Track original cooling period
-  CoolingPeriodMode _originalCoolingPeriodMode = CoolingPeriodMode.after;
+  CoolingPeriodMode? _originalCoolingPeriodMode;
   int? _originalRentalDays; // Rental days computed from original booking entity
   bool _hasLoadedInitialProducts = false; // Prevent duplicate API calls on init
 
@@ -251,7 +252,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       getProducts: getIt(),
       searchAndFilterProducts: getIt(),
     );
-    _productLoader = BookingProductLoader(selectProductBloc: _selectProductBloc);
+    _productLoader = BookingProductLoader(
+      selectProductBloc: _selectProductBloc,
+    );
 
     // Pre-fill data if editing
     if (widget.bookingDetails != null) {
@@ -290,25 +293,43 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     _removeSearchOverlay();
     for (final f in _overlayItemFocusNodes.values) f.dispose();
     for (final d in <ChangeNotifier>[
-      clientNameController, clientPhone1Controller, clientPhone2Controller,
-      clientAddressController, startLocationController, pickupLocationController,
-      destinationLocationController, staffNameController, advanceAmountController,
-      securityAmountController, discountAmountController, descriptionController,
-      serviceSearchController, runningKilometersController,
-      _clientNameFocusNode, _productSearchFocusNode, _clientPhone1FocusNode,
-      _clientPhone2FocusNode, _clientAddressFocusNode,
-      selectedProductsNotifier, additionalChargesNotifier, documentsNotifier,
-      _selectedSearchTypeIndex, _priceRange, _maxPriceNotifier,
-      _isPriceFilterEnabled, _overlayProducts, _overlayIsLoading,
+      clientNameController,
+      clientPhone1Controller,
+      clientPhone2Controller,
+      clientAddressController,
+      startLocationController,
+      pickupLocationController,
+      destinationLocationController,
+      staffNameController,
+      advanceAmountController,
+      securityAmountController,
+      discountAmountController,
+      descriptionController,
+      serviceSearchController,
+      runningKilometersController,
+      _clientNameFocusNode,
+      _productSearchFocusNode,
+      _clientPhone1FocusNode,
+      _clientPhone2FocusNode,
+      _clientAddressFocusNode,
+      selectedProductsNotifier,
+      additionalChargesNotifier,
+      documentsNotifier,
+      _selectedSearchTypeIndex,
+      _priceRange,
+      _maxPriceNotifier,
+      _isPriceFilterEnabled,
+      _overlayProducts,
+      _overlayIsLoading,
       _discountTypeNotifier,
-    ]) d.dispose();
+    ])
+      d.dispose();
     _clientPhone1FieldController.dispose();
     _clientPhone2FieldController.dispose();
     _selectProductBloc.close();
     _editBookingCubit.close();
     super.dispose();
   }
-
 
   /// Validates client details and continues to next step if valid
   void _validateAndContinue() {
@@ -375,7 +396,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
         if (!mounted) return;
         context.showSnackBar(
-          isBooking ? 'Booking updated successfully!' : 'Sale updated successfully!',
+          isBooking
+              ? 'Booking updated successfully!'
+              : 'Sale updated successfully!',
         );
         if (widget.onClose != null) {
           widget.onClose!();
@@ -400,43 +423,44 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       child: BlocListener<EditBookingCubit, EditBookingState>(
         listener: _handleEditBookingState,
         child: PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        await _handleBackNavigation();
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F6FA),
-        body: Container(
-          height: screenHeight,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                // Edit booking app bar
-                EditBookingAppBar(
-                  onSave: _handleSaveBooking,
-                  displayId:
-                      widget.bookingDetails?.invoiceId ??
-                      widget.saleDetails?.invoiceId ??
-                      '${widget.bookingId ?? widget.bookingDetails?.id ?? widget.saleDetails?.id ?? 0}',
-                  bookingType: selectedBookingType.name,
-                  onBack: _handleBackNavigation,
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (didPop) return;
+            await _handleBackNavigation();
+          },
+          child: Scaffold(
+            backgroundColor: const Color(0xFFF5F6FA),
+            body: Container(
+              height: screenHeight,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Edit booking app bar
+                    EditBookingAppBar(
+                      onSave: _handleSaveBooking,
+                      displayId:
+                          widget.bookingDetails?.invoiceId ??
+                          widget.saleDetails?.invoiceId ??
+                          '${widget.bookingId ?? widget.bookingDetails?.id ?? widget.saleDetails?.id ?? 0}',
+                      bookingType: selectedBookingType.name,
+                      onBack: _handleBackNavigation,
+                    ),
+                    // Main content - no scrolling
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                        child: _buildMainContent(),
+                      ),
+                    ),
+                  ],
                 ),
-                // Main content - no scrolling
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: _buildMainContent(),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-        ),
       ),
-    ));
+    );
   }
 
   Widget _buildMainContent() {
@@ -498,8 +522,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Future<void> _selectTime({required bool isPickup}) async {
-    final initialTime =
-        isPickup ? (pickupTime ?? TimeOfDay.now()) : (returnTime ?? TimeOfDay.now());
+    final initialTime = isPickup
+        ? (pickupTime ?? TimeOfDay.now())
+        : (returnTime ?? TimeOfDay.now());
     final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
@@ -568,8 +593,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
     final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
       returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: returnDate,
+      returnTime: returnTime,
       mode: coolingPeriodMode,
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
@@ -582,8 +621,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             returnDate: effectiveReturnDate,
             variantIds: variantIds,
             bookingId: widget.bookingId, // Pass booking_id in edit mode
-            pickupTime: pickupTime,
-            returnTime: returnTime,
+            pickupTime: effectivePickupTime,
+            returnTime: effectiveReturnTime,
           );
 
       if (notFoundIds.isNotEmpty && mounted) {
@@ -624,7 +663,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     // Fallback: if calculation returns 1 (e.g., because screen-state pickupDate
     // is incorrect when booking.pickupDate is null from the API), use the
     // original booking entity's dates for a more accurate computation.
-    if ((result <= 1) && _originalRentalDays != null && _originalRentalDays! > 1) {
+    if ((result <= 1) &&
+        _originalRentalDays != null &&
+        _originalRentalDays! > 1) {
       return _originalRentalDays!;
     }
     return result;
@@ -654,15 +695,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     double additionalCharges = 0,
     double securityAmount = 0,
     double discountAmount = 0,
-  }) => (_originalBooking?.appliedTaxes ??
-          widget.saleDetails?.appliedTaxes ??
-          const [])
-      .calculateTaxSummary(
-    productTotal: productTotal,
-    additionalCharges: additionalCharges,
-    securityAmount: securityAmount,
-    discountAmount: discountAmount,
-  );
+  }) =>
+      (_originalBooking?.appliedTaxes ??
+              widget.saleDetails?.appliedTaxes ??
+              const [])
+          .calculateTaxSummary(
+            productTotal: productTotal,
+            additionalCharges: additionalCharges,
+            securityAmount: securityAmount,
+            discountAmount: discountAmount,
+          );
 
   Widget _buildSummaryBreakdownCard() {
     return BookingAmountSummary(
@@ -673,6 +715,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSecurityPaid: isSecurityPaid,
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
@@ -690,6 +733,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
       securityMethodLabel: selectedSecurityAccount?.accountName ?? 'Cash',
+      isSecurityPaid: isSecurityPaid,
       isSales: selectedBookingType == BookingType.sales,
       calculateRentalDays: _calculateRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
@@ -703,13 +747,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     );
   }
 
-  void _addAdditionalCharge() =>
-      AdditionalChargesManager.showAddChargeDialog(
-          context, additionalChargesNotifier);
+  void _addAdditionalCharge() => AdditionalChargesManager.showAddChargeDialog(
+    context,
+    additionalChargesNotifier,
+  );
 
   void _removeCharge(AdditionalChargesEntity charge) =>
       AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
-
 
   Widget _buildDateSelectionSection() {
     final isSales = selectedBookingType == BookingType.sales;
@@ -796,10 +840,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 ),
 
                 const SizedBox(width: 24),
-                Expanded(
-                  flex: 2,
-                  child: _buildCoolingPeriodSection(),
-                ),
+                Expanded(flex: 2, child: _buildCoolingPeriodSection()),
               ],
             ),
         ],
@@ -1062,7 +1103,9 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
           BookingPhonePopulator.setPhoneFieldValue(
             _clientPhone2FieldController,
             clientPhone2Controller,
-            phoneNumber: (client.phone2 ?? 0) > 0 ? client.phone2.toString() : null,
+            phoneNumber: (client.phone2 ?? 0) > 0
+                ? client.phone2.toString()
+                : null,
             e164: client.phone2E164,
           );
           selectedClientId = client.id;
@@ -1288,10 +1331,38 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   AccountSelectionField(
                     selectedAccount: selectedSecurityAccount,
                     initialAccountId: widget.bookingDetails?.securityAccountId,
-                    onChanged: (account) => rebuild(() => selectedSecurityAccount = account),
+                    onChanged: (account) =>
+                        rebuild(() => selectedSecurityAccount = account),
                     label: 'Security Payment Option',
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: Checkbox(
+                          value: isSecurityPaid,
+                          onChanged: (v) =>
+                              rebuild(() => isSecurityPaid = v ?? false),
+                          activeColor: AppColors.purple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Security deposit paid',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                          fontFamily: 'Inter',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
                 ],
               );
             }
@@ -1347,8 +1418,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 final total = _getDiscountProductBase();
                 if (input > 0 && total > 0) {
                   if (switchToPercent) {
-                    final pct =
-                        (input / total * 100).round().clamp(0, 100);
+                    final pct = (input / total * 100).round().clamp(0, 100);
                     discountAmountController.text = pct.toString();
                   } else {
                     final amount = (total * input / 100).round();

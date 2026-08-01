@@ -4,12 +4,13 @@ class ChangeAccountPasswordUseCase {
   final IAuthRepository _repository;
   ChangeAccountPasswordUseCase(this._repository);
 
-  Future<void> call(
-          {required String oldPassword,
-          required String newPassword,
-          required bool logoutFromAllDevices}) =>
-      _repository.changeAccountPassword(
-          oldPassword: oldPassword,
-          newPassword: newPassword,
-          logoutFromAllDevices: logoutFromAllDevices);
+  Future<void> call({
+    required String oldPassword,
+    required String newPassword,
+    required bool logoutFromAllDevices,
+  }) => _repository.changeAccountPassword(
+    oldPassword: oldPassword,
+    newPassword: newPassword,
+    logoutFromAllDevices: logoutFromAllDevices,
+  );
 }

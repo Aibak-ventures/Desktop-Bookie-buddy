@@ -50,8 +50,9 @@ class ClientRepositoryImpl implements IClientRepository {
         () => _datasource.getClientById(clientId),
       );
       if (response.status.isSuccess) {
-        return ClientModel.fromJson(response.data as Map<String, dynamic>)
-            .toEntity();
+        return ClientModel.fromJson(
+          response.data as Map<String, dynamic>,
+        ).toEntity();
       }
       log('Failed to fetch client by id: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
@@ -71,8 +72,9 @@ class ClientRepositoryImpl implements IClientRepository {
         () => _datasource.addClient(ClientRequestModel.fromEntity(client)),
       );
       if (response.status.isSuccess) {
-        return ClientModel.fromJson(response.data as Map<String, dynamic>)
-            .toEntity();
+        return ClientModel.fromJson(
+          response.data as Map<String, dynamic>,
+        ).toEntity();
       } else if (response.status.isValidationError &&
           response.devMessage is Map<String, dynamic> &&
           allowExisting) {
@@ -82,8 +84,9 @@ class ClientRepositoryImpl implements IClientRepository {
           log(
             'Client already exists, returning existing client data from api $clientData',
           );
-          return ClientModel.fromJson(clientData as Map<String, dynamic>)
-              .toEntity();
+          return ClientModel.fromJson(
+            clientData as Map<String, dynamic>,
+          ).toEntity();
         }
       }
       log('Failed to add client: ${response.devMessage}');
@@ -101,8 +104,9 @@ class ClientRepositoryImpl implements IClientRepository {
         () => _datasource.updateClient(ClientRequestModel.fromEntity(client)),
       );
       if (response.status.isSuccess) {
-        return ClientModel.fromJson(response.data as Map<String, dynamic>)
-            .toEntity();
+        return ClientModel.fromJson(
+          response.data as Map<String, dynamic>,
+        ).toEntity();
       }
       log('Failed to update client: ${response.devMessage}');
       throw response.message ?? 'Failed to complete operation';
@@ -115,8 +119,9 @@ class ClientRepositoryImpl implements IClientRepository {
   @override
   Future<void> deleteClient(int clientId) async {
     try {
-      final response =
-          await safeApiCall(() => _datasource.deleteClient(clientId));
+      final response = await safeApiCall(
+        () => _datasource.deleteClient(clientId),
+      );
       if (!response.status.isSuccess) {
         log('Failed to delete client: ${response.devMessage}');
         throw response.message ?? 'Failed to complete operation';

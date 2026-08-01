@@ -87,6 +87,23 @@ extension StringXDateFormat on String {
     }
   }
 
+  /// Appends [pickupTime] to this formatted date string, defaulting to
+  /// 00:00:00 (start of day) when the user hasn't explicitly picked a
+  /// pickup time. Single source of truth for the pickup-side default used
+  /// across every booking submission payload.
+  String appendPickupTime(TimeOfDay? pickupTime) => appendTimeToDate(
+    time: pickupTime,
+    time24HourAsString: pickupTime == null ? '00:00:00' : null,
+  );
+
+  /// Appends [returnTime] to this formatted date string, defaulting to
+  /// 23:59:00 (end of day) when the user hasn't explicitly picked a return
+  /// time.
+  String appendReturnTime(TimeOfDay? returnTime) => appendTimeToDate(
+    time: returnTime,
+    time24HourAsString: returnTime == null ? '23:59:00' : null,
+  );
+
   /// Extracts and formats time if needed (supports both 24hr and 12hr)
   String formatToUiTime({bool is24Hour = false}) {
     try {
@@ -187,8 +204,9 @@ extension StringXDateFormat on String {
       final dateTime = parseToDateTime();
       final today = DateTime.now();
       final timeFormat = is24Hour ? 'HH:mm' : 'h:mma';
-      final formattedTime =
-          DateFormat(timeFormat).format(dateTime).toLowerCase();
+      final formattedTime = DateFormat(
+        timeFormat,
+      ).format(dateTime).toLowerCase();
 
       if (DateUtils.isSameDay(dateTime, today)) {
         return 'Today, $formattedTime';
@@ -413,5 +431,4 @@ extension StringColorXNullable on String? {
   //   final intVal = int.parse(hex, radix: 16);
   //   return Color(intVal);
   // }
-
 }

@@ -28,19 +28,29 @@ class AppBorders {
   // ---------------------------------------------------------------------------
 
   /// For text fields
-  static const BorderRadius inputBorderRadius = BorderRadius.all(Radius.circular(inputRadius));
+  static const BorderRadius inputBorderRadius = BorderRadius.all(
+    Radius.circular(inputRadius),
+  );
 
   /// For small elements (thumbnails, quantity controls)
-  static const BorderRadius smallBorderRadius = BorderRadius.all(Radius.circular(smallRadius));
+  static const BorderRadius smallBorderRadius = BorderRadius.all(
+    Radius.circular(smallRadius),
+  );
 
   /// For buttons and chips
-  static const BorderRadius buttonBorderRadius = BorderRadius.all(Radius.circular(buttonRadius));
+  static const BorderRadius buttonBorderRadius = BorderRadius.all(
+    Radius.circular(buttonRadius),
+  );
 
   /// For section containers and panels
-  static const BorderRadius containerBorderRadius = BorderRadius.all(Radius.circular(containerRadius));
+  static const BorderRadius containerBorderRadius = BorderRadius.all(
+    Radius.circular(containerRadius),
+  );
 
   /// For primary cards
-  static const BorderRadius cardBorderRadius = BorderRadius.all(Radius.circular(cardRadius));
+  static const BorderRadius cardBorderRadius = BorderRadius.all(
+    Radius.circular(cardRadius),
+  );
 
   /// Top-only rounded — for bottom sheets or stacked cards
   static const BorderRadius topRoundedBorderRadius = BorderRadius.only(

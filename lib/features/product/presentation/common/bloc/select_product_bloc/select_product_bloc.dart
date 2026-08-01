@@ -23,10 +23,10 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     required GetAvailableProductsPaginatedUseCase getAvailableProducts,
     required GetProductsPaginatedUseCase getProducts,
     required SearchAndFilterProductsUseCase searchAndFilterProducts,
-  })  : _getAvailableProducts = getAvailableProducts,
-        _getProducts = getProducts,
-        _searchAndFilterProducts = searchAndFilterProducts,
-        super(const _Loading()) {
+  }) : _getAvailableProducts = getAvailableProducts,
+       _getProducts = getProducts,
+       _searchAndFilterProducts = searchAndFilterProducts,
+       super(const _Loading()) {
     on<_LoadProducts>(_onLoadProducts);
     on<_LoadNextPageProducts>(
       _onLoadNextPageProducts,
@@ -135,7 +135,9 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
     Emitter<SelectProductState> emit,
   ) async {
     emit(const _Loading());
-    log('_onSearchProducts -> query: ${event.query}, type: ${event.type}, useAvailable: ${event.useAvailableProductsApi}');
+    log(
+      '_onSearchProducts -> query: ${event.query}, type: ${event.type}, useAvailable: ${event.useAvailableProductsApi}',
+    );
 
     try {
       late final PaginationModel<ProductEntity> result;
@@ -156,7 +158,9 @@ class SelectProductBloc extends Bloc<SelectProductEvent, SelectProductState> {
           bookingId: event.bookingId,
           variantIds: event.variantIds,
         );
-        log('_onSearchProducts -> fetched ${result.data.length} products from repo (useAvailable=true)');
+        log(
+          '_onSearchProducts -> fetched ${result.data.length} products from repo (useAvailable=true)',
+        );
       } else {
         result = await _searchAndFilterProducts(
           serviceId: serviceId,

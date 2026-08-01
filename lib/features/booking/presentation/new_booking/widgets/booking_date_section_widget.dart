@@ -126,7 +126,8 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
 
     if (picked != null) {
       if (isPickup) {
-        if (pickupDate.isDateToday && BookingFormValidator.isTimeInPast(picked)) {
+        if (pickupDate.isDateToday &&
+            BookingFormValidator.isTimeInPast(picked)) {
           _showTimeError('Pickup time cannot be in the past');
           return;
         }
@@ -149,7 +150,8 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
 
         _loadProductsForService(selectedServiceId);
       } else {
-        if (returnDate.isDateToday && BookingFormValidator.isTimeInPast(picked)) {
+        if (returnDate.isDateToday &&
+            BookingFormValidator.isTimeInPast(picked)) {
           _showTimeError('Return time cannot be in the past');
           return;
         }
@@ -349,7 +351,9 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                                 _searchAllProductsForOverlay();
                             },
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
@@ -376,8 +380,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                           focusNode: _coolingPeriodFocusNode,
                           onKeyEvent: (_, event) {
                             if (event is KeyDownEvent &&
-                                (event.logicalKey ==
-                                        LogicalKeyboardKey.enter ||
+                                (event.logicalKey == LogicalKeyboardKey.enter ||
                                     event.logicalKey ==
                                         LogicalKeyboardKey.numpadEnter)) {
                               _searchAllProductsForOverlay();
@@ -403,8 +406,9 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                                   9,
                                   10,
                                 };
-                                final hasCustomValue =
-                                    !standardValues.contains(currentDays);
+                                final hasCustomValue = !standardValues.contains(
+                                  currentDays,
+                                );
                                 return DropdownButton<int>(
                                   value: currentDays,
                                   isExpanded: true,
@@ -440,9 +444,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                                   ],
                                   onChanged: (val) {
                                     if (val != null) {
-                                      rebuild(
-                                        () => coolingPeriodDays = val,
-                                      );
+                                      rebuild(() => coolingPeriodDays = val);
                                       _updateCoolingPeriod();
                                       _loadProductsForService(
                                         selectedServiceId,
@@ -551,5 +553,4 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
       ],
     );
   }
-
 }

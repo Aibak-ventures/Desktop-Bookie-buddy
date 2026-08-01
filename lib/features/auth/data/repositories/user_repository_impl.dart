@@ -24,10 +24,10 @@ class UserRepositoryImpl implements IUserRepository {
     required SharedPreferenceHelper prefs,
     required IAuthRepository authRepository,
     required SessionStorage sessionStorage,
-  })  : _datasource = datasource,
-        _prefs = prefs,
-        _authRepository = authRepository,
-        _sessionStorage = sessionStorage;
+  }) : _datasource = datasource,
+       _prefs = prefs,
+       _authRepository = authRepository,
+       _sessionStorage = sessionStorage;
 
   @override
   Future<UserEntity> fetchUserData() async {
@@ -123,7 +123,9 @@ class UserRepositoryImpl implements IUserRepository {
         ),
       );
       if (response.status.isSuccess) return;
-      log('Failed to update FCM token: ${response.devMessage ?? response.message}');
+      log(
+        'Failed to update FCM token: ${response.devMessage ?? response.message}',
+      );
       throw response.message ?? 'Failed to update FCM token';
     } catch (e, stack) {
       log('Error updating FCM token: $e', stackTrace: stack);

@@ -11,9 +11,6 @@ class AddClientUseCase {
     ClientRequestEntity client, {
     bool allowExisting = true,
   }) async {
-    return await _repository.addClient(
-      client,
-      allowExisting: allowExisting,
-    );
+    return await _repository.addClient(client, allowExisting: allowExisting);
   }
 }

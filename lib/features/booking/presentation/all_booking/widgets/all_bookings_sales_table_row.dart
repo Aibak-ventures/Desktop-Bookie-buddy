@@ -38,34 +38,78 @@ class AllBookingsSalesTableRow extends StatelessWidget {
                 SizedBox(
                   width: 100,
                   child: Text(
-                    sale.shopSaleId ?? 'SL${sale.id.toString().padLeft(5, '0')}',
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                    sale.shopSaleId ??
+                        'SL${sale.id.toString().padLeft(5, '0')}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 12),
-                SizedBox(width: 95, child: Text(sale.saleDate, style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis)),
+                SizedBox(
+                  width: 95,
+                  child: Text(
+                    sale.saleDate,
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 12),
                 SizedBox(
                   width: 110,
                   child: Text(
                     sale.clientPhone?.toString() ?? 'N/A',
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(sale.products, style: const TextStyle(fontSize: 12, color: Colors.black), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    sale.products,
+                    style: const TextStyle(fontSize: 12, color: Colors.black),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(width: 12),
-                SizedBox(width: 80, child: Text('₹${sale.totalAmount}', style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis)),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    '₹${sale.totalAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                SizedBox(width: 70, child: Text('₹${sale.paidAmount}', style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis)),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${sale.paidAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                SizedBox(width: 70, child: Text('₹${sale.discountAmount}', style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis)),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹${sale.discountAmount}',
+                    style: const TextStyle(fontSize: 13),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 const SizedBox(width: 10),
-                const Icon(Icons.chevron_right, size: 18, color: Colors.blueAccent),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 18,
+                  color: Colors.blueAccent,
+                ),
               ],
             ),
           ),

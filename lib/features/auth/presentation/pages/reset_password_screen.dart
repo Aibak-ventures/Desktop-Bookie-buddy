@@ -38,9 +38,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Account Password'),
-      ),
+      appBar: AppBar(title: const Text('Account Password')),
       body: SingleChildScrollView(
         child: Padding(
           padding: context.isMobile ? 20.padding : (40, 20).padding,
@@ -103,9 +101,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: _oldPasswordController,
                   hintText: 'Old Password',
                   obscureText: _obscureOldPassword,
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                  ),
+                  prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureOldPassword
@@ -125,9 +121,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: _passwordController,
                   hintText: 'New Password',
                   obscureText: _obscurePassword,
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                  ),
+                  prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
@@ -147,9 +141,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: _confirmPasswordController,
                   hintText: 'Confirm Password',
                   obscureText: _obscureConfirmPassword,
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                  ),
+                  prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureConfirmPassword
@@ -194,10 +186,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         context.pushAndRemoveUntil(const BottomBarScreen());
                         context.showSnackBar('Password reset successful!');
                       },
-                      error: (error) => context.showSnackBar(
-                        error,
-                        isError: true,
-                      ),
+                      error: (error) =>
+                          context.showSnackBar(error, isError: true),
                     );
                   },
                   builder: (context, state) {
@@ -212,13 +202,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       onPressed: () async {
                         if (_formKey.currentState?.validate() ?? false) {
                           context.read<ResetPasswordBloc>().add(
-                                ResetPasswordEvent.resetPassword(
-                                  oldPassword:
-                                      _oldPasswordController.text.trim(),
-                                  newPassword: _passwordController.text.trim(),
-                                  logoutFromAllDevices: _logoutFromAllDevices,
-                                ),
-                              );
+                            ResetPasswordEvent.resetPassword(
+                              oldPassword: _oldPasswordController.text.trim(),
+                              newPassword: _passwordController.text.trim(),
+                              logoutFromAllDevices: _logoutFromAllDevices,
+                            ),
+                          );
                         }
                       },
                       text: 'Reset Password',

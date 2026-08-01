@@ -19,9 +19,9 @@ abstract class StaffDetailsModel with _$StaffDetailsModel {
 
 extension StaffDetailsModelMapper on StaffDetailsModel {
   StaffDetailsEntity toEntity() => StaffDetailsEntity(
-        id: id,
-        name: name,
-        phoneNumber: phoneNumber,
-        createdAt: createdAt,
-      );
+    id: id,
+    name: name,
+    phoneNumber: phoneNumber,
+    createdAt: createdAt,
+  );
 }

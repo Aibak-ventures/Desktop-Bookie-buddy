@@ -82,7 +82,9 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
     final product = widget.product;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final services = _uniqueServices(context.read<ServiceBloc>().getServices());
+      final services = _uniqueServices(
+        context.read<ServiceBloc>().getServices(),
+      );
       if (services.isNotEmpty && !_servicesLoaded) {
         setState(() {
           selectedServiceId = product?.mainServiceType != null
@@ -175,8 +177,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
                 ),
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey.shade200)),
+                border: Border(bottom: BorderSide(color: Colors.grey.shade200)),
               ),
               child: Row(
                 children: [
@@ -270,8 +271,7 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
                             : null;
 
                         return Container(
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey.shade300),
                             borderRadius: BorderRadius.circular(8),

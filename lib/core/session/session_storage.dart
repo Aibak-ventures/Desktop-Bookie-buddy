@@ -40,8 +40,9 @@ class SessionStorage {
   }
 
   Future<void> loadTokenExpiry() async {
-    final expiryString =
-        _preferences.instance.getString(AppConstants.tokenExpiryKey);
+    final expiryString = _preferences.instance.getString(
+      AppConstants.tokenExpiryKey,
+    );
     if (expiryString != null) {
       final parsed = DateTime.tryParse(expiryString);
       if (parsed != null) {
@@ -52,15 +53,15 @@ class SessionStorage {
   }
 
   /// Save refresh token
-  Future<void> saveTokens({
-    String? accessToken,
-    String? refreshToken,
-  }) async {
+  Future<void> saveTokens({String? accessToken, String? refreshToken}) async {
     try {
       if (accessToken != null) {
-        await _preferences.instance
-            .setString(AppConstants.accessTokenKey, accessToken);
-        final expiryTime = getTokenExpiry(accessToken) ??
+        await _preferences.instance.setString(
+          AppConstants.accessTokenKey,
+          accessToken,
+        );
+        final expiryTime =
+            getTokenExpiry(accessToken) ??
             DateTime.now().add(const Duration(minutes: 30));
         await setTokenExpiry(expiryTime);
       }

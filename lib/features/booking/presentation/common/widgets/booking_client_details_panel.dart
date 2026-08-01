@@ -43,8 +43,7 @@ class BookingClientDetailsPanel extends StatefulWidget {
       _BookingClientDetailsPanelState();
 }
 
-class _BookingClientDetailsPanelState
-    extends State<BookingClientDetailsPanel>
+class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
     with BookingFormMixin<BookingClientDetailsPanel> {
   static const double _fieldSpacing = 8.0;
 
@@ -84,8 +83,9 @@ class _BookingClientDetailsPanelState
                         if (state.selectedClient != null) {
                           final client = state.selectedClient!;
                           form.clientNameController.text = client.name;
-                          final phone1 =
-                              extractPhoneFromE164(client.phone1E164);
+                          final phone1 = extractPhoneFromE164(
+                            client.phone1E164,
+                          );
                           if (phone1.isNotEmpty) {
                             cachePhoneE164(
                               rawPhoneNumber: phone1,
@@ -94,8 +94,9 @@ class _BookingClientDetailsPanelState
                             form.clientPhone1Controller.text = phone1;
                           }
                           if (client.phone2E164 != null) {
-                            final phone2 =
-                                extractPhoneFromE164(client.phone2E164);
+                            final phone2 = extractPhoneFromE164(
+                              client.phone2E164,
+                            );
                             if (phone2.isNotEmpty) {
                               cachePhoneE164(
                                 rawPhoneNumber: phone2,
@@ -292,8 +293,9 @@ class _BookingClientDetailsPanelState
               final discountAmount =
                   form.discountAmountController.text.trim().toIntOrNull() ?? 0;
 
-              final rentalDays =
-                  !widget.isSales ? widget.calculateRentalDays() : 1;
+              final rentalDays = !widget.isSales
+                  ? widget.calculateRentalDays()
+                  : 1;
               final productTotal = products.fold<int>(0, (sum, product) {
                 final daysMultiplier =
                     (!widget.isSales &&

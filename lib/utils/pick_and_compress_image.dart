@@ -57,10 +57,7 @@ Future<File?> pickAndCompressImage({
 // This will run in a separate isolate
 /// Wrapper to call from main isolate
 Future<Uint8List> compressImage(Uint8List originalBytes) async {
-  return await compute(
-    compressImageLogic,
-    originalBytes,
-  );
+  return await compute(compressImageLogic, originalBytes);
 }
 
 Uint8List compressImageLogic(
@@ -73,15 +70,17 @@ Uint8List compressImageLogic(
   if (decodedImage == null) throw Exception('Failed to decode image');
 
   final resizedImage = img.copyResize(decodedImage, width: width);
-  var compressedBytes =
-      Uint8List.fromList(img.encodeJpg(resizedImage, quality: quality));
+  var compressedBytes = Uint8List.fromList(
+    img.encodeJpg(resizedImage, quality: quality),
+  );
 
   // Loop to reduce quality until size is below maxSize
   while (compressedBytes.lengthInBytes / (1024 * 1024) > maxSizeInMB &&
       quality > 10) {
     quality -= 10;
-    compressedBytes =
-        Uint8List.fromList(img.encodeJpg(resizedImage, quality: quality));
+    compressedBytes = Uint8List.fromList(
+      img.encodeJpg(resizedImage, quality: quality),
+    );
   }
 
   return compressedBytes;

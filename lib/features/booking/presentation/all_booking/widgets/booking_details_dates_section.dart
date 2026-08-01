@@ -1,5 +1,4 @@
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -65,10 +64,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(booking.bookedDate),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),
@@ -96,7 +92,7 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      'Available from',
+                      'Cooling Period',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey,
@@ -105,11 +101,8 @@ class BookingDetailsDatesSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatAvailableFromDate(booking),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
+                      _formatDate(booking.coolingPeriodDate),
+                      style: const TextStyle(fontSize: 12, color: Colors.black),
                     ),
                   ],
                 ),
@@ -144,8 +137,9 @@ class BookingDetailsDatesSection extends StatelessWidget {
 
       if (isEndOfDay || isStartOfDay) return dateLabel;
 
-      final hour12 =
-          date.hour == 0 ? 12 : (date.hour > 12 ? date.hour - 12 : date.hour);
+      final hour12 = date.hour == 0
+          ? 12
+          : (date.hour > 12 ? date.hour - 12 : date.hour);
       final period = date.hour >= 12 ? 'PM' : 'AM';
       final time =
           '${hour12.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')} $period';
@@ -161,28 +155,6 @@ class BookingDetailsDatesSection extends StatelessWidget {
       return dateStr.formatToUiDate();
     } catch (e) {
       return dateStr;
-    }
-  }
-
-  String _formatAvailableFromDate(BookingDetailsEntity booking) {
-    final coolingDateStr = booking.coolingPeriodDate;
-    if (coolingDateStr == null || coolingDateStr.isEmpty) {
-      if (booking.returnDate.isNotEmpty) {
-        try {
-          final returnDate = booking.returnDate.parseToDateTime();
-          return returnDate.add(const Duration(days: 1)).format();
-        } catch (e) {
-          return 'N/A';
-        }
-      }
-      return 'N/A';
-    }
-    try {
-      final coolingDate = coolingDateStr.parseToDateTime();
-      final availableDate = coolingDate.add(const Duration(days: 1));
-      return availableDate.format();
-    } catch (e) {
-      return coolingDateStr;
     }
   }
 }

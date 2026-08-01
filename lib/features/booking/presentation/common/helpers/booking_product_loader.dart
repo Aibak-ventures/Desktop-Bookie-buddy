@@ -31,8 +31,8 @@ class BookingProductLoader {
   final Debouncer _debouncer;
 
   BookingProductLoader({required SelectProductBloc selectProductBloc})
-      : _bloc = selectProductBloc,
-        _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
+    : _bloc = selectProductBloc,
+      _debouncer = Debouncer(delay: const Duration(milliseconds: 300));
 
   /// Schedules a debounced product-list load.
   ///
@@ -94,8 +94,22 @@ class BookingProductLoader {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
     final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
       returnDate: returnDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: returnDate,
+      returnTime: returnTime,
       mode: coolingPeriodMode,
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
@@ -115,8 +129,8 @@ class BookingProductLoader {
         serviceId: serviceIdToUse,
         pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
-        pickupTime: pickupTime,
-        returnTime: returnTime,
+        pickupTime: effectivePickupTime,
+        returnTime: effectiveReturnTime,
         useAvailableProductsApi: !isSales,
         isSales: isSales,
         bookingId: bookingId,

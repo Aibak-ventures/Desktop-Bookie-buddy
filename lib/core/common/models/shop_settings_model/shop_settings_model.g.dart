@@ -20,10 +20,11 @@ _ShopSettingsModel _$ShopSettingsModelFromJson(Map<String, dynamic> json) =>
       searchClient: json['search_client'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$ShopSettingsModelToJson(_ShopSettingsModel instance) =>
-    <String, dynamic>{
-      'cooling_days': instance.coolingPeriodDuration,
-      'cooling_period_mode': instance.coolingPeriodMode,
-      'default_action': instance.addButtonDefaultAction,
-      'search_client': instance.searchClient,
-    };
+Map<String, dynamic> _$ShopSettingsModelToJson(
+  _ShopSettingsModel instance,
+) => <String, dynamic>{
+  'cooling_days': instance.coolingPeriodDuration,
+  'cooling_period_mode': CoolingPeriodMode.toJson(instance.coolingPeriodMode),
+  'default_action': instance.addButtonDefaultAction,
+  'search_client': instance.searchClient,
+};

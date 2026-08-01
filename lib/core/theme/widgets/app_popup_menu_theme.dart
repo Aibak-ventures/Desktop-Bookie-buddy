@@ -6,8 +6,6 @@ class AppPopupMenuTheme {
   static final lightTheme = PopupMenuThemeData(
     color: AppColors.white,
     elevation: 1.5,
-    shape: RoundedRectangleBorder(
-      borderRadius: 5.radiusBorder,
-    ),
+    shape: RoundedRectangleBorder(borderRadius: 5.radiusBorder),
   );
 }

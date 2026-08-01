@@ -21,7 +21,11 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
     emit(_Selected(selected));
   }
 
-  void addSelectedProduct(ProductInfoEntity product, int? amount, int quantity) {
+  void addSelectedProduct(
+    ProductInfoEntity product,
+    int? amount,
+    int quantity,
+  ) {
     log(
       'SelectedProductsCubit: Adding product - ${product.name}, amount: $amount, quantity: $quantity',
     );

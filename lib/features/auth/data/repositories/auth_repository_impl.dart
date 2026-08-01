@@ -16,9 +16,9 @@ class AuthRepositoryImpl implements IAuthRepository {
     required AuthRemoteDatasource datasource,
     required SharedPreferenceHelper prefs,
     required SessionStorage sessionStorage,
-  })  : _datasource = datasource,
-        _prefs = prefs,
-        _sessionStorage = sessionStorage;
+  }) : _datasource = datasource,
+       _prefs = prefs,
+       _sessionStorage = sessionStorage;
 
   @override
   Future<void> login({
@@ -100,10 +100,11 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<void> changeAccountPassword(
-      {required String oldPassword,
-      required String newPassword,
-      bool logoutFromAllDevices = false}) async {
+  Future<void> changeAccountPassword({
+    required String oldPassword,
+    required String newPassword,
+    bool logoutFromAllDevices = false,
+  }) async {
     try {
       await _datasource.changeAccountPassword(
         oldPassword: oldPassword,
@@ -116,8 +117,10 @@ class AuthRepositoryImpl implements IAuthRepository {
   }
 
   @override
-  Future<void> changeSecretPassword(
-      {required String oldPassword, required String newPassword}) async {
+  Future<void> changeSecretPassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
     try {
       await _datasource.changeSecretPassword(
         oldPassword: oldPassword,

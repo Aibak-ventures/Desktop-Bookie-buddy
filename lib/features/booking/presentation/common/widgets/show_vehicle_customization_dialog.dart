@@ -12,7 +12,8 @@ Future<MeasurementValueEntity?> showVehicleCustomizationDialog(
   MeasurementValueEntity? initialValue,
 ) {
   final controller = TextEditingController(
-      text: initialValue?.value.replaceAll('Km', '').trim());
+    text: initialValue?.value.replaceAll('Km', '').trim(),
+  );
   return showDialog<MeasurementValueEntity>(
     context: context,
     builder: (dialogCtx) => AlertDialog(
@@ -36,9 +37,7 @@ Future<MeasurementValueEntity?> showVehicleCustomizationDialog(
       ),
       actions: [
         TextButton(
-          child: const Text(
-            'Cancel',
-          ),
+          child: const Text('Cancel'),
           onPressed: () {
             dialogCtx.pop(); // Close the dialog
           },

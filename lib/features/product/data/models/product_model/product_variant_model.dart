@@ -13,10 +13,7 @@ abstract class ProductVariantModel with _$ProductVariantModel {
     required String attribute,
     required int stock,
     @JsonKey(name: 'remaining_stock') int? remainingStock,
-    @JsonKey(
-      name: 'price',
-    )
-    int? price,
+    @JsonKey(name: 'price') int? price,
     @JsonKey(name: 'sale_price') int? salePrice,
     @JsonKey(name: 'external_qr_code') String? externalQrCode,
   }) = _ProductVariantModel;
@@ -28,19 +25,19 @@ abstract class ProductVariantModel with _$ProductVariantModel {
 extension ProductVariantModelExtension on ProductVariantModel {
   /// Converts only attribute, stock, and external_qr_code fields of this ProductVariantModel to a JSON map.
   Map<String, dynamic> toJsonOnly() => {
-        'attribute': attribute,
-        'stock': stock,
-        if (externalQrCode != null && externalQrCode!.isNotEmpty)
-          'external_qr_code': externalQrCode,
-      };
+    'attribute': attribute,
+    'stock': stock,
+    if (externalQrCode != null && externalQrCode!.isNotEmpty)
+      'external_qr_code': externalQrCode,
+  };
 
   ProductVariantEntity toEntity() => ProductVariantEntity(
-        id: id,
-        attribute: attribute,
-        stock: stock,
-        remainingStock: remainingStock,
-        price: price,
-        salePrice: salePrice,
-        externalQrCode: externalQrCode,
-      );
+    id: id,
+    attribute: attribute,
+    stock: stock,
+    remainingStock: remainingStock,
+    price: price,
+    salePrice: salePrice,
+    externalQrCode: externalQrCode,
+  );
 }

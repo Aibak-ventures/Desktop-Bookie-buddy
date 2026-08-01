@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingOtherDetailsEntity {
 
- String? get locationStart; String? get locationFrom; String? get locationTo; String? get end; String? get coolingPeriodType;
+ String? get locationStart; String? get locationFrom; String? get locationTo; String? get end; CoolingPeriodMode? get coolingPeriodType;
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $BookingOtherDetailsEntityCopyWith<$Res>  {
   factory $BookingOtherDetailsEntityCopyWith(BookingOtherDetailsEntity value, $Res Function(BookingOtherDetailsEntity) _then) = _$BookingOtherDetailsEntityCopyWithImpl;
 @useResult
 $Res call({
- String? locationStart, String? locationFrom, String? locationTo, String? end, String? coolingPeriodType
+ String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType
 });
 
 
@@ -69,7 +69,7 @@ as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : location
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,
+as CoolingPeriodMode?,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  String? coolingPeriodType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity() when $default != null:
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -175,7 +175,7 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  String? coolingPeriodType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity():
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -195,7 +195,7 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  String? coolingPeriodType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity() when $default != null:
 return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
@@ -217,7 +217,7 @@ class _BookingOtherDetailsEntity implements BookingOtherDetailsEntity {
 @override final  String? locationFrom;
 @override final  String? locationTo;
 @override final  String? end;
-@override final  String? coolingPeriodType;
+@override final  CoolingPeriodMode? coolingPeriodType;
 
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$BookingOtherDetailsEntityCopyWith<$Res> implements $Booki
   factory _$BookingOtherDetailsEntityCopyWith(_BookingOtherDetailsEntity value, $Res Function(_BookingOtherDetailsEntity) _then) = __$BookingOtherDetailsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? locationStart, String? locationFrom, String? locationTo, String? end, String? coolingPeriodType
+ String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType
 });
 
 
@@ -273,7 +273,7 @@ as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : location
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as String?,
+as CoolingPeriodMode?,
   ));
 }
 

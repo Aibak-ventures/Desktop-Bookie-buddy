@@ -89,8 +89,11 @@ class SalesFormDateSection extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_outlined,
-                    size: 16, color: Color(0xFF9A76E8)),
+                const Icon(
+                  Icons.calendar_today_outlined,
+                  size: 16,
+                  color: Color(0xFF9A76E8),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -103,8 +106,11 @@ class SalesFormDateSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down,
-                    size: 18, color: Colors.grey.shade500),
+                Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 18,
+                  color: Colors.grey.shade500,
+                ),
               ],
             ),
           ),

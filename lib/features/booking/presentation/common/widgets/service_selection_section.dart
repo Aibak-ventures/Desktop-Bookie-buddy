@@ -65,20 +65,20 @@ class ServiceSelectionSection extends StatelessWidget {
           const SizedBox(height: 5),
           searchBar,
           const SizedBox(height: 5),
-            Expanded(
-              child: ProductListTableWidget(
-                selectedProductsNotifier: selectedProductsNotifier,
-                selectedBookingType: selectedBookingType,
-                effectiveRentalDays: effectiveRentalDays,
-                manualExtraRentalDays: manualExtraRentalDays,
-                clientNameFocusNode: clientNameFocusNode,
-                onIncrementRentalDays: onIncrementRentalDays,
-                onDecrementRentalDays: onDecrementRentalDays,
-                showDayControls: showDayControls,
-                focusTargetProductKey: focusTargetProductKey,
-                onNavigateToClientDetails: onNavigateToClientDetails,
-              ),
+          Expanded(
+            child: ProductListTableWidget(
+              selectedProductsNotifier: selectedProductsNotifier,
+              selectedBookingType: selectedBookingType,
+              effectiveRentalDays: effectiveRentalDays,
+              manualExtraRentalDays: manualExtraRentalDays,
+              clientNameFocusNode: clientNameFocusNode,
+              onIncrementRentalDays: onIncrementRentalDays,
+              onDecrementRentalDays: onDecrementRentalDays,
+              showDayControls: showDayControls,
+              focusTargetProductKey: focusTargetProductKey,
+              onNavigateToClientDetails: onNavigateToClientDetails,
             ),
+          ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-﻿part of '../pages/edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingSearchHandler on EditNewBookingScreenState {
   // ===== Search/Overlay Lifecycle Methods =====
@@ -191,23 +191,24 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
 
   void _showProductFilterBottomSheet() {
     final currentProducts = _selectProductBloc.state.maybeWhen(
-      loaded: (
-        products,
-        nextPageUrl,
-        serviceId,
-        pickupDate,
-        returnDate,
-        isPaginating,
-        isSearching,
-        searchQuery,
-        searchType,
-        startPrice,
-        endPrice,
-        pickupTime,
-        returnTime,
-        useAvailableProductsApi,
-        isSales,
-      ) => products,
+      loaded:
+          (
+            products,
+            nextPageUrl,
+            serviceId,
+            pickupDate,
+            returnDate,
+            isPaginating,
+            isSearching,
+            searchQuery,
+            searchType,
+            startPrice,
+            endPrice,
+            pickupTime,
+            returnTime,
+            useAvailableProductsApi,
+            isSales,
+          ) => products,
       orElse: () => <ProductEntity>[],
     );
 
@@ -246,22 +247,27 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
         initialPriceRange: _priceRange.value,
         initialMaxPrice: _maxPriceNotifier.value,
         initialIsPriceFilterEnabled: _isPriceFilterEnabled.value,
-        onApply: ({
-          required serviceId,
-          required searchTypeIndex,
-          required priceRange,
-          required maxPrice,
-          required isPriceFilterEnabled,
-        }) {
-          rebuild(() {
-            selectedServiceId = serviceId;
-            _selectedSearchTypeIndex.value = searchTypeIndex;
-            _priceRange.value = priceRange;
-            _maxPriceNotifier.value = maxPrice;
-            _isPriceFilterEnabled.value = isPriceFilterEnabled;
-          });
-          _applyProductFilters(searchTypeIndex, priceRange, isPriceFilterEnabled);
-        },
+        onApply:
+            ({
+              required serviceId,
+              required searchTypeIndex,
+              required priceRange,
+              required maxPrice,
+              required isPriceFilterEnabled,
+            }) {
+              rebuild(() {
+                selectedServiceId = serviceId;
+                _selectedSearchTypeIndex.value = searchTypeIndex;
+                _priceRange.value = priceRange;
+                _maxPriceNotifier.value = maxPrice;
+                _isPriceFilterEnabled.value = isPriceFilterEnabled;
+              });
+              _applyProductFilters(
+                searchTypeIndex,
+                priceRange,
+                isPriceFilterEnabled,
+              );
+            },
       ),
     );
   }
@@ -288,8 +294,22 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
-    final effectivePickup = BookingDateCalculator.effectivePickupDateStr(
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDateStr(
       pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: returnDate,
+      returnTime: returnTime,
       mode: coolingPeriodMode,
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
@@ -303,10 +323,10 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           type: searchType,
           startPrice: isPriceEnabled ? _priceRange.start.toInt() : null,
           endPrice: isPriceEnabled ? _priceRange.end.toInt() : null,
-          pickupDate: effectivePickup,
+          pickupDate: effectivePickupDate,
           returnDate: effectiveReturnDate,
-          pickupTime: pickupTime,
-          returnTime: returnTime,
+          pickupTime: effectivePickupTime,
+          returnTime: effectiveReturnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
         ),
@@ -315,10 +335,10 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: selectedServiceId == -1 ? null : selectedServiceId,
-          pickupDate: effectivePickup,
+          pickupDate: effectivePickupDate,
           returnDate: effectiveReturnDate,
-          pickupTime: pickupTime,
-          returnTime: returnTime,
+          pickupTime: effectivePickupTime,
+          returnTime: effectiveReturnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
         ),
@@ -341,8 +361,22 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
     );
-    final effectivePickup = BookingDateCalculator.effectivePickupDateStr(
+    final effectivePickupDate = BookingDateCalculator.effectivePickupDateStr(
       pickupDate: pickupDate,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
+      pickupDate: pickupDate,
+      pickupTime: pickupTime,
+      mode: coolingPeriodMode,
+      coolingDays: coolingPeriodDays,
+      isBooking: isBooking,
+    );
+    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
+      returnDate: returnDate,
+      returnTime: returnTime,
       mode: coolingPeriodMode,
       coolingDays: coolingPeriodDays,
       isBooking: isBooking,
@@ -355,18 +389,19 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
       _selectProductBloc.add(
         SelectProductEvent.loadProducts(
           serviceId: serviceIdToUse,
-          pickupDate: effectivePickup,
+          pickupDate: effectivePickupDate,
           returnDate: effectiveReturnDate,
-          pickupTime: pickupTime,
-          returnTime: returnTime,
+          pickupTime: effectivePickupTime,
+          returnTime: effectiveReturnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
           bookingId: widget.bookingId,
         ),
       );
     } else {
-      final searchType =
-          BookingSearchRules.resolveSearchType(_selectedSearchTypeIndex.value);
+      final searchType = BookingSearchRules.resolveSearchType(
+        _selectedSearchTypeIndex.value,
+      );
       _selectProductBloc.add(
         SelectProductEvent.searchProducts(
           serviceId: serviceIdToUse,
@@ -378,10 +413,10 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
           endPrice: _isPriceFilterEnabled.value
               ? _priceRange.value.end.toInt()
               : null,
-          pickupDate: effectivePickup,
+          pickupDate: effectivePickupDate,
           returnDate: effectiveReturnDate,
-          pickupTime: pickupTime,
-          returnTime: returnTime,
+          pickupTime: effectivePickupTime,
+          returnTime: effectiveReturnTime,
           useAvailableProductsApi: !isSales,
           isSales: isSales,
           bookingId: widget.bookingId,

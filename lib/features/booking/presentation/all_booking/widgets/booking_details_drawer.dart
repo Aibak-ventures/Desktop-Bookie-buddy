@@ -10,13 +10,16 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widge
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_header_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_items_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_payment_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_security_refund_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class BookingDetailsDrawer extends StatelessWidget {
@@ -69,7 +72,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                           ),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
                               icon: const Icon(Icons.chevron_right, size: 28),
@@ -82,12 +85,24 @@ class BookingDetailsDrawer extends StatelessWidget {
                               color: Colors.grey.shade600,
                               hoverColor: Colors.grey.shade100,
                             ),
+                            if (drawerState.selectedBookingId != null)
+                              IconButton(
+                                icon: Icon(Icons.refresh, size: 28.sp),
+                                onPressed: () {
+                                  context.read<BookingDetailsBloc>().add(
+                                    BookingDetailsEvent.fetchBookingDetails(
+                                      drawerState.selectedBookingId!,
+                                    ),
+                                  );
+                                },
+                                tooltip: 'Refresh',
+                                color: Colors.grey.shade600,
+                                hoverColor: Colors.grey.shade100,
+                              ),
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: _buildContent(context, drawerState),
-                      ),
+                      Expanded(child: _buildContent(context, drawerState)),
                     ],
                   ),
                 ),
@@ -100,7 +115,9 @@ class BookingDetailsDrawer extends StatelessWidget {
   }
 
   Widget _buildContent(
-      BuildContext context, BookingDetailsDrawerState drawerState) {
+    BuildContext context,
+    BookingDetailsDrawerState drawerState,
+  ) {
     if (!drawerState.isOpen || drawerState.selectedBookingId == null) {
       return const SizedBox.shrink();
     }
@@ -110,10 +127,15 @@ class BookingDetailsDrawer extends StatelessWidget {
         state.maybeWhen(
           orElse: () {},
           loaded: (booking) {
-            final paymentHistoryCubit =
-                context.read<BookingDetailsPaymentHistoryCubit>();
+            final paymentHistoryCubit = context
+                .read<BookingDetailsPaymentHistoryCubit>();
             if (paymentHistoryCubit.isExpanded) {
               paymentHistoryCubit.collapsePaymentHistory();
+            }
+            final securityHistoryCubit = context
+                .read<BookingDetailsSecurityRefundHistoryCubit>();
+            if (securityHistoryCubit.isExpanded) {
+              securityHistoryCubit.collapseHistory();
             }
           },
           success: (message, didPop, needRefresh) {
@@ -121,19 +143,21 @@ class BookingDetailsDrawer extends StatelessWidget {
 
             if (needRefresh && drawerState.selectedBookingId != null) {
               context.read<BookingDetailsBloc>().add(
-                    BookingDetailsEvent.fetchBookingDetails(
-                      drawerState.selectedBookingId!,
-                    ),
-                  );
+                BookingDetailsEvent.fetchBookingDetails(
+                  drawerState.selectedBookingId!,
+                ),
+              );
 
               final allBookingBloc = context.read<AllBookingBloc>();
               allBookingBloc.state.mapOrNull(
-                loaded: (s) => allBookingBloc.add(AllBookingEvent.loadBookings(
-                  status: s.status,
-                  startDate: s.startDate,
-                  endDate: s.endDate,
-                  searchQuery: s.searchQuery,
-                )),
+                loaded: (s) => allBookingBloc.add(
+                  AllBookingEvent.loadBookings(
+                    status: s.status,
+                    startDate: s.startDate,
+                    endDate: s.endDate,
+                    searchQuery: s.searchQuery,
+                  ),
+                ),
               );
             }
           },
@@ -159,22 +183,25 @@ class BookingDetailsDrawer extends StatelessWidget {
                 onRetry: () {
                   if (drawerState.selectedBookingId != null) {
                     context.read<BookingDetailsBloc>().add(
-                          BookingDetailsEvent.fetchBookingDetails(
-                            drawerState.selectedBookingId!,
-                          ),
-                        );
+                      BookingDetailsEvent.fetchBookingDetails(
+                        drawerState.selectedBookingId!,
+                      ),
+                    );
                   }
                 },
               ),
             ),
             loaded: (BookingDetailsEntity booking) => Column(
               key: ValueKey(
-                  'booking_${booking.id}_${booking.actualPaidAmount}'),
+                'booking_${booking.id}_${booking.actualPaidAmount}',
+              ),
               children: [
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
+                      horizontal: 16,
+                      vertical: 20,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -187,6 +214,8 @@ class BookingDetailsDrawer extends StatelessWidget {
                         BookingDetailsCustomerSection(booking: booking),
                         const SizedBox(height: 20),
                         BookingDetailsPaymentSection(booking: booking),
+                        const SizedBox(height: 20),
+                        BookingDetailsSecurityRefundSection(booking: booking),
                         const SizedBox(height: 20),
                         BookingDetailsDocumentsSection(booking: booking),
                         const SizedBox(height: 80),

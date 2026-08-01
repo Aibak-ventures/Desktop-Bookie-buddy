@@ -2,7 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_refund_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_security_refund_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_security_refunded_payment_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
@@ -10,6 +15,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment
 import 'package:bookie_buddy_web/features/booking/domain/usecases/cancel_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_payment_usecase.dart';
+import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -26,6 +32,10 @@ class BookingDetailsBloc
   final DeletePaymentUseCase _deletePayment;
   final CancelBookingUseCase _cancelBooking;
   final DeleteBookingUseCase _deleteBooking;
+  final AddRefundUseCase _addRefund;
+  final DeleteRefundUseCase _deleteRefund;
+  final UpdateSecurityRefundUseCase _updateSecurityRefund;
+  final DeleteSecurityRefundedPaymentUseCase _deleteSecurityRefundedPayment;
 
   BookingDetailsBloc({
     required GetBookingUseCase getBooking,
@@ -35,6 +45,10 @@ class BookingDetailsBloc
     required DeletePaymentUseCase deletePayment,
     required CancelBookingUseCase cancelBooking,
     required DeleteBookingUseCase deleteBooking,
+    required AddRefundUseCase addRefund,
+    required DeleteRefundUseCase deleteRefund,
+    required UpdateSecurityRefundUseCase updateSecurityRefund,
+    required DeleteSecurityRefundedPaymentUseCase deleteSecurityRefundedPayment,
   }) : _getBooking = getBooking,
        _updateDeliveryStatus = updateDeliveryStatus,
        _updateBookingStatus = updateBookingStatus,
@@ -42,14 +56,28 @@ class BookingDetailsBloc
        _deletePayment = deletePayment,
        _cancelBooking = cancelBooking,
        _deleteBooking = deleteBooking,
+       _addRefund = addRefund,
+       _deleteRefund = deleteRefund,
+       _updateSecurityRefund = updateSecurityRefund,
+       _deleteSecurityRefundedPayment = deleteSecurityRefundedPayment,
        super(const BookingDetailsState.loading()) {
-    on<_FetchBookingDetails>(_onFetchBookingDetails);
-    on<_UpdateDeliveryStatus>(_onUpdateDeliveryStatus);
+    on<_FetchBookingDetails>(
+      _onFetchBookingDetails,
+      transformer: debounceDroppable(const Duration(milliseconds: 500)),
+    );
+    on<_UpdateDeliveryStatus>(
+      _onUpdateDeliveryStatus,
+      transformer: debounceDroppable(const Duration(milliseconds: 500)),
+    );
     on<_UpdateBookingStatus>(_onUpdateBookingStatus);
     on<_UpdatePayment>(_onUpdatePayment);
     on<_DeletePayment>(_onDeletePayment);
     on<_CancelBooking>(_onCancelBooking);
     on<_DeleteBooking>(_onDeleteBooking);
+    on<_AddRefund>(_onAddRefund);
+    on<_DeleteRefund>(_onDeleteRefund);
+    on<_UpdateSecurityRefund>(_onUpdateSecurityRefund);
+    on<_DeleteSecurityRefundedPayment>(_onDeleteSecurityRefundedPayment);
   }
 
   Future<void> _onFetchBookingDetails(
@@ -120,10 +148,18 @@ class BookingDetailsBloc
       log(
         '📤 Updating payment: ${event.amount} for booking ${event.bookingId}',
       );
+      if (event.useSecurityRefund) {
+        await _updateSecurityRefund(
+          bookingId: event.bookingId,
+          refundAmount: event.amount,
+          accountId: event.accountId,
+        );
+      }
       await _updatePayment(
         bookingId: event.bookingId,
         amount: event.amount,
         accountId: event.accountId,
+        paymentDate: event.paymentDate,
       );
 
       log('✅ Payment updated, refetching booking details...');
@@ -193,6 +229,104 @@ class BookingDetailsBloc
           needRefresh: false,
         ),
       );
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  //
+  FutureOr<void> _onAddRefund(
+    _AddRefund event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      await _addRefund(
+        bookingId: event.bookingId,
+        amount: event.amount,
+        accountId: event.accountId,
+        refundReason: event.refundReason,
+      );
+
+      log('✅ Refund added, refetching booking details...');
+
+      final booking = await _getBooking(event.bookingId);
+      log(
+        '📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}',
+      );
+      emit(BookingDetailsState.loaded(booking: booking));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  //
+  FutureOr<void> _onDeleteRefund(
+    _DeleteRefund event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      await _deleteRefund(bookingId: event.bookingId, refundId: event.refundId);
+
+      final booking = await _getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
+      emit(
+        const BookingDetailsState.success(
+          'Refund deleted successfully',
+          needRefresh: true,
+        ),
+      );
+      emit(BookingDetailsState.loaded(booking: booking));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  //
+  FutureOr<void> _onUpdateSecurityRefund(
+    _UpdateSecurityRefund event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      await _updateSecurityRefund(
+        bookingId: event.bookingId,
+        refundAmount: event.refundAmount,
+        deductionAmount: event.deductionAmount,
+        accountId: event.accountId,
+        note: event.note,
+      );
+
+      final booking = await _getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  //
+  FutureOr<void> _onDeleteSecurityRefundedPayment(
+    _DeleteSecurityRefundedPayment event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      await _deleteSecurityRefundedPayment(refundId: event.paymentId);
+
+      final booking = await _getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
+      emit(
+        BookingDetailsState.success(
+          'Security ${event.securityPaymentType.isRefund ? 'refund' : 'deduction'} deleted successfully',
+          needRefresh: true,
+        ),
+      );
+      emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
       log(e.toString(), stackTrace: stack);
       _emitFailedWithRollback(emit, e.toString(), oldState);

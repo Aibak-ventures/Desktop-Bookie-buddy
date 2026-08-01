@@ -20,26 +20,30 @@ import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 class AuthDependencies {
   static void register() {
     // auth
-    getIt.registerLazySingleton(() => AuthRemoteDatasource(
-          dio: DioClient.dio,
-          prefs: getIt<SharedPreferenceHelper>(),
-          tokenRefreshManager: getIt<TokenRefreshManager>(),
-          sessionStorage: getIt<SessionStorage>(),
-        ));
-    getIt.registerLazySingleton<IAuthRepository>(() => AuthRepositoryImpl(
-          datasource: getIt(),
-          prefs: getIt<SharedPreferenceHelper>(),
-          sessionStorage: getIt<SessionStorage>(),
-        ));
     getIt.registerLazySingleton(
-        () => LoginUseCase(getIt<IAuthRepository>()));
+      () => AuthRemoteDatasource(
+        dio: DioClient.dio,
+        prefs: getIt<SharedPreferenceHelper>(),
+        tokenRefreshManager: getIt<TokenRefreshManager>(),
+        sessionStorage: getIt<SessionStorage>(),
+      ),
+    );
+    getIt.registerLazySingleton<IAuthRepository>(
+      () => AuthRepositoryImpl(
+        datasource: getIt(),
+        prefs: getIt<SharedPreferenceHelper>(),
+        sessionStorage: getIt<SessionStorage>(),
+      ),
+    );
+    getIt.registerLazySingleton(() => LoginUseCase(getIt<IAuthRepository>()));
     getIt.registerLazySingleton(
-        () => ChangeAccountPasswordUseCase(getIt<IAuthRepository>()));
+      () => ChangeAccountPasswordUseCase(getIt<IAuthRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => ChangeSecretPasswordUseCase(getIt<IAuthRepository>()));
+      () => ChangeSecretPasswordUseCase(getIt<IAuthRepository>()),
+    );
     // user session
-    getIt.registerLazySingleton(
-        () => UserRemoteDatasource(dio: DioClient.dio));
+    getIt.registerLazySingleton(() => UserRemoteDatasource(dio: DioClient.dio));
     getIt.registerLazySingleton<IUserRepository>(
       () => UserRepositoryImpl(
         datasource: getIt(),
@@ -48,13 +52,13 @@ class AuthDependencies {
         sessionStorage: getIt<SessionStorage>(),
       ),
     );
+    getIt.registerLazySingleton(() => GetUserUseCase(getIt<IUserRepository>()));
+    getIt.registerLazySingleton(() => LogoutUseCase(getIt<IUserRepository>()));
     getIt.registerLazySingleton(
-        () => GetUserUseCase(getIt<IUserRepository>()));
+      () => SwitchShopUseCase(getIt<IUserRepository>()),
+    );
     getIt.registerLazySingleton(
-        () => LogoutUseCase(getIt<IUserRepository>()));
-    getIt.registerLazySingleton(
-        () => SwitchShopUseCase(getIt<IUserRepository>()));
-    getIt.registerLazySingleton(
-        () => RegisterFCMTokenUseCase(getIt<IUserRepository>()));
+      () => RegisterFCMTokenUseCase(getIt<IUserRepository>()),
+    );
   }
 }

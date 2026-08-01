@@ -6,23 +6,24 @@ class CustomShimmerBox extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
-  const CustomShimmerBox(
-      {super.key,
-      required this.width,
-      required this.height,
-      this.borderRadius = 4});
+  const CustomShimmerBox({
+    super.key,
+    required this.width,
+    required this.height,
+    this.borderRadius = 4,
+  });
 
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: borderRadius.radiusBorder,
-          ),
-        ),
-      );
+    baseColor: Colors.grey.shade300,
+    highlightColor: Colors.grey.shade100,
+    child: Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: borderRadius.radiusBorder,
+      ),
+    ),
+  );
 }

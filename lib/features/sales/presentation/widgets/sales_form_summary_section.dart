@@ -51,11 +51,10 @@ class SalesFormSummarySection extends StatelessWidget {
                 0,
                 (sum, p) => sum + (p.amount * p.variant.quantity),
               );
-              final taxSummary = saleDetails.appliedTaxes
-                  .calculateTaxSummary(
-                    productTotal: productTotal.toDouble(),
-                    discountAmount: discountAmount.toDouble(),
-                  );
+              final taxSummary = saleDetails.appliedTaxes.calculateTaxSummary(
+                productTotal: productTotal.toDouble(),
+                discountAmount: discountAmount.toDouble(),
+              );
               final additionalTaxAmount = taxSummary.additionalTaxAmount
                   .round();
               final totalPayable =

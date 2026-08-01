@@ -38,8 +38,8 @@ class SalesDetailsDrawer extends StatelessWidget {
               context.showSnackBar(message);
               if (needRefresh) {
                 context.read<AllSalesBloc>().add(
-                      const AllSalesEvent.loadSales(),
-                    );
+                  const AllSalesEvent.loadSales(),
+                );
               }
               if (didPop) {
                 context.read<SalesDetailsDrawerCubit>().closeDrawer();
@@ -82,16 +82,14 @@ class SalesDetailsDrawer extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             border: Border(
-                              bottom:
-                                  BorderSide(color: Colors.grey.shade200),
+                              bottom: BorderSide(color: Colors.grey.shade200),
                             ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.chevron_right,
-                                    size: 28),
+                                icon: const Icon(Icons.chevron_right, size: 28),
                                 onPressed: () => context
                                     .read<SalesDetailsDrawerCubit>()
                                     .closeDrawer(),
@@ -102,8 +100,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Expanded(
-                            child: _buildContent(context, drawerState)),
+                        Expanded(child: _buildContent(context, drawerState)),
                       ],
                     ),
                   ),
@@ -141,9 +138,10 @@ class SalesDetailsDrawer extends StatelessWidget {
               onRetry: () {
                 if (drawerState.selectedSaleId != null) {
                   context.read<SalesDetailsBloc>().add(
-                        SalesDetailsEvent.fetchSaleDetails(
-                            drawerState.selectedSaleId!),
-                      );
+                    SalesDetailsEvent.fetchSaleDetails(
+                      drawerState.selectedSaleId!,
+                    ),
+                  );
                 }
               },
             ),
@@ -154,7 +152,9 @@ class SalesDetailsDrawer extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 20),
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -9,7 +9,36 @@ class DioClient {
   /// A dio client with a base url and a auth interceptor
   /// The auth interceptor is responsible for adding the token to the request
   /// and for logging out the user when the token is invalid
-  static final Dio dio = Dio(
+  static final Dio dio =
+      Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
+            headers: {
+              // 'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            validateStatus: (status) {
+              if (status == null) return false;
+
+              if (status == 401 || status >= 500) return false;
+              return true;
+            },
+          ),
+        )
+        ..interceptors.addAll([
+          AuthInterceptor(getIt<SessionStorage>()),
+          if (kDebugMode)
+            LogInterceptor(
+              requestBody: true,
+              responseBody: true,
+              error: true,
+              logPrint: (obj) => print(obj.toString()),
+            ),
+        ]);
+
+  static Dio newDio() => Dio(
     BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 15),
@@ -18,35 +47,8 @@ class DioClient {
         // 'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      validateStatus: (status) {
-        if (status == null) return false;
-
-        if (status == 401 || status >= 500) return false;
-        return true;
-      },
     ),
-  )..interceptors.addAll([
-      AuthInterceptor(getIt<SessionStorage>()),
-      if (kDebugMode)
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          error: true,
-          logPrint: (obj) => print(obj.toString()),
-        ),
-    ]);
-
-  static Dio newDio() => Dio(
-        BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          headers: {
-            // 'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        ),
-      );
+  );
 
   /// Initializes the Dio client configuration.
   ///
@@ -118,16 +120,20 @@ class DioClient {
               // Provide helpful error messages for development
               if (error.type == DioExceptionType.connectionError) {
                 print(
-                    '[WEB ERROR] This is likely a CORS issue. For development:');
+                  '[WEB ERROR] This is likely a CORS issue. For development:',
+                );
                 print(
-                    '[WEB ERROR] 1. Run with: flutter run -d chrome --web-browser-flag "--disable-web-security"');
+                  '[WEB ERROR] 1. Run with: flutter run -d chrome --web-browser-flag "--disable-web-security"',
+                );
                 print('[WEB ERROR] 2. Or use the run_web_dev.bat script');
                 print('[WEB ERROR] 3. Install CORS browser extension');
                 print(
-                    '[WEB ERROR] For production: Configure CORS headers on your backend server');
+                  '[WEB ERROR] For production: Configure CORS headers on your backend server',
+                );
               } else if (error.type == DioExceptionType.badResponse) {
                 print(
-                    '[WEB ERROR] Server returned error: ${error.response?.statusCode}');
+                  '[WEB ERROR] Server returned error: ${error.response?.statusCode}',
+                );
                 print('[WEB ERROR] Response data: ${error.response?.data}');
               }
               handler.next(error);

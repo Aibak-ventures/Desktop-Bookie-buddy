@@ -44,10 +44,7 @@ String? phoneNumberToE164(PhoneNumber? phoneNumber) {
   return phoneNumber?.international.replaceAll(RegExp(r'[^0-9+]'), '');
 }
 
-void cachePhoneE164({
-  required String rawPhoneNumber,
-  required String? e164,
-}) {
+void cachePhoneE164({required String rawPhoneNumber, required String? e164}) {
   final digits = normalizePhoneDigits(rawPhoneNumber);
   final normalizedE164 = e164?.trim();
   if (digits.isEmpty || normalizedE164 == null || normalizedE164.isEmpty) {

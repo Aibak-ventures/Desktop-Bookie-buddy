@@ -761,7 +761,9 @@ class _ProductFilterDialogState extends State<ProductFilterDialog> {
                         backgroundColor: const Color(0xFF6132E4),
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shadowColor: const Color(0xFF6132E4).withValues(alpha: 0.3),
+                        shadowColor: const Color(
+                          0xFF6132E4,
+                        ).withValues(alpha: 0.3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

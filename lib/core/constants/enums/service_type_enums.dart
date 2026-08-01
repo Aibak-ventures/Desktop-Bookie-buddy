@@ -68,9 +68,8 @@ extension MainServiceTypeX on MainServiceType? {
   bool get isOthers => this == MainServiceType.others;
 
   /// Returns true for service types that support multi-variant product setup
-  /// (dress sizes, costume sizes, shoe sizes, bridal sizes, gadget serials)
-  bool get needsVariantsSection =>
-      isDress || isCostume || isShoes || isBridal || isGadget;
+  /// (dress sizes, costume sizes, shoe sizes, bridal sizes,)
+  bool get needsVariantsSection => isDress || isCostume || isShoes || isBridal;
 
   // ==================== Variant Management ====================
 
@@ -87,28 +86,23 @@ extension MainServiceTypeX on MainServiceType? {
   ///
   /// Multi-variant types:
   /// - Dress/Costume: Multiple sizes with quantities
-  /// - Gadget: Multiple serial numbers (1 unit each)
-  bool get isMultiVariantProductType =>
-      this == MainServiceType.dress ||
-      this == MainServiceType.costume ||
-      this == MainServiceType.gadgets;
+  bool get isMultiVariantProductType => isDressType;
 
   /// Check if each variant represents a unique unit (stock = 1 per variant)
   ///
-  /// True for gadgets where each serial number = one unique item.
-  /// False for dress/costume where each size can have multiple units.
-  bool get hasUniqueVariantIdentifier => isGadget;
+  bool get hasUniqueVariantIdentifier => false;
+
+  // For future use
+  bool get showQuantityInDynamicFields => true;
 
   /// Get the label for the variant attribute field
   ///
   /// Examples:
   /// - Dress/Costume → "Size"
-  /// - Gadget → "Serial Number"
   /// - Vehicle → "Model"
   /// - Others → "Variant"
   String get variantAttributeLabel {
     if (isDress || isCostume) return 'Size';
-    if (isGadget) return 'Serial Number';
     if (isVehicle) return 'Model';
     return 'Variant';
   }
@@ -142,7 +136,7 @@ extension MainServiceTypeX on MainServiceType? {
   String get quantityFieldLabel {
     if (isVehicle) return 'Unit';
     if (isMaterial) return 'Length (in meters)';
-    if (isDress || isCostume) return 'Size';
+    if (isDressType) return 'Size';
     return 'Quantity';
   }
 
@@ -152,12 +146,10 @@ extension MainServiceTypeX on MainServiceType? {
   ///
   /// Examples:
   /// - Vehicle → "Brand"
-  /// - Gadget → "Serial Number"
   /// - Material → "Fabric Type"
   /// - Others → "Category"
   String get categoryFieldLabel {
     if (isVehicle) return 'Brand';
-    // if (isGadget) return 'Serial Number';
     if (isMaterial) return 'Fabric Type';
     return 'Category';
   }

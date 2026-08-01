@@ -12,10 +12,7 @@ class FailedBookingException extends BookingException {
 }
 
 class InvalidBookingException extends BookingException {
-  InvalidBookingException([
-    super.message = 'Invalid Booking',
-    super.errorCode,
-  ]);
+  InvalidBookingException([super.message = 'Invalid Booking', super.errorCode]);
 }
 
 class BookingNotFoundException extends BookingException {

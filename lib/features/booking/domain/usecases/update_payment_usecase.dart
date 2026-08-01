@@ -8,9 +8,11 @@ class UpdatePaymentUseCase {
     required int bookingId,
     required int amount,
     required int accountId,
+    String? paymentDate,
   }) => _repository.updatePayment(
     bookingId: bookingId,
     amount: amount,
     accountId: accountId,
+    paymentDate: paymentDate,
   );
 }

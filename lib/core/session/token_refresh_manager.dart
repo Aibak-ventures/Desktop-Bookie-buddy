@@ -6,8 +6,8 @@ class TokenRefreshManager {
   TokenRefreshManager({
     required Future<bool> Function() refreshCallback,
     required SessionStorage sessionStorage,
-  })  : _refreshCallback = refreshCallback,
-        _sessionStorage = sessionStorage;
+  }) : _refreshCallback = refreshCallback,
+       _sessionStorage = sessionStorage;
 
   final Future<bool> Function() _refreshCallback;
   final SessionStorage _sessionStorage;
@@ -25,12 +25,9 @@ class TokenRefreshManager {
     log('Proactive token refresh started');
     _refreshTimer?.cancel();
     await _checkTokenExpiry();
-    _refreshTimer = Timer.periodic(
-      const Duration(minutes: 5),
-      (_) async {
-        await _checkTokenExpiry();
-      },
-    );
+    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) async {
+      await _checkTokenExpiry();
+    });
   }
 
   Future<void> _checkTokenExpiry() async {

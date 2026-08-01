@@ -9,7 +9,8 @@ Future<T> safeApiCall<T>(Future<T> Function() apiCall) async {
     // Log the error for debugging
     if (kDebugMode) {
       print(
-          'HTTP Error - Status: ${e.response?.statusCode}, Type: ${e.type}, Message: ${e.message}');
+        'HTTP Error - Status: ${e.response?.statusCode}, Type: ${e.type}, Message: ${e.message}',
+      );
       print('*** DioException ***:');
       print('uri: ${e.requestOptions.uri}');
       print('${e.toString()}');
@@ -37,7 +38,8 @@ Future<T> safeApiCall<T>(Future<T> Function() apiCall) async {
       // Try to extract error message from response
       String? serverMessage;
       if (responseData is Map<String, dynamic>) {
-        serverMessage = responseData['message'] ??
+        serverMessage =
+            responseData['message'] ??
             responseData['error'] ??
             responseData['detail'];
       }

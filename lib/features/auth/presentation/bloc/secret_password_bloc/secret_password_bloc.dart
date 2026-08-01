@@ -10,10 +10,10 @@ class SecretPasswordBloc
     extends Bloc<SecretPasswordEvent, SecretPasswordState> {
   final ChangeSecretPasswordUseCase _changeSecretPassword;
 
-  SecretPasswordBloc(
-      {required ChangeSecretPasswordUseCase changeSecretPassword})
-      : _changeSecretPassword = changeSecretPassword,
-        super(const _Initial()) {
+  SecretPasswordBloc({
+    required ChangeSecretPasswordUseCase changeSecretPassword,
+  }) : _changeSecretPassword = changeSecretPassword,
+       super(const _Initial()) {
     on<SecretPasswordEvent>((event, emit) async {
       emit(const _Loading());
 

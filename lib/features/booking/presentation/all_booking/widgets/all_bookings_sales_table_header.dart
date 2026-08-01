@@ -20,36 +20,85 @@ class AllBookingsSalesTableHeader extends StatelessWidget {
           SizedBox(width: 11),
           SizedBox(
             width: 100,
-            child: Text('Sale ID', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Sale ID',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 95,
-            child: Text('Sale Date', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Sale Date',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 110,
-            child: Text('Phone', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Phone',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           Expanded(
-            child: Text('Items', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Items',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 80,
-            child: Text('Total', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Total',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 70,
-            child: Text('Paid', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Paid',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 12),
           SizedBox(
             width: 70,
-            child: Text('Discount', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87)),
+            child: Text(
+              'Discount',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
           ),
           SizedBox(width: 28),
         ],

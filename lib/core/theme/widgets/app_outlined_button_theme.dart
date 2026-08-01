@@ -10,10 +10,7 @@ class AppOutlinedButtonTheme {
         borderRadius: 5.radiusBorder,
         side: BorderSide.none,
       ),
-      textStyle: TextStyle(
-        color: AppColors.purple,
-        fontSize: 14.sp,
-      ),
+      textStyle: TextStyle(color: AppColors.purple, fontSize: 14.sp),
       iconColor: AppColors.purple,
     ),
   );

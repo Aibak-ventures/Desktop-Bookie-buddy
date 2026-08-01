@@ -67,10 +67,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Scaffold(
           backgroundColor: const Color(0xFFF5F7FA),
           body: Stack(
-            children: [
-              _buildDesktopLayout(bloc),
-              const BookingDetailsDrawer(),
-            ],
+            children: [_buildDesktopLayout(bloc), const BookingDetailsDrawer()],
           ),
         ),
       ),
@@ -106,16 +103,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           child: BlocBuilder<DashboardBloc, DashboardState>(
                             builder: (context, state) {
                               return state.maybeWhen(
-                                loaded: (
-                                  _,
-                                  __,
-                                  carouselData,
-                                  ___,
-                                  ____,
-                                  _____,
-                                  ______,
-                                ) =>
-                                    SizedBox(
+                                loaded:
+                                    (
+                                      _,
+                                      __,
+                                      carouselData,
+                                      ___,
+                                      ____,
+                                      _____,
+                                      ______,
+                                    ) => SizedBox(
                                       height: 120,
                                       child: CarouselDashboard(
                                         data: carouselData,
