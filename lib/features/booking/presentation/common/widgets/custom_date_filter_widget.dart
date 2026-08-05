@@ -297,7 +297,9 @@ class _CustomDateFilterWidgetState extends State<CustomDateFilterWidget> {
         style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
       ),
       const Spacer(),
-      if (_startDate != null || _endDate != null)
+      if (_startDate != null ||
+            _endDate != null ||
+            _checkboxOptions.any((option) => option.isSelected))
         TextButton(
           onPressed: _clearFilter,
           child: Text(
@@ -744,8 +746,12 @@ class _CustomDateFilterWidgetState extends State<CustomDateFilterWidget> {
     setState(() {
       _startDate = null;
       _endDate = null;
+      for (final option in _checkboxOptions) {
+        option.isSelected = false;
+      }
     });
     widget.onDateFilterChanged(null, null);
+    widget.onCheckboxChanged?.call(_checkboxOptions);
   }
 }
 

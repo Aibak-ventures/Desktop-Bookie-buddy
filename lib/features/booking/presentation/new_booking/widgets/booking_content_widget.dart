@@ -583,7 +583,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   // purchase type
                   CustomDropDownField<PurchaseMode>(
                     selectedValue: purchaseMode,
-                    width: 0.22.widthR,
+                    width: 320,
                     hintText: 'Select Purchase Type',
                     label: 'Purchase Type',
                     prefixIcon: const Icon(Icons.shopping_bag),
