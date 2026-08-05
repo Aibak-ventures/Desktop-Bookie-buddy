@@ -1,9 +1,10 @@
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomDropDownField<T> extends StatelessWidget {
+  final TextEditingController? controller;
   final List<T> items;
   final String Function(T item)? itemLabelBuilder;
   final void Function(T? newValue) onChanged;
@@ -16,9 +17,11 @@ class CustomDropDownField<T> extends StatelessWidget {
   final InputDecorationTheme? inputDecorationTheme;
   final double? width;
   final bool enableFilter;
+  final bool enabled;
 
   const CustomDropDownField({
     super.key,
+    this.controller,
     required this.hintText,
     required this.onChanged,
     required this.items,
@@ -34,11 +37,13 @@ class CustomDropDownField<T> extends StatelessWidget {
     this.label,
     this.width,
     this.enableFilter = false,
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return DropdownMenu<T>(
+      controller: controller,
       initialSelection: selectedValue,
       onSelected: onChanged,
       menuHeight: menuHeight,
@@ -74,32 +79,34 @@ class CustomDropDownField<T> extends StatelessWidget {
           context.theme.dropdownMenuTheme.inputDecorationTheme?.copyWith(
             contentPadding: contentPadding,
           ),
-      dropdownMenuEntries: items
-          .map(
-            (item) => DropdownMenuEntry<T>(
-              value: item,
-              label: itemLabelBuilder?.call(item) ?? item.toString(),
-              style: ButtonStyle(
-                textStyle: WidgetStateProperty.all(TextStyle(fontSize: 16.sp)),
-                padding: WidgetStateProperty.all(
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                ),
-                foregroundColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return AppColors.white;
-                  }
-                  return AppColors.black;
-                }),
-                backgroundColor: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return AppColors.purple;
-                  }
-                  return Colors.transparent;
-                }),
-              ),
+      dropdownMenuEntries: items.map((item) {
+        final isSelected = item == selectedValue;
+        return DropdownMenuEntry<T>(
+          value: item,
+          label: itemLabelBuilder?.call(item) ?? item.toString(),
+          style: ButtonStyle(
+            textStyle: WidgetStateProperty.all(TextStyle(fontSize: 16.sp)),
+            overlayColor: WidgetStateProperty.resolveWith((states) {
+              return AppColors.purpleLight;
+            }),
+            padding: WidgetStateProperty.all(
+              const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             ),
-          )
-          .toList(),
+            foregroundColor: WidgetStateProperty.resolveWith((states) {
+              if (isSelected || states.contains(WidgetState.selected)) {
+                return AppColors.purple;
+              }
+              return AppColors.black;
+            }),
+            backgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (isSelected || states.contains(WidgetState.selected)) {
+                return AppColors.purpleLight;
+              }
+              return Colors.transparent;
+            }),
+          ),
+        );
+      }).toList(),
     );
   }
 }

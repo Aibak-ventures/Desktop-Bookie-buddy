@@ -34,6 +34,15 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                 : picked.add(const Duration(days: 1));
           }
 
+          // Re-derive booked date from the new pickup date, unless the
+          // user explicitly picked their own booked date.
+          if (!_isBookedDateManuallySet) {
+            final today = DateTime.now().dateOnly;
+            _bookedDate = picked.dateOnly.isBefore(today)
+                ? picked.dateOnly
+                : today;
+          }
+
           // Keep coolingPeriodDate in sync whenever pickup date changes.
           // Must run after both pickupDate and returnDate are finalized above.
           if (coolingPeriodDate != null) {
@@ -101,16 +110,26 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
   }
 
   Future<void> _selectBookedDate() async {
+    final today = DateTime.now().dateOnly;
+    // Booked date can never be after the pickup date or after today.
+    final lastDate = pickupDate.dateOnly.isBefore(today)
+        ? pickupDate.dateOnly
+        : today;
+    final initialDate = _bookedDate ?? lastDate;
+
     final picked = await showKeyboardDatePicker(
       context: context,
-      initialDate: _bookedDate ?? DateTime.now(),
+      initialDate: initialDate.isAfter(lastDate) ? lastDate : initialDate,
       firstDate: DateTime(2015),
-      lastDate: DateTime.now(),
+      lastDate: lastDate,
       selectedColor: const Color(0xFF6132E4),
     );
 
     if (picked != null) {
-      rebuild(() => _bookedDate = picked);
+      rebuild(() {
+        _bookedDate = picked;
+        _isBookedDateManuallySet = true;
+      });
     }
   }
 
@@ -193,13 +212,23 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            isSales ? 'Sale date' : 'Select dates',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+          Row(
+            children: [
+              Text(
+                isSales ? 'Sale date' : 'Select dates',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              // Booked date is de-emphasized here (minor detail, unlike
+              // pickup/return date) — matches the mobile app treatment.
+              if (!isSales && !isOldBooking) ...[
+                const Spacer(),
+                _buildInlineBookedDateLink(),
+              ],
+            ],
           ),
           const SizedBox(height: 7),
           if (isSales)
@@ -470,6 +499,42 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     );
   }
 
+  /// Small, de-emphasized "Booked date" link shown next to the section
+  /// title for regular bookings — mirrors the mobile app, where the booked
+  /// date carries far less weight than pickup/return date.
+  Widget _buildInlineBookedDateLink() {
+    return InkWell(
+      onTap: () => _selectBookedDate(),
+      borderRadius: BorderRadius.circular(4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Booked date: ',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            _bookedDate?.format() ?? DateTime.now().format(),
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF6132E4),
+              decoration: TextDecoration.underline,
+              decorationColor: Color(0xFF6132E4),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Icon(Icons.edit_outlined, size: 13, color: Colors.grey.shade500),
+        ],
+      ),
+    );
+  }
+
   Widget _buildOldBookedDateField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -532,7 +597,10 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
                   ),
                   if (_bookedDate != null)
                     GestureDetector(
-                      onTap: () => rebuild(() => _bookedDate = null),
+                      onTap: () => rebuild(() {
+                        _bookedDate = null;
+                        _isBookedDateManuallySet = false;
+                      }),
                       child: Icon(
                         Icons.close,
                         size: 16,

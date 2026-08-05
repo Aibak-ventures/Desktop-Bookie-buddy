@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -52,6 +53,7 @@ class BookingRequestBuilder {
     required CoolingPeriodMode coolingPeriodMode,
     required DateTime pickupDate,
     required DateTime returnDate,
+    required DateTime? bookedDate,
     required int? advanceAmount,
     required int? securityAmount,
     required bool isSecurityPaid,
@@ -62,6 +64,7 @@ class BookingRequestBuilder {
     required TimeOfDay? pickupTime,
     required TimeOfDay? returnTime,
     required bool sendPdfToWhatsApp,
+    PurchaseMode purchaseMode = PurchaseMode.normal,
   }) {
     // --- Products: apply day multiplier + optional running km ---
     final requestProducts = products.map((product) {
@@ -144,6 +147,7 @@ class BookingRequestBuilder {
       address: address,
       pickupDate: pickupDate.format(),
       returnDate: effectiveReturnDate.format(),
+      bookedDate: bookedDate?.format(),
       coolingPeriodDate: effectiveCoolingPeriodDate?.format(),
       coolingPeriodType: coolingPeriodDays > 0 ? coolingPeriodMode : null,
       advanceAmount: advanceAmount,
@@ -155,7 +159,7 @@ class BookingRequestBuilder {
           ? securityAccountId
           : null,
       discountAmount: actualDiscount,
-      purchaseMode: 'normal',
+      purchaseMode: purchaseMode.value,
       payments: !hasAdvance
           ? null
           : [

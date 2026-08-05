@@ -437,6 +437,7 @@ class BookingRemoteDatasource {
     String? searchQuery,
     String? startDate,
     String? endDate,
+    String? purchaseMode,
     int page = 1,
     String? nextPageUrl,
   }) async {
@@ -453,6 +454,8 @@ class BookingRemoteDatasource {
                 if (startDate != null && startDate.isNotEmpty)
                   'start_date': startDate,
                 if (endDate != null && endDate.isNotEmpty) 'end_date': endDate,
+                if (purchaseMode != null && purchaseMode.isNotEmpty)
+                  'purchase_mode': purchaseMode,
                 'page': page,
               },
       );

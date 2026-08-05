@@ -1,4 +1,4 @@
-﻿part of '../pages/edit_new_booking_screen.dart';
+part of '../pages/edit_new_booking_screen.dart';
 
 extension EditBookingChangeDetector on EditNewBookingScreenState {
   /// Returns true when any field on the form differs from its original value.
@@ -9,6 +9,7 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     if (_haveAmountsChanged()) return true;
     if (_hasRunningKmChanged()) return true;
     if (_hasDeliveryStatusChanged()) return true;
+    if (_hasPurchaseModeChanged()) return true;
     if (_haveAdditionalChargesChanged()) return true;
     if (_haveProductsChanged()) return true;
     if (_haveDocumentsChanged()) return true;
@@ -33,6 +34,7 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     if (descriptionController.text.trim().isNotEmpty) return true;
     if (_hasRunningKmChanged()) return true;
     if (_hasDeliveryStatusChanged()) return true;
+    if (_hasPurchaseModeChanged()) return true;
     if (isSecurityPaid != (_originalIsSecurityPaid ?? true)) return true;
     return false;
   }
@@ -122,6 +124,10 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     return deliveryStatus != _originalDeliveryStatus;
   }
 
+  bool _hasPurchaseModeChanged() {
+    return purchaseMode != _originalPurchaseMode;
+  }
+
   bool _haveAdditionalChargesChanged() {
     if (_originalBooking == null) return true;
     if (_originalAdditionalCharges == null) return true;
@@ -158,8 +164,7 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
 
   bool _haveDocumentsChanged() {
     final currentPaths = documentsNotifier.value.map((d) => d.path).toSet();
-    final originalPaths =
-        _originalDocuments?.map((d) => d.path).toSet() ?? {};
+    final originalPaths = _originalDocuments?.map((d) => d.path).toSet() ?? {};
     return currentPaths != originalPaths;
   }
 

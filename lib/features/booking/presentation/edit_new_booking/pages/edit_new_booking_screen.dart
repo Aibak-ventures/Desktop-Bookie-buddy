@@ -2,6 +2,7 @@
 
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
@@ -22,6 +23,7 @@ import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
@@ -128,6 +130,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   AccountEntity? selectedSecurityAccount;
   bool isSecurityPaid = true;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isDiscountPercentage = false;
   final _discountTypeNotifier = ValueNotifier<bool>(false);
   BookingStatus? bookingStatus; // Track booking status
@@ -221,6 +224,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   _originalDocuments; // Track original documents for removal detection
   String? _originalRunningKm; // Track original running kilometers
   DeliveryStatus? _originalDeliveryStatus; // Track original delivery status
+  PurchaseMode? _originalPurchaseMode; // Track original purchase mode
   int _originalCoolingPeriodDays = 0; // Track original cooling period
   CoolingPeriodMode? _originalCoolingPeriodMode;
   int? _originalRentalDays; // Rental days computed from original booking entity
@@ -1249,6 +1253,8 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   ),
                   const SizedBox(height: 20),
                   _buildLocationsSection(),
+                  _buildPurchaseModeField(),
+                  const SizedBox(height: 14),
                   BookingTextFieldBuilder.buildSectionHeader(
                     'Payment details',
                     optional: true,
@@ -1303,6 +1309,25 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
             const SizedBox(height: 14),
           ],
         );
+      },
+    );
+  }
+
+  Widget _buildPurchaseModeField() {
+    return
+    // purchase type
+    CustomDropDownField<PurchaseMode>(
+      selectedValue: purchaseMode,
+      width: 320,
+      hintText: 'Select Purchase Type',
+      label: 'Purchase Type',
+      prefixIcon: const Icon(Icons.shopping_bag),
+      items: PurchaseMode.filteredValues,
+      itemLabelBuilder: (item) => item.label,
+      onChanged: (mode) {
+        if (mode != null) {
+          rebuild(() => purchaseMode = mode);
+        }
       },
     );
   }

@@ -580,6 +580,24 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   ),
                   const SizedBox(height: 20),
 
+                  // purchase type
+                  CustomDropDownField<PurchaseMode>(
+                    selectedValue: purchaseMode,
+                    width: 320,
+                    hintText: 'Select Purchase Type',
+                    label: 'Purchase Type',
+                    prefixIcon: const Icon(Icons.shopping_bag),
+                    items: PurchaseMode.filteredValues,
+                    itemLabelBuilder: (item) => item.label,
+                    onChanged: (mode) {
+                      if (mode != null) {
+                        rebuild(() => purchaseMode = mode);
+                      }
+                    },
+                  ),
+
+                  const SizedBox(height: 14),
+
                   // Locations - Only for Vehicles
                   ValueListenableBuilder<List<ProductSelectedEntity>>(
                     valueListenable: selectedProductsNotifier,
@@ -862,27 +880,6 @@ extension BookingFlowBuilders on NewBookingScreenState {
                   ),
 
                   const SizedBox(height: 14),
-                  // // Payment Method Selection - only show if advance amount has value
-                  // ValueListenableBuilder(
-                  //   valueListenable: advanceAmountController,
-                  //   builder: (context, value, child) {
-                  //     final hasAdvanceAmount =
-                  //         value.text.trim().isNotEmpty &&
-                  //         (int.tryParse(value.text.trim()) ?? 0) > 0;
-                  //     if (hasAdvanceAmount) {
-                  //       return Column(
-                  //         children: [
-                  //           _buildPaymentMethodSection(
-                  //             label: 'Advance Payment Option',
-                  //           ),
-                  //           const SizedBox(height: 14),
-                  //         ],
-                  //       );
-                  //     }
-                  //     return const SizedBox.shrink();
-                  //   },
-                  // ),
-
                   // Additional Charges
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -34,7 +34,8 @@ abstract class BookingDetailsModel with _$BookingDetailsModel {
     @JsonKey(name: 'advance_amount_with_security') int? paidAmountWithSecurity,
     int? securityAmount,
     @JsonKey(
-      fromJson: PurchaseMode.fromString,
+      fromJson: PurchaseMode.fromJson,
+      toJson: PurchaseMode.toJson,
       defaultValue: PurchaseMode.normal,
     )
     required PurchaseMode purchaseMode,

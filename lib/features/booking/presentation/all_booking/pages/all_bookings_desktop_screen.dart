@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
@@ -12,7 +14,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
@@ -40,6 +42,8 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   final ValueNotifier<DateFilter> _dateFilterNotifier = ValueNotifier(
     const DateFilter(),
   );
+  final ValueNotifier<PurchaseMode?> _purchaseModeFilterNotifier =
+      ValueNotifier(null);
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
 
@@ -97,6 +101,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   void dispose() {
     _searchController.dispose();
     _dateFilterNotifier.dispose();
+    _purchaseModeFilterNotifier.dispose();
     _scrollController.dispose();
     _debounce?.cancel();
     super.dispose();
@@ -131,6 +136,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               : _searchController.text.trim(),
           startDate: _dateFilterNotifier.value.startDate?.format(),
           endDate: _dateFilterNotifier.value.endDate?.format(),
+          purchaseMode: _purchaseModeFilterNotifier.value,
         ),
       );
     }
@@ -495,10 +501,15 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
           const SizedBox(width: 8),
           Container(height: 20, width: 1, color: Colors.grey.shade300),
           const SizedBox(width: 8),
-          ValueListenableBuilder<DateFilter>(
-            valueListenable: _dateFilterNotifier,
-            builder: (context, filter, _) {
-              final hasFilter = filter.hasActiveFilter;
+          ListenableBuilder(
+            listenable: Listenable.merge([
+              _dateFilterNotifier,
+              _purchaseModeFilterNotifier,
+            ]),
+            builder: (context, _) {
+              final hasFilter =
+                  _dateFilterNotifier.value.hasActiveFilter ||
+                  _purchaseModeFilterNotifier.value != null;
               return InkWell(
                 onTap: () => _showDateFilterModal(context),
                 borderRadius: BorderRadius.circular(4),
@@ -518,31 +529,52 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   void _showDateFilterModal(BuildContext context) {
-    showDialog(
+    // Hide the purchase-type filter for Sales, which has no purchase mode.
+    final showPurchaseModeFilter = _activeActionTab != 1;
+    final checkboxExclusiveIds = PurchaseMode.filteredValues
+        .map((e) => e.value)
+        .toList();
+
+    showDateFilterDialog(
       context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: BookingDateFilter(
-                isGeneratePdf: false,
-                initialStartDate: _dateFilterNotifier.value.startDate,
-                initialEndDate: _dateFilterNotifier.value.endDate,
-                onDateFilterChanged: (startDate, endDate) {
-                  _dateFilterNotifier.value = _dateFilterNotifier.value
-                      .copyWith(startDate: startDate, endDate: endDate);
-                  _loadData();
-                  Navigator.pop(context);
-                },
-                onApplyFilter: (p0, p1, p2) {},
-              ),
-            ),
-          ),
-        ),
+      isGeneratePdf: false,
+      initialStartDate: _dateFilterNotifier.value.startDate,
+      initialEndDate: _dateFilterNotifier.value.endDate,
+      showCheckboxOptions: showPurchaseModeFilter,
+      title: 'Purchase Type',
+      selectionStrategy: CheckboxSelectionStrategy.exclusiveStrategy(
+        checkboxExclusiveIds,
       ),
+      checkboxOptions: [
+        for (final mode in PurchaseMode.filteredValues)
+          CheckboxOption(
+            id: mode.value,
+            label: mode.label,
+            isSelected: _purchaseModeFilterNotifier.value == mode,
+          ),
+      ],
+      onDateFilterChanged: (startDate, endDate) {
+        _dateFilterNotifier.value = _dateFilterNotifier.value.copyWith(
+          startDate: startDate,
+          endDate: endDate,
+        );
+        _loadData();
+        if (!showPurchaseModeFilter) Navigator.pop(context);
+      },
+      onCheckboxChanged: (options) {
+        final selected = options.firstWhereOrNull((o) => o.isSelected);
+        if (selected == null) {
+          _purchaseModeFilterNotifier.value = null;
+        } else {
+          PurchaseMode? selectedMode;
+          for (final mode in PurchaseMode.filteredValues) {
+            if (mode.value == selected.id) selectedMode = mode;
+          }
+          _purchaseModeFilterNotifier.value = selectedMode;
+        }
+        _loadData();
+      },
+      onApplyButtonPressed: (p0, p1, p2) => Navigator.pop(context),
     );
   }
 
@@ -572,6 +604,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                         ______,
                         _______,
                         ________,
+                        _________,
                       ) {
                         if (bookings.isEmpty)
                           return const Center(child: Text('No bookings found'));
@@ -654,6 +687,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                 ______,
                 _______,
                 ________,
+                _________,
               ) => isPaginating,
           orElse: () => false,
         );

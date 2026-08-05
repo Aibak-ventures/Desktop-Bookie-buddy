@@ -162,13 +162,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     // Amounts
     if (_haveAmountsChanged()) {
-      final secAmtChanged = securityAmountController.text
-          .trim()
-          .toIntOrNull();
+      final secAmtChanged = securityAmountController.text.trim().toIntOrNull();
       updates['security_amount'] = secAmtChanged;
-      updates['security_amount_is_paid'] = secAmtChanged != null && secAmtChanged > 0
-          ? isSecurityPaid
-          : null;
+      updates['security_amount_is_paid'] =
+          secAmtChanged != null && secAmtChanged > 0 ? isSecurityPaid : null;
       final discountInput =
           discountAmountController.text.trim().toIntOrNull() ?? 0;
       final productBase = _getDiscountProductBase();
@@ -230,7 +227,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       }).toList();
     }
 
-    updates['purchase_mode'] = 'normal';
+    updates['purchase_mode'] = purchaseMode.value;
 
     if (_hasDeliveryStatusChanged()) {
       updates['delivery_status'] = deliveryStatus.toValue();

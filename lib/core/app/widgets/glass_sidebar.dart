@@ -125,7 +125,7 @@ class _GlassSidebarState extends State<GlassSidebar> {
                 _navItemCollapsed(1, Icons.dashboard_outlined),
                 _navItemCollapsed(2, Icons.list_alt),
                 _navItemCollapsed(3, Icons.bar_chart_outlined),
-                _navItemCollapsed(4, Icons.settings_outlined),
+                // _navItemCollapsed(4, Icons.settings_outlined), // Currently not using
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
@@ -15,6 +16,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
@@ -126,6 +128,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   AccountEntity? selectedAdvanceAccount;
   AccountEntity? selectedSecurityAccount;
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isSecurityPaid = true;
   bool sendPdfToWhatsApp = false;
   bool decreaseStockForPastDate = false;
@@ -179,7 +182,38 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   CoolingPeriodMode coolingPeriodMode =
       CoolingPeriodMode.after; // User-selected cooling period mode
   DateTime? _bookedDate; // Optional for old booking entries
+  // Tracks whether the user explicitly picked a booked date, so pickup-date
+  // changes stop auto-deriving it once they have taken over.
+  bool _isBookedDateManuallySet = false;
   int _manualExtraRentalDays = 0; // Optional extra days added by user
+
+  /// Booked date as it should be sent to the API: mirrors mobile's rule —
+  /// a booked date that isn't actually in the past (i.e. today or later)
+  /// carries no meaningful information, so it's omitted.
+  DateTime? get _bookedDateForSubmit {
+    final bookedDate = _bookedDate;
+    if (bookedDate == null) return null;
+    return bookedDate.dateOnly.isBefore(DateTime.now().dateOnly)
+        ? bookedDate
+        : null;
+  }
+
+  /// True when a manually-picked booked date has ended up later than the
+  /// (subsequently lowered) pickup date — an invalid combination.
+  bool get _isBookedDateAfterPickup =>
+      _bookedDate != null &&
+      pickupDate.dateOnly.isBefore(_bookedDate!.dateOnly);
+
+  /// Returns true (and shows the error) if the booked date is invalid.
+  bool _validateBookedDateAgainstPickup() {
+    if (!_isBookedDateAfterPickup) return true;
+    context.showSnackBar(
+      'Pickup date cannot be before the booked date.',
+      isError: true,
+    );
+    return false;
+  }
+
   final runningKilometersController = TextEditingController();
 
   // Step state
@@ -415,6 +449,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     selectedStaffId = null;
     selectedClientId = null;
     _bookedDate = null;
+    _isBookedDateManuallySet = false;
     _manualExtraRentalDays = 0;
     advanceAmountController.clear();
     securityAmountController.clear();
@@ -740,6 +775,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
+    if (!_validateBookedDateAgainstPickup()) {
+      return;
+    }
+
     _addBookingCubit.submitOldBooking(_buildOldBookingRequest());
   }
 
@@ -753,7 +792,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       phone1Raw: clientPhone1Controller.text.trim(),
       phone2Raw: clientPhone2Controller.text.trim(),
       address: clientAddressController.text.trim(),
-      bookedDate: _bookedDate,
+      bookedDate: _bookedDateForSubmit,
       pickupDate: pickupDate,
       returnDate: returnDate,
       description: _buildDescriptionWithPaymentSummary(),
@@ -932,6 +971,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
+    if (selectedBookingType != BookingType.sales &&
+        !_validateBookedDateAgainstPickup()) {
+      return;
+    }
+
     if (selectedBookingType == BookingType.sales) {
       _addBookingCubit.submitSale(_buildSalesRequest());
     } else {
@@ -990,6 +1034,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       coolingPeriodMode: coolingPeriodMode,
       pickupDate: pickupDate,
       returnDate: returnDate,
+      bookedDate: _bookedDateForSubmit,
       advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       isSecurityPaid: isSecurityPaid,
@@ -1000,6 +1045,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       pickupTime: pickupTime,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
+      purchaseMode: purchaseMode,
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -103,6 +104,27 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                       );
                     },
                   ),
+                  // purchase type
+                  ValueListenableBuilder<PurchaseMode>(
+                    valueListenable: form.purchaseModeNotifier,
+                    builder: (context, selectedMode, _) {
+                      return CustomDropDownField<PurchaseMode>(
+                        selectedValue: selectedMode,
+                        width: double.infinity,
+                        hintText: 'Select Purchase Type',
+                        label: 'Purchase Type',
+                        prefixIcon: const Icon(Icons.shopping_bag),
+                        items: PurchaseMode.filteredValues,
+                        itemLabelBuilder: (item) => item.label,
+                        onChanged: (mode) {
+                          if (mode != null) {
+                            form.purchaseModeNotifier.value = mode;
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 14),
 
                   // Payment details
                   BookingTextFieldBuilder.buildSectionHeader(
