@@ -17,4 +17,7 @@ class AppConstants {
       'BPW8nMi99G498J4V59KDQTVq5xPD5jDtvuQDabfIvw5EL9IALPt0K0FutDS3j2x0DClUg-5W2kIog3EnHZPGggA';
 
   static const String defaultCountryDialCode = '+91';
+
+  ///
+  static DateTime defaultStartDate = DateTime(2015);
 }

@@ -79,6 +79,7 @@ abstract interface class IBookingRepository {
     String? startDate,
     String? endDate,
     String? searchQuery,
+    String? purchaseMode,
     int page = 1,
     String? nextPageUrl,
   });

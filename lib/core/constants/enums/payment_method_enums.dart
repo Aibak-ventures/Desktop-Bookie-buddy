@@ -11,18 +11,6 @@ enum PaymentMethod {
   final String name;
   final String upiValue;
 
-  /// Convert from string to PaymentMethod enum
-  // static PaymentMethod fromString(String? status) {
-  //   if (status == null) {
-  //     return PaymentMethod.cash;
-  //   }
-  //   return PaymentMethod.values.firstWhere(
-  //     (e) =>
-  //         e.value == status.toLowerCase() || e.upiValue == status.toLowerCase(),
-  //     orElse: () => PaymentMethod.cash,
-  //   );
-  // }
-
   static PaymentMethod? tryFromJson(String? value) {
     if (value == null) {
       return null;
@@ -54,12 +42,6 @@ enum PaymentMethod {
   bool get isUpi => this == PaymentMethod.upi;
   bool get isCash => this == PaymentMethod.cash;
 }
-
-/// Extension methods for nullable PaymentMethod enum
-// extension PaymentMethodX on PaymentMethod? {
-//   bool get isUpi => this == PaymentMethod.upi;
-//   bool get isCash => this == PaymentMethod.cash;
-// }
 
 enum PaymentStatus {
   pending('pending'),
@@ -106,51 +88,32 @@ enum PaymentStatus {
   bool get isCompleted => this == PaymentStatus.completed;
 }
 
-/// Extension methods for nullable PaymentStatus enum
-// extension PaymentStatusX on PaymentStatus? {
-//   bool get isPending => this == PaymentStatus.pending;
-//   bool get isCompleted => this == PaymentStatus.completed;
-// }
-
 enum PurchaseMode {
-  normal('normal'),
-  package('package');
+  normal('normal', 'Normal'),
+  courier('courier', 'Courier');
 
-  const PurchaseMode(this.value);
+  const PurchaseMode(this.value, this.label);
 
   final String value;
+  final String label;
 
   String get name => value.capitalizeFirstLetter();
 
-  /// Convert from string to PurchaseMode enum
-  static PurchaseMode fromString(String? status) {
-    if (status == null) {
-      return PurchaseMode.normal;
-    }
-    return PurchaseMode.values.firstWhere(
-      (e) => e.value == status.toLowerCase(),
-      orElse: () => PurchaseMode.normal,
-    );
-  }
+  /// The subset of values selectable in add/edit/filter UI.
+  static List<PurchaseMode> get filteredValues => const [normal, courier];
 
   static PurchaseMode fromJson(String? value) {
     if (value == null) {
       return PurchaseMode.normal;
     }
     return PurchaseMode.values.firstWhere(
-      (e) => e.value == value,
+      (e) => e.value == value.toLowerCase(),
       orElse: () => PurchaseMode.normal,
     );
   }
 
-  static String? toJson;
+  static String? toJson(PurchaseMode? mode) => mode?.value;
 
   bool get isNormal => this == PurchaseMode.normal;
-  bool get isPackage => this == PurchaseMode.package;
+  bool get isCourier => this == PurchaseMode.courier;
 }
-
-/// Extension methods for nullable PurchaseMode enum
-// extension PurchaseModeX on PurchaseMode? {
-//   bool get isNormal => this == PurchaseMode.normal;
-//   bool get isPackage => this == PurchaseMode.package;
-// }

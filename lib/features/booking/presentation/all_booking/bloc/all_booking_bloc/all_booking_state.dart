@@ -12,6 +12,7 @@ abstract class AllBookingState with _$AllBookingState {
     String? endDate,
     String? searchQuery,
     String? status,
+    PurchaseMode? purchaseMode,
     StatusCountsEntity? statusCounts,
     String? actionError,
   }) = _Loaded;

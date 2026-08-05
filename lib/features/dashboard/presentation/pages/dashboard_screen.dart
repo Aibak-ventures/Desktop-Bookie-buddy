@@ -32,7 +32,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context.read<all_booking.AllBookingBloc>().stream.listen((state) {
         state.maybeWhen(
           loaded:
-              (_, __, ___, ____, _____, ______, _______, ________, _________) {
+              (
+                _,
+                __,
+                ___,
+                ____,
+                _____,
+                ______,
+                _______,
+                ________,
+                _________,
+                __________,
+              ) {
                 context.read<DashboardBloc>().add(
                   const DashboardEvent.loadDashboardData(useOldState: true),
                 );

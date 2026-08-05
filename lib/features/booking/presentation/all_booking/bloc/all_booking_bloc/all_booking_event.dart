@@ -7,6 +7,7 @@ abstract class AllBookingEvent with _$AllBookingEvent {
     String? startDate,
     String? endDate,
     String? searchQuery,
+    PurchaseMode? purchaseMode,
   }) = _LoadBookings;
 
   const factory AllBookingEvent.loadNextPageBookings() = _LoadNextPageBookings;

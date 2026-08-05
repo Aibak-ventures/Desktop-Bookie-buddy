@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
@@ -94,6 +95,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
             startDate: s.startDate,
             endDate: s.endDate,
             searchQuery: s.searchQuery,
+            purchaseMode: s.purchaseMode,
           ),
         );
       }
@@ -132,6 +134,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
             startDate: s.startDate,
             endDate: s.endDate,
             searchQuery: s.searchQuery,
+            purchaseMode: s.purchaseMode,
           ),
         );
       }
@@ -168,6 +171,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         searchQuery: event.searchQuery.isNotNullOrEmpty
             ? event.searchQuery
             : null,
+        purchaseMode: event.purchaseMode,
       );
 
       emit(
@@ -178,6 +182,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
           startDate: event.startDate,
           searchQuery: event.searchQuery,
           status: event.status ?? 'pending',
+          purchaseMode: event.purchaseMode,
           statusCounts: result.statusCounts,
         ),
       );
@@ -205,6 +210,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         page: 1,
         nextPageUrl: s.nextPageUrl,
         searchQuery: s.searchQuery,
+        purchaseMode: s.purchaseMode,
       );
 
       final mergedBookings = [...s.bookings, ...result.pagination.data];
@@ -248,6 +254,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
             startDate: s.startDate,
             endDate: s.endDate,
             searchQuery: s.searchQuery,
+            purchaseMode: s.purchaseMode,
           ),
         );
       } else {
