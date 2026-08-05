@@ -38,6 +38,7 @@ class BookingFormControllers {
     PaymentMethod.cash,
   );
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
+  final purchaseModeNotifier = ValueNotifier<PurchaseMode>(PurchaseMode.normal);
 
   // ── Description / service / location ────────────────────────────────────────
   final descriptionController = TextEditingController();
@@ -139,6 +140,7 @@ class BookingFormControllers {
     additionalChargesNotifier.dispose();
     documentsNotifier.dispose();
     selectedPaymentMethods.dispose();
+    purchaseModeNotifier.dispose();
     overlayProducts.dispose();
     overlayIsLoading.dispose();
     selectedSearchTypeIndex.dispose();

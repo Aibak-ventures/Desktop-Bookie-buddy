@@ -413,6 +413,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     String? startDate,
     String? endDate,
     String? searchQuery,
+    String? purchaseMode,
     int page = 1,
     String? nextPageUrl,
   }) async {
@@ -424,6 +425,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           startDate: startDate,
           endDate: endDate,
           searchQuery: searchQuery,
+          purchaseMode: purchaseMode,
           nextPageUrl: nextPageUrl,
         ),
       );

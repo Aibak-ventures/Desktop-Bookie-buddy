@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widge
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_documents_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_header_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_items_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_other_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_payment_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_security_refund_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
@@ -156,6 +157,7 @@ class BookingDetailsDrawer extends StatelessWidget {
                     startDate: s.startDate,
                     endDate: s.endDate,
                     searchQuery: s.searchQuery,
+                    purchaseMode: s.purchaseMode,
                   ),
                 ),
               );
@@ -217,7 +219,11 @@ class BookingDetailsDrawer extends StatelessWidget {
                         const SizedBox(height: 20),
                         BookingDetailsSecurityRefundSection(booking: booking),
                         const SizedBox(height: 20),
-                        BookingDetailsDocumentsSection(booking: booking),
+                        BookingDetailsOtherSection(booking: booking),
+                        if (booking.documents.isNotEmpty) ...[
+                          const SizedBox(height: 20),
+                          BookingDetailsDocumentsSection(booking: booking),
+                        ],
                         const SizedBox(height: 80),
                       ],
                     ),

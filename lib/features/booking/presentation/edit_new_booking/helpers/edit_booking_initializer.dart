@@ -109,6 +109,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       discountAmountController.text = booking.discountAmount.toString();
     }
     deliveryStatus = booking.deliveryStatus;
+    purchaseMode = booking.purchaseMode;
     bookingStatus = booking.bookingStatus;
     bookingCompletedDate = booking.bookingCompletedDate;
 
@@ -355,6 +356,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     }
     _originalRunningKm = originalKm ?? booking.otherDetails.end;
     _originalDeliveryStatus = booking.deliveryStatus;
+    _originalPurchaseMode = booking.purchaseMode;
     _originalCoolingPeriodDays = coolingPeriodDays;
     _originalCoolingPeriodMode = coolingPeriodMode;
     _originalRentalDays = _computeRentalDaysFromBookingEntity(booking);

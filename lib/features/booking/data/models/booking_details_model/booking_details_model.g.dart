@@ -27,7 +27,7 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
   securityAmount: (json['security_amount'] as num?)?.toInt(),
   purchaseMode: json['purchase_mode'] == null
       ? PurchaseMode.normal
-      : PurchaseMode.fromString(json['purchase_mode'] as String?),
+      : PurchaseMode.fromJson(json['purchase_mode'] as String?),
   bookingStatus: json['booking_status'] == null
       ? BookingStatus.upcoming
       : BookingStatus.fromString(json['booking_status'] as String),
@@ -116,7 +116,7 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'total_amount_with_security': instance.totalAmountWithSecurity,
   'advance_amount_with_security': instance.paidAmountWithSecurity,
   'security_amount': instance.securityAmount,
-  'purchase_mode': _$PurchaseModeEnumMap[instance.purchaseMode]!,
+  'purchase_mode': PurchaseMode.toJson(instance.purchaseMode),
   'booking_status': BookingStatus.toJson(instance.bookingStatus),
   'payment_status': PaymentStatus.toJson(instance.paymentStatus),
   'delivery_status': DeliveryStatus.toJson(instance.deliveryStatus),
@@ -142,9 +142,4 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'security_account_name': instance.securityAccountName,
   'security_account_id': instance.securityAccountId,
   'tax': instance.appliedTaxes,
-};
-
-const _$PurchaseModeEnumMap = {
-  PurchaseMode.normal: 'normal',
-  PurchaseMode.package: 'package',
 };
