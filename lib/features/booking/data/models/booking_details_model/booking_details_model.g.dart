@@ -18,6 +18,8 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
   coolingPeriodDate: json['cooling_period_end'] as String?,
   coolingPeriodType: json['cooling_period_type'] as String?,
   totalAmount: (json['total_amount'] as num).toInt(),
+  totalPayable: (json['total_payable'] as num?)?.toInt(),
+  balanceAmount: (json['balance'] as num?)?.toInt() ?? 0,
   discountAmount: (json['discount_amount'] as num?)?.toInt(),
   paidAmount: (json['advance_amount'] as num).toInt(),
   totalAmountWithSecurity: (json['total_amount_with_security'] as num?)
@@ -111,6 +113,8 @@ Map<String, dynamic> _$BookingDetailsModelToJson(
   'cooling_period_end': instance.coolingPeriodDate,
   'cooling_period_type': instance.coolingPeriodType,
   'total_amount': instance.totalAmount,
+  'total_payable': instance.totalPayable,
+  'balance': instance.balanceAmount,
   'discount_amount': instance.discountAmount,
   'advance_amount': instance.paidAmount,
   'total_amount_with_security': instance.totalAmountWithSecurity,

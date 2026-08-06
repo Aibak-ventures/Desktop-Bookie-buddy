@@ -26,6 +26,8 @@ abstract class BookingDetailsEntity with _$BookingDetailsEntity {
     String? coolingPeriodDate,
     CoolingPeriodMode? coolingPeriodType,
     required int totalAmount,
+    required int totalPayable,
+    required int balanceAmount,
     int? discountAmount,
     required int paidAmount,
     int? securityAmount,
