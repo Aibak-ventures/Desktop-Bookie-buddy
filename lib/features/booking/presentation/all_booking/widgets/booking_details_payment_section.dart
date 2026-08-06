@@ -35,10 +35,11 @@ class BookingDetailsPaymentSection extends StatelessWidget {
       0,
       (sum, charge) => sum + (charge.amount ?? 0),
     );
-    final totalAmount = booking.totalAmountWithSecurity ?? booking.totalAmount;
+    // final totalAmount = booking.totalAmountWithSecurity ?? booking.totalAmount;
+    final totalPayable = booking.totalPayable;
     final paid = booking.paidAmountWithSecurity ?? booking.actualPaidAmount;
     final discount = booking.discountAmount ?? 0;
-    final balance = totalAmount - paid - discount;
+    final balance = booking.balanceAmount;
     final securityAmount = booking.securityAmount ?? 0;
     final isPaymentCompleted = balance <= 0;
     final appliedTaxes = booking.appliedTaxes.appliedOnly;
@@ -358,7 +359,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               ],
               _buildPaymentRow(
                 'Total Payable',
-                (totalAmount - discount).toCurrency(),
+                totalPayable.toCurrency(),
                 isBold: true,
                 fontSize: 15,
               ),
