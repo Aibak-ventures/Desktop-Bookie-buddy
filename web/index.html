@@ -108,6 +108,18 @@
 </head>
 <body>
   <div class="loading"></div>
+
+  <!--
+    QZ Tray browser client — self-hosted (not loaded from a CDN) so printing
+    doesn't break because a third-party host is unreachable. Pinned to
+    match the QZ Tray desktop version (2.2.6+) shops are told to install;
+    see thermal-printer-implementation-plan.md. Version 2.2.6 has no
+    external RSVP/Sha256 dependency (it falls back to native Promise, and
+    only needs a global Sha256 for the signed/certificate flow, which is
+    deferred) — so only qz-tray.js itself is vendored.
+  -->
+  <script src="qz/qz-tray.js"></script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

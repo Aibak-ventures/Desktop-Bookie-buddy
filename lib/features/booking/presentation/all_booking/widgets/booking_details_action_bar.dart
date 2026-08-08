@@ -1,16 +1,22 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_web/features/printer/presentation/print/pages/qz_print_screen.dart';
+import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/booking_receipt_canvas_builder.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
@@ -171,6 +177,15 @@ class BookingDetailsActionBar extends StatelessWidget {
           icon: Icons.download_outlined,
           color: AppColors.purple,
           onTap: () => _openInvoicePdf(context, booking),
+        ),
+        const SizedBox(width: 12),
+        // Print Receipt via QZ Tray (always visible) — mirrors mobile's
+        // "Print Receipt" popup menu item in BookingDetailsAppBar.
+        _buildIconActionButton(
+          context,
+          icon: Icons.print_outlined,
+          color: AppColors.purple,
+          onTap: () => _printReceipt(context, booking),
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings
@@ -397,6 +412,53 @@ class BookingDetailsActionBar extends StatelessWidget {
     } catch (e) {
       return dateStr.formatToUiDate();
     }
+  }
+
+  /// Builds a print-ready receipt ticket for [booking] and opens
+  /// [QzPrintScreen] on top of the drawer. Mirrors mobile's
+  /// `BookingDetailsAppBar` "Print Receipt" action: same
+  /// `BookingReceiptCanvasBuilder` call, same shop-details guard, same
+  /// loading overlay while the (async, off-screen-rendered) ticket builds.
+  Future<void> _printReceipt(
+    BuildContext context,
+    BookingDetailsEntity booking,
+  ) async {
+    final shop = context.read<UserCubit>().state?.shopDetails;
+    if (shop == null) {
+      context.showSnackBar(
+        'Shop details not available. Please try again.',
+        isError: true,
+      );
+      return;
+    }
+
+    GlobalLoadingOverlay.show(context, text: 'Preparing receipt...');
+    final PrintTicketEntity ticket;
+    try {
+      ticket = await const BookingReceiptCanvasBuilder()(
+        context: context,
+        booking: booking,
+        shop: shop,
+      );
+    } catch (e, stack) {
+      log('Failed to build receipt ticket: $e', stackTrace: stack);
+      GlobalLoadingOverlay.hide();
+      if (context.mounted) {
+        context.showSnackBar('Failed to prepare receipt: $e', isError: true);
+      }
+      return;
+    }
+    GlobalLoadingOverlay.hide();
+
+    log(
+      'Built receipt ticket for booking #${booking.id} '
+      '(${ticket.commands.length} commands) — opening print screen',
+      name: 'QzPrinter',
+    );
+    if (!context.mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => QzPrintScreen(ticket: ticket)),
+    );
   }
 
   Future<void> _openInvoicePdf(
