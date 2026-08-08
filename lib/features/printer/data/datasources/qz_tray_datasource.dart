@@ -11,6 +11,14 @@ const _logName = 'QzPrinter';
 /// feature works with domain entities. Mirrors
 /// `ThermalPrinterDatasource` in the mobile app's `thermal_printer`
 /// feature.
+///
+/// Every call here is request-signed (see `web/qz/qz-sign-message.js`,
+/// loaded before Flutter's own bootstrap in `web/index.html`) — without
+/// that, QZ Tray shows an "Allow this site to print?" popup on *every*
+/// privileged call (`connect`, `find`, `print`), not just once per
+/// session. Signing still means one one-time "trust this certificate?"
+/// prompt the first time QZ Tray sees this app's self-signed cert
+/// (`web/qz/digital-certificate.txt`) — expected, not a bug.
 class QzTrayDatasource {
   /// Connects to the QZ Tray WebSocket (`wss://localhost:8181`) if not
   /// already connected. Throws [PrinterBridgeUnavailableException] if QZ

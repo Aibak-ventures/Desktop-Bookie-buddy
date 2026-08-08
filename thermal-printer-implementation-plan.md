@@ -61,6 +61,23 @@
    singleton** — each `QzPrintScreen` needs its own instance since there's
    no cross-screen state worth sharing (see plan's own note that this
    cubit doesn't need mobile's app-wide singleton treatment).
+8. **Request signing implemented** (`web/qz/qz-sign-message.js` +
+   `web/qz/jsrsasign-all-min.js` + `web/qz/digital-certificate.txt`) —
+   triggered by real USB testing showing the unsigned popup fires on
+   every connect/find/print call, not once per session as originally
+   assumed in "Signing certificate" above. Uses a free self-signed
+   certificate (generated for this app specifically — never QZ's public
+   demo key from their own reference implementation, which is posted on
+   GitHub and explicitly not a secret), following QZ's own official
+   client-side reference pattern (`qzind/tray`,
+   `assets/signing/sign-message.js`) via `jsrsasign`. **Deliberate
+   tradeoff**: the private key ships inside `qz-sign-message.js`, visible
+   via view-source — acceptable only because this is a single shop's own
+   desktop/kiosk printing setup, not a public multi-tenant deployment (see
+   that file's doc comment). A public multi-tenant deployment would need
+   to move signing to a backend endpoint instead. Signing still means one
+   one-time "trust this certificate?" prompt the first time QZ Tray sees
+   this cert — expected, not eliminated.
 
 ---
 
@@ -106,10 +123,14 @@ own official `qz-tray.js` client library (maintained by the `qzind/tray`
 project itself, confirmed on npm as `qz-tray`) — full control, no
 third-party Dart-wrapper risk.
 
-**Signing certificate**: deferred per decision. Without it, the browser
-shows a one-time "Allow this site to print?" prompt per QZ Tray session —
-accepted for now; revisit if/when silent printing becomes worth the paid
-certificate.
+**Signing certificate**: originally deferred, then implemented — see
+"Amendment #8" below. Turned out unsigned QZ Tray doesn't prompt once per
+session as first assumed; it prompts on *every* privileged call (connect,
+find, print), which was a blocker for real USB testing, not a cosmetic
+annoyance. No paid QZ certificate was needed — a free self-signed
+certificate is enough to stop the popup; a paid one only matters if QZ
+Tray ever needs to trust the cert *without even the one-time* "trust this
+certificate?" prompt (not pursued here).
 
 ## Architecture (mirrors this repo's `lib/features/thermal_printer/`)
 

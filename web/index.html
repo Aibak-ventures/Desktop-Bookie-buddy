@@ -113,12 +113,18 @@
     QZ Tray browser client — self-hosted (not loaded from a CDN) so printing
     doesn't break because a third-party host is unreachable. Pinned to
     match the QZ Tray desktop version (2.2.6+) shops are told to install;
-    see thermal-printer-implementation-plan.md. Version 2.2.6 has no
-    external RSVP/Sha256 dependency (it falls back to native Promise, and
-    only needs a global Sha256 for the signed/certificate flow, which is
-    deferred) — so only qz-tray.js itself is vendored.
+    see thermal-printer-implementation-plan.md.
+
+    jsrsasign + qz-sign-message.js sign every QZ Tray request (self-signed
+    cert generated for this app — see qz-sign-message.js's doc comment for
+    why the key ships client-side here) so QZ Tray's "Allow this site to
+    print?" popup doesn't fire on every connect/find/print call. Must load
+    in this order: qz-tray.js first (defines `qz`), then jsrsasign (defines
+    KEYUTIL/KJUR), then qz-sign-message.js (uses both).
   -->
   <script src="qz/qz-tray.js"></script>
+  <script src="qz/jsrsasign-all-min.js"></script>
+  <script src="qz/qz-sign-message.js"></script>
 
   <script src="flutter_bootstrap.js" async></script>
 </body>
