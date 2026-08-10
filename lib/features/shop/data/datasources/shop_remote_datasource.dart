@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/features/shop/data/models/update_shop_settings_request_model/update_shop_settings_request_model.dart';
 import 'package:dio/dio.dart';
 
 class ShopRemoteDatasource {
@@ -38,6 +39,25 @@ class ShopRemoteDatasource {
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Get All Shop Summary Error: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  /// PUTs the full shop-settings payload. NOTE: `updateSettings` has no
+  /// confirmed caller/contract elsewhere in this codebase — payload shape
+  /// (full object vs. partial) and whether it's PUT vs. PATCH are both
+  /// unverified against the real backend; see `ShopSettingsModel`'s doc.
+  Future<CustomResponseModel> updateSettings(
+    UpdateShopSettingsRequestModel shopSettings,
+  ) async {
+    try {
+      final response = await _dio.put(
+        ApiEndpoints.shop.updateSettings,
+        data: shopSettings.toJson(),
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Update Shop Settings Error: $e', stackTrace: stack);
       rethrow;
     }
   }

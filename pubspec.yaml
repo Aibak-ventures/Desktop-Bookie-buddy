@@ -85,6 +85,7 @@ dependencies:
 
   # Thermal receipt printing (QZ Tray bridge)
   esc_pos_utils_plus: ^2.0.4
+  printing: ^5.14.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/common/entities/shop_settings_entity/shop_settings_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/print_output_preference_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,6 +26,15 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
     required AddButtonDefaultAction addButtonDefaultAction,
     @JsonKey(name: 'search_client', defaultValue: false)
     required bool searchClient,
+    
+    @JsonKey(
+      //TODO: check backend key for this field, it is not confirmed yet
+      name: 'print_output_preference',
+      fromJson: PrintOutputPreference.fromJson,
+      defaultValue: PrintOutputPreference.askEveryTime,
+      toJson: PrintOutputPreference.toJson,
+    )
+    required PrintOutputPreference printOutputPreference,
   }) = _ShopSettingsModel;
 
   factory ShopSettingsModel.fromJson(Map<String, dynamic> json) =>
@@ -37,5 +47,6 @@ extension ShopSettingsModelMapper on ShopSettingsModel {
     coolingPeriodMode: coolingPeriodMode,
     addButtonDefaultAction: addButtonDefaultAction,
     searchClient: searchClient,
+    printOutputPreference: printOutputPreference,
   );
 }

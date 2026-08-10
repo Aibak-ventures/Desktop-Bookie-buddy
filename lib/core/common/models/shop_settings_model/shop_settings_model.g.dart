@@ -18,6 +18,11 @@ _ShopSettingsModel _$ShopSettingsModelFromJson(Map<String, dynamic> json) =>
               json['default_action'] as String?,
             ),
       searchClient: json['search_client'] as bool? ?? false,
+      printOutputPreference: json['print_output_preference'] == null
+          ? PrintOutputPreference.askEveryTime
+          : PrintOutputPreference.fromJson(
+              json['print_output_preference'] as String?,
+            ),
     );
 
 Map<String, dynamic> _$ShopSettingsModelToJson(
@@ -27,4 +32,7 @@ Map<String, dynamic> _$ShopSettingsModelToJson(
   'cooling_period_mode': CoolingPeriodMode.toJson(instance.coolingPeriodMode),
   'default_action': instance.addButtonDefaultAction,
   'search_client': instance.searchClient,
+  'print_output_preference': PrintOutputPreference.toJson(
+    instance.printOutputPreference,
+  ),
 };

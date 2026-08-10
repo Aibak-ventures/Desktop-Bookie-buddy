@@ -70,6 +70,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
           status: PrinterBridgeStatus.connected,
           printers: printers,
           selectedPrinterName: preselected,
+          lastUsedPrinterName: preselected,
         ),
       );
     } catch (e, stack) {
@@ -93,6 +94,40 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     emit(state.copyWith(selectedPrinterName: printer.name));
   }
 
+  /// Persists the selected printer as default without printing anything —
+  /// used by the settings entry point (no [PrintTicketEntity] on hand),
+  /// as opposed to [print], which saves as a side effect of a successful
+  /// print job.
+  Future<bool> saveSelectedPrinter() async {
+    final printerName = state.selectedPrinterName;
+    if (printerName == null) {
+      log('saveSelectedPrinter() aborted — no printer selected',
+          name: _logName);
+      return false;
+    }
+
+    log('saveSelectedPrinter() -> "$printerName"', name: _logName);
+    try {
+      await saveLastPrinterUseCase(printerName);
+      emit(state.copyWith(lastUsedPrinterName: printerName));
+      return true;
+    } catch (e, stack) {
+      log(
+        'saveSelectedPrinter() failed: $e',
+        name: _logName,
+        error: e,
+        stackTrace: stack,
+      );
+      emit(
+        state.copyWith(
+          status: PrinterBridgeStatus.error,
+          errorMessage: 'Could not save printer: $e',
+        ),
+      );
+      return false;
+    }
+  }
+
   Future<bool> print(PrintTicketEntity ticket) async {
     final printerName = state.selectedPrinterName;
     if (printerName == null) {
@@ -112,7 +147,12 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
       await printReceiptUseCase(printerName, ticket);
       await saveLastPrinterUseCase(printerName);
       log('print() succeeded', name: _logName);
-      emit(state.copyWith(status: PrinterBridgeStatus.connected));
+      emit(
+        state.copyWith(
+          status: PrinterBridgeStatus.connected,
+          lastUsedPrinterName: printerName,
+        ),
+      );
       return true;
     } catch (e, stack) {
       log('print() failed: $e', name: _logName, error: e, stackTrace: stack);

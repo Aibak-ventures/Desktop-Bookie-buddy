@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages
 import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
+import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
@@ -202,7 +203,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: const StockManagementScreen(),
       ),
-      // const SettingsScreen(), //Currently not using
+      const SettingsScreen(), //Currently not using
     ];
     super.initState();
   }

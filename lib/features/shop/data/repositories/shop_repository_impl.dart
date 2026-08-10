@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:bookie_buddy_web/features/shop/data/models/services_model/services_model.dart';
 import 'package:bookie_buddy_web/features/shop/data/models/shop_model/shop_model.dart';
 import 'package:bookie_buddy_web/features/shop/data/datasources/shop_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/shop/data/models/update_shop_settings_request_model/update_shop_settings_request_model.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
+import 'package:bookie_buddy_web/features/shop/domain/entities/update_shop_settings_request_entity/update_shop_settings_request_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/repositories/i_shop_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
@@ -28,6 +30,24 @@ class ShopRepositoryImpl implements IShopRepository {
       throw response.message ?? 'Failed to get shops';
     } catch (e, stack) {
       log('Get Shops Exception: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateShopSettings(
+    UpdateShopSettingsRequestEntity request,
+  ) async {
+    try {
+      final model = UpdateShopSettingsRequestModel.fromEntity(request);
+      final response = await safeApiCall(
+        () => _datasource.updateSettings(model),
+      );
+      if (response.status.isSuccess) return;
+      log('Update Shop Settings Error: ${response.devMessage}');
+      throw response.message ?? 'Failed to update shop settings';
+    } catch (e, stack) {
+      log('Update Shop Settings Exception: $e', stackTrace: stack);
       rethrow;
     }
   }
