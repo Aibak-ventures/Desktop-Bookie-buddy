@@ -128,6 +128,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
+          SizedBox(width: 60, child: _buildHeaderCell('Sl. No.')),
+          const SizedBox(width: 4),
           Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
           const SizedBox(width: 10),
           Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
@@ -230,13 +232,14 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           controller: _scrollController,
           padding: EdgeInsets.zero,
           itemCount: products.length,
-          itemBuilder: (context, index) => _buildProductRow(products[index]),
+          itemBuilder: (context, index) =>
+              _buildProductRow(products[index], index + 1),
         );
       },
     );
   }
 
-  Widget _buildProductRow(ProductSelectedEntity product) {
+  Widget _buildProductRow(ProductSelectedEntity product, int serialNumber) {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
@@ -266,6 +269,20 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         ),
         child: Row(
           children: [
+            // Serial number
+            SizedBox(
+              width: 60,
+              child: Text(
+                '$serialNumber',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(width: 4),
             // Item Name & Image
             Expanded(
               flex: 3,

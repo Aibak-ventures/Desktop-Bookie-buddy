@@ -10,6 +10,8 @@ class SalesFormProductListHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
+          SizedBox(width: 60, child: _buildCell('Sl. No.')),
+          const SizedBox(width: 4),
           Expanded(flex: 3, child: _buildCell('items', alignLeft: true)),
           const SizedBox(width: 4),
           Expanded(flex: 2, child: _buildCell('Specifications')),

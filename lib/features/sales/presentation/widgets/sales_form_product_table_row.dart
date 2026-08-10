@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 /// All mutations (quantity, price, remove) are handled via callbacks —
 /// state is owned by the screen.
 class SalesFormProductTableRow extends StatelessWidget {
+  final int index;
   final ProductSelectedEntity product;
   final bool isEditing;
   final TextEditingController inlinePriceController;
@@ -19,6 +20,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
   const SalesFormProductTableRow({
     super.key,
+    required this.index,
     required this.product,
     required this.isEditing,
     required this.inlinePriceController,
@@ -40,6 +42,20 @@ class SalesFormProductTableRow extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Serial number
+          SizedBox(
+            width: 60,
+            child: Text(
+              '$index',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 4),
           // Item name & image
           Expanded(
             flex: 3,

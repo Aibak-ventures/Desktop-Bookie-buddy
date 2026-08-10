@@ -377,6 +377,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           padding: EdgeInsets.zero,
           itemCount: products.length,
           itemBuilder: (context, index) => SalesFormProductTableRow(
+            index: index + 1,
             product: products[index],
             isEditing: _editingVariantId == products[index].variant.variantId,
             inlinePriceController: _inlinePriceController,
