@@ -6,6 +6,7 @@ class AppColors {
   static const purple600 = Color(0xFF4C28B8);
   static const purpleLight = Color(0xFFE7E4FF);
   static const purpleLightShade = Color(0xFFEDEEFF);
+  static const purpleAccent = Color(0xFF8A63FE);
 
   // Accent colors
   static const yellow = Color(0xFFF2C849);

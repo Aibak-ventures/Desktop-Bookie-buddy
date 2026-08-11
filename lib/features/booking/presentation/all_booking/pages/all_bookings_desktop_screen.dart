@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_header.dart';
@@ -22,6 +21,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
@@ -265,66 +265,37 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     return BlocBuilder<UserCubit, UserEntity?>(
       builder: (context, userState) {
         final hasSales = _hasSalesFeature(userState);
-        final tabs = ['Booking', if (hasSales) 'Sales'];
+        final tabCount = hasSales ? 2 : 1;
 
         // If Sales tab was selected but is no longer available, reset to Booking.
-        if (_activeActionTab >= tabs.length) {
+        if (_activeActionTab >= tabCount) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (mounted) setState(() => _activeActionTab = 0);
           });
         }
 
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFFE7E4FF).withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            children: List.generate(tabs.length, (index) {
-              final isActive = _activeActionTab == index;
-              return GestureDetector(
-                onTap: () {
-                  setState(() => _activeActionTab = index);
-                  _loadData();
-                  // Close the booking details drawer when switching tabs
-                  context.read<BookingDetailsDrawerCubit>().closeDrawer();
-                  context.read<SalesDetailsDrawerCubit>().closeDrawer();
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isActive
-                        ? const Color(0xFF8A63FE)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        index == 0
-                            ? Icons.calendar_today_outlined
-                            : Icons.shopping_cart_outlined,
-                        size: 18,
-                        color: isActive ? Colors.white : Colors.grey.shade700,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        tabs[index],
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: isActive ? Colors.white : Colors.grey.shade700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-          ),
+        return ModeToggleWidget<int>(
+          selectedValue: _activeActionTab,
+          onChanged: (index) {
+            setState(() => _activeActionTab = index);
+            _loadData();
+            // Close the booking details drawer when switching tabs
+            context.read<BookingDetailsDrawerCubit>().closeDrawer();
+            context.read<SalesDetailsDrawerCubit>().closeDrawer();
+          },
+          tabs: [
+            const ModeToggleTab(
+              value: 0,
+              label: 'Booking',
+              icon: Icons.calendar_today_outlined,
+            ),
+            if (hasSales)
+              const ModeToggleTab(
+                value: 1,
+                label: 'Sales',
+                icon: Icons.shopping_cart_outlined,
+              ),
+          ],
         );
       },
     );
@@ -701,7 +672,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             final itemIndex = index - 1;
 
             if (itemIndex < bookings.length) {
-              return _buildTableRow(bookings[itemIndex]);
+              return AllBookingsBookingTableRow(booking: bookings[itemIndex]);
             } else {
               // Loading indicator or bottom padding
               if (isPaginating) {
@@ -723,55 +694,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
       ? const AllBookingsSalesTableHeader()
       : const AllBookingsBookingTableHeader();
 
-  Widget _buildTableRow(DesktopBookingItemEntity booking) =>
-      AllBookingsBookingTableRow(
-        booking: booking,
-        formatDateWithLabel: _formatDateWithLabel,
-        parseStaffColor: _parseStaffColor,
-      );
-
   Widget _buildSalesTableRow(SaleEntity sale) =>
       AllBookingsSalesTableRow(sale: sale);
-
-  /// Format date with Today/Tomorrow labels
-  String _formatDateWithLabel(String dateStr) {
-    if (dateStr.isEmpty) return 'N/A';
-    try {
-      final bookingDate = dateStr.parseToDateTime();
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final tomorrow = today.add(const Duration(days: 1));
-      final dateOnly = DateTime(
-        bookingDate.year,
-        bookingDate.month,
-        bookingDate.day,
-      );
-
-      if (dateOnly == today) {
-        return 'Today';
-      } else if (dateOnly == tomorrow) {
-        return 'Tomorrow';
-      }
-
-      // Default: Use formatted date
-      return dateStr.formatToUiDate();
-    } catch (e) {
-      // Fallback to original format if parsing fails
-      return dateStr.formatToUiDate();
-    }
-  }
-
-  /// Parse staff color from hex string (e.g., "FF64B5F6")
-  Color _parseStaffColor(String? staffColor) {
-    if (staffColor != null && staffColor.isNotEmpty) {
-      try {
-        final colorString = staffColor.toUpperCase();
-        return Color(int.parse('0x$colorString'));
-      } catch (e) {
-        // Fall back to grey if parsing fails
-        return Colors.grey.shade700;
-      }
-    }
-    return Colors.grey.shade700;
-  }
 }

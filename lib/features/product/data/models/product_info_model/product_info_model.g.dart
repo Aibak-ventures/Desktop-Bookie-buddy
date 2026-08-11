@@ -38,7 +38,7 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'product_name': instance.name,
       'image': instance.image,
       'thumbnailImage': instance.thumbnailImage,
-      'main_service_name': _$MainServiceTypeEnumMap[instance.mainServiceType],
+      'main_service_name': MainServiceType.toJson(instance.mainServiceType),
       'variant_attribute': instance.variantAttribute,
       'color': instance.color,
       'category': instance.category,
@@ -49,17 +49,3 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'stock': instance.stock,
       'remaining_stock': instance.remainingStock,
     };
-
-const _$MainServiceTypeEnumMap = {
-  MainServiceType.dress: 'dress',
-  MainServiceType.vehicle: 'vehicle',
-  MainServiceType.equipment: 'equipment',
-  MainServiceType.gadgets: 'gadgets',
-  MainServiceType.material: 'material',
-  MainServiceType.room: 'room',
-  MainServiceType.costume: 'costume',
-  MainServiceType.jewellery: 'jewellery',
-  MainServiceType.shoes: 'shoes',
-  MainServiceType.bridal: 'bridal',
-  MainServiceType.others: 'others',
-};
