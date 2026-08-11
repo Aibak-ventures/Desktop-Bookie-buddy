@@ -64,6 +64,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -127,6 +129,23 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   final taxAmountController = TextEditingController();
   AccountEntity? selectedAdvanceAccount;
   AccountEntity? selectedSecurityAccount;
+  // Split advance payment — cash (reuses advanceAmountController) + bank/UPI,
+  // each with its own filtered account selection.
+  bool isAdvanceSplit = false;
+  final splitBankAmountController = TextEditingController();
+  AccountEntity? selectedAdvanceCashAccount;
+  AccountEntity? selectedAdvanceBankAccount;
+
+  /// Current advance split state, built fresh from the split controllers on
+  /// every read — the single source of truth for validation, request
+  /// building, and the payment summary.
+  AdvanceSplitPayment get _advanceSplit => AdvanceSplitPayment(
+    isSplit: isAdvanceSplit,
+    cashAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+    bankAmount: splitBankAmountController.text.trim().toIntOrNull() ?? 0,
+    cashAccount: selectedAdvanceCashAccount,
+    bankAccount: selectedAdvanceBankAccount,
+  );
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isSecurityPaid = true;
@@ -339,6 +358,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       staffNameController,
       advanceAmountController,
       securityAmountController,
+      splitBankAmountController,
       discountAmountController,
       taxAmountController,
       descriptionController,
@@ -394,6 +414,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       clientPhone2Controller,
       clientAddressController,
       advanceAmountController,
+      splitBankAmountController,
       securityAmountController,
       discountAmountController,
       taxAmountController,
@@ -454,6 +475,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     advanceAmountController.clear();
     securityAmountController.clear();
     isSecurityPaid = true;
+    isAdvanceSplit = false;
+    splitBankAmountController.clear();
+    selectedAdvanceCashAccount = null;
+    selectedAdvanceBankAccount = null;
     discountAmountController.clear();
     taxAmountController.clear();
     descriptionController.clear();
@@ -900,6 +925,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       selectedProductsNotifier: selectedProductsNotifier,
       additionalChargesNotifier: additionalChargesNotifier,
       advanceAmountController: advanceAmountController,
+      splitBankAmountController: splitBankAmountController,
+      isAdvanceSplit: isAdvanceSplit,
       discountAmountController: discountAmountController,
       isDiscountPercentage: _discountTypeNotifier,
       securityAmountController: securityAmountController,
@@ -958,13 +985,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
+    final advanceSplit = _advanceSplit;
+
     final paymentResult = BookingFormValidator.validatePayment(
       bookingType: selectedBookingType,
-      advanceAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+      advanceAmount: advanceSplit.total,
       securityAmount: securityAmountController.text.trim().toIntOrNull() ?? 0,
       totalPayable: _calculateBookingTotalPayable(),
       advanceAccount: selectedAdvanceAccount,
       securityAccount: selectedSecurityAccount,
+      advanceSplit: advanceSplit,
     );
     if (!paymentResult.isValid) {
       context.showSnackBar(paymentResult.errors.first, isError: true);
@@ -1035,11 +1065,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       pickupDate: pickupDate,
       returnDate: returnDate,
       bookedDate: _bookedDateForSubmit,
-      advanceAmount: advanceAmountController.text.trim().toIntOrNull(),
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       isSecurityPaid: isSecurityPaid,
       securityAccountId: selectedSecurityAccount?.id,
       advanceAccount: selectedAdvanceAccount,
+      advanceSplit: _advanceSplit,
       deliveryStatus: deliveryStatus,
       description: _buildDescriptionWithPaymentSummary(),
       pickupTime: pickupTime,

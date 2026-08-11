@@ -1,6 +1,8 @@
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
+import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
+import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
@@ -46,6 +48,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   void initState() {
     pageController = PageController();
     screens = [
+      // dashboard
       MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
@@ -81,6 +84,41 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: DashboardScreen(onNavigateToBookings: _navigateToBookingsTab),
       ),
+
+      // Global Search
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                GlobalSearchBloc(getGlobalSearchUseCase: getIt()),
+          ),
+          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
+          BlocProvider(
+            create: (context) => BookingDetailsBloc(
+              getBooking: getIt(),
+              updateDeliveryStatus: getIt(),
+              updateBookingStatus: getIt(),
+              updatePayment: getIt(),
+              deletePayment: getIt(),
+              cancelBooking: getIt(),
+              deleteBooking: getIt(),
+              addRefund: getIt(),
+              deleteRefund: getIt(),
+              updateSecurityRefund: getIt(),
+              deleteSecurityRefundedPayment: getIt(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsPaymentHistoryCubit(),
+          ),
+          BlocProvider(
+            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
+          ),
+        ],
+        child: GlobalSearchScreen(),
+      ),
+
+      // All Bookings
       MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
@@ -119,6 +157,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
         ],
         child: AllBookingsDesktopScreen(key: _allBookingsKey),
       ),
+
+      // stock management
       MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => BookingDetailsDrawerCubit()),

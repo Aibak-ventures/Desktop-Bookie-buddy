@@ -10,6 +10,7 @@ class BookingTextFieldBuilder {
   static Widget buildRightPanelTextField({
     required TextEditingController controller,
     required String hint,
+    String? label,
     bool isNumber = false,
     bool enabled = true,
     FocusNode? focusNode,
@@ -22,6 +23,10 @@ class BookingTextFieldBuilder {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (label != null && label.isNotEmpty) ...[
+          Text(label, style: const TextStyle(fontSize: 11)),
+          const SizedBox(height: 4),
+        ],
         Container(
           height: 42,
           padding: const EdgeInsets.symmetric(horizontal: 12),

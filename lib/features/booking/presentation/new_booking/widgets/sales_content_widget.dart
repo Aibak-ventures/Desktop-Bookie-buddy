@@ -103,6 +103,7 @@ extension SalesFlowBuilders on NewBookingScreenState {
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: discountAmountController,
                     hint: 'Discount amount',
+                    label: 'Discount amount',
                     isNumber: true,
                   ),
                   const SizedBox(

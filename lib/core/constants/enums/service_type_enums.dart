@@ -1,52 +1,61 @@
 import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
 
 enum MainServiceType {
-  dress,
-  vehicle,
-  equipment,
-  gadgets,
-  material,
-  room,
-  costume,
-  jewellery,
-  shoes,
-  bridal,
-  others;
+  dress('dress'),
+  vehicle('vehicle'),
+  equipment('equipment'),
+  material('material'),
+  gadget('gadget'),
+  costume('costume'),
+  sale('sale'),
+  jewellery('jewellery'),
+  shoe('shoe'),
+  bridal('bridal'),
+  room('room'),
+  other('other');
+
+  final String value;
+  const MainServiceType(this.value);
 
   static MainServiceType fromString(String? serviceName) {
-    if (serviceName == null) return MainServiceType.others;
+    if (serviceName == null) return MainServiceType.other;
+    final serviceType = serviceName.toLowerCase();
 
-    final name = serviceName.toLowerCase();
-
-    if (name.contains('dress')) return MainServiceType.dress;
-    if (name.contains('vehicle')) return MainServiceType.vehicle;
-    if (name.contains('equipment')) return MainServiceType.equipment;
-    if (name.contains('gadget')) return MainServiceType.gadgets;
-    if (name.contains('material')) return MainServiceType.material;
-    if (name.contains('room')) return MainServiceType.room;
-    if (name.contains('costume')) return MainServiceType.costume;
-    if (name.contains('jewellery') || name.contains('jewelry'))
-      return MainServiceType.jewellery;
-    if (name.contains('shoe')) return MainServiceType.shoes;
-    if (name.contains('bride') || name.contains('bridal'))
-      return MainServiceType.bridal;
-
-    return MainServiceType.others;
+    for (final type in MainServiceType.values) {
+      if (serviceType.contains(type.value)) {
+        return type;
+      }
+    }
+    return MainServiceType.other;
   }
 
+  static String toJson(MainServiceType? type) =>
+      type?.value ?? MainServiceType.other.value;
+
+  /// Get MainServiceType from a list of ServiceEntity by serviceId.
+  /// Returns `MainServiceType.other` if serviceId is null or not found.
   static MainServiceType fromServiceList(
     List<ServiceEntity> services,
     int? serviceId,
   ) {
-    if (serviceId == null) return MainServiceType.others;
-
-    for (final service in services) {
-      if (service.id == serviceId) {
-        return fromString(service.mainServiceName);
-      }
+    if (serviceId == null) return MainServiceType.other;
+    for (final s in services) {
+      if (s.id == serviceId) return fromString(s.mainServiceName);
     }
+    return MainServiceType.other;
+  }
 
-    return MainServiceType.others;
+  /// Get MainServiceType from a list of ServiceEntity by serviceId.
+  /// Returns `null` if serviceId is null or not found.
+  static MainServiceType? tryFromServiceList(
+    List<ServiceEntity> services,
+    int? serviceId,
+  ) {
+    if (serviceId == null) return null;
+    for (final s in services) {
+      if (s.id == serviceId) return fromString(s.mainServiceName);
+    }
+    return null;
   }
 }
 
@@ -59,17 +68,17 @@ extension MainServiceTypeX on MainServiceType? {
   bool get isVehicle => this == MainServiceType.vehicle;
   bool get isEquipment => this == MainServiceType.equipment;
   bool get isMaterial => this == MainServiceType.material;
-  bool get isGadget => this == MainServiceType.gadgets;
+  bool get isGadget => this == MainServiceType.gadget;
   bool get isRoom => this == MainServiceType.room;
   bool get isCostume => this == MainServiceType.costume;
   bool get isJewellery => this == MainServiceType.jewellery;
-  bool get isShoes => this == MainServiceType.shoes;
+  bool get isShoe => this == MainServiceType.shoe;
   bool get isBridal => this == MainServiceType.bridal;
-  bool get isOthers => this == MainServiceType.others;
+  bool get isOther => this == MainServiceType.other;
 
   /// Returns true for service types that support multi-variant product setup
   /// (dress sizes, costume sizes, shoe sizes, bridal sizes,)
-  bool get needsVariantsSection => isDress || isCostume || isShoes || isBridal;
+  bool get needsVariantsSection => isDress || isCostume || isShoe || isBridal;
 
   // ==================== Variant Management ====================
 
@@ -112,9 +121,8 @@ extension MainServiceTypeX on MainServiceType? {
   /// Examples:
   /// - Dress/Costume → "Color"
   /// - Vehicle → "Model"
-  /// - Others → null (no secondary attribute)
   String? get secondaryAttributeLabel {
-    if (isDress || isCostume || isOthers) return 'Color';
+    if (isDress || isCostume || isOther) return 'Color';
     if (isVehicle) return 'Model';
     return null;
   }
@@ -173,5 +181,18 @@ extension MainServiceTypeX on MainServiceType? {
   /// Required for: vehicle, equipment, gadget, costume, room
   /// Not required for: material (custom work may not need dates)
   bool get requiresDateRange =>
-      isVehicle || isEquipment || isGadget || isCostume;
+      isVehicle || isEquipment || isGadget || isCostume || isRoom;
+
+  String get pickupLabel => isRoom ? 'Check-in' : 'Pickup';
+  String get returnLabel => isRoom ? 'Check-out' : 'Return';
+  String get pickupDateLabel => '$pickupLabel Date';
+  String get returnDateLabel => '$returnLabel Date';
+  String get pickupTimeLabel => '$pickupLabel Time';
+  String get returnTimeLabel => '$returnLabel Time';
+
+  String get rentalUnitTypeLabel => isRoom ? 'Duration Type' : 'Rental Type';
+
+  String get clientNameType => isRoom ? 'Guest' : 'Client';
+
+  bool get showCoolingPeriodField => !isRoom;
 }

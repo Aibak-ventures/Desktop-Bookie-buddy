@@ -11,7 +11,8 @@
       "Skill(code-review:*)",
       "Bash(fvm dart *)",
       "Bash(ls /Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/booking 2>&1)",
-      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/booking/**)"
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/booking/**)",
+      "Bash(git status *)"
     ]
   }
 }
