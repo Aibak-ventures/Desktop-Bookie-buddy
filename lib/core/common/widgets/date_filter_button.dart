@@ -8,6 +8,7 @@ class DateFilterButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool hasActiveFilter;
   final bool showLabel;
+
   const DateFilterButton({
     required this.onTap,
     super.key,
@@ -21,29 +22,20 @@ class DateFilterButton extends StatelessWidget {
       color: AppColors.purpleLightShade,
       borderRadius: BorderRadius.circular(5),
     ),
-    padding: 8.padding,
+    padding: 15.padding,
     child: Row(
       children: [
         Icon(
           Icons.tune,
-          size: 22.sp,
+          size: 26.sp,
           color: hasActiveFilter ? AppColors.purple : AppColors.black,
         ),
-        // SvgPicture.asset(
-        //   AppIcons.filterSvg,
-        //   height: 18,
-        //   semanticsLabel: 'Filter Booking',
-        //   colorFilter: ColorFilter.mode(
-        //     hasActiveFilter ? AppColors.purple : AppColors.black,
-        //     BlendMode.srcIn,
-        //   ),
-        // ),
         if (showLabel) ...[
-          4.width,
+          6.width,
           Text(
             'Filter',
             style: TextStyle(
-              fontSize: 15.sp,
+              fontSize: 22.sp,
               color: hasActiveFilter ? AppColors.purple : AppColors.black,
             ),
           ),

@@ -31,6 +31,7 @@ class AppAssets {
   static const String noDataAnimation = '${_animations}nodata.json';
   static const String noProductAnimation =
       '${_animations}no_product_animation.json';
+  static const String searchAnimation = '${_animations}search.json';
 
   // fonts
   static const String interRegularFont = '${_fonts}Inter_Regular.ttf';

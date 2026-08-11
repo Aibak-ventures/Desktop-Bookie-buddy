@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_list_header.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_table_row.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_summary_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
@@ -70,6 +71,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   List<String> _searchTypes = ['Name', 'Category', 'Model', 'Color'];
 
   static const double _fieldSpacing = 8.0;
+  final _horizontalTableScrollController = ScrollController();
 
   @override
   void initState() {
@@ -119,6 +121,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     _maxPriceNotifier.dispose();
     _overlayProducts.dispose();
     _overlayIsLoading.dispose();
+    _horizontalTableScrollController.dispose();
     super.dispose();
   }
 
@@ -321,11 +324,29 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   }
 
   Widget _buildSelectedProductsTable() {
-    return Column(
-      children: [
-        const SalesFormProductListHeader(),
-        Expanded(child: _buildSelectedProductsList()),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final tableWidth = constraints.maxWidth < SalesProductTableFlex.minTableWidth
+            ? SalesProductTableFlex.minTableWidth
+            : constraints.maxWidth;
+        return Scrollbar(
+          controller: _horizontalTableScrollController,
+          child: SingleChildScrollView(
+            controller: _horizontalTableScrollController,
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: tableWidth,
+              height: constraints.maxHeight,
+              child: Column(
+                children: [
+                  const SalesFormProductListHeader(),
+                  Expanded(child: _buildSelectedProductsList()),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -377,6 +398,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           padding: EdgeInsets.zero,
           itemCount: products.length,
           itemBuilder: (context, index) => SalesFormProductTableRow(
+            index: index + 1,
             product: products[index],
             isEditing: _editingVariantId == products[index].variant.variantId,
             inlinePriceController: _inlinePriceController,
@@ -456,6 +478,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: _formController.discountController,
                     hint: 'Discount amount',
+                    label: 'Discount amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),

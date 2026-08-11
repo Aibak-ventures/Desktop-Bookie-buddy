@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.da
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Hover-expandable glass sidebar for [BottomBarScreen].
 ///
@@ -90,9 +91,10 @@ class _GlassSidebarState extends State<GlassSidebar> {
               children: [
                 _navItemExpanded(0, Icons.add_box_outlined, 'New Order'),
                 _navItemExpanded(1, Icons.dashboard_outlined, 'Dashboard'),
-                _navItemExpanded(2, Icons.list_alt, 'Orders'),
-                _navItemExpanded(3, Icons.bar_chart_outlined, 'Stocks'),
-                // _navItemExpanded(4, Icons.settings_outlined, 'Settings'), //Currently not using
+                _navItemExpanded(2, LucideIcons.search500, 'Global Search'),
+                _navItemExpanded(3, Icons.list_alt, 'Orders'),
+                _navItemExpanded(4, Icons.bar_chart_outlined, 'Stocks'),
+                // _navItemExpanded(5, Icons.settings_outlined, 'Settings'), //Currently not using
               ],
             ),
           ),
@@ -123,9 +125,10 @@ class _GlassSidebarState extends State<GlassSidebar> {
               children: [
                 _navItemCollapsed(0, Icons.add_box_outlined),
                 _navItemCollapsed(1, Icons.dashboard_outlined),
-                _navItemCollapsed(2, Icons.list_alt),
-                _navItemCollapsed(3, Icons.bar_chart_outlined),
-                // _navItemCollapsed(4, Icons.settings_outlined), // Currently not using
+                _navItemCollapsed(2, LucideIcons.search500),
+                _navItemCollapsed(3, Icons.list_alt),
+                _navItemCollapsed(4, Icons.bar_chart_outlined),
+                // _navItemCollapsed(5, Icons.settings_outlined), // Currently not using
               ],
             ),
           ),

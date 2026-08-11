@@ -85,6 +85,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       for (final node in nodes) node.dispose();
     }
     _scrollController.dispose();
+    _horizontalScrollController.dispose();
     super.dispose();
   }
 
@@ -109,13 +110,46 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     widget.focusTargetProductKey?.value = null;
   }
 
+  /// Minimum width the table needs to lay out its columns without
+  /// overflowing. Below this, the table scrolls horizontally instead of
+  /// squeezing its columns.
+  static const double _minTableWidth = 1000;
+  final ScrollController _horizontalScrollController = ScrollController();
+
+  /// Column flex ratios, shared between the header and every data row so
+  /// cells stay aligned. `_flexColumn` is the "standard" column width;
+  /// `_flexSlNo` is deliberately half of it since Sl. No. only ever needs
+  /// to fit a couple of digits.
+  static const int _flexSlNo = 1;
+  static const int _flexColumn = 2;
+  static const int _flexItems = 6;
+  static const int _flexSpecifications = 4;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildProductListHeader(),
-        Expanded(child: _buildSelectedProductsList()),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final tableWidth = constraints.maxWidth < _minTableWidth
+            ? _minTableWidth
+            : constraints.maxWidth;
+        return Scrollbar(
+          controller: _horizontalScrollController,
+          child: SingleChildScrollView(
+            controller: _horizontalScrollController,
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: tableWidth,
+              height: constraints.maxHeight,
+              child: Column(
+                children: [
+                  _buildProductListHeader(),
+                  Expanded(child: _buildSelectedProductsList()),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -128,27 +162,35 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          Expanded(flex: 3, child: _buildHeaderCell('items', alignLeft: true)),
+          Expanded(flex: _flexSlNo, child: _buildHeaderCell('Sl. No.')),
+          const SizedBox(width: 4),
+          Expanded(
+            flex: _flexItems,
+            child: _buildHeaderCell('items', alignLeft: true),
+          ),
           const SizedBox(width: 10),
-          Expanded(flex: 2, child: _buildHeaderCell('Specifications')),
+          Expanded(
+            flex: _flexSpecifications,
+            child: _buildHeaderCell('Specifications'),
+          ),
           const SizedBox(width: 4),
           if (hasVariants) ...[
-            Expanded(child: _buildHeaderCell('Variants')),
+            Expanded(flex: _flexColumn, child: _buildHeaderCell('Variants')),
             const SizedBox(width: 4),
           ],
           if (!isOldBooking) ...[
-            Expanded(child: _buildHeaderCell('Available')),
+            Expanded(flex: _flexColumn, child: _buildHeaderCell('Available')),
             const SizedBox(width: 4),
           ],
-          Expanded(child: _buildHeaderCell('Quantity')),
+          Expanded(flex: _flexColumn, child: _buildHeaderCell('Quantity')),
           const SizedBox(width: 4),
           if (!isSales) ...[
-            Expanded(child: _buildHeaderCell('Days')),
+            Expanded(flex: _flexColumn, child: _buildHeaderCell('Days')),
             const SizedBox(width: 4),
           ],
-          Expanded(child: _buildHeaderCell('Price / item')),
+          Expanded(flex: _flexColumn, child: _buildHeaderCell('Price / item')),
           const SizedBox(width: 4),
-          Expanded(child: _buildHeaderCell('Total')),
+          Expanded(flex: _flexColumn, child: _buildHeaderCell('Total')),
           const SizedBox(width: 50), // Matches row close button area
         ],
       ),
@@ -230,13 +272,14 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
           controller: _scrollController,
           padding: EdgeInsets.zero,
           itemCount: products.length,
-          itemBuilder: (context, index) => _buildProductRow(products[index]),
+          itemBuilder: (context, index) =>
+              _buildProductRow(products[index], index + 1),
         );
       },
     );
   }
 
-  Widget _buildProductRow(ProductSelectedEntity product) {
+  Widget _buildProductRow(ProductSelectedEntity product, int serialNumber) {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
@@ -266,9 +309,23 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         ),
         child: Row(
           children: [
+            // Serial number
+            Expanded(
+              flex: _flexSlNo,
+              child: Text(
+                '$serialNumber',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(width: 4),
             // Item Name & Image
             Expanded(
-              flex: 3,
+              flex: _flexItems,
               child: Row(
                 children: [
                   MouseRegion(
@@ -341,7 +398,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             const SizedBox(width: 4),
             // Specifications
             Expanded(
-              flex: 2,
+              flex: _flexSpecifications,
               child: Center(
                 child: Text(
                   _getProductSpecifications(product),
@@ -360,6 +417,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             // Variant (only for multi-variant products)
             if (hasVariants) ...[
               Expanded(
+                flex: _flexColumn,
                 child: Center(
                   child: Text(
                     _getVariantDisplayText(product),
@@ -376,6 +434,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             // Available Badge
             if (!isOldBooking) ...[
               Expanded(
+                flex: _flexColumn,
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -419,6 +478,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             ],
             // Quantity Buttons
             Expanded(
+              flex: _flexColumn,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -517,6 +577,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             // Days column (only for bookings/custom/old booking)
             if (!isSales) ...[
               Expanded(
+                flex: _flexColumn,
                 child: widget.showDayControls
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -585,6 +646,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             ],
             // Price / item
             Expanded(
+              flex: _flexColumn,
               child: _editingVariantId == product.variant.variantId
                   ? Center(
                       child: SizedBox(
@@ -663,6 +725,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             const SizedBox(width: 4),
             // Total
             Expanded(
+              flex: _flexColumn,
               child: Center(
                 child: Text(
                   ((product.amount * product.quantity) *

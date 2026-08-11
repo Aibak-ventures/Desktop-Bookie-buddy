@@ -4,9 +4,9 @@ import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_request_entity/booking_payment_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -54,11 +54,11 @@ class BookingRequestBuilder {
     required DateTime pickupDate,
     required DateTime returnDate,
     required DateTime? bookedDate,
-    required int? advanceAmount,
     required int? securityAmount,
     required bool isSecurityPaid,
     required int? securityAccountId,
     required AccountEntity? advanceAccount,
+    required AdvanceSplitPayment advanceSplit,
     required DeliveryStatus deliveryStatus,
     required String? description,
     required TimeOfDay? pickupTime,
@@ -137,9 +137,6 @@ class BookingRequestBuilder {
       effectiveCoolingPeriodDate = null;
     }
 
-    // --- Advance payment ---
-    final hasAdvance = advanceAmount != null && advanceAmount > 0;
-
     return BookingRequestEntity(
       clientId: selectedClientId,
       staffId: staffId,
@@ -150,7 +147,6 @@ class BookingRequestBuilder {
       bookedDate: bookedDate?.format(),
       coolingPeriodDate: effectiveCoolingPeriodDate?.format(),
       coolingPeriodType: coolingPeriodDays > 0 ? coolingPeriodMode : null,
-      advanceAmount: advanceAmount,
       securityAmount: securityAmount,
       isSecurityPaid: securityAmount != null && securityAmount > 0
           ? isSecurityPaid
@@ -160,14 +156,8 @@ class BookingRequestBuilder {
           : null,
       discountAmount: actualDiscount,
       purchaseMode: purchaseMode.value,
-      payments: !hasAdvance
-          ? null
-          : [
-              BookingPaymentRequestEntity(
-                accountId: advanceAccount!.id,
-                amount: advanceAmount,
-              ),
-            ],
+      advanceAmount: advanceSplit.hasAmount ? advanceSplit.total : null,
+      payments: advanceSplit.buildPayments(singleAccount: advanceAccount),
       deliveryStatus: deliveryStatus,
       products: requestProducts,
       otherDetails: otherDetails,

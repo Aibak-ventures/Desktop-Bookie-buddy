@@ -43,7 +43,11 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'product_name') required String name,
     @JsonKey(readValue: _readProductImage) required String? image,
     @JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,
-    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    @JsonKey(
+      name: 'main_service_name',
+      fromJson: MainServiceType.fromString,
+      toJson: MainServiceType.toJson,
+    )
     MainServiceType? mainServiceType,
     @JsonKey(name: 'variant_attribute') String? variantAttribute,
     String? color,

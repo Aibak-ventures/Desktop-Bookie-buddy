@@ -67,7 +67,11 @@ abstract class ProductSaleInfoModel with _$ProductSaleInfoModel {
     @JsonKey(name: 'color') String? color,
     @JsonKey(name: 'category') String? category,
     @JsonKey(name: 'model') String? model,
-    @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)
+    @JsonKey(
+      name: 'main_category_name',
+      fromJson: MainServiceType.fromString,
+      toJson: MainServiceType.toJson,
+    )
     MainServiceType? mainServiceType,
   }) = _ProductSaleInfoModel;
 

@@ -40,16 +40,9 @@ class CustomSearchField extends StatelessWidget {
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
         hintText: hintText,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        visualDensity: VisualDensity.compact,
         prefixIcon: Icon(LucideIcons.search500, size: 24.sp),
-        // Padding(
-        //   padding: 12.padding, // Adjust as needed
-        //   child: SvgPicture.asset(
-        //     AppIcons.searchSvg,
-        //     height: 20,
-        //     width: 20,
-        //   ),
-        // ),
         suffixIcon: ValueListenableBuilder<TextEditingValue>(
           valueListenable: searchController,
           builder: (context, value, _) {

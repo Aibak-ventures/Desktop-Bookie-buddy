@@ -49,6 +49,14 @@ class BookingAmountSummary extends StatelessWidget {
   /// Header label on the expandable tile.
   final String totalRemainingLabel;
 
+  /// Whether the advance is split between cash and bank/UPI. When true,
+  /// [advanceAmountController] holds the cash leg and
+  /// [splitBankAmountController] the bank/UPI leg; the summary sums both.
+  final bool isAdvanceSplit;
+
+  /// Bank/UPI leg of a split advance. Ignored when [isAdvanceSplit] is false.
+  final TextEditingController? splitBankAmountController;
+
   /// Computes the tax breakdown for the current amounts — pass the shop's
   /// live `calculateTaxSummary` when creating, or the record's frozen
   /// `appliedTaxes.calculateTaxSummary` when editing.
@@ -69,6 +77,8 @@ class BookingAmountSummary extends StatelessWidget {
     required this.calculateTaxSummary,
     this.advanceLabel = 'Paid',
     this.totalRemainingLabel = 'Total Payable Amount',
+    this.isAdvanceSplit = false,
+    this.splitBankAmountController,
   });
 
   bool _shouldMultiplyByDays(MainServiceType? type) =>
@@ -81,6 +91,7 @@ class BookingAmountSummary extends StatelessWidget {
         selectedProductsNotifier,
         additionalChargesNotifier,
         advanceAmountController,
+        ?splitBankAmountController,
         discountAmountController,
         isDiscountPercentage,
         securityAmountController,
@@ -88,9 +99,14 @@ class BookingAmountSummary extends StatelessWidget {
       builder: (context, _) {
         final products = selectedProductsNotifier.value;
         final additionalCharges = additionalChargesNotifier.value;
+        final cashAdvanceAmount =
+            advanceAmountController.text.trim().toIntOrNull() ?? 0;
+        final bankAdvanceAmount = isAdvanceSplit
+            ? (splitBankAmountController?.text.trim().toIntOrNull() ?? 0)
+            : 0;
         final advanceAmount = isSales
             ? 0
-            : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
+            : cashAdvanceAmount + bankAdvanceAmount;
         final securityAmount = isSales
             ? 0
             : (int.tryParse(securityAmountController.text.trim()) ?? 0);
@@ -217,7 +233,20 @@ class BookingAmountSummary extends StatelessWidget {
         ];
 
         final summaryReceivedFields = <SummaryField>[
-          if (advanceAmount > 0)
+          if (isAdvanceSplit && advanceAmount > 0) ...[
+            if (cashAdvanceAmount > 0)
+              SummaryField(
+                label: '$advanceLabel (Cash)',
+                value: cashAdvanceAmount.toCurrency(),
+                valueStyle: const TextStyle(fontSize: 13),
+              ),
+            if (bankAdvanceAmount > 0)
+              SummaryField(
+                label: '$advanceLabel (Bank/UPI)',
+                value: bankAdvanceAmount.toCurrency(),
+                valueStyle: const TextStyle(fontSize: 13),
+              ),
+          ] else if (advanceAmount > 0)
             SummaryField(
               label: advanceLabel,
               value: advanceAmount.toCurrency(),
@@ -321,6 +350,14 @@ class BookingSummarySection extends StatelessWidget {
   /// Use 'Total Payable Amount' for add, 'Balance Amount' for edit.
   final String totalRemainingLabel;
 
+  /// Whether the advance is split between cash and bank/UPI — see
+  /// [BookingAmountSummary.isAdvanceSplit].
+  final bool isAdvanceSplit;
+
+  /// Bank/UPI leg of a split advance — see
+  /// [BookingAmountSummary.splitBankAmountController].
+  final TextEditingController? splitBankAmountController;
+
   /// Confirm button
   final VoidCallback onConfirm;
   final String confirmLabel;
@@ -341,6 +378,8 @@ class BookingSummarySection extends StatelessWidget {
     required this.calculateTaxSummary,
     this.advanceLabel = 'Paid',
     this.totalRemainingLabel = 'Total Payable Amount',
+    this.isAdvanceSplit = false,
+    this.splitBankAmountController,
     this.onShowCustomization,
     this.bookingStatus,
     this.bookingCompletedDate,
@@ -364,6 +403,8 @@ class BookingSummarySection extends StatelessWidget {
             selectedProductsNotifier: selectedProductsNotifier,
             additionalChargesNotifier: additionalChargesNotifier,
             advanceAmountController: advanceAmountController,
+            isAdvanceSplit: isAdvanceSplit,
+            splitBankAmountController: splitBankAmountController,
             discountAmountController: discountAmountController,
             isDiscountPercentage: isDiscountPercentage,
             securityAmountController: securityAmountController,

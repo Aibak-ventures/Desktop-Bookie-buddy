@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 /// All mutations (quantity, price, remove) are handled via callbacks —
 /// state is owned by the screen.
 class SalesFormProductTableRow extends StatelessWidget {
+  final int index;
   final ProductSelectedEntity product;
   final bool isEditing;
   final TextEditingController inlinePriceController;
@@ -19,6 +21,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
   const SalesFormProductTableRow({
     super.key,
+    required this.index,
     required this.product,
     required this.isEditing,
     required this.inlinePriceController,
@@ -40,9 +43,23 @@ class SalesFormProductTableRow extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // Serial number
+          Expanded(
+            flex: SalesProductTableFlex.slNo,
+            child: Text(
+              '$index',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(width: 4),
           // Item name & image
           Expanded(
-            flex: 3,
+            flex: SalesProductTableFlex.items,
             child: Row(
               children: [
                 Container(
@@ -100,7 +117,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Specifications
           Expanded(
-            flex: 2,
+            flex: SalesProductTableFlex.specifications,
             child: Center(
               child: Text(
                 _getSpecs(),
@@ -119,6 +136,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Quantity
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -145,6 +163,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Price / item
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Center(
               child: isEditing
                   ? ConstrainedBox(
@@ -217,6 +236,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Total
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Center(
               child: Text(
                 '${product.amount * product.quantity}',

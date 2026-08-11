@@ -68,6 +68,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_c
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +166,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
   OverlayEntry? _searchOverlayEntry;
-  // Reactive overlay state â€” updated without recreating the OverlayEntry
+  // Reactive overlay state — updated without recreating the OverlayEntry
   final _overlayProducts = ValueNotifier<List<ProductEntity>>([]);
   final _overlayIsLoading = ValueNotifier<bool>(false);
 
@@ -1339,6 +1340,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         BookingTextFieldBuilder.buildRightPanelTextField(
           controller: securityAmountController,
           hint: 'Security amount',
+          label: 'Security amount',
           isNumber: true,
         ),
         const SizedBox(height: 8),
@@ -1400,11 +1402,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   Widget _buildDiscountField() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Expanded(
           child: BookingTextFieldBuilder.buildRightPanelTextField(
             controller: discountAmountController,
             hint: isDiscountPercentage ? 'Discount %' : 'Discount amount',
+            label: isDiscountPercentage ? 'Discount %' : 'Discount amount',
             isNumber: true,
             suffix: ValueListenableBuilder<TextEditingValue>(
               valueListenable: discountAmountController,
@@ -1415,13 +1419,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 final String equiv;
                 if (isDiscountPercentage) {
                   final amount = (total * input / 100).round();
-                  equiv = 'â‰ˆ â‚¹$amount';
+                  equiv = '≈ ${amount.toCurrency()}';
                 } else {
                   final pct = input / total * 100;
                   final pctStr = pct % 1 == 0
                       ? '${pct.round()}'
                       : pct.toStringAsFixed(1);
-                  equiv = 'â‰ˆ $pctStr%';
+                  equiv = '≈ $pctStr%';
                 }
                 return Text(
                   equiv,
@@ -1470,7 +1474,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         : const Color(0xFF6132E4),
                   ),
                   const SizedBox(width: 8),
-                  const Text('Amount (â‚¹)'),
+                  const Text('Amount (₹)'),
                 ],
               ),
             ),
@@ -1546,7 +1550,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                             ),
                           ),
                           Text(
-                            'â‚¹${c.amount}',
+                            (c.amount ?? 0).toCurrency(),
                             style: const TextStyle(fontSize: 13),
                           ),
                           const SizedBox(width: 8),

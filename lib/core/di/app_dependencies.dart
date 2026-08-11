@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/core/di/features/client_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/dashboard_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/product_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/sales_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/features/global_search_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/shop_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/staff_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/tax_and_compliance_dependencies.dart';
@@ -39,6 +40,7 @@ class AppDependencies {
     BookingDependencies.register();
     AccountDependencies.register();
     TaxAndComplianceDependencies.register();
+    GlobalSearchDependencies.register();
   }
 
   // ================== common ==================

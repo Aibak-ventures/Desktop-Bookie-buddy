@@ -19,7 +19,11 @@ abstract class ProductModel with _$ProductModel {
     required int id,
     required String name,
     required String? description,
-    @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString)
+    @JsonKey(
+      name: 'main_service_name',
+      fromJson: MainServiceType.fromString,
+      toJson: MainServiceType.toJson,
+    )
     MainServiceType? mainServiceType,
     String? color,
     String? model,

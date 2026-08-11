@@ -248,6 +248,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: widget.discountController,
                     hint: 'Discount amount (Optional)',
+                    label: 'Discount Amount (Optional)',
                     isNumber: true,
                   ),
                   const SizedBox(height: fieldSpacing),

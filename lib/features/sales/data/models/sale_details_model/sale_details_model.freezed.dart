@@ -374,7 +374,7 @@ $ClientModelCopyWith<$Res>? get client {
 /// @nodoc
 mixin _$ProductSaleInfoModel {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'product_id') int get productId;@JsonKey(name: 'variant_id') int get variantId;@JsonKey(name: 'product_name') String get name;@JsonKey(name: 'variant') String? get variantAttribute;@JsonKey(name: 'quantity') int get quantity;@JsonKey(name: 'price') int get price;@JsonKey(name: 'subtotal') int get subtotal;@JsonKey(name: 'thumbnail') String? get image;@JsonKey(name: 'color') String? get color;@JsonKey(name: 'category') String? get category;@JsonKey(name: 'model') String? get model;@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString) MainServiceType? get mainServiceType;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'product_id') int get productId;@JsonKey(name: 'variant_id') int get variantId;@JsonKey(name: 'product_name') String get name;@JsonKey(name: 'variant') String? get variantAttribute;@JsonKey(name: 'quantity') int get quantity;@JsonKey(name: 'price') int get price;@JsonKey(name: 'subtotal') int get subtotal;@JsonKey(name: 'thumbnail') String? get image;@JsonKey(name: 'color') String? get color;@JsonKey(name: 'category') String? get category;@JsonKey(name: 'model') String? get model;@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? get mainServiceType;
 /// Create a copy of ProductSaleInfoModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -407,7 +407,7 @@ abstract mixin class $ProductSaleInfoModelCopyWith<$Res>  {
   factory $ProductSaleInfoModelCopyWith(ProductSaleInfoModel value, $Res Function(ProductSaleInfoModel) _then) = _$ProductSaleInfoModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'product_id') int productId,@JsonKey(name: 'variant_id') int variantId,@JsonKey(name: 'product_name') String name,@JsonKey(name: 'variant') String? variantAttribute,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'subtotal') int subtotal,@JsonKey(name: 'thumbnail') String? image,@JsonKey(name: 'color') String? color,@JsonKey(name: 'category') String? category,@JsonKey(name: 'model') String? model,@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString) MainServiceType? mainServiceType
+@JsonKey(name: 'id') int id,@JsonKey(name: 'product_id') int productId,@JsonKey(name: 'variant_id') int variantId,@JsonKey(name: 'product_name') String name,@JsonKey(name: 'variant') String? variantAttribute,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'subtotal') int subtotal,@JsonKey(name: 'thumbnail') String? image,@JsonKey(name: 'color') String? color,@JsonKey(name: 'category') String? category,@JsonKey(name: 'model') String? model,@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType
 });
 
 
@@ -524,7 +524,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)  MainServiceType? mainServiceType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductSaleInfoModel() when $default != null:
 return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.variantAttribute,_that.quantity,_that.price,_that.subtotal,_that.image,_that.color,_that.category,_that.model,_that.mainServiceType);case _:
@@ -545,7 +545,7 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.varian
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)  MainServiceType? mainServiceType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType)  $default,) {final _that = this;
 switch (_that) {
 case _ProductSaleInfoModel():
 return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.variantAttribute,_that.quantity,_that.price,_that.subtotal,_that.image,_that.color,_that.category,_that.model,_that.mainServiceType);case _:
@@ -565,7 +565,7 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.varian
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString)  MainServiceType? mainServiceType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'product_id')  int productId, @JsonKey(name: 'variant_id')  int variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(name: 'variant')  String? variantAttribute, @JsonKey(name: 'quantity')  int quantity, @JsonKey(name: 'price')  int price, @JsonKey(name: 'subtotal')  int subtotal, @JsonKey(name: 'thumbnail')  String? image, @JsonKey(name: 'color')  String? color, @JsonKey(name: 'category')  String? category, @JsonKey(name: 'model')  String? model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductSaleInfoModel() when $default != null:
 return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.variantAttribute,_that.quantity,_that.price,_that.subtotal,_that.image,_that.color,_that.category,_that.model,_that.mainServiceType);case _:
@@ -580,7 +580,7 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.varian
 @JsonSerializable()
 
 class _ProductSaleInfoModel implements ProductSaleInfoModel {
-  const _ProductSaleInfoModel({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(name: 'variant') this.variantAttribute, @JsonKey(name: 'quantity') required this.quantity, @JsonKey(name: 'price') required this.price, @JsonKey(name: 'subtotal') required this.subtotal, @JsonKey(name: 'thumbnail') this.image, @JsonKey(name: 'color') this.color, @JsonKey(name: 'category') this.category, @JsonKey(name: 'model') this.model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString) this.mainServiceType});
+  const _ProductSaleInfoModel({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(name: 'variant') this.variantAttribute, @JsonKey(name: 'quantity') required this.quantity, @JsonKey(name: 'price') required this.price, @JsonKey(name: 'subtotal') required this.subtotal, @JsonKey(name: 'thumbnail') this.image, @JsonKey(name: 'color') this.color, @JsonKey(name: 'category') this.category, @JsonKey(name: 'model') this.model, @JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType});
   factory _ProductSaleInfoModel.fromJson(Map<String, dynamic> json) => _$ProductSaleInfoModelFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
@@ -595,7 +595,7 @@ class _ProductSaleInfoModel implements ProductSaleInfoModel {
 @override@JsonKey(name: 'color') final  String? color;
 @override@JsonKey(name: 'category') final  String? category;
 @override@JsonKey(name: 'model') final  String? model;
-@override@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString) final  MainServiceType? mainServiceType;
+@override@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) final  MainServiceType? mainServiceType;
 
 /// Create a copy of ProductSaleInfoModel
 /// with the given fields replaced by the non-null parameter values.
@@ -630,7 +630,7 @@ abstract mixin class _$ProductSaleInfoModelCopyWith<$Res> implements $ProductSal
   factory _$ProductSaleInfoModelCopyWith(_ProductSaleInfoModel value, $Res Function(_ProductSaleInfoModel) _then) = __$ProductSaleInfoModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'product_id') int productId,@JsonKey(name: 'variant_id') int variantId,@JsonKey(name: 'product_name') String name,@JsonKey(name: 'variant') String? variantAttribute,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'subtotal') int subtotal,@JsonKey(name: 'thumbnail') String? image,@JsonKey(name: 'color') String? color,@JsonKey(name: 'category') String? category,@JsonKey(name: 'model') String? model,@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString) MainServiceType? mainServiceType
+@JsonKey(name: 'id') int id,@JsonKey(name: 'product_id') int productId,@JsonKey(name: 'variant_id') int variantId,@JsonKey(name: 'product_name') String name,@JsonKey(name: 'variant') String? variantAttribute,@JsonKey(name: 'quantity') int quantity,@JsonKey(name: 'price') int price,@JsonKey(name: 'subtotal') int subtotal,@JsonKey(name: 'thumbnail') String? image,@JsonKey(name: 'color') String? color,@JsonKey(name: 'category') String? category,@JsonKey(name: 'model') String? model,@JsonKey(name: 'main_category_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType
 });
 
 

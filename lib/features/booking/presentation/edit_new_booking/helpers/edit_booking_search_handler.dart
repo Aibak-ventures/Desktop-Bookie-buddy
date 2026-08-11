@@ -65,7 +65,7 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
                       _syncSelectedProductStock(products);
                     }
 
-                    // Reactive overlay update â€" show/hide overlay based on search state
+                    // Reactive overlay update — show/hide overlay based on search state
                     final hasSearchText =
                         serviceSearchController.text.isNotEmpty;
                     final hasFilters =
