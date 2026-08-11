@@ -295,6 +295,8 @@ class _CompactAccountField extends StatelessWidget {
       isEmpty: selectedAccount == null && !isLoading,
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: effectiveTextStyle,
+        floatingLabelStyle: effectiveTextStyle.copyWith(fontSize: 16),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(radius)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius),

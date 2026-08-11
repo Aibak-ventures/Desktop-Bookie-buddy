@@ -317,6 +317,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
               selectedProductsNotifier,
               additionalChargesNotifier,
               advanceAmountController,
+              splitBankAmountController,
               discountAmountController,
             ]),
             builder: (context, _) {
@@ -325,9 +326,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
 
               final additionalCharges = additionalChargesNotifier.value;
               final isSaleType = selectedBookingType == BookingType.sales;
-              final advanceAmount = isSaleType
-                  ? 0
-                  : (advanceAmountController.text.trim().toIntOrNull() ?? 0);
+              final advanceAmount = isSaleType ? 0 : _advanceSplit.total;
               final discountInput =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
               final rentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
@@ -646,38 +645,16 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     optional: true,
                   ),
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
-                  BookingTextFieldBuilder.buildRightPanelTextField(
-                    controller: advanceAmountController,
-                    hint: 'Advance amount',
-                    isNumber: true,
-                    focusNode: _advanceAmountFocusNode,
-                    nextFocusNode: _securityAmountFocusNode,
-                  ),
+
+                  // Advance amount
+                  _buildAdvanceAmountSection(),
+
                   const SizedBox(height: NewBookingScreenState._fieldSpacing),
-                  const SizedBox(height: NewBookingScreenState._fieldSpacing),
-                  // Payment Method Selection - only show if advance amount has value
-                  ValueListenableBuilder(
-                    valueListenable: advanceAmountController,
-                    builder: (context, value, child) {
-                      final hasAdvanceAmount =
-                          value.text.trim().isNotEmpty &&
-                          (int.tryParse(value.text.trim()) ?? 0) > 0;
-                      if (hasAdvanceAmount) {
-                        return Column(
-                          children: [
-                            _buildPaymentMethodSection(
-                              label: 'Advance Payment Option',
-                            ),
-                            const SizedBox(height: 14),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
+
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: securityAmountController,
                     hint: 'Security amount',
+                    label: 'Security amount',
                     isNumber: true,
                     focusNode: _securityAmountFocusNode,
                     nextFocusNode: _discountAmountFocusNode,
@@ -742,12 +719,16 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
                             child:
                                 BookingTextFieldBuilder.buildRightPanelTextField(
                                   controller: discountAmountController,
                                   hint: isDiscountPercentage
+                                      ? 'Discount %'
+                                      : 'Discount amount',
+                                  label: isDiscountPercentage
                                       ? 'Discount %'
                                       : 'Discount amount',
                                   isNumber: true,
@@ -1041,6 +1022,87 @@ extension BookingFlowBuilders on NewBookingScreenState {
           ),
         ],
       ),
+    );
+  }
+
+  // Builds the advance amount section
+  Widget _buildAdvanceAmountSection() {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        advanceAmountController,
+        splitBankAmountController,
+      ]),
+      builder: (context, child) {
+        // advanceAmountController holds the cash portion (or the whole
+        // amount when not split) and splitBankAmountController the bank/UPI
+        // portion — _advanceSplit combines them into one source of truth.
+        final hasAdvanceAmount = _advanceSplit.hasAmount;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BookingTextFieldBuilder.buildRightPanelTextField(
+              controller: advanceAmountController,
+              hint: isAdvanceSplit
+                  ? 'Enter advance cash amount'
+                  : 'Enter advance amount',
+              label: isAdvanceSplit
+                  ? 'Advance amount (Cash)'
+                  : 'Advance amount',
+              isNumber: true,
+              focusNode: _advanceAmountFocusNode,
+              nextFocusNode: isAdvanceSplit ? null : _securityAmountFocusNode,
+              suffix: PopupMenuButton<bool>(
+                tooltip: 'Advance amount options',
+                iconSize: 20,
+                icon: const Icon(Icons.more_vert_rounded),
+                onSelected: (v) {
+                  rebuild(() {
+                    isAdvanceSplit = v;
+                    if (!isAdvanceSplit) {
+                      splitBankAmountController.clear();
+                      selectedAdvanceCashAccount = null;
+                      selectedAdvanceBankAccount = null;
+                    }
+                  });
+                },
+                itemBuilder: (context) => [
+                  if (!isAdvanceSplit)
+                    const PopupMenuItem<bool>(
+                      value: true,
+                      child: Text('Split Cash & UPI'),
+                    ),
+                  if (isAdvanceSplit)
+                    const PopupMenuItem<bool>(
+                      value: false,
+                      child: Text('Merge Cash & UPI'),
+                    ),
+                ],
+              ),
+            ),
+            if (hasAdvanceAmount) ...[
+              const SizedBox(height: NewBookingScreenState._fieldSpacing * 2),
+              SplitAdvancePaymentFields(
+                isSplit: isAdvanceSplit,
+                bankAmountController: splitBankAmountController,
+                cashAccount: selectedAdvanceCashAccount,
+                onCashAccountChanged: (account) =>
+                    rebuild(() => selectedAdvanceCashAccount = account),
+                bankAccount: selectedAdvanceBankAccount,
+                onBankAccountChanged: (account) =>
+                    rebuild(() => selectedAdvanceBankAccount = account),
+                spacing: NewBookingScreenState._fieldSpacing,
+                spacingBetweenBankAccount:
+                    NewBookingScreenState._fieldSpacing * 2,
+                singlePaymentSelector: _buildPaymentMethodSection(
+                  label: 'Advance Payment Option',
+                ),
+              ),
+              const SizedBox(height: NewBookingScreenState._fieldSpacing * 2),
+            ],
+          ],
+        );
+      },
     );
   }
 }

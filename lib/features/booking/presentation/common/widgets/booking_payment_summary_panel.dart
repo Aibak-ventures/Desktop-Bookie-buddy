@@ -135,12 +135,14 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: form.advanceAmountController,
                     hint: 'Advance amount',
+                    label: 'Advance amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: form.securityAmountController,
                     hint: 'Security amount',
+                    label: 'Security amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: 8),
@@ -193,12 +195,16 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                     valueListenable: form.isDiscountPercentage,
                     builder: (context, isPercent, _) {
                       return Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
                             child:
                                 BookingTextFieldBuilder.buildRightPanelTextField(
                                   controller: form.discountAmountController,
                                   hint: isPercent
+                                      ? 'Discount %'
+                                      : 'Discount amount',
+                                  label: isPercent
                                       ? 'Discount %'
                                       : 'Discount amount',
                                   isNumber: true,

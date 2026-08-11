@@ -456,6 +456,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                   BookingTextFieldBuilder.buildRightPanelTextField(
                     controller: _formController.discountController,
                     hint: 'Discount amount',
+                    label: 'Discount amount',
                     isNumber: true,
                   ),
                   const SizedBox(height: _fieldSpacing),

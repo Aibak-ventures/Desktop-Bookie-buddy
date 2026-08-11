@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,13 @@ class BookingFormValidator {
   /// - **Sales**: payment account is always required.
   /// - **Booking**: advance must not exceed total payable; advance account
   ///   required when advance > 0; security account required when security > 0.
+  ///
+  /// [advanceSplit] carries the cash/bank breakdown when the advance is split
+  /// between two accounts; pass null (or a non-split [AdvanceSplitPayment])
+  /// for a plain single-account advance. [advanceAmount] must equal
+  /// `advanceSplit.total` when a split is supplied — callers derive it from
+  /// the same [AdvanceSplitPayment] used to build the request, so the two
+  /// never drift apart.
   static BookingValidationResult validatePayment({
     required BookingType bookingType,
     required int advanceAmount,
@@ -77,6 +85,7 @@ class BookingFormValidator {
     required int totalPayable,
     required AccountEntity? advanceAccount,
     required AccountEntity? securityAccount,
+    AdvanceSplitPayment? advanceSplit,
   }) {
     if (bookingType == BookingType.sales) {
       if (advanceAccount == null) {
@@ -95,7 +104,33 @@ class BookingFormValidator {
         firstErrorField: 'advanceAmount',
       );
     }
-    if (advanceAmount > 0 && advanceAccount == null) {
+    if (advanceAmount > 0 && (advanceSplit?.isSplit ?? false)) {
+      final split = advanceSplit!;
+      if (!split.hasAmount) {
+        return BookingValidationResult.invalid(
+          errors: ['Please enter cash and/or bank/UPI split amounts'],
+          firstErrorField: 'advanceAccount',
+        );
+      }
+      if (split.total != advanceAmount) {
+        return BookingValidationResult.invalid(
+          errors: ['Split amounts must add up to the advance amount'],
+          firstErrorField: 'advanceAccount',
+        );
+      }
+      if (split.cashAmount > 0 && split.cashAccount == null) {
+        return BookingValidationResult.invalid(
+          errors: ['Please select a cash account for the advance split'],
+          firstErrorField: 'advanceAccount',
+        );
+      }
+      if (split.bankAmount > 0 && split.bankAccount == null) {
+        return BookingValidationResult.invalid(
+          errors: ['Please select a bank/UPI account for the advance split'],
+          firstErrorField: 'advanceAccount',
+        );
+      }
+    } else if (advanceAmount > 0 && advanceAccount == null) {
       return BookingValidationResult.invalid(
         errors: ['Please select a payment option for advance amount'],
         firstErrorField: 'advanceAccount',
