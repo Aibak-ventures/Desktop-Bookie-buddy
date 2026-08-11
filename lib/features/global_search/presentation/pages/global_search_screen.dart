@@ -144,7 +144,8 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
                             searchController: searchController,
                             onChanged: (_) => _performSearch(),
                             padding: 0.padding,
-                            hintText: '$clientName name, staff name, or ID',
+                            hintText:
+                                '$clientName name, staff name, or invoice ID',
                             suffixFunction: () {
                               _resetAll();
                               _clearDateFilter(search: false);

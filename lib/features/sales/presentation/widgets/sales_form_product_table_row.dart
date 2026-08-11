@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,8 +44,8 @@ class SalesFormProductTableRow extends StatelessWidget {
       child: Row(
         children: [
           // Serial number
-          SizedBox(
-            width: 60,
+          Expanded(
+            flex: SalesProductTableFlex.slNo,
             child: Text(
               '$index',
               style: TextStyle(
@@ -58,7 +59,7 @@ class SalesFormProductTableRow extends StatelessWidget {
           const SizedBox(width: 4),
           // Item name & image
           Expanded(
-            flex: 3,
+            flex: SalesProductTableFlex.items,
             child: Row(
               children: [
                 Container(
@@ -116,7 +117,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Specifications
           Expanded(
-            flex: 2,
+            flex: SalesProductTableFlex.specifications,
             child: Center(
               child: Text(
                 _getSpecs(),
@@ -135,6 +136,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Quantity
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -161,6 +163,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Price / item
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Center(
               child: isEditing
                   ? ConstrainedBox(
@@ -233,6 +236,7 @@ class SalesFormProductTableRow extends StatelessWidget {
 
           // Total
           Expanded(
+            flex: SalesProductTableFlex.column,
             child: Center(
               child: Text(
                 '${product.amount * product.quantity}',

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 
 /// Column headers for the selected products table in [EditSalesScreen].
@@ -10,17 +11,35 @@ class SalesFormProductListHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          SizedBox(width: 60, child: _buildCell('Sl. No.')),
+          Expanded(
+            flex: SalesProductTableFlex.slNo,
+            child: _buildCell('Sl. No.'),
+          ),
           const SizedBox(width: 4),
-          Expanded(flex: 3, child: _buildCell('items', alignLeft: true)),
+          Expanded(
+            flex: SalesProductTableFlex.items,
+            child: _buildCell('items', alignLeft: true),
+          ),
           const SizedBox(width: 4),
-          Expanded(flex: 2, child: _buildCell('Specifications')),
+          Expanded(
+            flex: SalesProductTableFlex.specifications,
+            child: _buildCell('Specifications'),
+          ),
           const SizedBox(width: 4),
-          Expanded(child: _buildCell('Quantity')),
+          Expanded(
+            flex: SalesProductTableFlex.column,
+            child: _buildCell('Quantity'),
+          ),
           const SizedBox(width: 4),
-          Expanded(child: _buildCell('Price / item')),
+          Expanded(
+            flex: SalesProductTableFlex.column,
+            child: _buildCell('Price / item'),
+          ),
           const SizedBox(width: 4),
-          Expanded(child: _buildCell('Total')),
+          Expanded(
+            flex: SalesProductTableFlex.column,
+            child: _buildCell('Total'),
+          ),
           const SizedBox(width: 50),
         ],
       ),
