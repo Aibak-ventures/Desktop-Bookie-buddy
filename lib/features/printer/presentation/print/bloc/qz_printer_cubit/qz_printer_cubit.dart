@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_e
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_bridge_status_enum.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
+import 'package:bookie_buddy_web/features/printer/domain/usecases/clear_last_printer_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/find_printers_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/get_last_printer_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/print_receipt_usecase.dart';
@@ -29,6 +30,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     required this.printReceiptUseCase,
     required this.getLastPrinterUseCase,
     required this.saveLastPrinterUseCase,
+    required this.clearLastPrinterUseCase,
   }) : super(const QzPrinterState());
 
   final CheckPrintBridgeAvailableUseCase checkBridgeAvailableUseCase;
@@ -36,6 +38,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
   final PrintReceiptUseCase printReceiptUseCase;
   final GetLastPrinterUseCase getLastPrinterUseCase;
   final SaveLastPrinterUseCase saveLastPrinterUseCase;
+  final ClearLastPrinterUseCase clearLastPrinterUseCase;
 
   /// Call on screen entry. Checks the bridge, then — if available — loads
   /// the printer list and pre-selects the last-used printer (if it's still
@@ -71,6 +74,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
           printers: printers,
           selectedPrinterName: preselected,
           lastUsedPrinterName: preselected,
+          errorMessage: null,
         ),
       );
     } catch (e, stack) {
@@ -94,6 +98,46 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     emit(state.copyWith(selectedPrinterName: printer.name));
   }
 
+  /// Connects to [printer] — highlights it and immediately persists it as
+  /// the default, without waiting for the bottom "Save"/"Print" action.
+  /// This is what the per-row "Connect" button drives, as opposed to
+  /// [selectPrinter], which only highlights.
+  Future<bool> connectToPrinter(PrinterDeviceEntity printer) async {
+    log('connectToPrinter(${printer.name})', name: _logName);
+    emit(state.copyWith(selectedPrinterName: printer.name));
+    return saveSelectedPrinter();
+  }
+
+  /// Clears the currently connected/default printer. Selection in the list
+  /// (if any) is left as-is so the user can immediately connect to another
+  /// one.
+  Future<void> disconnectPrinter() async {
+    log('disconnectPrinter()', name: _logName);
+    try {
+      await clearLastPrinterUseCase();
+      emit(
+        state.copyWith(
+          lastUsedPrinterName: null,
+          selectedPrinterName: null,
+          errorMessage: null,
+        ),
+      );
+    } catch (e, stack) {
+      log(
+        'disconnectPrinter() failed: $e',
+        name: _logName,
+        error: e,
+        stackTrace: stack,
+      );
+      emit(
+        state.copyWith(
+          status: PrinterBridgeStatus.error,
+          errorMessage: 'Could not disconnect printer: $e',
+        ),
+      );
+    }
+  }
+
   /// Persists the selected printer as default without printing anything —
   /// used by the settings entry point (no [PrintTicketEntity] on hand),
   /// as opposed to [print], which saves as a side effect of a successful
@@ -109,7 +153,9 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     log('saveSelectedPrinter() -> "$printerName"', name: _logName);
     try {
       await saveLastPrinterUseCase(printerName);
-      emit(state.copyWith(lastUsedPrinterName: printerName));
+      emit(
+        state.copyWith(lastUsedPrinterName: printerName, errorMessage: null),
+      );
       return true;
     } catch (e, stack) {
       log(
@@ -151,6 +197,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
         state.copyWith(
           status: PrinterBridgeStatus.connected,
           lastUsedPrinterName: printerName,
+          errorMessage: null,
         ),
       );
       return true;

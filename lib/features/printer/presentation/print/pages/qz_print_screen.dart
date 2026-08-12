@@ -1,6 +1,8 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_bridge_status_enum.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/bloc/qz_printer_cubit/qz_printer_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +74,7 @@ class _QzPrintView extends StatelessWidget {
             case PrinterBridgeStatus.error:
               return _PrinterPickerView(ticket: ticket, state: state);
           }
-        }, // exhaustive switch — analyzer error above resolves once
-        // qz_printer_cubit.freezed.dart exists (adds `.status` etc.)
+        },
       ),
     );
   }
@@ -118,7 +119,7 @@ class _BridgeUnavailableView extends StatelessWidget {
                   onPressed: onRetry,
                   child: const Text(
                     'Retry',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: AppColors.white),
                   ),
                 ),
               ],
@@ -148,53 +149,88 @@ class _PrinterPickerView extends StatelessWidget {
             message: state.errorMessage ?? 'Something went wrong.',
             onRetry: () => cubit.initialize(),
           ),
+        if (state.lastUsedPrinterName != null)
+          _ConnectedPrinterBanner(
+            printerName: state.lastUsedPrinterName!,
+            busy: busy,
+            onDisconnect: () => cubit.disconnectPrinter(),
+          ),
         Expanded(
           child: state.printers.isEmpty
               ? _EmptyPrintersView(onRefresh: () => cubit.initialize())
               : RefreshIndicator(
                   onRefresh: cubit.initialize,
-                  child: ListView.builder(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                     itemCount: state.printers.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final printer = state.printers[index];
                       final selected =
                           printer.name == state.selectedPrinterName;
-                      final isDefault =
+                      final connected =
                           printer.name == state.lastUsedPrinterName;
-                      return ListTile(
-                        title: Text(printer.name),
-                        subtitle: isDefault ? const Text('Default') : null,
-                        leading: Icon(
-                          selected
-                              ? Icons.radio_button_checked
-                              : Icons.radio_button_unchecked,
-                        ),
+                      return _PrinterCard(
+                        name: printer.name,
+                        selected: selected,
+                        connected: connected,
+                        busy: busy,
                         onTap: busy ? null : () => cubit.selectPrinter(printer),
+                        onConnect: busy || connected
+                            ? null
+                            : () => _connect(context, cubit, printer),
                       );
                     },
                   ),
                 ),
         ),
-        Padding(
+        Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: state.selectedPrinterName == null || busy
-                  ? null
-                  : () => ticket != null
-                      ? cubit.print(ticket!)
-                      : _saveDefault(context, cubit),
-              child: busy
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(
-                      ticket != null ? 'Print' : 'Save as default printer',
-                      style: const TextStyle(color: Colors.white),
-                    ),
+          decoration: const BoxDecoration(
+            color: AppColors.surface,
+            border: Border(top: BorderSide(color: AppColors.greyBorder)),
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 360, minHeight: 52),
+              child: ElevatedButton.icon(
+                onPressed: state.selectedPrinterName == null || busy
+                    ? null
+                    : () => ticket != null
+                          ? cubit.print(ticket!)
+                          : _saveDefault(context, cubit),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                ),
+                icon: busy
+                    ? const SizedBox.shrink()
+                    : Icon(
+                        ticket != null ? Icons.print : Icons.save_outlined,
+                        color: AppColors.white,
+                        size: 20,
+                      ),
+                label: busy
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : Text(
+                        ticket != null ? 'Print' : 'Save as default printer',
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
             ),
           ),
         ),
@@ -202,11 +238,184 @@ class _PrinterPickerView extends StatelessWidget {
     );
   }
 
+  Future<void> _connect(
+    BuildContext context,
+    QzPrinterCubit cubit,
+    PrinterDeviceEntity printer,
+  ) async {
+    final connected = await cubit.connectToPrinter(printer);
+    if (connected && context.mounted) {
+      context.showSnackBar('Connected to ${printer.name}.');
+    }
+  }
+
   Future<void> _saveDefault(BuildContext context, QzPrinterCubit cubit) async {
     final saved = await cubit.saveSelectedPrinter();
     if (saved && context.mounted) {
       context.showSnackBar('Default printer saved.');
     }
+  }
+}
+
+/// Banner showing the printer currently saved as default, with a
+/// disconnect action — separate from row selection/highlighting.
+class _ConnectedPrinterBanner extends StatelessWidget {
+  const _ConnectedPrinterBanner({
+    required this.printerName,
+    required this.busy,
+    required this.onDisconnect,
+  });
+
+  final String printerName;
+  final bool busy;
+  final VoidCallback onDisconnect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.purpleLightShade,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.purpleAccent),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle, color: AppColors.purple, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Connected printer',
+                  style: TextStyle(fontSize: 11, color: AppColors.grey600),
+                ),
+                Text(
+                  printerName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          TextButton.icon(
+            onPressed: busy ? null : onDisconnect,
+            style: TextButton.styleFrom(foregroundColor: AppColors.red),
+            icon: const Icon(Icons.link_off, size: 16),
+            label: const Text('Disconnect'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A single printer row — tapping the card only highlights it; connecting
+/// requires the explicit "Connect" button.
+class _PrinterCard extends StatelessWidget {
+  const _PrinterCard({
+    required this.name,
+    required this.selected,
+    required this.connected,
+    required this.busy,
+    required this.onTap,
+    required this.onConnect,
+  });
+
+  final String name;
+  final bool selected;
+  final bool connected;
+  final bool busy;
+  final VoidCallback? onTap;
+  final VoidCallback? onConnect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.greyBorder, width: 1),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.print_outlined,
+                color: selected ? AppColors.purple : AppColors.grey600,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.black87,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (connected)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.check_circle,
+                              size: 13,
+                              color: AppColors.purple,
+                            ),
+                            const SizedBox(width: 4),
+                            const Text(
+                              'Connected',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppColors.purple,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              if (connected)
+                Chip(
+                  label: const Text('In use'),
+                  backgroundColor: AppColors.grey100,
+                  visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                )
+              else
+                OutlinedButton(
+                  onPressed: onConnect,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.purple,
+                    side: const BorderSide(color: AppColors.purple),
+                  ),
+                  child: const Text('Connect'),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -220,16 +429,20 @@ class _InlineErrorBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      color: Colors.red.shade50,
+      color: AppColors.redLight,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
-          Icon(Icons.error_outline, color: Colors.red.shade700, size: 18),
+          const Icon(Icons.error_outline, color: AppColors.red, size: 18),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(message, style: TextStyle(color: Colors.red.shade700)),
+            child: Text(message, style: const TextStyle(color: AppColors.red)),
           ),
-          TextButton(onPressed: onRetry, child: const Text('Retry')),
+          TextButton(
+            onPressed: onRetry,
+            style: TextButton.styleFrom(foregroundColor: AppColors.red),
+            child: const Text('Retry'),
+          ),
         ],
       ),
     );

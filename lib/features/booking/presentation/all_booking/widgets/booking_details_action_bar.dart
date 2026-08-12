@@ -1,36 +1,21 @@
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/print_output_preference_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_invoice_actions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
-import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
-import 'package:bookie_buddy_web/features/printer/presentation/print/quick_print_receipt.dart';
-import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/booking_receipt_canvas_builder.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:printing/printing.dart';
 
 /// Sticky action bar at the bottom of [BookingDetailsDrawer].
 ///
@@ -179,14 +164,14 @@ class BookingDetailsActionBar extends StatelessWidget {
           context,
           icon: Icons.download_outlined,
           color: AppColors.purple,
-          onTap: () => _openInvoicePdf(context, booking),
+          onTap: () => BookingInvoiceActions.openInvoicePdf(context, booking),
         ),
         const SizedBox(width: 12),
         _buildIconActionButton(
           context,
           icon: Icons.print_outlined,
           color: AppColors.purple,
-          onTap: () => _print(context, booking),
+          onTap: () => BookingInvoiceActions.printReceipt(context, booking),
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings
@@ -413,170 +398,5 @@ class BookingDetailsActionBar extends StatelessWidget {
     } catch (e) {
       return dateStr.formatToUiDate();
     }
-  }
-
-  /// Single "Print" entry point — reads Settings > Print Output
-  /// (`PrintOutputPreference`) and routes to the thermal receipt or the
-  /// PDF invoice accordingly. On [PrintOutputPreference.askEveryTime],
-  /// asks via a small chooser dialog first and does *not* persist that
-  /// one-off pick — "ask every time" means exactly that.
-  Future<void> _print(
-    BuildContext context,
-    BookingDetailsEntity booking,
-  ) async {
-    final preference =
-        context.read<UserCubit>().state?.shopSettings.printOutputPreference ??
-        PrintOutputPreference.askEveryTime;
-
-    final resolved = preference == PrintOutputPreference.askEveryTime
-        ? await _askPrintOutput(context)
-        : preference;
-    if (resolved == null || !context.mounted) return; // user dismissed
-
-    switch (resolved) {
-      case PrintOutputPreference.receipt:
-        await _printReceipt(context, booking);
-      case PrintOutputPreference.pdfInvoice:
-        await _printInvoicePdf(context, booking);
-      case PrintOutputPreference.askEveryTime:
-        break; // unreachable — _askPrintOutput never returns this value
-    }
-  }
-
-  Future<PrintOutputPreference?> _askPrintOutput(BuildContext context) {
-    return showDialog<PrintOutputPreference>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Print'),
-        content: const Text('What would you like to print?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
-          ),
-          OutlinedButton(
-            onPressed: () => Navigator.of(
-              dialogContext,
-            ).pop(PrintOutputPreference.pdfInvoice),
-            child: const Text('PDF invoice'),
-          ),
-          ElevatedButton(
-            onPressed: () =>
-                Navigator.of(dialogContext).pop(PrintOutputPreference.receipt),
-            child: const Text(
-              'Thermal receipt',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Builds a print-ready receipt ticket for [booking] and prints it
-  /// straight to the last-used printer via [printReceiptQuickly] — no
-  /// screen navigation on the happy path. Falls back to the printer setup
-  /// screen only if nothing's configured or the print attempt fails.
-  /// Mirrors mobile's `BookingDetailsAppBar` "Print Receipt" action: same
-  /// `BookingReceiptCanvasBuilder` call, same shop-details guard, same
-  /// loading overlay while the (async, off-screen-rendered) ticket builds.
-  Future<void> _printReceipt(
-    BuildContext context,
-    BookingDetailsEntity booking,
-  ) async {
-    final shop = context.read<UserCubit>().state?.shopDetails;
-    if (shop == null) {
-      context.showSnackBar(
-        'Shop details not available. Please try again.',
-        isError: true,
-      );
-      return;
-    }
-
-    GlobalLoadingOverlay.show(context, text: 'Preparing receipt...');
-    final PrintTicketEntity ticket;
-    try {
-      ticket = await const BookingReceiptCanvasBuilder()(
-        context: context,
-        booking: booking,
-        shop: shop,
-      );
-    } catch (e, stack) {
-      log('Failed to build receipt ticket: $e', stackTrace: stack);
-      GlobalLoadingOverlay.hide();
-      if (context.mounted) {
-        context.showSnackBar('Failed to prepare receipt: $e', isError: true);
-      }
-      return;
-    }
-    GlobalLoadingOverlay.hide();
-
-    log(
-      'Built receipt ticket for booking #${booking.id} '
-      '(${ticket.commands.length} commands) — quick-printing',
-      name: 'QzPrinter',
-    );
-    if (!context.mounted) return;
-    await printReceiptQuickly(context: context, ticket: ticket);
-  }
-
-  Future<void> _openInvoicePdf(
-    BuildContext context,
-    BookingDetailsEntity booking,
-  ) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      final getBookingInvoice = getIt<GetBookingInvoicePdfBytesUseCase>();
-      final pdfBytes = await getBookingInvoice(booking.id);
-      if (context.mounted) Navigator.of(context).pop();
-
-      if (kIsWeb) {
-        openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
-        return;
-      }
-
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/booking_invoice_${booking.id}.pdf');
-      await file.writeAsBytes(pdfBytes);
-      await OpenFile.open(file.path);
-    } catch (e) {
-      if (context.mounted) Navigator.of(context).pop();
-      if (context.mounted) {
-        context.showSnackBar('Failed to open invoice: $e', isError: true);
-      }
-    }
-  }
-
-  /// Print-output-preference path for PDF invoices: skips the
-  /// open-in-a-tab step entirely and hands the bytes straight to
-  /// `Printing.layoutPdf`, which opens the browser's native print dialog
-  /// on web (and the OS print/share sheet on other platforms) for the
-  /// PDF itself — one click instead of "open, then print from there".
-  Future<void> _printInvoicePdf(
-    BuildContext context,
-    BookingDetailsEntity booking,
-  ) async {
-    GlobalLoadingOverlay.show(context, text: 'Preparing invoice...');
-    final Uint8List pdfBytes;
-    try {
-      pdfBytes = await getIt<GetBookingInvoicePdfBytesUseCase>()(booking.id);
-    } catch (e) {
-      GlobalLoadingOverlay.hide();
-      if (context.mounted) {
-        context.showSnackBar('Failed to prepare invoice: $e', isError: true);
-      }
-      return;
-    }
-    GlobalLoadingOverlay.hide();
-
-    await Printing.layoutPdf(
-      onLayout: (_) async => pdfBytes,
-      name: 'booking_invoice_${booking.id}.pdf',
-    );
   }
 }

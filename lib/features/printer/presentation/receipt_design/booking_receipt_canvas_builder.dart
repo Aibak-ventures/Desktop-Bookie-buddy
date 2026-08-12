@@ -222,19 +222,6 @@ class BookingReceiptCanvasBuilder {
   ) {
     canvas.divider(heavy: true);
 
-    // final securityDeposit =
-    //     booking.securityTransactionSummary.totalSecurityAmount;
-    // if (booking.securityPayment != null && securityDeposit > 0) {
-    //   canvas.row([
-    //     ReceiptColumn(
-    //       booking.isSecurityPaid
-    //           ? 'Security Deposit'
-    //           : 'Security Deposit (Unpaid)',
-    //     ),
-    //     ReceiptColumn(securityDeposit.toCurrency(), align: TextAlign.right),
-    //   ], size: _rowSize);
-    // }
-
     final productTotal = booking.bookedItems.fold<int>(
       0,
       (sum, item) => sum + item.amount,
@@ -306,26 +293,6 @@ class BookingReceiptCanvasBuilder {
         ),
       ], size: _rowSize);
     }
-
-    // if (booking.deliveryStatus == DeliveryStatus.cancelled &&
-    //     booking.refundTotal > 0) {
-    //   canvas
-    //     ..divider()
-    //     ..row([
-    //       const ReceiptColumn('Refunded'),
-    //       ReceiptColumn(
-    //         booking.refundTotal.toCurrency(),
-    //         align: TextAlign.right,
-    //       ),
-    //     ], size: _rowSize)
-    //     ..row([
-    //       const ReceiptColumn('Penalty Deducted'),
-    //       ReceiptColumn(
-    //         booking.refundableBalance.toCurrency(),
-    //         align: TextAlign.right,
-    //       ),
-    //     ], size: _rowSize);
-    // }
 
     canvas
       ..divider(heavy: true)
