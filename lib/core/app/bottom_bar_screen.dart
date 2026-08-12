@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
@@ -205,7 +208,34 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       ),
       const SettingsScreen(), //Currently not using
     ];
+    _warmUpPrinterBridge();
     super.initState();
+  }
+
+  /// Fires a one-off, silent QZ Tray connection attempt as soon as the user
+  /// lands here — reached from every successful-auth path (fresh login,
+  /// splash's silent session restore, post-reset-password), so this is the
+  /// single place that covers all of them.
+  ///
+  /// Deliberately not tied to [QzPrinterCubit] — that cubit is screen-scoped
+  /// by design (see its own doc comment: no persistent per-device
+  /// connection worth keeping alive once the print screen closes), so
+  /// reusing it here for a background warm-up would fight that. This just
+  /// pays the WebSocket-handshake latency once, early, so the first receipt
+  /// print of the session (quick-print or the picker) doesn't have to pay
+  /// it — QZ Tray itself remembers nothing between calls, so nothing here
+  /// needs to be undone/disconnected.
+  ///
+  /// Uses [CheckPrintBridgeAvailableUseCase] rather than
+  /// [ConnectPrintBridgeUseCase] specifically because it never throws (a
+  /// user without QZ Tray running/installed is an entirely normal case here
+  /// — nothing to show an error for, since nothing on this screen is asking
+  /// to print yet).
+  void _warmUpPrinterBridge() {
+    try {
+      print('BottomBarScreen: warming up QZ Tray connection...');
+      unawaited(getIt<CheckPrintBridgeAvailableUseCase>()());
+    } catch (_) {}
   }
 
   void _navigateToBookingsTab(String statusTab) {
