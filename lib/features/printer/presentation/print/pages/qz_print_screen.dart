@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
@@ -5,13 +6,11 @@ import 'package:bookie_buddy_web/features/printer/domain/entities/printer_bridge
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/bloc/qz_printer_cubit/qz_printer_cubit.dart';
+import 'package:bookie_buddy_web/features/printer/presentation/print/widgets/printer_list_card.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-/// Downloads page for QZ Tray — shown when the bridge isn't running.
-const _qzTrayDownloadUrl = 'https://qz.io/download/';
 
 /// Screen that lets the user pick (and print to) a QZ Tray printer.
 ///
@@ -139,7 +138,8 @@ class _BridgeUnavailableView extends StatelessWidget {
               alignment: WrapAlignment.center,
               children: [
                 OutlinedButton(
-                  onPressed: () => launchUrl(Uri.parse(_qzTrayDownloadUrl)),
+                  onPressed: () =>
+                      launchUrl(Uri.parse(AppConstants.qzTrayDownloadUrl)),
                   child: const Text('Download QZ Tray'),
                 ),
                 ElevatedButton(
@@ -176,12 +176,6 @@ class _PrinterPickerView extends StatelessWidget {
             message: state.errorMessage ?? 'Something went wrong.',
             onRetry: () => cubit.initialize(),
           ),
-        if (state.lastUsedPrinterName != null)
-          _ConnectedPrinterBanner(
-            printerName: state.lastUsedPrinterName!,
-            busy: busy,
-            onDisconnect: () => cubit.disconnectPrinter(),
-          ),
         Expanded(
           child: state.printers.isEmpty
               ? _EmptyPrintersView(onRefresh: () => cubit.refreshPrinters())
@@ -197,7 +191,7 @@ class _PrinterPickerView extends StatelessWidget {
                           printer.name == state.selectedPrinterName;
                       final connected =
                           printer.name == state.lastUsedPrinterName;
-                      return _PrinterCard(
+                      return PrinterListCard(
                         name: printer.name,
                         onlineStatus: printer.onlineStatus,
                         selected: selected,
@@ -207,6 +201,9 @@ class _PrinterPickerView extends StatelessWidget {
                         onConnect: busy || connected
                             ? null
                             : () => _connect(context, cubit, printer),
+                        onDisconnect: busy || !connected
+                            ? null
+                            : () => cubit.disconnectPrinter(),
                       );
                     },
                   ),
@@ -289,205 +286,6 @@ class _PrinterPickerView extends StatelessWidget {
     if (saved && context.mounted) {
       context.showSnackBar('Default printer saved.');
     }
-  }
-}
-
-/// Banner showing the printer currently saved as default, with a
-/// disconnect action — separate from row selection/highlighting.
-class _ConnectedPrinterBanner extends StatelessWidget {
-  const _ConnectedPrinterBanner({
-    required this.printerName,
-    required this.busy,
-    required this.onDisconnect,
-  });
-
-  final String printerName;
-  final bool busy;
-  final VoidCallback onDisconnect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.purpleLightShade,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.purpleAccent),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: AppColors.purple, size: 20),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Connected printer',
-                  style: TextStyle(fontSize: 11, color: AppColors.grey600),
-                ),
-                Text(
-                  printerName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black87,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          TextButton.icon(
-            onPressed: busy ? null : onDisconnect,
-            style: TextButton.styleFrom(foregroundColor: AppColors.red),
-            icon: const Icon(Icons.link_off, size: 16),
-            label: const Text('Disconnect'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A single printer row — tapping the card only highlights it; connecting
-/// requires the explicit "Connect" button.
-class _PrinterCard extends StatelessWidget {
-  const _PrinterCard({
-    required this.name,
-    required this.onlineStatus,
-    required this.selected,
-    required this.connected,
-    required this.busy,
-    required this.onTap,
-    required this.onConnect,
-  });
-
-  final String name;
-  final PrinterOnlineStatus onlineStatus;
-  final bool selected;
-  final bool connected;
-  final bool busy;
-  final VoidCallback? onTap;
-  final VoidCallback? onConnect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.greyBorder, width: 1),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.print_outlined,
-                color: selected ? AppColors.purple : AppColors.grey600,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.black87,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: _StatusBadge(status: onlineStatus),
-                    ),
-                    if (connected)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.check_circle,
-                              size: 13,
-                              color: AppColors.purple,
-                            ),
-                            const SizedBox(width: 4),
-                            const Text(
-                              'Connected',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.purple,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              if (connected)
-                Chip(
-                  label: const Text('In use'),
-                  backgroundColor: AppColors.grey100,
-                  visualDensity: VisualDensity.compact,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                )
-              else
-                OutlinedButton(
-                  onPressed: onConnect,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.purple,
-                    side: const BorderSide(color: AppColors.purple),
-                  ),
-                  child: const Text('Connect'),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Small dot + label reflecting [PrinterOnlineStatus] — never blocks
-/// selection/connect, just informs (see [_PrinterPickerView.build] doc for
-/// why: some printers/drivers don't report status at all, so a hard
-/// online-only filter would risk hiding a real, workable printer).
-class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.status});
-
-  final PrinterOnlineStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final (color, label) = switch (status) {
-      PrinterOnlineStatus.online => (AppColors.green, 'Online'),
-      PrinterOnlineStatus.offline => (AppColors.red, 'Offline'),
-      PrinterOnlineStatus.unknown => (AppColors.grey600, 'Status unknown'),
-    };
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 7,
-          height: 7,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 5),
-        Text(label, style: TextStyle(fontSize: 12, color: color)),
-      ],
-    );
   }
 }
 

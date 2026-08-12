@@ -127,6 +127,13 @@ class QzTrayDatasource {
     // assumed here previously.
     void onStatus(JSAny? eventAny) {
       final event = eventAny?.dartify();
+      // Logged unconditionally (not just on a parse failure) so it's
+      // possible to tell, from a real device, whether QZ Tray is calling
+      // back at all — if this line never appears for a given printer, the
+      // driver isn't reporting status to QZ/the OS at all (common for
+      // generic/raw-USB thermal printer drivers), which is a QZ Tray/OS
+      // limitation, not a bug in this parsing code.
+      log('Printer status event: $event', name: _logName);
       if (event is! Map) return;
       final printerName = event['printerName'] as String?;
       final status = event['status'] as String?;
@@ -142,6 +149,11 @@ class QzTrayDatasource {
           .startListening(printerNames.map((e) => e.toJS).toList().toJS)
           .toDart;
       await qzTray.printers.getStatus().toDart;
+      log(
+        'Status request sent for $printerNames — waiting up to '
+        '$_statusTimeout for callback events...',
+        name: _logName,
+      );
       await completer.future.timeout(_statusTimeout, onTimeout: () {});
     } catch (e, stack) {
       log(
@@ -168,7 +180,7 @@ class QzTrayDatasource {
     return results;
   }
 
-  static const _statusTimeout = Duration(seconds: 4);
+  static const _statusTimeout = Duration(seconds: 6);
 
   /// QZ's `status` values are driver-specific free text (e.g. `"OK"`,
   /// `"READY"`, `"OFFLINE"`, `"NOT AVAILABLE"`) — no fixed enum from QZ
