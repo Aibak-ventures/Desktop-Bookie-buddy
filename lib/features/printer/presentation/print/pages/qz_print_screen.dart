@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_bridge_status_enum.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/bloc/qz_printer_cubit/qz_printer_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,32 @@ class _QzPrintView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(ticket != null ? 'Print Receipt' : 'Printer Setup'),
+        actions: [
+          BlocBuilder<QzPrinterCubit, QzPrinterState>(
+            buildWhen: (previous, current) =>
+                previous.status != current.status ||
+                previous.refreshingPrinters != current.refreshingPrinters,
+            builder: (context, state) {
+              final canRefresh =
+                  (state.status == PrinterBridgeStatus.connected ||
+                      state.status == PrinterBridgeStatus.error) &&
+                  !state.refreshingPrinters;
+              return IconButton(
+                tooltip: 'Refresh printer list',
+                icon: state.refreshingPrinters
+                    ? const SizedBox(
+                        height: 18,
+                        width: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.refresh),
+                onPressed: canRefresh
+                    ? () => context.read<QzPrinterCubit>().refreshPrinters()
+                    : null,
+              );
+            },
+          ),
+        ],
       ),
       body: BlocConsumer<QzPrinterCubit, QzPrinterState>(
         listener: (context, state) {
@@ -157,9 +184,9 @@ class _PrinterPickerView extends StatelessWidget {
           ),
         Expanded(
           child: state.printers.isEmpty
-              ? _EmptyPrintersView(onRefresh: () => cubit.initialize())
+              ? _EmptyPrintersView(onRefresh: () => cubit.refreshPrinters())
               : RefreshIndicator(
-                  onRefresh: cubit.initialize,
+                  onRefresh: cubit.refreshPrinters,
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                     itemCount: state.printers.length,
@@ -172,6 +199,7 @@ class _PrinterPickerView extends StatelessWidget {
                           printer.name == state.lastUsedPrinterName;
                       return _PrinterCard(
                         name: printer.name,
+                        onlineStatus: printer.onlineStatus,
                         selected: selected,
                         connected: connected,
                         busy: busy,
@@ -244,7 +272,14 @@ class _PrinterPickerView extends StatelessWidget {
     PrinterDeviceEntity printer,
   ) async {
     final connected = await cubit.connectToPrinter(printer);
-    if (connected && context.mounted) {
+    if (!connected || !context.mounted) return;
+    if (printer.onlineStatus == PrinterOnlineStatus.offline) {
+      context.showSnackBar(
+        'Set ${printer.name} as default, but it looks offline right now — '
+        'check it\'s powered on before printing.',
+        isError: true,
+      );
+    } else {
       context.showSnackBar('Connected to ${printer.name}.');
     }
   }
@@ -321,6 +356,7 @@ class _ConnectedPrinterBanner extends StatelessWidget {
 class _PrinterCard extends StatelessWidget {
   const _PrinterCard({
     required this.name,
+    required this.onlineStatus,
     required this.selected,
     required this.connected,
     required this.busy,
@@ -329,6 +365,7 @@ class _PrinterCard extends StatelessWidget {
   });
 
   final String name;
+  final PrinterOnlineStatus onlineStatus;
   final bool selected;
   final bool connected;
   final bool busy;
@@ -367,6 +404,10 @@ class _PrinterCard extends StatelessWidget {
                         color: AppColors.black87,
                       ),
                       overflow: TextOverflow.ellipsis,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: _StatusBadge(status: onlineStatus),
                     ),
                     if (connected)
                       Padding(
@@ -415,6 +456,37 @@ class _PrinterCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Small dot + label reflecting [PrinterOnlineStatus] — never blocks
+/// selection/connect, just informs (see [_PrinterPickerView.build] doc for
+/// why: some printers/drivers don't report status at all, so a hard
+/// online-only filter would risk hiding a real, workable printer).
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.status});
+
+  final PrinterOnlineStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final (color, label) = switch (status) {
+      PrinterOnlineStatus.online => (AppColors.green, 'Online'),
+      PrinterOnlineStatus.offline => (AppColors.red, 'Offline'),
+      PrinterOnlineStatus.unknown => (AppColors.grey600, 'Status unknown'),
+    };
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 7,
+          height: 7,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 5),
+        Text(label, style: TextStyle(fontSize: 12, color: color)),
+      ],
     );
   }
 }

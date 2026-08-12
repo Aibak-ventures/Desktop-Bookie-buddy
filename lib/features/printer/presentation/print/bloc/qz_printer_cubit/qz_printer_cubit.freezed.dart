@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$QzPrinterState {
 
- PrinterBridgeStatus get status; List<PrinterDeviceEntity> get printers; String? get selectedPrinterName; String? get errorMessage;/// The printer that was saved as default *before* this session's
+ PrinterBridgeStatus get status; List<PrinterDeviceEntity> get printers; String? get selectedPrinterName; String? get errorMessage;/// True while [QzPrinterCubit.refreshPrinters] is in flight — drives
+/// the AppBar refresh button's spinner without swapping the whole
+/// body out for a loading state the way [status] would.
+ bool get refreshingPrinters;/// The printer that was saved as default *before* this session's
 /// selection changed anything — purely for the picker UI to label a
 /// "(default)" tag; never mutated by [QzPrinterCubit.selectPrinter].
  String? get lastUsedPrinterName;
@@ -28,16 +31,16 @@ $QzPrinterStateCopyWith<QzPrinterState> get copyWith => _$QzPrinterStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.printers, printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.printers, printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.refreshingPrinters, refreshingPrinters) || other.refreshingPrinters == refreshingPrinters)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(printers),selectedPrinterName,errorMessage,lastUsedPrinterName);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(printers),selectedPrinterName,errorMessage,refreshingPrinters,lastUsedPrinterName);
 
 @override
 String toString() {
-  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, lastUsedPrinterName: $lastUsedPrinterName)';
+  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, refreshingPrinters: $refreshingPrinters, lastUsedPrinterName: $lastUsedPrinterName)';
 }
 
 
@@ -48,7 +51,7 @@ abstract mixin class $QzPrinterStateCopyWith<$Res>  {
   factory $QzPrinterStateCopyWith(QzPrinterState value, $Res Function(QzPrinterState) _then) = _$QzPrinterStateCopyWithImpl;
 @useResult
 $Res call({
- PrinterBridgeStatus status, List<PrinterDeviceEntity> printers, String? selectedPrinterName, String? errorMessage, String? lastUsedPrinterName
+ PrinterBridgeStatus status, List<PrinterDeviceEntity> printers, String? selectedPrinterName, String? errorMessage, bool refreshingPrinters, String? lastUsedPrinterName
 });
 
 
@@ -65,13 +68,14 @@ class _$QzPrinterStateCopyWithImpl<$Res>
 
 /// Create a copy of QzPrinterState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? printers = null,Object? selectedPrinterName = freezed,Object? errorMessage = freezed,Object? lastUsedPrinterName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? printers = null,Object? selectedPrinterName = freezed,Object? errorMessage = freezed,Object? refreshingPrinters = null,Object? lastUsedPrinterName = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as PrinterBridgeStatus,printers: null == printers ? _self.printers : printers // ignore: cast_nullable_to_non_nullable
 as List<PrinterDeviceEntity>,selectedPrinterName: freezed == selectedPrinterName ? _self.selectedPrinterName : selectedPrinterName // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastUsedPrinterName: freezed == lastUsedPrinterName ? _self.lastUsedPrinterName : lastUsedPrinterName // ignore: cast_nullable_to_non_nullable
+as String?,refreshingPrinters: null == refreshingPrinters ? _self.refreshingPrinters : refreshingPrinters // ignore: cast_nullable_to_non_nullable
+as bool,lastUsedPrinterName: freezed == lastUsedPrinterName ? _self.lastUsedPrinterName : lastUsedPrinterName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -157,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  String? lastUsedPrinterName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  bool refreshingPrinters,  String? lastUsedPrinterName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _QzPrinterState() when $default != null:
-return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.lastUsedPrinterName);case _:
+return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.refreshingPrinters,_that.lastUsedPrinterName);case _:
   return orElse();
 
 }
@@ -178,10 +182,10 @@ return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.erro
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  String? lastUsedPrinterName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  bool refreshingPrinters,  String? lastUsedPrinterName)  $default,) {final _that = this;
 switch (_that) {
 case _QzPrinterState():
-return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.lastUsedPrinterName);case _:
+return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.refreshingPrinters,_that.lastUsedPrinterName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +202,10 @@ return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.erro
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  String? lastUsedPrinterName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PrinterBridgeStatus status,  List<PrinterDeviceEntity> printers,  String? selectedPrinterName,  String? errorMessage,  bool refreshingPrinters,  String? lastUsedPrinterName)?  $default,) {final _that = this;
 switch (_that) {
 case _QzPrinterState() when $default != null:
-return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.lastUsedPrinterName);case _:
+return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.errorMessage,_that.refreshingPrinters,_that.lastUsedPrinterName);case _:
   return null;
 
 }
@@ -213,7 +217,7 @@ return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.erro
 
 
 class _QzPrinterState implements QzPrinterState {
-  const _QzPrinterState({this.status = PrinterBridgeStatus.unknown, final  List<PrinterDeviceEntity> printers = const [], this.selectedPrinterName, this.errorMessage, this.lastUsedPrinterName}): _printers = printers;
+  const _QzPrinterState({this.status = PrinterBridgeStatus.unknown, final  List<PrinterDeviceEntity> printers = const [], this.selectedPrinterName, this.errorMessage, this.refreshingPrinters = false, this.lastUsedPrinterName}): _printers = printers;
   
 
 @override@JsonKey() final  PrinterBridgeStatus status;
@@ -226,6 +230,10 @@ class _QzPrinterState implements QzPrinterState {
 
 @override final  String? selectedPrinterName;
 @override final  String? errorMessage;
+/// True while [QzPrinterCubit.refreshPrinters] is in flight — drives
+/// the AppBar refresh button's spinner without swapping the whole
+/// body out for a loading state the way [status] would.
+@override@JsonKey() final  bool refreshingPrinters;
 /// The printer that was saved as default *before* this session's
 /// selection changed anything — purely for the picker UI to label a
 /// "(default)" tag; never mutated by [QzPrinterCubit.selectPrinter].
@@ -241,16 +249,16 @@ _$QzPrinterStateCopyWith<_QzPrinterState> get copyWith => __$QzPrinterStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._printers, _printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._printers, _printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.refreshingPrinters, refreshingPrinters) || other.refreshingPrinters == refreshingPrinters)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_printers),selectedPrinterName,errorMessage,lastUsedPrinterName);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_printers),selectedPrinterName,errorMessage,refreshingPrinters,lastUsedPrinterName);
 
 @override
 String toString() {
-  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, lastUsedPrinterName: $lastUsedPrinterName)';
+  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, refreshingPrinters: $refreshingPrinters, lastUsedPrinterName: $lastUsedPrinterName)';
 }
 
 
@@ -261,7 +269,7 @@ abstract mixin class _$QzPrinterStateCopyWith<$Res> implements $QzPrinterStateCo
   factory _$QzPrinterStateCopyWith(_QzPrinterState value, $Res Function(_QzPrinterState) _then) = __$QzPrinterStateCopyWithImpl;
 @override @useResult
 $Res call({
- PrinterBridgeStatus status, List<PrinterDeviceEntity> printers, String? selectedPrinterName, String? errorMessage, String? lastUsedPrinterName
+ PrinterBridgeStatus status, List<PrinterDeviceEntity> printers, String? selectedPrinterName, String? errorMessage, bool refreshingPrinters, String? lastUsedPrinterName
 });
 
 
@@ -278,13 +286,14 @@ class __$QzPrinterStateCopyWithImpl<$Res>
 
 /// Create a copy of QzPrinterState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? printers = null,Object? selectedPrinterName = freezed,Object? errorMessage = freezed,Object? lastUsedPrinterName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? printers = null,Object? selectedPrinterName = freezed,Object? errorMessage = freezed,Object? refreshingPrinters = null,Object? lastUsedPrinterName = freezed,}) {
   return _then(_QzPrinterState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as PrinterBridgeStatus,printers: null == printers ? _self._printers : printers // ignore: cast_nullable_to_non_nullable
 as List<PrinterDeviceEntity>,selectedPrinterName: freezed == selectedPrinterName ? _self.selectedPrinterName : selectedPrinterName // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,lastUsedPrinterName: freezed == lastUsedPrinterName ? _self.lastUsedPrinterName : lastUsedPrinterName // ignore: cast_nullable_to_non_nullable
+as String?,refreshingPrinters: null == refreshingPrinters ? _self.refreshingPrinters : refreshingPrinters // ignore: cast_nullable_to_non_nullable
+as bool,lastUsedPrinterName: freezed == lastUsedPrinterName ? _self.lastUsedPrinterName : lastUsedPrinterName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -159,10 +159,10 @@ class BookingDetailsActionBar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
         ],
-        // Download Invoice (always visible)
+        // Share Invoice (always visible)
         _buildIconActionButton(
           context,
-          icon: Icons.download_outlined,
+          icon: Icons.share_outlined,
           color: AppColors.purple,
           onTap: () => BookingInvoiceActions.openInvoicePdf(context, booking),
         ),

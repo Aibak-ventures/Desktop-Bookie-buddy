@@ -47,6 +47,34 @@ class QzPrintersJs {}
 extension QzPrintersJsExtension on QzPrintersJs {
   /// Resolves to a `JSArray<JSString>` of installed printer names.
   external JSPromise find();
+
+  /// Registers the callback QZ Tray pushes printer status events to
+  /// (fired for any printer passed to [startListening], any time its
+  /// status changes, and once per printer after [getStatus]). Callback
+  /// receives a `JSArray` of [QzPrinterStatusEventJs].
+  external void setPrinterCallbacks(JSFunction callback);
+
+  /// Starts listening for status events on [printerNames] — required
+  /// before [getStatus] will report anything for them.
+  external JSPromise startListening(JSArray<JSString> printerNames);
+
+  /// Stops listening for status events on all printers.
+  external JSPromise stopListening();
+
+  /// Asks QZ Tray to push the current status of every actively-listened
+  /// printer (see [startListening]) to the callback registered via
+  /// [setPrinterCallbacks]. Resolves once the request is sent — the actual
+  /// status arrives asynchronously via the callback, not this promise.
+  external JSPromise getStatus();
+}
+
+/// Shape of each entry QZ Tray pushes to the `setPrinterCallbacks`
+/// callback — confirmed against the bundled `qz-tray.js` v2.2.6 JSDoc for
+/// `PrinterStatusEvent` (`printer`/`statusText`/`severity`/`code`).
+extension type QzPrinterStatusEventJs._(JSObject _) implements JSObject {
+  external String get printer;
+  external String get statusText;
+  external String get severity;
 }
 
 @JS()

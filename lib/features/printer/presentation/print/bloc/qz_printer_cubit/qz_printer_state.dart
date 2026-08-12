@@ -8,6 +8,11 @@ abstract class QzPrinterState with _$QzPrinterState {
     String? selectedPrinterName,
     String? errorMessage,
 
+    /// True while [QzPrinterCubit.refreshPrinters] is in flight — drives
+    /// the AppBar refresh button's spinner without swapping the whole
+    /// body out for a loading state the way [status] would.
+    @Default(false) bool refreshingPrinters,
+
     /// The printer that was saved as default *before* this session's
     /// selection changed anything — purely for the picker UI to label a
     /// "(default)" tag; never mutated by [QzPrinterCubit.selectPrinter].

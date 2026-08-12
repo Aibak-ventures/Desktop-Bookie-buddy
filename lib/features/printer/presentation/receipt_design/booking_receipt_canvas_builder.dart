@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart'
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/receipt_canvas.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -38,17 +39,19 @@ class BookingReceiptCanvasBuilder {
   }) async {
     final canvas = ReceiptCanvas(context: context);
 
-    // Only the header (async logo fetch) and the final call (which flushes
-    // everything accumulated since) actually await anything — the sections
-    // in between just queue widgets onto the same pending buffer. Rendering
-    // them as one combined image instead of five separate ones cuts the
-    // per-section cost (offscreen render + isolate spawn for monochrome
-    // conversion) from six down to two, which is most of what makes a print
-    // feel slow, especially over Bluetooth.
+    // Every section just queues widgets onto the same pending buffer, all
+    // rendered as a single combined image by the one `flushSection()`
+    // inside `cut()`/`build()` — one offscreen render + one GPU pixel
+    // readback for the whole receipt instead of several, which is what
+    // actually costs UI-thread time per print (the black/white conversion
+    // itself already runs off the main isolate — see `toMonochromeBitmap`).
+    // The one exception is `_buildItems`: a booking with an unusually long
+    // item list gets an extra flush partway through so no single readback
+    // has to process a huge image — see its own doc for why.
     await _buildHeader(canvas, shop);
     _buildMeta(canvas, booking);
     _buildCustomer(canvas, booking);
-    _buildItems(canvas, booking);
+    await _buildItems(canvas, booking);
     _buildPaymentDetails(canvas, booking);
     await _buildTermsAndFooter(canvas, shop);
 
@@ -96,7 +99,6 @@ class BookingReceiptCanvasBuilder {
         size: _shopDetailsSize,
       );
     }
-    await canvas.flushSection();
   }
 
   void _buildMeta(ReceiptCanvas canvas, BookingDetailsEntity booking) {
@@ -170,7 +172,19 @@ class BookingReceiptCanvasBuilder {
       ], size: _rowSize);
   }
 
-  void _buildItems(ReceiptCanvas canvas, BookingDetailsEntity booking) {
+  /// Item lists past this length get an extra [ReceiptCanvas.flushSection]
+  /// partway through (see below) instead of joining the single-image
+  /// receipt everything else stays part of — keeps the GPU readback for
+  /// any one image bounded even for an unusually large booking, at the
+  /// (rare) cost of one extra flush. Purely an internal rendering detail:
+  /// the printed paper is one continuous strip either way, so there's no
+  /// visible seam or repeated column header for the customer to see.
+  static const _itemSplitThreshold = 40;
+
+  Future<void> _buildItems(
+    ReceiptCanvas canvas,
+    BookingDetailsEntity booking,
+  ) async {
     canvas
       ..divider()
       ..row([
@@ -190,29 +204,34 @@ class BookingReceiptCanvasBuilder {
       ], size: _rowSize)
       ..divider(heavy: true);
 
-    for (final item in booking.bookedItems) {
-      canvas.row([
-        ReceiptColumn(item.name, flex: 56),
-        ReceiptColumn(
-          item.quantity.toString(),
-          flex: 14,
-          align: TextAlign.right,
-        ),
-        ReceiptColumn(
-          item.amount.toCurrency(symbol: false),
-          flex: 30,
-          align: TextAlign.right,
-        ),
-      ], size: _rowSize);
-      final subtitle = [
-        item.category,
-        item.color,
-        item.variantAttribute,
-        item.model,
-      ].where((s) => s != null && s.trim().isNotEmpty).join(' · ');
-      if (subtitle.isNotEmpty) {
-        canvas.text(subtitle, size: _itemSubtitleSize);
+    final items = booking.bookedItems;
+    for (var i = 0; i < items.length; i++) {
+      _buildItemRow(canvas, items[i]);
+      final isSplitPoint = (i == _itemSplitThreshold - 1);
+      if (isSplitPoint && items.length > _itemSplitThreshold) {
+        await canvas.flushSection();
       }
+    }
+  }
+
+  void _buildItemRow(ReceiptCanvas canvas, ProductInfoEntity item) {
+    canvas.row([
+      ReceiptColumn(item.name, flex: 56),
+      ReceiptColumn(item.quantity.toString(), flex: 14, align: TextAlign.right),
+      ReceiptColumn(
+        item.amount.toCurrency(symbol: false),
+        flex: 30,
+        align: TextAlign.right,
+      ),
+    ], size: _rowSize);
+    final subtitle = [
+      item.category,
+      item.color,
+      item.variantAttribute,
+      item.model,
+    ].where((s) => s != null && s.trim().isNotEmpty).join(' · ');
+    if (subtitle.isNotEmpty) {
+      canvas.text(subtitle, size: _itemSubtitleSize);
     }
   }
 

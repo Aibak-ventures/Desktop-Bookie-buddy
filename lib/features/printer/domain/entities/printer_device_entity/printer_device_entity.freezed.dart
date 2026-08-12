@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PrinterDeviceEntity {
 
- String get name;
+ String get name;/// Live reachability from QZ's status API — [PrinterOnlineStatus.unknown]
+/// until a status check has run (or if it timed out/isn't supported by
+/// this printer's driver), never used to hide a printer from the list.
+ PrinterOnlineStatus get onlineStatus;
 /// Create a copy of PrinterDeviceEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +28,16 @@ $PrinterDeviceEntityCopyWith<PrinterDeviceEntity> get copyWith => _$PrinterDevic
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrinterDeviceEntity&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrinterDeviceEntity&&(identical(other.name, name) || other.name == name)&&(identical(other.onlineStatus, onlineStatus) || other.onlineStatus == onlineStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,name,onlineStatus);
 
 @override
 String toString() {
-  return 'PrinterDeviceEntity(name: $name)';
+  return 'PrinterDeviceEntity(name: $name, onlineStatus: $onlineStatus)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $PrinterDeviceEntityCopyWith<$Res>  {
   factory $PrinterDeviceEntityCopyWith(PrinterDeviceEntity value, $Res Function(PrinterDeviceEntity) _then) = _$PrinterDeviceEntityCopyWithImpl;
 @useResult
 $Res call({
- String name
+ String name, PrinterOnlineStatus onlineStatus
 });
 
 
@@ -62,10 +65,11 @@ class _$PrinterDeviceEntityCopyWithImpl<$Res>
 
 /// Create a copy of PrinterDeviceEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? onlineStatus = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,
+as String,onlineStatus: null == onlineStatus ? _self.onlineStatus : onlineStatus // ignore: cast_nullable_to_non_nullable
+as PrinterOnlineStatus,
   ));
 }
 
@@ -150,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  PrinterOnlineStatus onlineStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrinterDeviceEntity() when $default != null:
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   return orElse();
 
 }
@@ -171,10 +175,10 @@ return $default(_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  PrinterOnlineStatus onlineStatus)  $default,) {final _that = this;
 switch (_that) {
 case _PrinterDeviceEntity():
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -191,10 +195,10 @@ return $default(_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  PrinterOnlineStatus onlineStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _PrinterDeviceEntity() when $default != null:
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   return null;
 
 }
@@ -206,10 +210,14 @@ return $default(_that.name);case _:
 
 
 class _PrinterDeviceEntity implements PrinterDeviceEntity {
-  const _PrinterDeviceEntity({required this.name});
+  const _PrinterDeviceEntity({required this.name, this.onlineStatus = PrinterOnlineStatus.unknown});
   
 
 @override final  String name;
+/// Live reachability from QZ's status API — [PrinterOnlineStatus.unknown]
+/// until a status check has run (or if it timed out/isn't supported by
+/// this printer's driver), never used to hide a printer from the list.
+@override@JsonKey() final  PrinterOnlineStatus onlineStatus;
 
 /// Create a copy of PrinterDeviceEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -221,16 +229,16 @@ _$PrinterDeviceEntityCopyWith<_PrinterDeviceEntity> get copyWith => __$PrinterDe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrinterDeviceEntity&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrinterDeviceEntity&&(identical(other.name, name) || other.name == name)&&(identical(other.onlineStatus, onlineStatus) || other.onlineStatus == onlineStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,name,onlineStatus);
 
 @override
 String toString() {
-  return 'PrinterDeviceEntity(name: $name)';
+  return 'PrinterDeviceEntity(name: $name, onlineStatus: $onlineStatus)';
 }
 
 
@@ -241,7 +249,7 @@ abstract mixin class _$PrinterDeviceEntityCopyWith<$Res> implements $PrinterDevi
   factory _$PrinterDeviceEntityCopyWith(_PrinterDeviceEntity value, $Res Function(_PrinterDeviceEntity) _then) = __$PrinterDeviceEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String name
+ String name, PrinterOnlineStatus onlineStatus
 });
 
 
@@ -258,10 +266,11 @@ class __$PrinterDeviceEntityCopyWithImpl<$Res>
 
 /// Create a copy of PrinterDeviceEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? onlineStatus = null,}) {
   return _then(_PrinterDeviceEntity(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,
+as String,onlineStatus: null == onlineStatus ? _self.onlineStatus : onlineStatus // ignore: cast_nullable_to_non_nullable
+as PrinterOnlineStatus,
   ));
 }
 

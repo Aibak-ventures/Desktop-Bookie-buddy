@@ -13,7 +13,20 @@ abstract interface class IPrinterRepository {
   /// connect on demand — but it's exposed for an explicit "Retry" action.
   Future<void> connectToBridge();
 
+  /// Returns the OS/QZ-installed printer list. [PrinterDeviceEntity.onlineStatus]
+  /// on each entry is [PrinterOnlineStatus.unknown] until [refreshPrinterStatuses]
+  /// has been run against it — this call alone doesn't probe liveness.
   Future<List<PrinterDeviceEntity>> findPrinters();
+
+  /// Probes live reachability for [printers] via QZ Tray's status API and
+  /// returns the same list with [PrinterDeviceEntity.onlineStatus] filled
+  /// in. Separate from [findPrinters] since the status query is slower
+  /// (round-trips through QZ's async event callback, several seconds
+  /// worst-case) — callers show the list immediately from [findPrinters]
+  /// then refresh statuses in.
+  Future<List<PrinterDeviceEntity>> refreshPrinterStatuses(
+    List<PrinterDeviceEntity> printers,
+  );
 
   /// Sends [ticket] to [printerName] via QZ Tray. The repository is the
   /// only place that turns [PrintTicketEntity]'s commands into actual

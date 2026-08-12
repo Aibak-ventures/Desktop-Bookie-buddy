@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
@@ -8,6 +9,7 @@ import 'package:bookie_buddy_web/features/printer/domain/usecases/clear_last_pri
 import 'package:bookie_buddy_web/features/printer/domain/usecases/find_printers_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/get_last_printer_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/print_receipt_usecase.dart';
+import 'package:bookie_buddy_web/features/printer/domain/usecases/refresh_printer_statuses_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/save_last_printer_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,6 +33,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     required this.getLastPrinterUseCase,
     required this.saveLastPrinterUseCase,
     required this.clearLastPrinterUseCase,
+    required this.refreshPrinterStatusesUseCase,
   }) : super(const QzPrinterState());
 
   final CheckPrintBridgeAvailableUseCase checkBridgeAvailableUseCase;
@@ -39,6 +42,12 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
   final GetLastPrinterUseCase getLastPrinterUseCase;
   final SaveLastPrinterUseCase saveLastPrinterUseCase;
   final ClearLastPrinterUseCase clearLastPrinterUseCase;
+  final RefreshPrinterStatusesUseCase refreshPrinterStatusesUseCase;
+
+  /// Guards against a stale status refresh (from a superseded
+  /// [initialize] call, e.g. pull-to-refresh fired twice) overwriting a
+  /// newer printer list.
+  int _statusRefreshToken = 0;
 
   /// Call on screen entry. Checks the bridge, then — if available — loads
   /// the printer list and pre-selects the last-used printer (if it's still
@@ -77,6 +86,7 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
           errorMessage: null,
         ),
       );
+      unawaited(_refreshStatuses(printers));
     } catch (e, stack) {
       log(
         'initialize() failed listing printers: $e',
@@ -88,6 +98,65 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
         state.copyWith(
           status: PrinterBridgeStatus.error,
           errorMessage: 'Could not list printers: $e',
+        ),
+      );
+    }
+  }
+
+  /// Queries live status for [printers] and merges it into whatever
+  /// printer list is current in state — dropped if a newer [initialize]
+  /// call has already superseded [printers] (guarded by
+  /// [_statusRefreshToken]) so a slow status query can't clobber a fresher
+  /// list.
+  Future<void> _refreshStatuses(List<PrinterDeviceEntity> printers) async {
+    final token = ++_statusRefreshToken;
+    try {
+      final withStatus = await refreshPrinterStatusesUseCase(printers);
+      if (token != _statusRefreshToken || isClosed) return;
+      emit(state.copyWith(printers: withStatus));
+    } catch (e, stack) {
+      // Status is a best-effort enhancement — the plain printer list from
+      // [initialize] already rendered, so a failed refresh just leaves
+      // every printer's status as unknown rather than surfacing an error.
+      log('_refreshStatuses() failed: $e', name: _logName, error: e, stackTrace: stack);
+    }
+  }
+
+  /// Re-lists printers and re-checks their live status without leaving the
+  /// picker (unlike [initialize], which briefly swaps the whole body for a
+  /// spinner) — this is what the AppBar refresh button and pull-to-refresh
+  /// call, so the user can confirm a printer just came online/offline
+  /// without navigating away and back.
+  Future<void> refreshPrinters() async {
+    log('refreshPrinters()', name: _logName);
+    emit(state.copyWith(refreshingPrinters: true));
+    try {
+      final printers = await findPrintersUseCase();
+      final selected = state.selectedPrinterName != null &&
+              printers.any((p) => p.name == state.selectedPrinterName)
+          ? state.selectedPrinterName
+          : null;
+      emit(
+        state.copyWith(
+          printers: printers,
+          selectedPrinterName: selected,
+          refreshingPrinters: false,
+          errorMessage: null,
+        ),
+      );
+      await _refreshStatuses(printers);
+    } catch (e, stack) {
+      log(
+        'refreshPrinters() failed: $e',
+        name: _logName,
+        error: e,
+        stackTrace: stack,
+      );
+      emit(
+        state.copyWith(
+          refreshingPrinters: false,
+          status: PrinterBridgeStatus.error,
+          errorMessage: 'Could not refresh printers: $e',
         ),
       );
     }

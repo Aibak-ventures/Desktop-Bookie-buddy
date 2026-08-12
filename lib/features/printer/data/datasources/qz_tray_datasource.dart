@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:js_interop';
 
 import 'package:bookie_buddy_web/features/printer/data/datasources/qz_tray_js_bindings.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/printer_exceptions.dart';
 
 const _logName = 'QzPrinter';
@@ -90,6 +92,86 @@ class QzTrayDatasource {
       );
       throw PrinterOperationException('Could not list printers: $e');
     }
+  }
+
+  /// Queries QZ Tray's live status for [printerNames] (OS/driver-reported
+  /// reachability — SNMP for network printers, driver state for USB/local
+  /// ones) and returns a status per name. Any name QZ never reports back
+  /// for (driver doesn't support status, or the [_statusTimeout] elapses
+  /// first) is reported as [PrinterOnlineStatus.unknown] rather than
+  /// assumed offline — an absent report isn't proof the printer is down.
+  Future<Map<String, PrinterOnlineStatus>> getPrinterStatuses(
+    List<String> printerNames,
+  ) async {
+    if (printerNames.isEmpty) return {};
+    await connect();
+    log('Querying status for $printerNames...', name: _logName);
+
+    final results = <String, PrinterOnlineStatus>{};
+    final pending = printerNames.toSet();
+    final completer = Completer<void>();
+
+    void onStatus(JSArray<JSObject> events) {
+      for (final event in events.toDart) {
+        final status = event as QzPrinterStatusEventJs;
+        results[status.printer] = _parseStatus(status.statusText);
+        pending.remove(status.printer);
+      }
+      if (pending.isEmpty && !completer.isCompleted) completer.complete();
+    }
+
+    try {
+      qzTray.printers.setPrinterCallbacks(onStatus.toJS);
+      await qzTray.printers
+          .startListening(printerNames.map((e) => e.toJS).toList().toJS)
+          .toDart;
+      await qzTray.printers.getStatus().toDart;
+      await completer.future.timeout(_statusTimeout, onTimeout: () {});
+    } catch (e, stack) {
+      log(
+        'getPrinterStatuses() failed: $e',
+        name: _logName,
+        error: e,
+        stackTrace: stack,
+      );
+      // Fall through — printers not yet in [results] are reported unknown
+      // below rather than throwing, since a failed status check shouldn't
+      // block the picker from showing the (still-valid) printer list.
+    } finally {
+      try {
+        await qzTray.printers.stopListening().toDart;
+      } catch (_) {
+        // Best-effort cleanup only.
+      }
+    }
+
+    for (final name in printerNames) {
+      results.putIfAbsent(name, () => PrinterOnlineStatus.unknown);
+    }
+    log('Printer statuses: $results', name: _logName);
+    return results;
+  }
+
+  static const _statusTimeout = Duration(seconds: 4);
+
+  /// QZ's `statusText` values are driver-specific free text (e.g. `"OK"`,
+  /// `"READY"`, `"OFFLINE"`, `"NOT AVAILABLE"`) — no fixed enum from QZ
+  /// itself, so this matches on substrings rather than exact strings.
+  PrinterOnlineStatus _parseStatus(String statusText) {
+    final normalized = statusText.toUpperCase();
+    if (normalized.contains('OFFLINE') ||
+        normalized.contains('NOT AVAILABLE') ||
+        normalized.contains('UNAVAILABLE') ||
+        normalized.contains('ERROR')) {
+      return PrinterOnlineStatus.offline;
+    }
+    if (normalized.contains('OK') ||
+        normalized.contains('READY') ||
+        normalized.contains('IDLE') ||
+        normalized.contains('ONLINE')) {
+      return PrinterOnlineStatus.online;
+    }
+    return PrinterOnlineStatus.unknown;
   }
 
   /// Sends already-built raw ESC/POS bytes (base64-encoded) to

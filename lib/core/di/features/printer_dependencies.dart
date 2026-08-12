@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/features/printer/domain/usecases/find_printers_
 import 'package:bookie_buddy_web/features/printer/domain/usecases/get_last_printer_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/print_receipt_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/quick_print_receipt_usecase.dart';
+import 'package:bookie_buddy_web/features/printer/domain/usecases/refresh_printer_statuses_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/save_last_printer_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/bloc/qz_printer_cubit/qz_printer_cubit.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
@@ -52,6 +53,9 @@ class PrinterDependencies {
     getIt.registerLazySingleton(
       () => QuickPrintReceiptUseCase(getIt<IPrinterRepository>()),
     );
+    getIt.registerLazySingleton(
+      () => RefreshPrinterStatusesUseCase(getIt<IPrinterRepository>()),
+    );
     // Factory, not singleton — QzPrinterCubit is screen-scoped (see its
     // own doc for why, unlike mobile's app-wide ThermalPrinterCubit), so
     // each QzPrintScreen must get a fresh instance.
@@ -63,6 +67,7 @@ class PrinterDependencies {
         getLastPrinterUseCase: getIt(),
         saveLastPrinterUseCase: getIt(),
         clearLastPrinterUseCase: getIt(),
+        refreshPrinterStatusesUseCase: getIt(),
       ),
     );
   }

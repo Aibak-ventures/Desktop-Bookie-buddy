@@ -4,6 +4,7 @@ import 'dart:math' show Random;
 import 'package:bookie_buddy_web/features/printer/data/models/printer_device_model/printer_device_model.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/features/printer/domain/repositories/i_printer_repository.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 
@@ -57,6 +58,24 @@ class MockQzPrinterRepositoryImpl implements IPrinterRepository {
         name: _logName);
     return _fakePrinterNames
         .map((name) => PrinterDeviceModel(name: name).toEntity())
+        .toList();
+  }
+
+  @override
+  Future<List<PrinterDeviceEntity>> refreshPrinterStatuses(
+    List<PrinterDeviceEntity> printers,
+  ) async {
+    await _delay();
+    // Simulate one of the fake printers being offline so the badge/warning
+    // UI has something to show during local dev.
+    return printers
+        .map(
+          (p) => p.copyWith(
+            onlineStatus: p.name == 'Rongta RP80'
+                ? PrinterOnlineStatus.offline
+                : PrinterOnlineStatus.online,
+          ),
+        )
         .toList();
   }
 

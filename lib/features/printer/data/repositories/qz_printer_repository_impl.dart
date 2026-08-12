@@ -5,7 +5,9 @@ import 'package:bookie_buddy_web/features/printer/data/datasources/qz_tray_datas
 import 'package:bookie_buddy_web/features/printer/data/models/printer_device_model/printer_device_model.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/features/printer/domain/repositories/i_printer_repository.dart';
+import 'package:bookie_buddy_web/utils/error/exceptions/printer_exceptions.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart' as epu;
 import 'package:image/image.dart' as img;
@@ -36,6 +38,22 @@ class QzPrinterRepositoryImpl implements IPrinterRepository {
     final names = await _datasource.findPrinters();
     return names
         .map((name) => PrinterDeviceModel(name: name).toEntity())
+        .toList();
+  }
+
+  @override
+  Future<List<PrinterDeviceEntity>> refreshPrinterStatuses(
+    List<PrinterDeviceEntity> printers,
+  ) async {
+    final statuses = await _datasource.getPrinterStatuses(
+      printers.map((p) => p.name).toList(),
+    );
+    return printers
+        .map(
+          (p) => p.copyWith(
+            onlineStatus: statuses[p.name] ?? PrinterOnlineStatus.unknown,
+          ),
+        )
         .toList();
   }
 
@@ -79,6 +97,19 @@ class QzPrinterRepositoryImpl implements IPrinterRepository {
     for (final command in ticket.commands) {
       switch (command) {
         case PrintTicketImageCommand(:final rgba, :final width, :final height):
+          // Fail loudly on a mismatched buffer rather than silently
+          // decoding garbage into a raster header that no longer matches
+          // its own pixel data — that's what turns into unreadable output
+          // on the printer instead of a catchable error here. See
+          // `toMonochromeBitmap` for the kind of upstream bug this guards
+          // against (a byte buffer sliced wrong relative to width/height).
+          if (rgba.length != width * height * 4) {
+            throw PrinterOperationException(
+              'Receipt image data (${rgba.length} bytes) does not match its '
+              'declared ${width}x$height dimensions '
+              '(expected ${width * height * 4} bytes) — refusing to print.',
+            );
+          }
           final decoded = img.Image.fromBytes(
             width: width,
             height: height,

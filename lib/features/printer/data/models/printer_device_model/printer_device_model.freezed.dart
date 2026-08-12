@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PrinterDeviceModel {
 
- String get name;
+ String get name; PrinterOnlineStatus get onlineStatus;
 /// Create a copy of PrinterDeviceModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PrinterDeviceModelCopyWith<PrinterDeviceModel> get copyWith => _$PrinterDeviceM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrinterDeviceModel&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PrinterDeviceModel&&(identical(other.name, name) || other.name == name)&&(identical(other.onlineStatus, onlineStatus) || other.onlineStatus == onlineStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,name,onlineStatus);
 
 @override
 String toString() {
-  return 'PrinterDeviceModel(name: $name)';
+  return 'PrinterDeviceModel(name: $name, onlineStatus: $onlineStatus)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PrinterDeviceModelCopyWith<$Res>  {
   factory $PrinterDeviceModelCopyWith(PrinterDeviceModel value, $Res Function(PrinterDeviceModel) _then) = _$PrinterDeviceModelCopyWithImpl;
 @useResult
 $Res call({
- String name
+ String name, PrinterOnlineStatus onlineStatus
 });
 
 
@@ -65,10 +65,11 @@ class _$PrinterDeviceModelCopyWithImpl<$Res>
 
 /// Create a copy of PrinterDeviceModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? onlineStatus = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,
+as String,onlineStatus: null == onlineStatus ? _self.onlineStatus : onlineStatus // ignore: cast_nullable_to_non_nullable
+as PrinterOnlineStatus,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  PrinterOnlineStatus onlineStatus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrinterDeviceModel() when $default != null:
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  PrinterOnlineStatus onlineStatus)  $default,) {final _that = this;
 switch (_that) {
 case _PrinterDeviceModel():
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.name);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  PrinterOnlineStatus onlineStatus)?  $default,) {final _that = this;
 switch (_that) {
 case _PrinterDeviceModel() when $default != null:
-return $default(_that.name);case _:
+return $default(_that.name,_that.onlineStatus);case _:
   return null;
 
 }
@@ -209,10 +210,11 @@ return $default(_that.name);case _:
 @JsonSerializable()
 
 class _PrinterDeviceModel implements PrinterDeviceModel {
-  const _PrinterDeviceModel({required this.name});
+  const _PrinterDeviceModel({required this.name, this.onlineStatus = PrinterOnlineStatus.unknown});
   factory _PrinterDeviceModel.fromJson(Map<String, dynamic> json) => _$PrinterDeviceModelFromJson(json);
 
 @override final  String name;
+@override@JsonKey() final  PrinterOnlineStatus onlineStatus;
 
 /// Create a copy of PrinterDeviceModel
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrinterDeviceModel&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PrinterDeviceModel&&(identical(other.name, name) || other.name == name)&&(identical(other.onlineStatus, onlineStatus) || other.onlineStatus == onlineStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,name,onlineStatus);
 
 @override
 String toString() {
-  return 'PrinterDeviceModel(name: $name)';
+  return 'PrinterDeviceModel(name: $name, onlineStatus: $onlineStatus)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$PrinterDeviceModelCopyWith<$Res> implements $PrinterDevic
   factory _$PrinterDeviceModelCopyWith(_PrinterDeviceModel value, $Res Function(_PrinterDeviceModel) _then) = __$PrinterDeviceModelCopyWithImpl;
 @override @useResult
 $Res call({
- String name
+ String name, PrinterOnlineStatus onlineStatus
 });
 
 
@@ -264,10 +266,11 @@ class __$PrinterDeviceModelCopyWithImpl<$Res>
 
 /// Create a copy of PrinterDeviceModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? onlineStatus = null,}) {
   return _then(_PrinterDeviceModel(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,
+as String,onlineStatus: null == onlineStatus ? _self.onlineStatus : onlineStatus // ignore: cast_nullable_to_non_nullable
+as PrinterOnlineStatus,
   ));
 }
 

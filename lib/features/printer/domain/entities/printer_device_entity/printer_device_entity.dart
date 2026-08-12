@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'printer_device_entity.freezed.dart';
@@ -8,6 +9,12 @@ part 'printer_device_entity.freezed.dart';
 /// abstracts the transport away.
 @freezed
 abstract class PrinterDeviceEntity with _$PrinterDeviceEntity {
-  const factory PrinterDeviceEntity({required String name}) =
-      _PrinterDeviceEntity;
+  const factory PrinterDeviceEntity({
+    required String name,
+
+    /// Live reachability from QZ's status API — [PrinterOnlineStatus.unknown]
+    /// until a status check has run (or if it timed out/isn't supported by
+    /// this printer's driver), never used to hide a printer from the list.
+    @Default(PrinterOnlineStatus.unknown) PrinterOnlineStatus onlineStatus,
+  }) = _PrinterDeviceEntity;
 }

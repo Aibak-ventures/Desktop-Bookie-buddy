@@ -45,7 +45,18 @@ Future<MonochromeBitmap> toMonochromeBitmap(
   int threshold = 200,
 }) async {
   final byteData = await image.toByteData();
-  final rgba = Uint8List.fromList(byteData!.buffer.asUint8List());
+  // `byteData.buffer` is the *entire* underlying ArrayBuffer the engine
+  // allocated — not necessarily just this ByteData's own bytes (it may be
+  // a view with a non-zero offset into a larger/pooled buffer, especially
+  // under heavy concurrent allocation like right after a fresh app load).
+  // Slicing to [offsetInBytes, lengthInBytes) is required to get exactly
+  // the width*height*4 RGBA bytes this image claims to have — without it,
+  // the pixel payload can silently mismatch the width/height baked into
+  // the ESC/POS raster header downstream, which desyncs the printer's
+  // parser and prints garbage until it's power-cycled.
+  final rgba = Uint8List.fromList(
+    byteData!.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+  );
 
   final thresholded = await compute(
     _threshold,
