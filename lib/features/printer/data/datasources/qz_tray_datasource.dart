@@ -111,12 +111,28 @@ class QzTrayDatasource {
     final pending = printerNames.toSet();
     final completer = Completer<void>();
 
-    void onStatus(JSArray<JSObject> events) {
-      for (final event in events.toDart) {
-        final status = event as QzPrinterStatusEventJs;
-        results[status.printer] = _parseStatus(status.statusText);
-        pending.remove(status.printer);
-      }
+    // Deliberately untyped (`JSAny?` + `dartify()`) rather than a
+    // statically-typed extension-type/array parameter: DDC's runtime
+    // argument check on a strongly-generic-typed callback parameter
+    // rejects the native object QZ actually calls back with
+    // ("LegacyJavaScriptObject is not a subtype of ..."). `dartify()`
+    // walks the JS value into plain Dart collections with no such brand
+    // check, sidestepping the mismatch entirely.
+    //
+    // Per the bundled `qz-tray.js`'s own JSDoc on `setPrinterCallbacks`
+    // (`web/qz/qz-tray.js`, `printers.callPrinter`/`setPrinterCallbacks`):
+    // this callback fires once **per event**, each call carrying a single
+    // event object (never a batch array) with `printerName`/`status`
+    // fields — not the `printer`/`statusText`/`severity` array shape
+    // assumed here previously.
+    void onStatus(JSAny? eventAny) {
+      final event = eventAny?.dartify();
+      if (event is! Map) return;
+      final printerName = event['printerName'] as String?;
+      final status = event['status'] as String?;
+      if (printerName == null) return;
+      results[printerName] = _parseStatus(status ?? '');
+      pending.remove(printerName);
       if (pending.isEmpty && !completer.isCompleted) completer.complete();
     }
 
@@ -154,11 +170,11 @@ class QzTrayDatasource {
 
   static const _statusTimeout = Duration(seconds: 4);
 
-  /// QZ's `statusText` values are driver-specific free text (e.g. `"OK"`,
+  /// QZ's `status` values are driver-specific free text (e.g. `"OK"`,
   /// `"READY"`, `"OFFLINE"`, `"NOT AVAILABLE"`) — no fixed enum from QZ
   /// itself, so this matches on substrings rather than exact strings.
-  PrinterOnlineStatus _parseStatus(String statusText) {
-    final normalized = statusText.toUpperCase();
+  PrinterOnlineStatus _parseStatus(String status) {
+    final normalized = status.toUpperCase();
     if (normalized.contains('OFFLINE') ||
         normalized.contains('NOT AVAILABLE') ||
         normalized.contains('UNAVAILABLE') ||

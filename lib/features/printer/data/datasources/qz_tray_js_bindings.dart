@@ -50,8 +50,18 @@ extension QzPrintersJsExtension on QzPrintersJs {
 
   /// Registers the callback QZ Tray pushes printer status events to
   /// (fired for any printer passed to [startListening], any time its
-  /// status changes, and once per printer after [getStatus]). Callback
-  /// receives a `JSArray` of [QzPrinterStatusEventJs].
+  /// status changes, and once per printer after [getStatus]). Confirmed
+  /// against the bundled `web/qz/qz-tray.js`'s own JSDoc/implementation
+  /// (`printers.setPrinterCallbacks`/`printers.callPrinter`): the callback
+  /// fires **once per event** — never a batched array — with a single
+  /// plain JS object carrying `{string} printerName` and `{string}
+  /// status` (plus `output`/`exception`/`actionType` depending on event
+  /// type, unused here). Registered with an untyped `JSAny?` parameter and
+  /// unpacked via `dartify()` on the Dart side (see
+  /// `QzTrayDatasource.getPrinterStatuses`) rather than a statically-typed
+  /// extension-type parameter, since DDC's strict runtime argument check
+  /// on a generically-typed callback parameter rejects the native object
+  /// QZ actually calls back with.
   external void setPrinterCallbacks(JSFunction callback);
 
   /// Starts listening for status events on [printerNames] — required
@@ -66,15 +76,6 @@ extension QzPrintersJsExtension on QzPrintersJs {
   /// [setPrinterCallbacks]. Resolves once the request is sent — the actual
   /// status arrives asynchronously via the callback, not this promise.
   external JSPromise getStatus();
-}
-
-/// Shape of each entry QZ Tray pushes to the `setPrinterCallbacks`
-/// callback — confirmed against the bundled `qz-tray.js` v2.2.6 JSDoc for
-/// `PrinterStatusEvent` (`printer`/`statusText`/`severity`/`code`).
-extension type QzPrinterStatusEventJs._(JSObject _) implements JSObject {
-  external String get printer;
-  external String get statusText;
-  external String get severity;
 }
 
 @JS()
