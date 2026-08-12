@@ -154,13 +154,28 @@ this is connected.
       }
   }
   ```
-- **Event object fields** (per QZ's JSDoc, "for all types"):
-  - `printerName` (string)
-  - `status` (string) — free text, driver-dependent (e.g. `"OK"`,
-    `"OFFLINE"`, `"PAUSED"`) — QZ does not define a fixed enum for this.
-  - Plus, depending on event type: `output` (RECEIVE events), `exception`
-    (ERROR events), `actionType` (ACTION events, e.g. paper jam). This app
-    only reads `printerName`/`status`.
+- **⚠️ Second JSDoc mismatch, also confirmed wrong against a real device:**
+  the doc claims the event carries `printerName`/`status`. The actual
+  runtime payload (logged from a real QZ Tray instance/printer) is:
+  ```
+  {printerName, eventType, statusText, severity, statusCode, message, type}
+  ```
+  — the human-readable status field is **`statusText`**, not `status`
+  (`status` doesn't exist on the real object at all). Example events seen
+  from a real 2-printer setup:
+  ```
+  {printerName: "Printer POS-80", eventType: PRINTER, statusText: OK, severity: INFO, statusCode: idle, ...}
+  {printerName: "4BARCODE 4B-2054TF", eventType: PRINTER, statusText: OFFLINE, severity: FATAL, statusCode: offline-report, ...}
+  {printerName: "4BARCODE 4B-2054TF", eventType: PRINTER, statusText: PAUSED, severity: WARN, statusCode: paused, ...}
+  ```
+  `severity` (`INFO`/`WARN`/`ERROR`/`FATAL`) turned out to be the more
+  reliable field to key off of — it's a small, QZ-assigned set, unlike
+  `statusText`, which is driver-specific free text with no fixed enum
+  (`"OK"`, `"OFFLINE"`, `"PAUSED"`, ...). This app's `_parseStatus` uses
+  `severity` first, falling back to `statusText` substring-matching only
+  if severity is missing/unrecognized. Trust what you log from a real
+  device over this JSDoc for anything printer-status related — it's wrong
+  twice over in this one call alone.
 
 ### `qz.printers.stopListening()`
 - **Takes:** nothing · **Returns:** `Promise<null | Error>` — stops all
@@ -316,7 +331,7 @@ void onStatus(JSAny? eventAny) {
   final event = eventAny?.dartify();   // walks JS → plain Dart Map/List, no type-brand check
   if (event is! Map) return;
   final printerName = event['printerName'] as String?;
-  final status = event['status'] as String?;
+  final statusText = event['statusText'] as String?;   // not `status` — see qz.printers above
   // ...
 }
 qzTray.printers.setPrinterCallbacks(onStatus.toJS);

@@ -119,12 +119,14 @@ class QzTrayDatasource {
     // walks the JS value into plain Dart collections with no such brand
     // check, sidestepping the mismatch entirely.
     //
-    // Per the bundled `qz-tray.js`'s own JSDoc on `setPrinterCallbacks`
-    // (`web/qz/qz-tray.js`, `printers.callPrinter`/`setPrinterCallbacks`):
-    // this callback fires once **per event**, each call carrying a single
-    // event object (never a batch array) with `printerName`/`status`
-    // fields — not the `printer`/`statusText`/`severity` array shape
-    // assumed here previously.
+    // This callback fires once **per event**, each call carrying a single
+    // event object (never a batch array) — confirmed from the bundled
+    // `qz-tray.js`'s own `printers.callPrinter`/`setPrinterCallbacks`
+    // implementation. Its JSDoc claims the event carries `printerName`/
+    // `status` fields, but that's wrong for the actual runtime payload
+    // (confirmed against a real QZ Tray instance): the real shape is
+    // `{printerName, eventType, statusText, severity, statusCode, message,
+    // type}` — the human-readable status is `statusText`, not `status`.
     void onStatus(JSAny? eventAny) {
       final event = eventAny?.dartify();
       // Logged unconditionally (not just on a parse failure) so it's
@@ -136,9 +138,10 @@ class QzTrayDatasource {
       log('Printer status event: $event', name: _logName);
       if (event is! Map) return;
       final printerName = event['printerName'] as String?;
-      final status = event['status'] as String?;
+      final statusText = event['statusText'] as String?;
+      final severity = event['severity'] as String?;
       if (printerName == null) return;
-      results[printerName] = _parseStatus(status ?? '');
+      results[printerName] = _parseStatus(statusText ?? '', severity);
       pending.remove(printerName);
       if (pending.isEmpty && !completer.isCompleted) completer.complete();
     }
@@ -182,14 +185,33 @@ class QzTrayDatasource {
 
   static const _statusTimeout = Duration(seconds: 6);
 
-  /// QZ's `status` values are driver-specific free text (e.g. `"OK"`,
-  /// `"READY"`, `"OFFLINE"`, `"NOT AVAILABLE"`) — no fixed enum from QZ
-  /// itself, so this matches on substrings rather than exact strings.
-  PrinterOnlineStatus _parseStatus(String status) {
-    final normalized = status.toUpperCase();
+  /// [severity] (`INFO`/`WARN`/`ERROR`/`FATAL` — confirmed against a real
+  /// QZ Tray instance, e.g. `OK` events carry `INFO`, `OFFLINE` carries
+  /// `FATAL`, `PAUSED` carries `WARN`) is the primary signal: it's a
+  /// small, stable set QZ itself assigns, unlike [statusText] which is
+  /// driver-specific free text (`"OK"`, `"READY"`, `"OFFLINE"`, `"PAUSED"`,
+  /// `"NOT AVAILABLE"`, ...) that varies per printer/driver. [statusText]
+  /// substring-matching is kept only as a fallback for the rare event that
+  /// arrives without a recognized severity.
+  PrinterOnlineStatus _parseStatus(String statusText, String? severity) {
+    switch (severity?.toUpperCase()) {
+      case 'INFO':
+        return PrinterOnlineStatus.online;
+      case 'WARN':
+      case 'ERROR':
+      case 'FATAL':
+        // WARN is included here (not just ERROR/FATAL) because QZ reports
+        // states like PAUSED under WARN — the printer isn't broken, but it
+        // can't currently accept a print job either, which is what this
+        // status is meant to answer.
+        return PrinterOnlineStatus.offline;
+    }
+
+    final normalized = statusText.toUpperCase();
     if (normalized.contains('OFFLINE') ||
         normalized.contains('NOT AVAILABLE') ||
         normalized.contains('UNAVAILABLE') ||
+        normalized.contains('PAUSED') ||
         normalized.contains('ERROR')) {
       return PrinterOnlineStatus.offline;
     }
