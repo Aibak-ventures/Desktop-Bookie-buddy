@@ -18,9 +18,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// (via [UpdateShopSettingsUseCase]) to `shop-settings/update-settings`
 /// and treats the round-trip as unverified until backend confirms it.
 class SettingsPrintOutputPreferenceTile extends StatefulWidget {
-  const SettingsPrintOutputPreferenceTile({required this.shopSettings});
+  const SettingsPrintOutputPreferenceTile({
+    required this.shopSettings,
+    this.isStaff = false,
+  });
 
   final ShopSettingsEntity shopSettings;
+
+  /// Staff accounts can't change this shop-wide setting — matches mobile,
+  /// which disables the same control for staff (see
+  /// `SettingsPrintOutputPreferenceSection`).
+  final bool isStaff;
 
   @override
   State<SettingsPrintOutputPreferenceTile> createState() =>
@@ -34,13 +42,18 @@ class _SettingsPrintOutputPreferenceTileState
   @override
   Widget build(BuildContext context) {
     final preference = widget.shopSettings.printOutputPreference;
+    final locked = widget.isStaff;
     return SettingsListTile(
       icon: Icons.receipt_long_rounded,
       iconColor: AppColors.aquamarineMedium,
       iconBackground: AppColors.aquamarineMedium.withValues(alpha: 0.15),
       title: 'Print Output',
-      subtitle: _saving ? 'Saving…' : 'When you print: ${preference.label}',
-      onTap: _saving ? () {} : () => _pickPreference(preference),
+      subtitle: _saving
+          ? 'Saving…'
+          : locked
+          ? 'When you print: ${preference.label} (staff can\'t change setting)'
+          : 'When you print: ${preference.label}',
+      onTap: (_saving || locked) ? () {} : () => _pickPreference(preference),
     );
   }
 

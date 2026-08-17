@@ -40,6 +40,36 @@ extension UserShopEntityX on UserShopEntity {
     return parts.join(', ');
   }
 
+
+  /// Default terms and conditions for bookings. can use if
+  /// [termsAndConditions] is empty or null
+  List<String> get defaultBookingsTermsAndConditions => const [
+    'No refund will be given after Booking cancellation.',
+    'Products should be returned on the exact return date, without any damages.',
+    'Any damages must be paid by the customer.',
+    'Confirm your Pickup and return dates properly.',
+    'Make sure all your needs are clear before booking.',
+    'Security deposit (if applicable) will be refunded after return.',
+  ];
+
+  /// Default terms and conditions for sales. can use if
+  /// [termsAndConditions] is empty or null
+  List<String> get defaultSalesTermsAndConditions => const [
+    'Damage to the product after delivery will not be our responsibility.',
+    'Refund or replacement will not be provided after the product is sold.',
+    'Verify all products before leaving the shop.',
+    'Products once sold will not be taken back or exchanged.',
+  ];
+
+  /// Default terms and conditions for custom works. can use if
+  /// [termsAndConditions] is empty or null
+  List<String> get defaultCustomWorkTermsAndConditions => const [
+    'Alterations must be claimed within 7 days of delivery.',
+    'No refund after work has commenced.',
+    'Ensure measurements are confirmed before finalising the order.',
+    'Security deposit (if applicable) will be refunded after delivery.',
+  ];
+
   /// All tax rules currently enabled for this shop. A shop may have more
   /// than one enabled rule (e.g. GST plus a future local tax) — every helper
   /// below sums across whatever is in this list, so adding a new rule to

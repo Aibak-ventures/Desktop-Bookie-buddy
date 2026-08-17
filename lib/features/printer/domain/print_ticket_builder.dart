@@ -40,6 +40,12 @@ class PrintTicketBuilder {
     );
   }
 
+  /// Native ESC/POS text, printed with the printer's own built-in font
+  /// rather than rasterized — see [PrintTicketTextCommand] doc.
+  void text(String value) {
+    _commands.add(PrintTicketTextCommand(value));
+  }
+
   void feed([int lines = 1]) {
     _commands.add(PrintTicketFeedCommand(lines: lines));
   }

@@ -72,6 +72,29 @@ class PrintTicketImageCommand extends PrintTicketCommand {
       Object.hash(width, height, const ListEquality<int>().hash(rgba));
 }
 
+/// A native ESC/POS text line — printed using the printer's own built-in
+/// font, not a rasterized image like [PrintTicketImageCommand]. Reach for
+/// this whenever a ticket genuinely needs a native (non-image) line rather
+/// than something `ReceiptCanvas` rasterizes — e.g. `BookingReceiptCanvasBuilder.call`
+/// currently uses one as a diagnostic probe: sent as the very first command
+/// in a ticket, ahead of the rasterized header image, it tests whether a
+/// printer's blank-paper gap before the first thing it prints is specific
+/// to entering raster/image mode — if the gap moves to after this line (or
+/// disappears) with a native text line first, that confirms it.
+class PrintTicketTextCommand extends PrintTicketCommand {
+  const PrintTicketTextCommand(this.text);
+
+  final String text;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PrintTicketTextCommand && other.text == text);
+
+  @override
+  int get hashCode => text.hashCode;
+}
+
 class PrintTicketFeedCommand extends PrintTicketCommand {
   const PrintTicketFeedCommand({this.lines = 1});
 

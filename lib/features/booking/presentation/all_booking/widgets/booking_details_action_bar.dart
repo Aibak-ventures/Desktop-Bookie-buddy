@@ -1,3 +1,5 @@
+import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart'
+    show kIsDevelopment;
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
@@ -167,11 +169,17 @@ class BookingDetailsActionBar extends StatelessWidget {
           onTap: () => BookingInvoiceActions.openInvoicePdf(context, booking),
         ),
         const SizedBox(width: 12),
+        // Dev builds: long-press to preview the receipt design instead of
+        // printing it — no extra button, so it doesn't compete for space
+        // in a bar that's already tight in production.
         _buildIconActionButton(
           context,
           icon: Icons.print_outlined,
           color: AppColors.purple,
           onTap: () => BookingInvoiceActions.printReceipt(context, booking),
+          onLongPress: kIsDevelopment
+              ? () => BookingInvoiceActions.previewReceipt(context, booking)
+              : null,
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings
@@ -370,9 +378,11 @@ class BookingDetailsActionBar extends StatelessWidget {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    VoidCallback? onLongPress,
   }) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: 50,

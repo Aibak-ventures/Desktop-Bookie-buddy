@@ -95,9 +95,16 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
         newDocuments: newDocs.isNotEmpty ? newDocs : null,
         removedDocumentUrls: removedUrls.isNotEmpty ? removedUrls : null,
       );
-    } else if (widget.saleDetails != null) {
-      _editBookingCubit.updateSale(_buildSalesRequest());
     }
+    // Unreachable: `EditNewBookingScreen` has exactly one call site
+    // (`booking_details_action_bar.dart`), and it always passes
+    // `bookingDetails`/`bookingId`, never `saleDetails` — editing a sale
+    // goes through the separate `EditSalesScreen` /
+    // `AddOrEditSalesFormStateController` flow instead. Left in place
+    // (commented, not deleted) rather than assuming it's safe to remove.
+    // else if (widget.saleDetails != null) {
+    //   _editBookingCubit.updateSale(_buildSalesRequest());
+    // }
   }
 
   // ---------------------------------------------------------------------------
@@ -256,28 +263,30 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
     }
   }
 
-  SalesRequestEntity _buildSalesRequest() {
-    final products = selectedProductsNotifier.value;
-    final clientPhone = clientPhone1Controller.text.trim();
-
-    return SalesRequestEntity(
-      id: widget.saleDetails?.id,
-      staffId: selectedStaffId,
-      clientPhone: clientPhone.isEmpty ? null : clientPhone,
-      address: clientAddressController.text.trim().isEmpty
-          ? null
-          : clientAddressController.text.trim(),
-      saleDate: pickupDate.format(),
-      description: descriptionController.text.trim().isEmpty
-          ? null
-          : descriptionController.text.trim(),
-      sendPdfToWhatsApp: sendPdfToWhatsApp,
-      products: products,
-      paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
-      discountAmount: discountAmountController.text.trim().toIntOrNull() ?? 0,
-      stockCountDecrease: false,
-    );
-  }
+  // Unreachable — kept commented rather than deleted; see the call-site
+  // note in `_handleSaveBooking` above for why.
+  // SalesRequestEntity _buildSalesRequest() {
+  //   final products = selectedProductsNotifier.value;
+  //   final clientPhone = clientPhone1Controller.text.trim();
+  //
+  //   return SalesRequestEntity(
+  //     id: widget.saleDetails?.id,
+  //     staffId: selectedStaffId,
+  //     clientPhone: clientPhone.isEmpty ? null : clientPhone,
+  //     address: clientAddressController.text.trim().isEmpty
+  //         ? null
+  //         : clientAddressController.text.trim(),
+  //     saleDate: pickupDate.format(),
+  //     description: descriptionController.text.trim().isEmpty
+  //         ? null
+  //         : descriptionController.text.trim(),
+  //     sendPdfToWhatsApp: sendPdfToWhatsApp,
+  //     products: products,
+  //     paidAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+  //     discountAmount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+  //     stockCountDecrease: false,
+  //   );
+  // }
 
   // ---------------------------------------------------------------------------
   // Error formatting

@@ -11,6 +11,7 @@ abstract class BookingOtherDetailsEntity with _$BookingOtherDetailsEntity {
     String? locationTo,
     String? end,
     CoolingPeriodMode? coolingPeriodType,
+    int? totalProductCount,
   }) = _BookingOtherDetailsEntity;
 
   static BookingOtherDetailsEntity empty() => const BookingOtherDetailsEntity();

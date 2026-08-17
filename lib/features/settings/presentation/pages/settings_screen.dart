@@ -23,6 +23,7 @@ class SettingsScreen extends StatelessWidget {
       body: BlocBuilder<UserCubit, UserEntity?>(
         builder: (context, user) {
           // final canManageTax = user?.shopDetails.shopRole != ShopRole.staff;
+          final isStaff = user?.shopDetails.shopRole.isStaff ?? false;
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
             child: Center(
@@ -88,6 +89,7 @@ class SettingsScreen extends StatelessWidget {
                         if (user != null)
                           SettingsPrintOutputPreferenceTile(
                             shopSettings: user.shopSettings,
+                            isStaff: isStaff,
                           ),
                       ],
                     ),

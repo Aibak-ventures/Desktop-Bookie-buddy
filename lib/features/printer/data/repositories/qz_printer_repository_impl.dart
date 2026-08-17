@@ -76,7 +76,8 @@ class QzPrinterRepositoryImpl implements IPrinterRepository {
       _prefs.instance.getString(_lastPrinterPrefKey);
 
   @override
-  Future<void> clearLastPrinter() => _prefs.instance.remove(_lastPrinterPrefKey);
+  Future<void> clearLastPrinter() =>
+      _prefs.instance.remove(_lastPrinterPrefKey);
 
   // ---------------------------------------------------------------------
   // Mapping helpers
@@ -120,6 +121,8 @@ class QzPrinterRepositoryImpl implements IPrinterRepository {
           bytes.addAll(
             generator.imageRaster(decoded, align: epu.PosAlign.left),
           );
+        case PrintTicketTextCommand(:final text):
+          bytes.addAll(generator.text(text));
         case PrintTicketFeedCommand(:final lines):
           bytes.addAll(generator.feed(lines));
         case PrintTicketCutCommand():

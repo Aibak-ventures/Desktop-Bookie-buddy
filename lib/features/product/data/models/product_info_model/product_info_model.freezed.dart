@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductInfoModel {
 
-@JsonKey(name: 'id', readValue: _idCustomRead) int get id;@JsonKey(name: 'product_id') int? get productId;@JsonKey(name: 'variant_id') int? get variantId;@JsonKey(name: 'product_name') String get name;@JsonKey(readValue: _readProductImage) String? get image;@JsonKey(readValue: _readProductThumbnail) String? get thumbnailImage;@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? get mainServiceType;@JsonKey(name: 'variant_attribute') String? get variantAttribute; String? get color; String? get category; String? get model; int get quantity;@JsonKey(defaultValue: 0) int get amount;@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> get measurements; int? get stock;@JsonKey(name: 'remaining_stock') int? get remainingStock;
+@JsonKey(name: 'id', readValue: _idCustomRead) int get id;@JsonKey(name: 'product_id') int? get productId;@JsonKey(name: 'variant_id') int? get variantId;@JsonKey(name: 'product_name') String get name;@JsonKey(readValue: _readProductImage) String? get image;@JsonKey(readValue: _readProductThumbnail) String? get thumbnailImage;@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? get mainServiceType;@JsonKey(name: 'variant_attribute') String? get variantAttribute; String? get color; String? get category; String? get model; int get quantity;@JsonKey(defaultValue: 0) int get amount;@JsonKey(name: 'fabric_length', defaultValue: 0.0) double get fabricLength;@JsonKey(name: 'attributes') ProductAttributesModel get attributes;@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> get measurements; int? get stock;@JsonKey(name: 'remaining_stock') int? get remainingStock;
 /// Create a copy of ProductInfoModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProductInfoModelCopyWith<ProductInfoModel> get copyWith => _$ProductInfoModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.measurements, measurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other.measurements, measurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,const DeepCollectionEquality().hash(measurements),stock,remainingStock);
+int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,fabricLength,attributes,const DeepCollectionEquality().hash(measurements),stock,remainingStock);
 
 @override
 String toString() {
-  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, measurements: $measurements, stock: $stock, remainingStock: $remainingStock)';
+  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, fabricLength: $fabricLength, attributes: $attributes, measurements: $measurements, stock: $stock, remainingStock: $remainingStock)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $ProductInfoModelCopyWith<$Res>  {
   factory $ProductInfoModelCopyWith(ProductInfoModel value, $Res Function(ProductInfoModel) _then) = _$ProductInfoModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id', readValue: _idCustomRead) int id,@JsonKey(name: 'product_id') int? productId,@JsonKey(name: 'variant_id') int? variantId,@JsonKey(name: 'product_name') String name,@JsonKey(readValue: _readProductImage) String? image,@JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType,@JsonKey(name: 'variant_attribute') String? variantAttribute, String? color, String? category, String? model, int quantity,@JsonKey(defaultValue: 0) int amount,@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> measurements, int? stock,@JsonKey(name: 'remaining_stock') int? remainingStock
+@JsonKey(name: 'id', readValue: _idCustomRead) int id,@JsonKey(name: 'product_id') int? productId,@JsonKey(name: 'variant_id') int? variantId,@JsonKey(name: 'product_name') String name,@JsonKey(readValue: _readProductImage) String? image,@JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType,@JsonKey(name: 'variant_attribute') String? variantAttribute, String? color, String? category, String? model, int quantity,@JsonKey(defaultValue: 0) int amount,@JsonKey(name: 'fabric_length', defaultValue: 0.0) double fabricLength,@JsonKey(name: 'attributes') ProductAttributesModel attributes,@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> measurements, int? stock,@JsonKey(name: 'remaining_stock') int? remainingStock
 });
 
 
-
+$ProductAttributesModelCopyWith<$Res> get attributes;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$ProductInfoModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductInfoModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = freezed,Object? variantId = freezed,Object? name = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? mainServiceType = freezed,Object? variantAttribute = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? quantity = null,Object? amount = null,Object? measurements = null,Object? stock = freezed,Object? remainingStock = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = freezed,Object? variantId = freezed,Object? name = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? mainServiceType = freezed,Object? variantAttribute = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? quantity = null,Object? amount = null,Object? fabricLength = null,Object? attributes = null,Object? measurements = null,Object? stock = freezed,Object? remainingStock = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,productId: freezed == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
@@ -80,13 +80,24 @@ as String?,category: freezed == category ? _self.category : category // ignore: 
 as String?,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
 as String?,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self.measurements : measurements // ignore: cast_nullable_to_non_nullable
+as int,fabricLength: null == fabricLength ? _self.fabricLength : fabricLength // ignore: cast_nullable_to_non_nullable
+as double,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
+as ProductAttributesModel,measurements: null == measurements ? _self.measurements : measurements // ignore: cast_nullable_to_non_nullable
 as List<MeasurementValueModel>,stock: freezed == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as int?,remainingStock: freezed == remainingStock ? _self.remainingStock : remainingStock // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
-
+/// Create a copy of ProductInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProductAttributesModelCopyWith<$Res> get attributes {
+  
+  return $ProductAttributesModelCopyWith<$Res>(_self.attributes, (value) {
+    return _then(_self.copyWith(attributes: value));
+  });
+}
 }
 
 
@@ -168,10 +179,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0)  double fabricLength, @JsonKey(name: 'attributes')  ProductAttributesModel attributes, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductInfoModel() when $default != null:
-return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.measurements,_that.stock,_that.remainingStock);case _:
+return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.fabricLength,_that.attributes,_that.measurements,_that.stock,_that.remainingStock);case _:
   return orElse();
 
 }
@@ -189,10 +200,10 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0)  double fabricLength, @JsonKey(name: 'attributes')  ProductAttributesModel attributes, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)  $default,) {final _that = this;
 switch (_that) {
 case _ProductInfoModel():
-return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.measurements,_that.stock,_that.remainingStock);case _:
+return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.fabricLength,_that.attributes,_that.measurements,_that.stock,_that.remainingStock);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +220,10 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id', readValue: _idCustomRead)  int id, @JsonKey(name: 'product_id')  int? productId, @JsonKey(name: 'variant_id')  int? variantId, @JsonKey(name: 'product_name')  String name, @JsonKey(readValue: _readProductImage)  String? image, @JsonKey(readValue: _readProductThumbnail)  String? thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson)  MainServiceType? mainServiceType, @JsonKey(name: 'variant_attribute')  String? variantAttribute,  String? color,  String? category,  String? model,  int quantity, @JsonKey(defaultValue: 0)  int amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0)  double fabricLength, @JsonKey(name: 'attributes')  ProductAttributesModel attributes, @JsonKey(name: 'measurements', fromJson: _parseMeasurements)  List<MeasurementValueModel> measurements,  int? stock, @JsonKey(name: 'remaining_stock')  int? remainingStock)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductInfoModel() when $default != null:
-return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.measurements,_that.stock,_that.remainingStock);case _:
+return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,_that.thumbnailImage,_that.mainServiceType,_that.variantAttribute,_that.color,_that.category,_that.model,_that.quantity,_that.amount,_that.fabricLength,_that.attributes,_that.measurements,_that.stock,_that.remainingStock);case _:
   return null;
 
 }
@@ -224,7 +235,7 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,
 @JsonSerializable()
 
 class _ProductInfoModel implements ProductInfoModel {
-  const _ProductInfoModel({@JsonKey(name: 'id', readValue: _idCustomRead) required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(readValue: _readProductImage) required this.image, @JsonKey(readValue: _readProductThumbnail) this.thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, @JsonKey(name: 'variant_attribute') this.variantAttribute, this.color, this.category, this.model, required this.quantity, @JsonKey(defaultValue: 0) required this.amount, @JsonKey(name: 'measurements', fromJson: _parseMeasurements) final  List<MeasurementValueModel> measurements = const [], this.stock, @JsonKey(name: 'remaining_stock') this.remainingStock}): _measurements = measurements;
+  const _ProductInfoModel({@JsonKey(name: 'id', readValue: _idCustomRead) required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(readValue: _readProductImage) required this.image, @JsonKey(readValue: _readProductThumbnail) this.thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, @JsonKey(name: 'variant_attribute') this.variantAttribute, this.color, this.category, this.model, required this.quantity, @JsonKey(defaultValue: 0) required this.amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0) this.fabricLength = 0.0, @JsonKey(name: 'attributes') this.attributes = const ProductAttributesModel(), @JsonKey(name: 'measurements', fromJson: _parseMeasurements) final  List<MeasurementValueModel> measurements = const [], this.stock, @JsonKey(name: 'remaining_stock') this.remainingStock}): _measurements = measurements;
   factory _ProductInfoModel.fromJson(Map<String, dynamic> json) => _$ProductInfoModelFromJson(json);
 
 @override@JsonKey(name: 'id', readValue: _idCustomRead) final  int id;
@@ -240,6 +251,8 @@ class _ProductInfoModel implements ProductInfoModel {
 @override final  String? model;
 @override final  int quantity;
 @override@JsonKey(defaultValue: 0) final  int amount;
+@override@JsonKey(name: 'fabric_length', defaultValue: 0.0) final  double fabricLength;
+@override@JsonKey(name: 'attributes') final  ProductAttributesModel attributes;
  final  List<MeasurementValueModel> _measurements;
 @override@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> get measurements {
   if (_measurements is EqualUnmodifiableListView) return _measurements;
@@ -263,16 +276,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._measurements, _measurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other._measurements, _measurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,const DeepCollectionEquality().hash(_measurements),stock,remainingStock);
+int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,fabricLength,attributes,const DeepCollectionEquality().hash(_measurements),stock,remainingStock);
 
 @override
 String toString() {
-  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, measurements: $measurements, stock: $stock, remainingStock: $remainingStock)';
+  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, fabricLength: $fabricLength, attributes: $attributes, measurements: $measurements, stock: $stock, remainingStock: $remainingStock)';
 }
 
 
@@ -283,11 +296,11 @@ abstract mixin class _$ProductInfoModelCopyWith<$Res> implements $ProductInfoMod
   factory _$ProductInfoModelCopyWith(_ProductInfoModel value, $Res Function(_ProductInfoModel) _then) = __$ProductInfoModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id', readValue: _idCustomRead) int id,@JsonKey(name: 'product_id') int? productId,@JsonKey(name: 'variant_id') int? variantId,@JsonKey(name: 'product_name') String name,@JsonKey(readValue: _readProductImage) String? image,@JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType,@JsonKey(name: 'variant_attribute') String? variantAttribute, String? color, String? category, String? model, int quantity,@JsonKey(defaultValue: 0) int amount,@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> measurements, int? stock,@JsonKey(name: 'remaining_stock') int? remainingStock
+@JsonKey(name: 'id', readValue: _idCustomRead) int id,@JsonKey(name: 'product_id') int? productId,@JsonKey(name: 'variant_id') int? variantId,@JsonKey(name: 'product_name') String name,@JsonKey(readValue: _readProductImage) String? image,@JsonKey(readValue: _readProductThumbnail) String? thumbnailImage,@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? mainServiceType,@JsonKey(name: 'variant_attribute') String? variantAttribute, String? color, String? category, String? model, int quantity,@JsonKey(defaultValue: 0) int amount,@JsonKey(name: 'fabric_length', defaultValue: 0.0) double fabricLength,@JsonKey(name: 'attributes') ProductAttributesModel attributes,@JsonKey(name: 'measurements', fromJson: _parseMeasurements) List<MeasurementValueModel> measurements, int? stock,@JsonKey(name: 'remaining_stock') int? remainingStock
 });
 
 
-
+@override $ProductAttributesModelCopyWith<$Res> get attributes;
 
 }
 /// @nodoc
@@ -300,7 +313,7 @@ class __$ProductInfoModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductInfoModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? productId = freezed,Object? variantId = freezed,Object? name = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? mainServiceType = freezed,Object? variantAttribute = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? quantity = null,Object? amount = null,Object? measurements = null,Object? stock = freezed,Object? remainingStock = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? productId = freezed,Object? variantId = freezed,Object? name = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? mainServiceType = freezed,Object? variantAttribute = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? quantity = null,Object? amount = null,Object? fabricLength = null,Object? attributes = null,Object? measurements = null,Object? stock = freezed,Object? remainingStock = freezed,}) {
   return _then(_ProductInfoModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,productId: freezed == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
@@ -315,14 +328,25 @@ as String?,category: freezed == category ? _self.category : category // ignore: 
 as String?,model: freezed == model ? _self.model : model // ignore: cast_nullable_to_non_nullable
 as String?,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self._measurements : measurements // ignore: cast_nullable_to_non_nullable
+as int,fabricLength: null == fabricLength ? _self.fabricLength : fabricLength // ignore: cast_nullable_to_non_nullable
+as double,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
+as ProductAttributesModel,measurements: null == measurements ? _self._measurements : measurements // ignore: cast_nullable_to_non_nullable
 as List<MeasurementValueModel>,stock: freezed == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
 as int?,remainingStock: freezed == remainingStock ? _self.remainingStock : remainingStock // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
 
-
+/// Create a copy of ProductInfoModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProductAttributesModelCopyWith<$Res> get attributes {
+  
+  return $ProductAttributesModelCopyWith<$Res>(_self.attributes, (value) {
+    return _then(_self.copyWith(attributes: value));
+  });
+}
 }
 
 // dart format on

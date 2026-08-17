@@ -17,7 +17,7 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       saleDate: json['sale_date'] as String,
       createdAt: json['created_at'] as String? ?? '',
-      totalAmount: (json['total_amount'] as num).toInt(),
+      totalAmount: (json['total_amount_after_discount'] as num).toInt(),
       discountAmount: (json['discount'] as num).toInt(),
       paidAmount: (json['paid_amount'] as num).toInt(),
       invoiceId: json['shop_sale_id'] as String? ?? '',
@@ -25,10 +25,17 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       products: (json['items'] as List<dynamic>)
           .map((e) => ProductSaleInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      accountId: (_readAccountId(json, 'account_id') as num?)?.toInt(),
-      accountName: _readAccountName(json, 'account_name') as String?,
       staffId: (json['staff_id'] as num?)?.toInt(),
       staffName: json['staff_name'] as String?,
+      paymentHistory:
+          (json['payments'] as List<dynamic>?)
+              ?.map(
+                (e) => SaleDetailsPaymentHistoryModel.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList() ??
+          const [],
       appliedTaxes: json['tax'] == null
           ? const []
           : AppliedTaxModel.listFromJson(json['tax']),
@@ -43,18 +50,38 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
       'description': instance.description,
       'sale_date': instance.saleDate,
       'created_at': instance.createdAt,
-      'total_amount': instance.totalAmount,
+      'total_amount_after_discount': instance.totalAmount,
       'discount': instance.discountAmount,
       'paid_amount': instance.paidAmount,
       'shop_sale_id': instance.invoiceId,
       'balance_due': instance.balanceDueAmount,
       'items': instance.products,
-      'account_id': instance.accountId,
-      'account_name': instance.accountName,
       'staff_id': instance.staffId,
       'staff_name': instance.staffName,
+      'payments': instance.paymentHistory,
       'tax': instance.appliedTaxes,
     };
+
+_SaleDetailsPaymentHistoryModel _$SaleDetailsPaymentHistoryModelFromJson(
+  Map<String, dynamic> json,
+) => _SaleDetailsPaymentHistoryModel(
+  accountId: (json['account_id'] as num?)?.toInt(),
+  accountName: json['account_name'] as String?,
+  paymentMethod: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
+);
+
+Map<String, dynamic> _$SaleDetailsPaymentHistoryModelToJson(
+  _SaleDetailsPaymentHistoryModel instance,
+) => <String, dynamic>{
+  'account_id': instance.accountId,
+  'account_name': instance.accountName,
+  'method': instance.paymentMethod,
+};
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.upi: 'upi',
+  PaymentMethod.cash: 'cash',
+};
 
 _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(
   Map<String, dynamic> json,
@@ -74,6 +101,12 @@ _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(
   mainServiceType: MainServiceType.fromString(
     json['main_category_name'] as String?,
   ),
+  fabricLength: (json['fabric_length'] as num?)?.toDouble() ?? 0.0,
+  attributes: json['attributes'] == null
+      ? const ProductAttributesModel()
+      : ProductAttributesModel.fromJson(
+          json['attributes'] as Map<String, dynamic>,
+        ),
 );
 
 Map<String, dynamic> _$ProductSaleInfoModelToJson(
@@ -92,4 +125,6 @@ Map<String, dynamic> _$ProductSaleInfoModelToJson(
   'category': instance.category,
   'model': instance.model,
   'main_category_name': MainServiceType.toJson(instance.mainServiceType),
+  'fabric_length': instance.fabricLength,
+  'attributes': instance.attributes,
 };

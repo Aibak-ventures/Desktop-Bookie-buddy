@@ -55,7 +55,10 @@ Future<MonochromeBitmap> toMonochromeBitmap(
   // the ESC/POS raster header downstream, which desyncs the printer's
   // parser and prints garbage until it's power-cycled.
   final rgba = Uint8List.fromList(
-    byteData!.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+    byteData!.buffer.asUint8List(
+      byteData.offsetInBytes,
+      byteData.lengthInBytes,
+    ),
   );
 
   final thresholded = await compute(
