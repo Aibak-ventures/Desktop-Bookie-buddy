@@ -20,7 +20,7 @@ import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 /// physical printer — swaps in [MockQzPrinterRepositoryImpl] (fake printer
 /// list, simulated connect/print delays, occasional simulated failure).
 /// **Must be `false` before shipping/merging.**
-const _useMockPrinterRepository = true && !kIsProduction;
+const _useMockPrinterRepository = bool.fromEnvironment('MOCK_PRINTER') && !kIsProduction;
 
 class PrinterDependencies {
   static void register() {

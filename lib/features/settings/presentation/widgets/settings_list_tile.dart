@@ -9,7 +9,8 @@ class SettingsListTile extends StatelessWidget {
     required this.iconBackground,
     required this.title,
     required this.subtitle,
-    required this.onTap,
+    this.onTap,
+    this.trailing,
   });
 
   final IconData icon;
@@ -17,47 +18,63 @@ class SettingsListTile extends StatelessWidget {
   final Color iconBackground;
   final String title;
   final String subtitle;
-  final VoidCallback onTap;
+
+  /// Null when the row itself isn't a tap target — e.g. when [trailing] is
+  /// its own interactive control (a dropdown) rather than a chevron
+  /// implying "tap anywhere to open something".
+  final VoidCallback? onTap;
+
+  /// Defaults to the chevron-right "this row opens something" affordance.
+  /// Pass a different widget (e.g. a dropdown) for a row whose control is
+  /// inline instead of behind a tap.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
+    final row = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: iconBackground,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.subheading),
+                const SizedBox(height: 2),
+                Text(subtitle, style: AppTextStyles.bodySecondary),
+              ],
+            ),
+          ),
+          if (trailing != null) ...[
+            const SizedBox(width: 12),
+            trailing!,
+          ] else
+            Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.grey400,
+              size: 22,
+            ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return row;
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         mouseCursor: SystemMouseCursors.click,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: iconBackground,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: iconColor, size: 20),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: AppTextStyles.subheading),
-                    const SizedBox(height: 2),
-                    Text(subtitle, style: AppTextStyles.bodySecondary),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.grey400,
-                size: 22,
-              ),
-            ],
-          ),
-        ),
+        child: row,
       ),
     );
   }

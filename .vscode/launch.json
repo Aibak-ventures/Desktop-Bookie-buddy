@@ -7,7 +7,10 @@
         {
             "name": "bookie_buddy_web",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=FULL_NETWORK_LOG=true"
+            ]
         },
         {
             "name": "Flutter: Run Dev",
@@ -15,6 +18,15 @@
             "type": "dart",
             "toolArgs": [
                 "--dart-define=PROD=false"
+            ]
+        },
+        {
+            "name": "Flutter: Run Dev (MOCK_PRINTER)",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=PROD=false",
+                "--dart-define=MOCK_PRINTER=true"
             ]
         },
         {

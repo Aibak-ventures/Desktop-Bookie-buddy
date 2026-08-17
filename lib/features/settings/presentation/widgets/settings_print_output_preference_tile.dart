@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/common/entities/shop_settings_entity/shop_settings_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/constants/enums/print_output_preference_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
@@ -11,7 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// "Print" button behavior across the app (booking/sale detail, etc.):
-/// thermal receipt, PDF invoice, or ask every time.
+/// thermal receipt, PDF invoice, or ask every time — a suffix dropdown
+/// showing the current selection, matching mobile's
+/// `SettingsPrintOutputPreferenceSection` (same title/subtitle copy, same
+/// disabled-for-staff dropdown), rather than mobile's on-row-tap picker
+/// dialog. The row itself isn't a tap target — [SettingsListTile.onTap] is
+/// left unset — since the dropdown is its own control.
 ///
 /// NOTE: `printOutputPreference` on [ShopSettingsEntity] is a speculative
 /// field — see its doc — so this PUTs the *entire* shop-settings object
@@ -42,28 +48,55 @@ class _SettingsPrintOutputPreferenceTileState
   @override
   Widget build(BuildContext context) {
     final preference = widget.shopSettings.printOutputPreference;
-    final locked = widget.isStaff;
+    final locked = widget.isStaff || _saving;
+
     return SettingsListTile(
       icon: Icons.receipt_long_rounded,
       iconColor: AppColors.aquamarineMedium,
       iconBackground: AppColors.aquamarineMedium.withValues(alpha: 0.15),
-      title: 'Print Output',
+      title: 'Default print action',
       subtitle: _saving
           ? 'Saving…'
-          : locked
-          ? 'When you print: ${preference.label} (staff can\'t change setting)'
-          : 'When you print: ${preference.label}',
-      onTap: (_saving || locked) ? () {} : () => _pickPreference(preference),
+          : 'Select the default print action for this shop.',
+      trailing: SizedBox(
+        width: 170,
+        child: CustomDropDownField<PrintOutputPreference>(
+          hintText: '',
+          enabled: !locked,
+          selectedValue: preference,
+          items: PrintOutputPreference.values,
+          itemLabelBuilder: (item) => item.label,
+          onChanged: (selected) {
+            if (selected == null || selected == preference) return;
+            _confirmAndApply(selected);
+          },
+        ),
+      ),
     );
   }
 
-  Future<void> _pickPreference(PrintOutputPreference current) async {
-    final selected = await showDialog<PrintOutputPreference>(
+  Future<void> _confirmAndApply(PrintOutputPreference selected) async {
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) =>
-          _PrintOutputPreferenceDialog(current: current),
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Change print output?'),
+        content: Text(
+          'Every print action across the shop will default to '
+          '"${selected.label}" until changed again. Continue?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
     );
-    if (selected == null || selected == current || !mounted) return;
+    if (confirmed != true || !mounted) return;
 
     final userCubit = context.read<UserCubit>();
     setState(() => _saving = true);
@@ -72,9 +105,11 @@ class _SettingsPrintOutputPreferenceTileState
         UpdateShopSettingsRequestEntity(printOutputPreference: selected),
       );
 
-      context.showSnackBar(
-        'Print output preference saved to "${selected.label}".',
-      );
+      if (mounted) {
+        context.showSnackBar(
+          'Print output preference saved to "${selected.label}".',
+        );
+      }
 
       // Settings/booking screens read this off the cached UserCubit
       // snapshot, so refetch it now — same pattern Tax & Compliance uses.
@@ -86,39 +121,5 @@ class _SettingsPrintOutputPreferenceTileState
     } finally {
       if (mounted) setState(() => _saving = false);
     }
-  }
-}
-
-class _PrintOutputPreferenceDialog extends StatelessWidget {
-  const _PrintOutputPreferenceDialog({required this.current});
-
-  final PrintOutputPreference current;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Print Output'),
-      content: RadioGroup(
-        groupValue: current,
-        onChanged: (value) => Navigator.of(context).pop(value),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final option in PrintOutputPreference.values)
-              RadioListTile<PrintOutputPreference>(
-                contentPadding: EdgeInsets.zero,
-                title: Text(option.label),
-                value: option,
-              ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-      ],
-    );
   }
 }

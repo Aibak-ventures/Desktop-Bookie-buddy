@@ -48,6 +48,15 @@ class CustomDropDownField<T> extends StatelessWidget {
       onSelected: onChanged,
       menuHeight: menuHeight,
       hintText: hintText,
+      // `DropdownMenu` is backed by a real text field, and on desktop/web
+      // it focuses (and lets you type into) that field on tap by default —
+      // on mobile it doesn't, since tapping always just opens the menu
+      // there regardless of focus. Forcing this off for the plain
+      // (non-filterable) case makes web match mobile's tap-to-select-only
+      // behavior instead of doubling as a free-text input; left on when
+      // [enableFilter] is actually turned on, since typing-to-filter needs
+      // that same focus to work at all.
+      requestFocusOnTap: enableFilter ? null : false,
       filterCallback: !enableFilter
           ? null
           : (entries, filter) {
