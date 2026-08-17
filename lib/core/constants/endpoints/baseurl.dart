@@ -16,6 +16,12 @@ const String _prodBaseUrl = 'https://flutter.bookiebuddy.in';
 ///* Prod-like debug run: flutter run --dart-define=PROD=true
 ///* Release APK (prod default): flutter build apk --release
 ///* Release APK (dev override): flutter build apk --release --dart-define=PROD=false
-const bool _isProd = bool.fromEnvironment('PROD', defaultValue: kReleaseMode);
+const bool kIsProduction = bool.fromEnvironment(
+  'PROD',
+  defaultValue: kReleaseMode,
+);
 
-const String baseUrl = _isProd ? _prodBaseUrl : _devBaseUrl;
+/// Whether the app is running in development environment
+const bool kIsDevelopment = !kIsProduction;
+
+const String baseUrl = kIsProduction ? _prodBaseUrl : _devBaseUrl;

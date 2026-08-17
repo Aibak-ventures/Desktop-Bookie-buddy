@@ -10,7 +10,7 @@
 /// field exists) is a mapping change only, not a rewrite of call sites.
 enum PrintOutputPreference {
   receipt('RECEIPT', 'Thermal receipt'),
-  pdfInvoice('PDF_INVOICE', 'PDF invoice'),
+  pdfInvoice('INVOICE_PDF', 'PDF invoice'),
   askEveryTime('ASK_EVERY_TIME', 'Ask every time');
 
   const PrintOutputPreference(this.value, this.label);

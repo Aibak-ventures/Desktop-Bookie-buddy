@@ -42,11 +42,7 @@ abstract class UpdateShopSettingsRequestModel
     @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)
     AddButtonDefaultAction? addButtonDefaultAction,
     @JsonKey(name: 'search_client') bool? searchClient,
-    @JsonKey(
-      //TODO: check backend key for this field, it is not confirmed yet
-      name: 'print_output_preference',
-      toJson: _printOutputPreferenceToJson,
-    )
+    @JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson)
     PrintOutputPreference? printOutputPreference,
   }) = _UpdateShopSettingsRequestModel;
 

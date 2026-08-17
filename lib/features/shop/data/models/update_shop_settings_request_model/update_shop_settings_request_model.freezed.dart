@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateShopSettingsRequestModel {
 
-@JsonKey(name: 'cooling_days') int? get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? get coolingPeriodMode;@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? get addButtonDefaultAction;@JsonKey(name: 'search_client') bool? get searchClient;@JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? get printOutputPreference;
+@JsonKey(name: 'cooling_days') int? get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? get coolingPeriodMode;@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? get addButtonDefaultAction;@JsonKey(name: 'search_client') bool? get searchClient;@JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? get printOutputPreference;
 /// Create a copy of UpdateShopSettingsRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $UpdateShopSettingsRequestModelCopyWith<$Res>  {
   factory $UpdateShopSettingsRequestModelCopyWith(UpdateShopSettingsRequestModel value, $Res Function(UpdateShopSettingsRequestModel) _then) = _$UpdateShopSettingsRequestModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'cooling_days') int? coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? coolingPeriodMode,@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? addButtonDefaultAction,@JsonKey(name: 'search_client') bool? searchClient,@JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? printOutputPreference
+@JsonKey(name: 'cooling_days') int? coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? coolingPeriodMode,@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? addButtonDefaultAction,@JsonKey(name: 'search_client') bool? searchClient,@JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? printOutputPreference
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateShopSettingsRequestModel() when $default != null:
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
@@ -178,7 +178,7 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateShopSettingsRequestModel():
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
@@ -198,7 +198,7 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days')  int? coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson)  CoolingPeriodMode? coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson)  AddButtonDefaultAction? addButtonDefaultAction, @JsonKey(name: 'search_client')  bool? searchClient, @JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson)  PrintOutputPreference? printOutputPreference)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateShopSettingsRequestModel() when $default != null:
 return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
@@ -213,14 +213,14 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 
 @JsonSerializable(includeIfNull: false)
 class _UpdateShopSettingsRequestModel implements UpdateShopSettingsRequestModel {
-  const _UpdateShopSettingsRequestModel({@JsonKey(name: 'cooling_days') this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) this.coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) this.addButtonDefaultAction, @JsonKey(name: 'search_client') this.searchClient, @JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson) this.printOutputPreference});
+  const _UpdateShopSettingsRequestModel({@JsonKey(name: 'cooling_days') this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) this.coolingPeriodMode, @JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) this.addButtonDefaultAction, @JsonKey(name: 'search_client') this.searchClient, @JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson) this.printOutputPreference});
   factory _UpdateShopSettingsRequestModel.fromJson(Map<String, dynamic> json) => _$UpdateShopSettingsRequestModelFromJson(json);
 
 @override@JsonKey(name: 'cooling_days') final  int? coolingPeriodDuration;
 @override@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) final  CoolingPeriodMode? coolingPeriodMode;
 @override@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) final  AddButtonDefaultAction? addButtonDefaultAction;
 @override@JsonKey(name: 'search_client') final  bool? searchClient;
-@override@JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson) final  PrintOutputPreference? printOutputPreference;
+@override@JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson) final  PrintOutputPreference? printOutputPreference;
 
 /// Create a copy of UpdateShopSettingsRequestModel
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$UpdateShopSettingsRequestModelCopyWith<$Res> implements $
   factory _$UpdateShopSettingsRequestModelCopyWith(_UpdateShopSettingsRequestModel value, $Res Function(_UpdateShopSettingsRequestModel) _then) = __$UpdateShopSettingsRequestModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'cooling_days') int? coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? coolingPeriodMode,@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? addButtonDefaultAction,@JsonKey(name: 'search_client') bool? searchClient,@JsonKey(name: 'print_output_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? printOutputPreference
+@JsonKey(name: 'cooling_days') int? coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', toJson: _coolingPeriodModeToJson) CoolingPeriodMode? coolingPeriodMode,@JsonKey(name: 'default_action', toJson: _addButtonDefaultActionToJson) AddButtonDefaultAction? addButtonDefaultAction,@JsonKey(name: 'search_client') bool? searchClient,@JsonKey(name: 'printer_preference', toJson: _printOutputPreferenceToJson) PrintOutputPreference? printOutputPreference
 });
 
 

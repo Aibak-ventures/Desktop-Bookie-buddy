@@ -26,10 +26,9 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
     required AddButtonDefaultAction addButtonDefaultAction,
     @JsonKey(name: 'search_client', defaultValue: false)
     required bool searchClient,
-    
+
     @JsonKey(
-      //TODO: check backend key for this field, it is not confirmed yet
-      name: 'print_output_preference',
+      name: 'printer_preference',
       fromJson: PrintOutputPreference.fromJson,
       defaultValue: PrintOutputPreference.askEveryTime,
       toJson: PrintOutputPreference.toJson,

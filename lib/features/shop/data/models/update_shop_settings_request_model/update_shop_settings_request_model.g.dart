@@ -21,7 +21,7 @@ _UpdateShopSettingsRequestModel _$UpdateShopSettingsRequestModelFromJson(
   searchClient: json['search_client'] as bool?,
   printOutputPreference: $enumDecodeNullable(
     _$PrintOutputPreferenceEnumMap,
-    json['print_output_preference'],
+    json['printer_preference'],
   ),
 );
 
@@ -34,7 +34,7 @@ Map<String, dynamic> _$UpdateShopSettingsRequestModelToJson(
     instance.addButtonDefaultAction,
   ),
   'search_client': ?instance.searchClient,
-  'print_output_preference': ?_printOutputPreferenceToJson(
+  'printer_preference': ?_printOutputPreferenceToJson(
     instance.printOutputPreference,
   ),
 };

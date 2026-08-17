@@ -51,7 +51,7 @@ class ShopRemoteDatasource {
     UpdateShopSettingsRequestModel shopSettings,
   ) async {
     try {
-      final response = await _dio.put(
+      final response = await _dio.patch(
         ApiEndpoints.shop.updateSettings,
         data: shopSettings.toJson(),
       );
