@@ -83,19 +83,15 @@ extension BookingDetailsEntityX on BookingDetailsEntity {
 
   /// Whether the security deposit should be surfaced inside the normal
   /// payment details section instead of the dedicated security refund
-  /// section — true while the booking is still active (or just completed
-  /// with no refund/deduction processed yet).
+  /// section — true only while the booking is still active, i.e. items
+  /// haven't been returned or cancelled yet. Once items are returned (or
+  /// the booking is cancelled), the deposit needs to be refunded/deducted,
+  /// so it always moves to the dedicated security refund section — even if
+  /// nothing has been refunded/deducted yet.
   bool get showSecurityInPayments {
     if (securitySummary.securityAmount <= 0) return false;
 
-    final noRefundOrDeduction =
-        securitySummary.totalRefunded <= 0 &&
-        securitySummary.totalDeducted <= 0;
-
-    if (bookingStatus == BookingStatus.completed && noRefundOrDeduction) {
-      return true;
-    }
-
+    // Only show the security deposit if the booking is still active
     return deliveryStatus != DeliveryStatus.cancelled &&
         deliveryStatus != DeliveryStatus.returned;
   }
