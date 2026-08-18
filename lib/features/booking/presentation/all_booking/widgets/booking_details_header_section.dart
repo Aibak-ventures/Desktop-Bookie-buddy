@@ -138,7 +138,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (dialogContext) => CancelBookingDialog(
-                              maxRefundAmount: booking.actualPaidAmount,
+                              maxRefundAmount: booking.paidAmount,
                               onCancel: () => Navigator.of(dialogContext).pop(),
                               onConfirm: (refundAmount, accountId) {
                                 Navigator.of(dialogContext).pop();
