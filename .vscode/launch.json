@@ -10,7 +10,8 @@
             "type": "dart",
             "toolArgs": [
                 "--dart-define=FULL_NETWORK_LOG=true"
-            ]
+            ],
+            "deviceId": "chrome"
         },
         {
             "name": "Flutter: Run Dev",
@@ -18,7 +19,8 @@
             "type": "dart",
             "toolArgs": [
                 "--dart-define=PROD=false"
-            ]
+            ],
+            "deviceId": "chrome"
         },
         {
             "name": "Flutter: Run Dev (MOCK_PRINTER)",
@@ -27,7 +29,8 @@
             "toolArgs": [
                 "--dart-define=PROD=false",
                 "--dart-define=MOCK_PRINTER=true"
-            ]
+            ],
+            "deviceId": "chrome"
         },
         {
             "name": "Flutter: Run Prod",
@@ -35,7 +38,8 @@
             "type": "dart",
             "toolArgs": [
                 "--dart-define=PROD=true"
-            ]
+            ],
+            "deviceId": "chrome"
         },
     ]
 }
