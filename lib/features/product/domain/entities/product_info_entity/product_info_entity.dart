@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_attributes_entity/product_attributes_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_info_entity.freezed.dart';
@@ -20,6 +21,8 @@ abstract class ProductInfoEntity with _$ProductInfoEntity {
     String? model,
     required int quantity,
     required int amount,
+    @Default(0.0) double fabricLength,
+    @Default(ProductAttributesEntity.empty) ProductAttributesEntity attributes,
     @Default([]) List<MeasurementValueEntity> measurements,
     int? stock,
     int? remainingStock,

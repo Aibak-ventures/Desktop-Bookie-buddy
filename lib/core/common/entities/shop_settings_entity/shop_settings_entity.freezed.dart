@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShopSettingsEntity {
 
- int get coolingPeriodDuration; CoolingPeriodMode get coolingPeriodMode; AddButtonDefaultAction get addButtonDefaultAction; bool get searchClient;
+ int get coolingPeriodDuration; CoolingPeriodMode get coolingPeriodMode; AddButtonDefaultAction get addButtonDefaultAction; bool get searchClient; PrintOutputPreference get printOutputPreference;
 /// Create a copy of ShopSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ShopSettingsEntityCopyWith<ShopSettingsEntity> get copyWith => _$ShopSettingsEn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient);
+int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
 
 @override
 String toString() {
-  return 'ShopSettingsEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
+  return 'ShopSettingsEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ShopSettingsEntityCopyWith<$Res>  {
   factory $ShopSettingsEntityCopyWith(ShopSettingsEntity value, $Res Function(ShopSettingsEntity) _then) = _$ShopSettingsEntityCopyWithImpl;
 @useResult
 $Res call({
- int coolingPeriodDuration, CoolingPeriodMode coolingPeriodMode, AddButtonDefaultAction addButtonDefaultAction, bool searchClient
+ int coolingPeriodDuration, CoolingPeriodMode coolingPeriodMode, AddButtonDefaultAction addButtonDefaultAction, bool searchClient, PrintOutputPreference printOutputPreference
 });
 
 
@@ -62,13 +62,14 @@ class _$ShopSettingsEntityCopyWithImpl<$Res>
 
 /// Create a copy of ShopSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,Object? printOutputPreference = null,}) {
   return _then(_self.copyWith(
 coolingPeriodDuration: null == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int,coolingPeriodMode: null == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode,addButtonDefaultAction: null == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
 as AddButtonDefaultAction,searchClient: null == searchClient ? _self.searchClient : searchClient // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,printOutputPreference: null == printOutputPreference ? _self.printOutputPreference : printOutputPreference // ignore: cast_nullable_to_non_nullable
+as PrintOutputPreference,
   ));
 }
 
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient,  PrintOutputPreference printOutputPreference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShopSettingsEntity() when $default != null:
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient,  PrintOutputPreference printOutputPreference)  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsEntity():
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int coolingPeriodDuration,  CoolingPeriodMode coolingPeriodMode,  AddButtonDefaultAction addButtonDefaultAction,  bool searchClient,  PrintOutputPreference printOutputPreference)?  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsEntity() when $default != null:
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   return null;
 
 }
@@ -209,13 +210,14 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 
 
 class _ShopSettingsEntity implements ShopSettingsEntity {
-  const _ShopSettingsEntity({required this.coolingPeriodDuration, required this.coolingPeriodMode, required this.addButtonDefaultAction, required this.searchClient});
+  const _ShopSettingsEntity({required this.coolingPeriodDuration, required this.coolingPeriodMode, required this.addButtonDefaultAction, required this.searchClient, this.printOutputPreference = PrintOutputPreference.askEveryTime});
   
 
 @override final  int coolingPeriodDuration;
 @override final  CoolingPeriodMode coolingPeriodMode;
 @override final  AddButtonDefaultAction addButtonDefaultAction;
 @override final  bool searchClient;
+@override@JsonKey() final  PrintOutputPreference printOutputPreference;
 
 /// Create a copy of ShopSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ _$ShopSettingsEntityCopyWith<_ShopSettingsEntity> get copyWith => __$ShopSetting
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient);
+int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
 
 @override
 String toString() {
-  return 'ShopSettingsEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
+  return 'ShopSettingsEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$ShopSettingsEntityCopyWith<$Res> implements $ShopSettings
   factory _$ShopSettingsEntityCopyWith(_ShopSettingsEntity value, $Res Function(_ShopSettingsEntity) _then) = __$ShopSettingsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int coolingPeriodDuration, CoolingPeriodMode coolingPeriodMode, AddButtonDefaultAction addButtonDefaultAction, bool searchClient
+ int coolingPeriodDuration, CoolingPeriodMode coolingPeriodMode, AddButtonDefaultAction addButtonDefaultAction, bool searchClient, PrintOutputPreference printOutputPreference
 });
 
 
@@ -264,13 +266,14 @@ class __$ShopSettingsEntityCopyWithImpl<$Res>
 
 /// Create a copy of ShopSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,Object? printOutputPreference = null,}) {
   return _then(_ShopSettingsEntity(
 coolingPeriodDuration: null == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int,coolingPeriodMode: null == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode,addButtonDefaultAction: null == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
 as AddButtonDefaultAction,searchClient: null == searchClient ? _self.searchClient : searchClient // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,printOutputPreference: null == printOutputPreference ? _self.printOutputPreference : printOutputPreference // ignore: cast_nullable_to_non_nullable
+as PrintOutputPreference,
   ));
 }
 

@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -55,6 +56,12 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     String? model,
     required int quantity,
     @JsonKey(defaultValue: 0) required int amount,
+    @JsonKey(name: 'fabric_length', defaultValue: 0.0)
+    @Default(0.0)
+    double fabricLength,
+    @JsonKey(name: 'attributes')
+    @Default(ProductAttributesModel())
+    ProductAttributesModel attributes,
     @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
     @Default(const [])
     List<MeasurementValueModel> measurements,
@@ -80,6 +87,8 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         model: entity.model,
         quantity: entity.quantity,
         amount: entity.amount,
+        fabricLength: entity.fabricLength,
+        attributes: ProductAttributesModel.fromEntity(entity.attributes),
         measurements: entity.measurements.map((e) => e.toModel()).toList(),
         stock: entity.stock,
         remainingStock: entity.remainingStock,
@@ -101,6 +110,8 @@ extension ProductInfoModelMapper on ProductInfoModel {
     model: model,
     quantity: quantity,
     amount: amount,
+    fabricLength: fabricLength,
+    attributes: attributes.toEntity(),
     measurements: measurements.map((e) => e.toEntity()).toList(),
     stock: stock,
     remainingStock: remainingStock,

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/print_output_preference_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,5 +11,8 @@ abstract class ShopSettingsEntity with _$ShopSettingsEntity {
     required CoolingPeriodMode coolingPeriodMode,
     required AddButtonDefaultAction addButtonDefaultAction,
     required bool searchClient,
+
+    @Default(PrintOutputPreference.askEveryTime)
+    PrintOutputPreference printOutputPreference,
   }) = _ShopSettingsEntity;
 }

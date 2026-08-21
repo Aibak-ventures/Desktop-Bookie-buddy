@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_invoice_actions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
@@ -16,12 +14,8 @@ import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/se
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
 /// Sticky action bar at the bottom of [BookingDetailsDrawer].
 ///
@@ -165,12 +159,22 @@ class BookingDetailsActionBar extends StatelessWidget {
           ),
           const SizedBox(width: 12),
         ],
-        // Download Invoice (always visible)
+        // Share Invoice (always visible)
         _buildIconActionButton(
           context,
-          icon: Icons.download_outlined,
+          icon: Icons.share_outlined,
           color: AppColors.purple,
-          onTap: () => _openInvoicePdf(context, booking),
+          onTap: () => BookingInvoiceActions.openInvoicePdf(context, booking),
+        ),
+        const SizedBox(width: 12),
+        // Print Invoice / Receipt / Preview
+        _buildIconActionButton(
+          context,
+          icon: Icons.print_outlined,
+          color: AppColors.purple,
+          onTap: () => BookingInvoiceActions.printReceipt(context, booking),
+          onLongPress: () =>
+              BookingInvoiceActions.previewReceipt(context, booking),
         ),
         const SizedBox(width: 12),
         // Delete button for completed bookings
@@ -381,9 +385,11 @@ class BookingDetailsActionBar extends StatelessWidget {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    VoidCallback? onLongPress,
   }) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: 50,
@@ -408,38 +414,6 @@ class BookingDetailsActionBar extends StatelessWidget {
       return dateStr.formatToUiDate();
     } catch (e) {
       return dateStr.formatToUiDate();
-    }
-  }
-
-  Future<void> _openInvoicePdf(
-    BuildContext context,
-    BookingDetailsEntity booking,
-  ) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      final getBookingInvoice = getIt<GetBookingInvoicePdfBytesUseCase>();
-      final pdfBytes = await getBookingInvoice(booking.id);
-      if (context.mounted) Navigator.of(context).pop();
-
-      if (kIsWeb) {
-        openPdfInNewTab(pdfBytes, 'booking_invoice_${booking.id}.pdf');
-        return;
-      }
-
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/booking_invoice_${booking.id}.pdf');
-      await file.writeAsBytes(pdfBytes);
-      await OpenFile.open(file.path);
-    } catch (e) {
-      if (context.mounted) Navigator.of(context).pop();
-      if (context.mounted) {
-        context.showSnackBar('Failed to open invoice: $e', isError: true);
-      }
     }
   }
 }

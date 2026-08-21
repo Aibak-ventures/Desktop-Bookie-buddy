@@ -1,6 +1,8 @@
 import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_attributes_entity/product_attributes_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sale_details_entity.freezed.dart';
@@ -25,6 +27,7 @@ abstract class SaleDetailsEntity with _$SaleDetailsEntity {
     String? accountName,
     int? staffId,
     String? staffName,
+    PaymentMethod? paymentMethod,
     @Default([]) List<AppliedTaxEntity> appliedTaxes,
   }) = _SaleDetailsEntity;
 }
@@ -45,5 +48,7 @@ abstract class ProductSaleInfoEntity with _$ProductSaleInfoEntity {
     String? category,
     String? model,
     MainServiceType? mainServiceType,
+    @Default(0.0) double fabricLength,
+    @Default(ProductAttributesEntity.empty) ProductAttributesEntity attributes,
   }) = _ProductSaleInfoEntity;
 }

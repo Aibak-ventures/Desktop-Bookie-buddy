@@ -35,6 +35,14 @@ extension StringXDateFormat on String {
     );
   }
 
+  DateTime? tryParseToDateTime() {
+    try {
+      return parseToDateTime();
+    } catch (_) {
+      return null;
+    }
+  }
+
   TimeOfDay toTimeOfDay() {
     try {
       // Expecting format: HH:mm or HH:mm:ss

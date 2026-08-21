@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShopSettingsModel {
 
-@JsonKey(name: 'cooling_days', defaultValue: 0) int get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode get coolingPeriodMode;@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction get addButtonDefaultAction;@JsonKey(name: 'search_client', defaultValue: false) bool get searchClient;
+@JsonKey(name: 'cooling_days', defaultValue: 0) int get coolingPeriodDuration;@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode get coolingPeriodMode;@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction get addButtonDefaultAction;@JsonKey(name: 'search_client', defaultValue: false) bool get searchClient;@JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson) PrintOutputPreference get printOutputPreference;
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ShopSettingsModelCopyWith<ShopSettingsModel> get copyWith => _$ShopSettingsMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient);
+int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
 
 @override
 String toString() {
-  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
+  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ShopSettingsModelCopyWith<$Res>  {
   factory $ShopSettingsModelCopyWith(ShopSettingsModel value, $Res Function(ShopSettingsModel) _then) = _$ShopSettingsModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
+@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient,@JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson) PrintOutputPreference printOutputPreference
 });
 
 
@@ -65,13 +65,14 @@ class _$ShopSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,Object? printOutputPreference = null,}) {
   return _then(_self.copyWith(
 coolingPeriodDuration: null == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int,coolingPeriodMode: null == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode,addButtonDefaultAction: null == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
 as AddButtonDefaultAction,searchClient: null == searchClient ? _self.searchClient : searchClient // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,printOutputPreference: null == printOutputPreference ? _self.printOutputPreference : printOutputPreference // ignore: cast_nullable_to_non_nullable
+as PrintOutputPreference,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient, @JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson)  PrintOutputPreference printOutputPreference)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel() when $default != null:
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient, @JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson)  PrintOutputPreference printOutputPreference)  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel():
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'cooling_days', defaultValue: 0)  int coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson)  CoolingPeriodMode coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking)  AddButtonDefaultAction addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false)  bool searchClient, @JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson)  PrintOutputPreference printOutputPreference)?  $default,) {final _that = this;
 switch (_that) {
 case _ShopSettingsModel() when $default != null:
-return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient);case _:
+return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addButtonDefaultAction,_that.searchClient,_that.printOutputPreference);case _:
   return null;
 
 }
@@ -212,13 +213,14 @@ return $default(_that.coolingPeriodDuration,_that.coolingPeriodMode,_that.addBut
 @JsonSerializable()
 
 class _ShopSettingsModel implements ShopSettingsModel {
-  const _ShopSettingsModel({@JsonKey(name: 'cooling_days', defaultValue: 0) required this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) required this.coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) required this.addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false) required this.searchClient});
+  const _ShopSettingsModel({@JsonKey(name: 'cooling_days', defaultValue: 0) required this.coolingPeriodDuration, @JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) required this.coolingPeriodMode, @JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) required this.addButtonDefaultAction, @JsonKey(name: 'search_client', defaultValue: false) required this.searchClient, @JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson) required this.printOutputPreference});
   factory _ShopSettingsModel.fromJson(Map<String, dynamic> json) => _$ShopSettingsModelFromJson(json);
 
 @override@JsonKey(name: 'cooling_days', defaultValue: 0) final  int coolingPeriodDuration;
 @override@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) final  CoolingPeriodMode coolingPeriodMode;
 @override@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) final  AddButtonDefaultAction addButtonDefaultAction;
 @override@JsonKey(name: 'search_client', defaultValue: false) final  bool searchClient;
+@override@JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson) final  PrintOutputPreference printOutputPreference;
 
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient);
+int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
 
 @override
 String toString() {
-  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient)';
+  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$ShopSettingsModelCopyWith<$Res> implements $ShopSettingsM
   factory _$ShopSettingsModelCopyWith(_ShopSettingsModel value, $Res Function(_ShopSettingsModel) _then) = __$ShopSettingsModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient
+@JsonKey(name: 'cooling_days', defaultValue: 0) int coolingPeriodDuration,@JsonKey(name: 'cooling_period_mode', fromJson: CoolingPeriodMode.fromJson, defaultValue: CoolingPeriodMode.after, toJson: CoolingPeriodMode.toJson) CoolingPeriodMode coolingPeriodMode,@JsonKey(name: 'default_action', fromJson: AddButtonDefaultAction.fromString, defaultValue: AddButtonDefaultAction.booking) AddButtonDefaultAction addButtonDefaultAction,@JsonKey(name: 'search_client', defaultValue: false) bool searchClient,@JsonKey(name: 'printer_preference', fromJson: PrintOutputPreference.fromJson, defaultValue: PrintOutputPreference.askEveryTime, toJson: PrintOutputPreference.toJson) PrintOutputPreference printOutputPreference
 });
 
 
@@ -270,13 +272,14 @@ class __$ShopSettingsModelCopyWithImpl<$Res>
 
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,Object? printOutputPreference = null,}) {
   return _then(_ShopSettingsModel(
 coolingPeriodDuration: null == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int,coolingPeriodMode: null == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode,addButtonDefaultAction: null == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
 as AddButtonDefaultAction,searchClient: null == searchClient ? _self.searchClient : searchClient // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,printOutputPreference: null == printOutputPreference ? _self.printOutputPreference : printOutputPreference // ignore: cast_nullable_to_non_nullable
+as PrintOutputPreference,
   ));
 }
 
