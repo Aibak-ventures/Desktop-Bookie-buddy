@@ -20,4 +20,7 @@ class AppConstants {
 
   ///
   static DateTime defaultStartDate = DateTime(2015);
+
+  /// Downloads page for QZ Tray — shown when the bridge isn't running.
+  static const String qzTrayDownloadUrl = 'https://qz.io/download/';
 }

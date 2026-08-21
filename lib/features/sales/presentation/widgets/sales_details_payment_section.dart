@@ -78,7 +78,7 @@ class SalesDetailsPaymentSection extends StatelessWidget {
           ],
           _buildPaymentRow(
             'Grand Total',
-            '₹${sale.paidAmount}',
+            '₹${sale.totalAmount}',
             isBold: true,
             fontSize: 15,
           ),

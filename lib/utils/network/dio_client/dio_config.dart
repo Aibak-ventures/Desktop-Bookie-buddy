@@ -5,6 +5,14 @@ import 'package:bookie_buddy_web/utils/network/dio_client/auth_interceptor.dart'
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+/// Verbose request/response logging (bodies, headers, per-request prints)
+/// is opt-in via `--dart-define=FULL_NETWORK_LOG=true` — off by default
+/// even in debug builds, since every request's full payload printed to
+/// console is more noise than most debugging sessions want. Error logging
+/// is unaffected by this flag; it always happens (in debug builds, and via
+/// the production error interceptor below).
+const bool _kFullNetworkLog = bool.fromEnvironment('FULL_NETWORK_LOG');
+
 class DioClient {
   /// A dio client with a base url and a auth interceptor
   /// The auth interceptor is responsible for adding the token to the request
@@ -15,10 +23,7 @@ class DioClient {
             baseUrl: baseUrl,
             connectTimeout: const Duration(seconds: 15),
             receiveTimeout: const Duration(seconds: 15),
-            headers: {
-              // 'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
+            headers: {'Accept': 'application/json'},
             validateStatus: (status) {
               if (status == null) return false;
 
@@ -31,10 +36,13 @@ class DioClient {
           AuthInterceptor(getIt<SessionStorage>()),
           if (kDebugMode)
             LogInterceptor(
-              requestBody: true,
-              responseBody: true,
+              request: _kFullNetworkLog,
+              requestHeader: _kFullNetworkLog,
+              requestBody: _kFullNetworkLog,
+              responseHeader: _kFullNetworkLog,
+              responseBody: _kFullNetworkLog,
               error: true,
-              logPrint: (obj) => print(obj.toString()),
+              logPrint: (obj) => debugPrint(obj.toString()),
             ),
         ]);
 
@@ -88,30 +96,41 @@ class DioClient {
 
       // Add debug logging only in development
       if (kDebugMode) {
-        dio.interceptors.add(
-          LogInterceptor(
-            requestBody: true,
-            responseBody: false, // Disabled to prevent printing binary PDF data
-            error: true,
-            requestHeader: true,
-            responseHeader: false,
-            logPrint: (obj) => print('[WEB API] $obj'),
-          ),
-        );
+        if (_kFullNetworkLog) {
+          dio.interceptors.add(
+            LogInterceptor(
+              requestBody: true,
+              responseBody: false, // Disabled to prevent printing binary PDF data
+              error: true,
+              requestHeader: true,
+              responseHeader: false,
+              logPrint: (obj) => print('[WEB API] $obj'),
+            ),
+          );
 
-        // Add development-specific error interceptor with better CORS guidance
+          dio.interceptors.add(
+            InterceptorsWrapper(
+              onRequest: (options, handler) {
+                print('[WEB API] Making request to: ${options.uri}');
+                print('[WEB API] Headers: ${options.headers}');
+                handler.next(options);
+              },
+              onResponse: (response, handler) {
+                print(
+                  '[WEB API] Response from: ${response.requestOptions.uri}',
+                );
+                print('[WEB API] Status: ${response.statusCode}');
+                handler.next(response);
+              },
+            ),
+          );
+        }
+
+        // Development error interceptor with CORS guidance — always on in
+        // debug builds regardless of [kFullNetworkLog], since error
+        // visibility isn't the "noisy" part `FULL_NETWORK_LOG` opts out of.
         dio.interceptors.add(
           InterceptorsWrapper(
-            onRequest: (options, handler) {
-              print('[WEB API] Making request to: ${options.uri}');
-              print('[WEB API] Headers: ${options.headers}');
-              handler.next(options);
-            },
-            onResponse: (response, handler) {
-              print('[WEB API] Response from: ${response.requestOptions.uri}');
-              print('[WEB API] Status: ${response.statusCode}');
-              handler.next(response);
-            },
             onError: (error, handler) {
               print('[WEB ERROR] ${error.message}');
               print('[WEB ERROR] Type: ${error.type}');

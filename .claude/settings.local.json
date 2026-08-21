@@ -12,7 +12,17 @@
       "Bash(fvm dart *)",
       "Bash(ls /Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/booking 2>&1)",
       "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/booking/**)",
-      "Bash(git status *)"
+      "Bash(git status *)",
+      "Bash(find /Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer -type f | sort)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/**)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/domain/repositories/**)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/data/datasources/**)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/domain/**)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/presentation/print/bloc/thermal_printer_cubit/**)",
+      "Bash(curl -sI https://cdn.jsdelivr.net/npm/qz-tray@2.2.5/qz-tray.js)",
+      "Bash(cat /Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/data/repositories/thermal_printer_repository_impl.dart)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/data/repositories/**)",
+      "Read(//Users/afnanp/Desktop/Work/Bookie-Buddy/lib/features/thermal_printer/domain/entities/print_ticket_entity/**)"
     ]
   }
 }

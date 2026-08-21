@@ -23,6 +23,7 @@ abstract class BookingOtherDetailsModel with _$BookingOtherDetailsModel {
       toJson: CoolingPeriodMode.tryToJson,
     )
     CoolingPeriodMode? coolingPeriodType,
+    @JsonKey(name: 'total_product_count') int? totalProductCount,
   }) = _BookingOtherDetailsModel;
 
   factory BookingOtherDetailsModel.fromJson(Map<String, dynamic> json) =>
@@ -38,6 +39,7 @@ extension BookingOtherDetailsModelMapper on BookingOtherDetailsModel {
     locationTo: locationTo,
     end: end,
     coolingPeriodType: coolingPeriodType,
+    totalProductCount: totalProductCount,
   );
 }
 
@@ -48,5 +50,6 @@ extension BookingOtherDetailsEntityMapper on BookingOtherDetailsEntity {
     locationTo: locationTo,
     end: end,
     coolingPeriodType: coolingPeriodType,
+    totalProductCount: totalProductCount,
   );
 }

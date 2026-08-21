@@ -94,7 +94,7 @@ class _GlassSidebarState extends State<GlassSidebar> {
                 _navItemExpanded(2, LucideIcons.search500, 'Global Search'),
                 _navItemExpanded(3, Icons.list_alt, 'Orders'),
                 _navItemExpanded(4, Icons.bar_chart_outlined, 'Stocks'),
-                // _navItemExpanded(5, Icons.settings_outlined, 'Settings'), //Currently not using
+                _navItemExpanded(5, Icons.settings_outlined, 'Settings'),
               ],
             ),
           ),
@@ -128,7 +128,7 @@ class _GlassSidebarState extends State<GlassSidebar> {
                 _navItemCollapsed(2, LucideIcons.search500),
                 _navItemCollapsed(3, Icons.list_alt),
                 _navItemCollapsed(4, Icons.bar_chart_outlined),
-                // _navItemCollapsed(5, Icons.settings_outlined), // Currently not using
+                _navItemCollapsed(5, Icons.settings_outlined),
               ],
             ),
           ),

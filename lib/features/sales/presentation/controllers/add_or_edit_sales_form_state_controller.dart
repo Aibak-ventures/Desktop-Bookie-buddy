@@ -277,7 +277,11 @@ class AddOrEditSalesFormStateController {
       stockCountDecrease: stockCountDecreaseNotifier.value,
       description: descriptionController.text.trim(),
       discountAmount: discountAmount,
-      paidAmount: totalAmount - discountAmount,
+      // Not sent — sales have no partial-payment/credit workflow, so the
+      // backend always settles a created sale as fully paid on its own
+      // (same as mobile, which never sends this field either). Computing
+      // it client-side risks silently drifting from whatever the backend
+      // actually does with discount/tax ordering.
       accountId: selectedAccountNotifier.value?.id,
       sendPdfToWhatsApp: isSharingPdfToWhatsAppNotifier.value,
     );

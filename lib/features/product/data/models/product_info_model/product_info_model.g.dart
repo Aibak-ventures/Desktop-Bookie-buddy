@@ -23,6 +23,12 @@ _ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
       model: json['model'] as String?,
       quantity: (json['quantity'] as num).toInt(),
       amount: (json['amount'] as num?)?.toInt() ?? 0,
+      fabricLength: (json['fabric_length'] as num?)?.toDouble() ?? 0.0,
+      attributes: json['attributes'] == null
+          ? const ProductAttributesModel()
+          : ProductAttributesModel.fromJson(
+              json['attributes'] as Map<String, dynamic>,
+            ),
       measurements: json['measurements'] == null
           ? const []
           : _parseMeasurements(json['measurements']),
@@ -45,6 +51,8 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'model': instance.model,
       'quantity': instance.quantity,
       'amount': instance.amount,
+      'fabric_length': instance.fabricLength,
+      'attributes': instance.attributes,
       'measurements': instance.measurements,
       'stock': instance.stock,
       'remaining_stock': instance.remainingStock,

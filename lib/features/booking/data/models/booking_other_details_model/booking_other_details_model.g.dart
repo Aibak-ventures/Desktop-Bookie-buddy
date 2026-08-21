@@ -16,6 +16,7 @@ _BookingOtherDetailsModel _$BookingOtherDetailsModelFromJson(
   coolingPeriodType: CoolingPeriodMode.tryFromJson(
     json['cooling_period_type'] as String?,
   ),
+  totalProductCount: (json['total_product_count'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$BookingOtherDetailsModelToJson(
@@ -28,4 +29,5 @@ Map<String, dynamic> _$BookingOtherDetailsModelToJson(
   'cooling_period_type': ?CoolingPeriodMode.tryToJson(
     instance.coolingPeriodType,
   ),
+  'total_product_count': ?instance.totalProductCount,
 };

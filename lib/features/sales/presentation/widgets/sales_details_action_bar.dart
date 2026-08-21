@@ -1,24 +1,19 @@
-import 'dart:io';
-
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_invoice_pdf_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/pages/edit_sales_screen.dart';
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart'; //added
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_invoice_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
-/// Sticky action bar (delete / edit / download) for [SalesDetailsDrawer].
+/// Sticky action bar (delete / edit / share invoice / print) for
+/// [SalesDetailsDrawer]. Print/invoice actions themselves live in
+/// [SalesInvoiceActions] — this widget is just the button row.
 class SalesDetailsActionBar extends StatelessWidget {
   final SaleDetailsEntity sale;
 
@@ -55,11 +50,22 @@ class SalesDetailsActionBar extends StatelessWidget {
             onTap: () => _onEdit(context),
           ),
           const SizedBox(width: 12),
+          // Share Invoice (always visible)
           _buildIconActionButton(
             context,
-            icon: Icons.download_outlined,
+            icon: Icons.share_outlined,
             color: AppColors.purple,
-            onTap: () => _openInvoicePdf(context),
+            onTap: () => SalesInvoiceActions.openInvoicePdf(context, sale),
+          ),
+          const SizedBox(width: 12),
+          // Print Invoice / Receipt / Preview
+          _buildIconActionButton(
+            context,
+            icon: Icons.print_outlined,
+            color: AppColors.purple,
+            onTap: () => SalesInvoiceActions.printReceipt(context, sale),
+            onLongPress: () =>
+                SalesInvoiceActions.previewReceipt(context, sale),
           ),
         ],
       ),
@@ -127,39 +133,16 @@ class SalesDetailsActionBar extends StatelessWidget {
     );
   }
 
-  Future<void> _openInvoicePdf(BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-    try {
-      final pdfBytes = await getIt<GetSaleInvoicePdfUseCase>()(sale.id);
-      if (context.mounted) Navigator.of(context).pop();
-      if (kIsWeb) {
-        openPdfInNewTab(pdfBytes, 'sales_invoice_${sale.id}.pdf');
-        return;
-      }
-      final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/sales_invoice_${sale.id}.pdf');
-      await file.writeAsBytes(pdfBytes);
-      await OpenFile.open(file.path);
-    } catch (e) {
-      if (context.mounted) Navigator.of(context).pop();
-      if (context.mounted) {
-        context.showSnackBar('Failed to open invoice: $e', isError: true);
-      }
-    }
-  }
-
   Widget _buildIconActionButton(
     BuildContext context, {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    VoidCallback? onLongPress,
   }) {
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: 50,

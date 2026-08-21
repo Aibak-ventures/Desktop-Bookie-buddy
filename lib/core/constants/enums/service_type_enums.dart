@@ -194,5 +194,29 @@ extension MainServiceTypeX on MainServiceType? {
 
   String get clientNameType => isRoom ? 'Guest' : 'Client';
 
+  /// "Shutter Count" / "Color"
+  String get colorFieldLabel => switch (this) {
+    MainServiceType.gadget => 'Shutter Count',
+    MainServiceType.room => 'Bed Type',
+    _ => 'Color',
+  };
+
+  /// "Year of Manufacture" / "Model"
+  String get modelFieldLabel => switch (this) {
+    MainServiceType.gadget => 'Year of Manufacture',
+    MainServiceType.room => 'Max Occupancy',
+    _ => 'Model',
+  };
+
   bool get showCoolingPeriodField => !isRoom;
+
+  /// Show the quantity field when adding/editing a product or booking.
+  bool get showProductQuantityField => !isRoom;
+
+  /// Show the color field on the product form.
+  bool get showsColorField =>
+      isMultiVariantProductType || isOther || isJewellery || isRoom;
+
+  /// Show the model field on the product form.
+  bool get showsModelField => isVehicle;
 }

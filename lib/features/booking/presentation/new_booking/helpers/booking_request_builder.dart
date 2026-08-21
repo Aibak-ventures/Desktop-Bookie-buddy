@@ -209,9 +209,6 @@ class BookingRequestBuilder {
     final discount = isDiscountPercentage
         ? (grossTotal * discountInput / 100).round()
         : discountInput;
-    final finalTotal = (grossTotal - discount) > 0
-        ? (grossTotal - discount)
-        : 0;
 
     return SalesRequestEntity(
       staffId: staffId,
@@ -221,7 +218,10 @@ class BookingRequestBuilder {
       description: description,
       sendPdfToWhatsApp: sendInvoice,
       products: products,
-      paidAmount: finalTotal,
+      // Not sent — sales have no partial-payment/credit workflow, so the
+      // backend always settles a created sale as fully paid on its own
+      // (same reasoning as the dedicated sales create flow in
+      // AddOrEditSalesFormStateController — see there for details).
       discountAmount: discount,
       stockCountDecrease: decreaseStockForPastDate || !isPastDate,
       accountId: accountId,

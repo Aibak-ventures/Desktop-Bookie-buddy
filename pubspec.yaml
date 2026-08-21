@@ -82,6 +82,10 @@ dependencies:
   feedback: ^3.1.0
   vector_graphics: ^1.1.7
   phone_form_field: ^10.0.17
+
+  # Thermal receipt printing (QZ Tray bridge)
+  esc_pos_utils_plus: ^2.0.4
+  printing: ^5.14.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -140,6 +144,7 @@ flutter:
 
     - family: Inter
       fonts:
+        - asset: assets/fonts/Inter.ttf
         - asset: assets/fonts/Inter_Regular.ttf
           weight: 400
         - asset: assets/fonts/Inter_Medium.ttf

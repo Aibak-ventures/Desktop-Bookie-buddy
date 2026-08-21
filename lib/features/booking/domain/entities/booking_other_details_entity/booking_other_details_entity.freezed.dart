@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingOtherDetailsEntity {
 
- String? get locationStart; String? get locationFrom; String? get locationTo; String? get end; CoolingPeriodMode? get coolingPeriodType;
+ String? get locationStart; String? get locationFrom; String? get locationTo; String? get end; CoolingPeriodMode? get coolingPeriodType; int? get totalProductCount;
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingOtherDetailsEntityCopyWith<BookingOtherDetailsEntity> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingOtherDetailsEntity&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingOtherDetailsEntity&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.totalProductCount, totalProductCount) || other.totalProductCount == totalProductCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType);
+int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType,totalProductCount);
 
 @override
 String toString() {
-  return 'BookingOtherDetailsEntity(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType)';
+  return 'BookingOtherDetailsEntity(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType, totalProductCount: $totalProductCount)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $BookingOtherDetailsEntityCopyWith<$Res>  {
   factory $BookingOtherDetailsEntityCopyWith(BookingOtherDetailsEntity value, $Res Function(BookingOtherDetailsEntity) _then) = _$BookingOtherDetailsEntityCopyWithImpl;
 @useResult
 $Res call({
- String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType
+ String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType, int? totalProductCount
 });
 
 
@@ -62,14 +62,15 @@ class _$BookingOtherDetailsEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? locationStart = freezed,Object? locationFrom = freezed,Object? locationTo = freezed,Object? end = freezed,Object? coolingPeriodType = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? locationStart = freezed,Object? locationFrom = freezed,Object? locationTo = freezed,Object? end = freezed,Object? coolingPeriodType = freezed,Object? totalProductCount = freezed,}) {
   return _then(_self.copyWith(
 locationStart: freezed == locationStart ? _self.locationStart : locationStart // ignore: cast_nullable_to_non_nullable
 as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : locationFrom // ignore: cast_nullable_to_non_nullable
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as CoolingPeriodMode?,
+as CoolingPeriodMode?,totalProductCount: freezed == totalProductCount ? _self.totalProductCount : totalProductCount // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType,  int? totalProductCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity() when $default != null:
-return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
+return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType,_that.totalProductCount);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType,  int? totalProductCount)  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity():
-return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
+return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType,_that.totalProductCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? locationStart,  String? locationFrom,  String? locationTo,  String? end,  CoolingPeriodMode? coolingPeriodType,  int? totalProductCount)?  $default,) {final _that = this;
 switch (_that) {
 case _BookingOtherDetailsEntity() when $default != null:
-return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType);case _:
+return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.end,_that.coolingPeriodType,_that.totalProductCount);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.locationStart,_that.locationFrom,_that.locationTo,_that.en
 
 
 class _BookingOtherDetailsEntity implements BookingOtherDetailsEntity {
-  const _BookingOtherDetailsEntity({this.locationStart, this.locationFrom, this.locationTo, this.end, this.coolingPeriodType});
+  const _BookingOtherDetailsEntity({this.locationStart, this.locationFrom, this.locationTo, this.end, this.coolingPeriodType, this.totalProductCount});
   
 
 @override final  String? locationStart;
@@ -218,6 +219,7 @@ class _BookingOtherDetailsEntity implements BookingOtherDetailsEntity {
 @override final  String? locationTo;
 @override final  String? end;
 @override final  CoolingPeriodMode? coolingPeriodType;
+@override final  int? totalProductCount;
 
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ _$BookingOtherDetailsEntityCopyWith<_BookingOtherDetailsEntity> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingOtherDetailsEntity&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingOtherDetailsEntity&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.totalProductCount, totalProductCount) || other.totalProductCount == totalProductCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType);
+int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType,totalProductCount);
 
 @override
 String toString() {
-  return 'BookingOtherDetailsEntity(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType)';
+  return 'BookingOtherDetailsEntity(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType, totalProductCount: $totalProductCount)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$BookingOtherDetailsEntityCopyWith<$Res> implements $Booki
   factory _$BookingOtherDetailsEntityCopyWith(_BookingOtherDetailsEntity value, $Res Function(_BookingOtherDetailsEntity) _then) = __$BookingOtherDetailsEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType
+ String? locationStart, String? locationFrom, String? locationTo, String? end, CoolingPeriodMode? coolingPeriodType, int? totalProductCount
 });
 
 
@@ -266,14 +268,15 @@ class __$BookingOtherDetailsEntityCopyWithImpl<$Res>
 
 /// Create a copy of BookingOtherDetailsEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? locationStart = freezed,Object? locationFrom = freezed,Object? locationTo = freezed,Object? end = freezed,Object? coolingPeriodType = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? locationStart = freezed,Object? locationFrom = freezed,Object? locationTo = freezed,Object? end = freezed,Object? coolingPeriodType = freezed,Object? totalProductCount = freezed,}) {
   return _then(_BookingOtherDetailsEntity(
 locationStart: freezed == locationStart ? _self.locationStart : locationStart // ignore: cast_nullable_to_non_nullable
 as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : locationFrom // ignore: cast_nullable_to_non_nullable
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
 as String?,end: freezed == end ? _self.end : end // ignore: cast_nullable_to_non_nullable
 as String?,coolingPeriodType: freezed == coolingPeriodType ? _self.coolingPeriodType : coolingPeriodType // ignore: cast_nullable_to_non_nullable
-as CoolingPeriodMode?,
+as CoolingPeriodMode?,totalProductCount: freezed == totalProductCount ? _self.totalProductCount : totalProductCount // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
