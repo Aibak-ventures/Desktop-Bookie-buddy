@@ -3,6 +3,8 @@ import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart
 import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -81,9 +83,6 @@ class BookingAmountSummary extends StatelessWidget {
     this.splitBankAmountController,
   });
 
-  bool _shouldMultiplyByDays(MainServiceType? type) =>
-      type?.requiresDateRange ?? false;
-
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -112,24 +111,24 @@ class BookingAmountSummary extends StatelessWidget {
             : (int.tryParse(securityAmountController.text.trim()) ?? 0);
 
         final summaryRentalDays = !isSales ? calculateRentalDays() : 1;
-        final productTotal = products.fold<int>(0, (sum, product) {
-          final daysMultiplier =
-              (!isSales &&
-                  _shouldMultiplyByDays(product.variant.mainServiceType))
-              ? (summaryRentalDays > 0 ? summaryRentalDays : 1)
-              : 1;
-          return sum + (product.amount * product.quantity * daysMultiplier);
-        });
-        final additionalTotal = additionalCharges.fold<int>(
-          0,
-          (sum, charge) => sum + (charge.amount ?? 0),
+        final productTotal = PaymentCalculator.calculateProductTotal(
+          selectedProducts: products,
+          bookingType: isSales ? BookingType.sales : BookingType.booking,
+          effectiveRentalDays: summaryRentalDays > 0 ? summaryRentalDays : 1,
         );
+        final additionalTotal =
+            PaymentCalculator.calculateAdditionalChargesTotal(
+              additionalCharges,
+            );
 
         final discountInput =
             discountAmountController.text.trim().toIntOrNull() ?? 0;
-        final discountAmount = isDiscountPercentage.value
-            ? ((productTotal + additionalTotal) * discountInput / 100).round()
-            : discountInput;
+        final discountAmount = PaymentCalculator.resolveDiscountAmount(
+          isDiscountPercentage: isDiscountPercentage.value,
+          discountInput: discountInput,
+          productTotal: productTotal,
+          additionalTotal: additionalTotal,
+        );
 
         final taxSummary = calculateTaxSummary(
           productTotal: productTotal.toDouble(),
@@ -146,11 +145,12 @@ class BookingAmountSummary extends StatelessWidget {
             ),
         ];
 
-        final totalPayable =
-            productTotal +
-            additionalTotal -
-            discountAmount +
-            additionalTaxAmount;
+        final totalPayable = PaymentCalculator.combineTotalPayable(
+          productTotal: productTotal,
+          additionalTotal: additionalTotal,
+          discountAmount: discountAmount,
+          additionalTaxAmount: additionalTaxAmount.toDouble(),
+        );
 
         if (isSales) {
           final clampedTotal = totalPayable > 0 ? totalPayable : 0;
@@ -200,12 +200,8 @@ class BookingAmountSummary extends StatelessWidget {
             (totalPayable + outstandingSecurityAmount - advanceAmount)
                 .clamp(0, 999999999)
                 .toInt();
-        final pendingTotal =
-            productTotal +
-            securityAmount +
-            additionalTotal -
-            discountAmount +
-            additionalTaxAmount;
+        // Same as totalPayable, with the security deposit added on top.
+        final pendingTotal = totalPayable + securityAmount;
         final receivedTotal = advanceAmount + receivedSecurityAmount;
 
         final summaryPayableFields = <SummaryField>[

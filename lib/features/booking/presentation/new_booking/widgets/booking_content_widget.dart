@@ -332,35 +332,29 @@ extension BookingFlowBuilders on NewBookingScreenState {
               final discountInput =
                   discountAmountController.text.trim().toIntOrNull() ?? 0;
               final rentalDays = !isSaleType ? _getEffectiveRentalDays() : 1;
-              final productTotal = products.fold<int>(0, (sum, product) {
-                final daysMultiplier =
-                    (!isSaleType &&
-                        _shouldMultiplyByDays(product.variant.mainServiceType))
-                    ? (rentalDays > 0 ? rentalDays : 1)
-                    : 1;
-                return sum +
-                    (product.amount * product.quantity * daysMultiplier);
-              });
-              final additionalTotal = additionalCharges.fold<int>(
-                0,
-                (sum, charge) => sum + (charge.amount ?? 0),
+              final productTotal = PaymentCalculator.calculateProductTotal(
+                selectedProducts: products,
+                bookingType: selectedBookingType,
+                effectiveRentalDays: rentalDays,
               );
-              final actualDiscount = isDiscountPercentage
-                  ? ((productTotal + additionalTotal) * discountInput / 100)
-                        .round()
-                  : discountInput;
+              final additionalTotal =
+                  PaymentCalculator.calculateAdditionalChargesTotal(
+                    additionalCharges,
+                  );
+              final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+                isDiscountPercentage: isDiscountPercentage,
+                discountInput: discountInput,
+                productTotal: productTotal,
+                additionalTotal: additionalTotal,
+              );
               final taxSummary = _calculateTaxSummary(
                 productTotal: productTotal.toDouble(),
                 additionalCharges: additionalTotal.toDouble(),
                 discountAmount: actualDiscount.toDouble(),
               );
-              final additionalTaxAmount = taxSummary.additionalTaxAmount
-                  .round();
-              final totalPayable =
-                  productTotal +
-                  additionalTotal -
-                  actualDiscount +
-                  additionalTaxAmount;
+              // Reuse the same total-payable gate as the confirm/summary
+              // flow so this preview never disagrees with them.
+              final totalPayable = _calculateBookingTotalPayable();
               final remainingAmount = totalPayable - advanceAmount;
 
               return Padding(

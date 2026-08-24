@@ -94,6 +94,43 @@ class PaymentCalculator {
     return effectiveRentalDays;
   }
 
+  /// Sum of selected products' line amounts, applying the day multiplier
+  /// per product (via [getDaysMultiplierForProduct]).
+  ///
+  /// The single source of truth for "product total" — used by
+  /// [getDiscountProductBase], [calculateBookingTotalPayable], and every
+  /// screen/widget that needs to show or validate against it, so they never
+  /// drift apart.
+  static int calculateProductTotal({
+    required List<ProductSelectedEntity> selectedProducts,
+    required BookingType bookingType,
+    required int effectiveRentalDays,
+  }) {
+    // Defensive: the callers we know of always clamp this upstream, but the
+    // three call sites this replaced each guarded against a stray 0/negative
+    // value themselves — keep that guarantee here so nothing regresses if a
+    // future caller forgets to.
+    final safeRentalDays = effectiveRentalDays > 0 ? effectiveRentalDays : 1;
+    return selectedProducts.fold<int>(0, (sum, product) {
+      final daysMultiplier = getDaysMultiplierForProduct(
+        product: product,
+        bookingType: bookingType,
+        effectiveRentalDays: safeRentalDays,
+      );
+      return sum + (product.amount * product.quantity * daysMultiplier);
+    });
+  }
+
+  /// Sum of additional charges' amounts.
+  static int calculateAdditionalChargesTotal(
+    List<AdditionalChargesEntity> additionalCharges,
+  ) {
+    return additionalCharges.fold<int>(
+      0,
+      (sum, charge) => sum + (charge.amount ?? 0),
+    );
+  }
+
   /// Calculate the product base amount for discount calculation.
   ///
   /// This is: (products with day multiplier) + (additional charges)
@@ -105,28 +142,80 @@ class PaymentCalculator {
     required BookingType bookingType,
     required int effectiveRentalDays,
   }) {
-    final productTotal = selectedProducts.fold<int>(0, (sum, p) {
-      final daysMultiplier =
-          (bookingType != BookingType.sales &&
-              shouldMultiplyByDays(p.variant.mainServiceType))
-          ? (effectiveRentalDays > 0 ? effectiveRentalDays : 1)
-          : 1;
-      return sum + (p.amount * p.quantity * daysMultiplier);
-    });
-    final additionalTotal = additionalCharges.fold<int>(
-      0,
-      (sum, charge) => sum + (charge.amount ?? 0),
+    final productTotal = calculateProductTotal(
+      selectedProducts: selectedProducts,
+      bookingType: bookingType,
+      effectiveRentalDays: effectiveRentalDays,
     );
-    return productTotal + additionalTotal;
+    return productTotal + calculateAdditionalChargesTotal(additionalCharges);
   }
 
-  /// Calculate the total amount payable after discount.
+  /// Resolve a raw discount input (a percentage or a fixed amount,
+  /// depending on [isDiscountPercentage]) into an actual currency amount.
+  ///
+  /// Percentage discounts are taken against [productTotal] + [additionalTotal]
+  /// — pass these separately rather than pre-summed so callers don't have to
+  /// know that's the base; they just hand over whatever product/additional
+  /// totals they already computed. Most callers pass the day-multiplied
+  /// product total (see [calculateProductTotal]), but at least one
+  /// deliberately passes unit amounts only (see `BookingRequestBuilder`'s
+  /// discount comment).
+  static int resolveDiscountAmount({
+    required bool isDiscountPercentage,
+    required int discountInput,
+    required int productTotal,
+    required int additionalTotal,
+  }) {
+    return isDiscountPercentage
+        ? ((productTotal + additionalTotal) * discountInput / 100).round()
+        : discountInput;
+  }
+
+  /// Combine already-computed components into a final payable total:
+  /// products + additional charges + security − discount + exclusive tax.
+  ///
+  /// The single place that knows what gets added and what gets subtracted —
+  /// every screen/widget that assembles a payable total from these same
+  /// pieces should call this instead of re-deriving the +/- signs itself.
+  ///
+  /// [additionalTaxAmount] is the exclusive-tax portion from a
+  /// `TaxSummaryEntity` (its `additionalTaxAmount`) — pass it whenever the
+  /// shop/booking has tax rules so this total matches what's shown in the
+  /// summary card; omit it (defaults to 0) where tax doesn't apply.
+  /// [securityAmount] only applies where a security deposit is part of the
+  /// payable total (e.g. a booking's "pending" total); omit it elsewhere.
+  ///
+  /// Edge cases:
+  /// - Negative totals clamped to 0 (handled at UI level)
+  /// - Percentage discount rounded to nearest integer (see
+  ///   [resolveDiscountAmount]) before it reaches [discountAmount] here
+  static int combineTotalPayable({
+    required int productTotal,
+    int additionalTotal = 0,
+    required int discountAmount,
+    double additionalTaxAmount = 0,
+    int securityAmount = 0,
+  }) {
+    return productTotal +
+        additionalTotal +
+        securityAmount -
+        discountAmount +
+        additionalTaxAmount.round();
+  }
+
+  /// Calculate the total amount payable after discount (and tax, if any).
   ///
   /// Flow:
   /// 1. Calculate product total (with day multiplier)
   /// 2. Add additional charges
   /// 3. Apply discount (fixed or percentage)
-  /// 4. Return final amount
+  /// 4. Add exclusive-type tax on top
+  /// 5. Return final amount
+  ///
+  /// [additionalTaxAmount] is the exclusive-tax portion from a
+  /// `TaxSummaryEntity` (its `additionalTaxAmount`) — pass it whenever the
+  /// shop/booking has tax rules so this total matches what's shown in the
+  /// summary card; omit it (defaults to 0) where tax doesn't apply.
   ///
   /// Edge cases:
   /// - Negative totals clamped to 0 (handled at UI level)
@@ -139,27 +228,28 @@ class PaymentCalculator {
     required bool isDiscountPercentage,
     required BookingType bookingType,
     required int effectiveRentalDays,
+    double additionalTaxAmount = 0,
   }) {
-    final productTotal = selectedProducts.fold<int>(0, (sum, product) {
-      final effectiveDaysMultiplier =
-          (bookingType != BookingType.sales &&
-              shouldMultiplyByDays(product.variant.mainServiceType))
-          ? (effectiveRentalDays > 0 ? effectiveRentalDays : 1)
-          : 1;
+    final productTotal = calculateProductTotal(
+      selectedProducts: selectedProducts,
+      bookingType: bookingType,
+      effectiveRentalDays: effectiveRentalDays,
+    );
+    final additionalTotal = calculateAdditionalChargesTotal(additionalCharges);
 
-      return sum +
-          ((product.amount * product.quantity) * effectiveDaysMultiplier);
-    });
-    final additionalTotal = additionalCharges.fold<int>(
-      0,
-      (sum, charge) => sum + (charge.amount ?? 0),
+    final actualDiscount = resolveDiscountAmount(
+      isDiscountPercentage: isDiscountPercentage,
+      discountInput: discountAmount,
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
     );
 
-    final actualDiscount = isDiscountPercentage
-        ? ((productTotal + additionalTotal) * discountAmount / 100).round()
-        : discountAmount;
-
-    return productTotal + additionalTotal - actualDiscount;
+    return combineTotalPayable(
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
+      discountAmount: actualDiscount,
+      additionalTaxAmount: additionalTaxAmount,
+    );
   }
 
   /// Round a number to a meaningful price point.

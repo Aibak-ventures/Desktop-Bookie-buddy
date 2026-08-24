@@ -86,13 +86,15 @@ class BookingRequestBuilder {
       0,
       (sum, p) => sum + (p.amount * p.quantity),
     );
-    final additionalTotal = additionalCharges.fold<int>(
-      0,
-      (sum, c) => sum + (c.amount ?? 0),
+    final additionalTotal = PaymentCalculator.calculateAdditionalChargesTotal(
+      additionalCharges,
     );
-    final actualDiscount = isDiscountPercentage
-        ? ((productTotal + additionalTotal) * discountInput / 100).round()
-        : discountInput;
+    final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+      isDiscountPercentage: isDiscountPercentage,
+      discountInput: discountInput,
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
+    );
 
     // --- Client data: only when no existing client is linked ---
     ClientRequestEntity? clientData;

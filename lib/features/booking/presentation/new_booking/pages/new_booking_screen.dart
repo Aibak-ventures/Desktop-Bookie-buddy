@@ -638,13 +638,38 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   int _calculateBookingTotalPayable() {
     final discountInput =
         discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final products = selectedProductsNotifier.value;
+    final additionalCharges = additionalChargesNotifier.value;
+    final effectiveRentalDays = _getEffectiveRentalDays();
+    final productTotal = PaymentCalculator.calculateProductTotal(
+      selectedProducts: products,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: effectiveRentalDays,
+    );
+    final additionalTotal = PaymentCalculator.calculateAdditionalChargesTotal(
+      additionalCharges,
+    );
+    // Mirror BookingAmountSummary's own math so this gate never rejects an
+    // amount the summary card itself shows as payable.
+    final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+      isDiscountPercentage: isDiscountPercentage,
+      discountInput: discountInput,
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
+    );
+    final taxSummary = _calculateTaxSummary(
+      productTotal: productTotal.toDouble(),
+      additionalCharges: additionalTotal.toDouble(),
+      discountAmount: actualDiscount.toDouble(),
+    );
     return PaymentCalculator.calculateBookingTotalPayable(
-      selectedProducts: selectedProductsNotifier.value,
-      additionalCharges: additionalChargesNotifier.value,
+      selectedProducts: products,
+      additionalCharges: additionalCharges,
       discountAmount: discountInput,
       isDiscountPercentage: isDiscountPercentage,
       bookingType: selectedBookingType,
-      effectiveRentalDays: _getEffectiveRentalDays(),
+      effectiveRentalDays: effectiveRentalDays,
+      additionalTaxAmount: taxSummary.additionalTaxAmount,
     );
   }
 
@@ -900,9 +925,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       label: label,
     );
   }
-
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) =>
-      PaymentCalculator.shouldMultiplyByDays(serviceType);
 
   TaxSummaryEntity _calculateTaxSummary({
     double productTotal = 0,
