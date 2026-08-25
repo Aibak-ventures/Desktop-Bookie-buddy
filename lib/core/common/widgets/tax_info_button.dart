@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_overlay.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../../core/common/entities/applied_tax_entity/applied_tax_entity.dart';
-import '../../../../../core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import '../../../../../core/constants/enums/booking_status_enums.dart';
 import '../../../../../core/constants/enums/service_type_enums.dart';
 import '../../../../../utils/extensions/list_extensions.dart';

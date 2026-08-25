@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';

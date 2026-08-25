@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';

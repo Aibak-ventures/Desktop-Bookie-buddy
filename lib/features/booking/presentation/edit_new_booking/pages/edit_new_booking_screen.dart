@@ -1,7 +1,7 @@
 ﻿import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
-import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';

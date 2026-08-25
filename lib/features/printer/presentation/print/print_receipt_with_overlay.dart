@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart'
     show kIsDevelopment;
