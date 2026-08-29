@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_mode
 import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';

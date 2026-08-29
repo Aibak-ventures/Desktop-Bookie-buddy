@@ -165,8 +165,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                       SalesDetailsItemsSection(sale: sale),
                       const SizedBox(height: 24),
                       if (sale.client != null ||
-                          (sale.clientPhone != null &&
-                              sale.clientPhone.toString().isNotEmpty)) ...[
+                          sale.clientPhone.isNotEmpty) ...[
                         SalesDetailsCustomerSection(sale: sale),
                         const SizedBox(height: 24),
                       ],

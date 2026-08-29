@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_entity
 import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_app_bar.dart';
@@ -492,7 +492,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                             _formController.selectedAccountNotifier.value =
                                 account;
                           },
-                          initialAccountId: widget.saleDetails.accountId,
+                          initialAccountId: widget.saleDetails.payment.accountId,
                         ),
                   ),
                   const SizedBox(height: 16),
@@ -1191,7 +1191,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         widget.saleDetails.discountAmount;
     final accountChanged =
         _formController.selectedAccountNotifier.value?.id !=
-        widget.saleDetails.accountId;
+        widget.saleDetails.payment.accountId;
     final productsChanged =
         products.length != widget.saleDetails.products.length;
 

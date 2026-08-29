@@ -59,7 +59,7 @@ import 'package:bookie_buddy_core/features/product/domain/entities/product_info_
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 // Only used by the commented-out (unreachable) `_buildSalesRequest` in
 // `edit_booking_submission_handler.dart` — see the note there.
 // import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';

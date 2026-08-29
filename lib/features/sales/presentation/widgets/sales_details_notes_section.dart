@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:flutter/material.dart';
 
 /// Notes section for [SalesDetailsDrawer].

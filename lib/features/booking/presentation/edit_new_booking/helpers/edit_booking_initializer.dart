@@ -210,8 +210,8 @@ extension EditBookingInitializer on EditNewBookingScreenState {
         phoneNumber: extractPhoneFromE164(saleClient.phone1).nullIfEmpty,
         e164: saleClient.phone1,
       );
-    } else if (sale.clientPhone != null) {
-      final phoneStr = sale.clientPhone.toString();
+    } else {
+      final phoneStr = sale.clientPhone;
       if (phoneStr.isNotEmpty) {
         BookingPhonePopulator.setPhoneFieldValue(
           _clientPhone1FieldController,
@@ -246,10 +246,8 @@ extension EditBookingInitializer on EditNewBookingScreenState {
           variantId: item.variantId,
           productId: item.productId,
           name: item.name,
-          // ProductSaleInfoEntity has no separate thumbnail — reuse its one
-          // image for both.
           productImage: item.image,
-          thumbnailImage: item.image,
+          thumbnailImage: item.thumbnailImage,
           fabricLength: 0,
           amount: item.price,
           category: item.category,

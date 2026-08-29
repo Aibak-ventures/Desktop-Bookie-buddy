@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,9 +14,12 @@ class SalesDetailsCustomerSection extends StatelessWidget {
     final phone1 = _preferredPhone(
       sale.client?.phone1,
       null,
-      fallback: sale.clientPhone?.toString(),
-    );
-    final phone2 = _preferredPhone(sale.client?.phone2, null);
+      fallback: sale.clientPhone,
+    )?.formatPhoneNumber();
+    final phone2 = _preferredPhone(
+      sale.client?.phone2,
+      null,
+    )?.formatPhoneNumber();
     final name = sale.client?.name;
 
     if (phone1 == null || phone1.isEmpty) return const SizedBox.shrink();
@@ -45,7 +48,7 @@ class SalesDetailsCustomerSection extends StatelessWidget {
             const SizedBox(height: 12),
           ],
           _buildPhoneRow('Phone 1', phone1),
-          if (phone2 != null && phone2.isNotEmpty && phone2 != '0') ...[
+          if (phone2 != null && phone2.isNotEmpty) ...[
             const SizedBox(height: 12),
             _buildPhoneRow('Phone 2', phone2),
           ],
