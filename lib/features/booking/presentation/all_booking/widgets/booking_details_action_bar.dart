@@ -1,9 +1,10 @@
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_invoice_actions.dart';
@@ -312,7 +313,7 @@ class BookingDetailsActionBar extends StatelessWidget {
               // Security deposit must be refunded/deducted before completing
               // — applies whether the booking is being completed normally or
               // as cancelled work.
-              final pendingDeposit = booking.securitySummary.remainingBalance;
+              final pendingDeposit = booking.remainingSecurityBalance;
               if (pendingDeposit > 0) {
                 context.showSnackBar(
                   'Cannot mark as completed. Refund or deduct the pending security deposit of ₹${pendingDeposit.toInt()} first.',

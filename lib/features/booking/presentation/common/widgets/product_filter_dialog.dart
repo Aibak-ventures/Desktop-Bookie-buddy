@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
 import 'package:flutter/material.dart';

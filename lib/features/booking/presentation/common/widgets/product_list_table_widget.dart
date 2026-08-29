@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
@@ -283,11 +283,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
+    final imageUrl = product.variant.thumbnailImage ?? product.variant.productImage;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
     final fullImageUrl =
-        product.variant.image ?? product.variant.thumbnailImage;
+        product.variant.productImage ?? product.variant.thumbnailImage;
     final effectiveDaysMultiplier =
         PaymentCalculator.getDaysMultiplierForProduct(
           bookingType: widget.selectedBookingType,

@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/features/client/data/models/client_request_mode
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';

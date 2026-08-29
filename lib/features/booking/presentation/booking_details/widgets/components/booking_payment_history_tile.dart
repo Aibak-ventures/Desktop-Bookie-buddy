@@ -5,7 +5,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_refund_history_entity/booking_refund_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -50,7 +51,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
 
   final int bookingId;
   final List<BookingPaymentHistoryEntity> paymentHistory;
-  final List<dynamic> refunds;
+  final List<BookingRefundHistoryEntity> refunds;
   final bool isLoading;
   final bool canDeletePayments;
   final bool canDeleteRefunds;
@@ -73,30 +74,21 @@ class BookingPaymentHistoryTile extends StatelessWidget {
       );
     }
 
-    // Add refunds - API uses 'refunded_amount' field
+    // Add refunds — now a typed list (BookingRefundHistoryEntity) rather
+    // than raw JSON maps; the field-name fallback juggling this used to do
+    // ('refunded_amount' vs 'amount', etc.) is handled once, in the model
+    // layer (see BookingDetailsRefundHistoryModel), not here.
     for (final refund in refunds) {
-      if (refund is Map<String, dynamic>) {
-        final dynamic refundIdRaw = refund['id'];
-        // Try 'refunded_amount' first (from API), then fallback to 'amount'
-        final dynamic refundAmountRaw =
-            refund['refunded_amount'] ?? refund['amount'] ?? 0;
-        final int amount = refundAmountRaw is num ? refundAmountRaw.toInt() : 0;
-
-        final String? accountName = refund['account_name'] as String?;
-        final int? accountId = refund['account_id'] as int?;
-        final dateTime = refund['created_at'] ?? refund['datetime'] ?? '';
-
-        transactions.add(
-          TransactionEntry(
-            id: refundIdRaw is num ? refundIdRaw.toInt() : null,
-            amount: amount,
-            accountName: accountName,
-            accountId: accountId,
-            dateTime: dateTime.toString(),
-            isRefund: true,
-          ),
-        );
-      }
+      transactions.add(
+        TransactionEntry(
+          id: refund.id,
+          amount: refund.amount,
+          accountName: refund.accountName,
+          accountId: refund.accountId,
+          dateTime: refund.createdAt,
+          isRefund: true,
+        ),
+      );
     }
 
     // Sort by datetime (newest first)

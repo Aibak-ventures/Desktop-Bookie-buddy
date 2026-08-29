@@ -75,7 +75,7 @@ Map<String, dynamic> _$SaleDetailsPaymentHistoryModelToJson(
 ) => <String, dynamic>{
   'account_id': instance.accountId,
   'account_name': instance.accountName,
-  'method': instance.paymentMethod,
+  'method': PaymentMethod.toJson(instance.paymentMethod),
 };
 
 const _$PaymentMethodEnumMap = {

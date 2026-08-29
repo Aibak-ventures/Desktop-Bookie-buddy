@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
@@ -84,23 +84,23 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                           final client = state.selectedClient!;
                           form.clientNameController.text = client.name;
                           final phone1 = extractPhoneFromE164(
-                            client.phone1E164,
+                            client.phone1,
                           );
                           if (phone1.isNotEmpty) {
                             cachePhoneE164(
                               rawPhoneNumber: phone1,
-                              e164: client.phone1E164,
+                              e164: client.phone1,
                             );
                             form.clientPhone1Controller.text = phone1;
                           }
-                          if (client.phone2E164 != null) {
+                          if (client.phone2 != null) {
                             final phone2 = extractPhoneFromE164(
-                              client.phone2E164,
+                              client.phone2,
                             );
                             if (phone2.isNotEmpty) {
                               cachePhoneE164(
                                 rawPhoneNumber: phone2,
-                                e164: client.phone2E164,
+                                e164: client.phone2,
                               );
                               form.clientPhone2Controller.text = phone2;
                             }

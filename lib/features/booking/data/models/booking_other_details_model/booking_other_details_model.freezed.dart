@@ -15,7 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookingOtherDetailsModel {
 
-@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? get coolingPeriodType;@JsonKey(name: 'total_product_count') int? get totalProductCount;
+@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;// Vehicle odometer reading — read/display only, never submitted back
+// through this model. See BookingOtherDetailsEntity.runningKilometers
+// (bookie_buddy_core) for the full explanation: the value the user
+// enters is submitted per-product instead (running_kilometers inside
+// each variant's measurements), not via this field, on either the
+// new-booking or edit path.
+@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? get coolingPeriodType;@JsonKey(name: 'total_product_count') int? get totalProductCount;
 /// Create a copy of BookingOtherDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -220,6 +226,12 @@ class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
 @override@JsonKey(name: 'location_start') final  String? locationStart;
 @override@JsonKey(name: 'location_from') final  String? locationFrom;
 @override@JsonKey(name: 'location_to') final  String? locationTo;
+// Vehicle odometer reading — read/display only, never submitted back
+// through this model. See BookingOtherDetailsEntity.runningKilometers
+// (bookie_buddy_core) for the full explanation: the value the user
+// enters is submitted per-product instead (running_kilometers inside
+// each variant's measurements), not via this field, on either the
+// new-booking or edit path.
 @override@JsonKey(name: 'end') final  String? end;
 @override@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) final  CoolingPeriodMode? coolingPeriodType;
 @override@JsonKey(name: 'total_product_count') final  int? totalProductCount;

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
@@ -19,7 +19,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -971,7 +971,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
             variantId: variant.id,
             productId: product.id,
             name: product.name,
-            image: product.image,
+            productImage: product.image,
+            thumbnailImage: product.thumbnailImage,
+            fabricLength: 0,
             amount: price,
             category: product.category,
             color: product.color,

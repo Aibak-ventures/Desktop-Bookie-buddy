@@ -1,16 +1,16 @@
 import 'dart:async';
 
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
-import '../../../../../core/constants/enums/booking_status_enums.dart';
-import '../../../../../core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import '../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../utils/extensions/number_extensions.dart';
-import '../../../../booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import '../../../../booking/presentation/common/utils/booking_time_resolver.dart';
-import '../../../../product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import '../../../domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import '../shared/receipt_canvas.dart';
 import '../shared/receipt_date_formatter.dart';
@@ -131,7 +131,7 @@ class BookingReceiptCanvasBuilder {
       ])
       ..row([
         const ReceiptColumn('Phone:'),
-        ReceiptColumn(booking.client.phone1E164 ?? '', align: TextAlign.right),
+        ReceiptColumn(booking.client.phone1, align: TextAlign.right),
       ]);
   }
 
@@ -229,7 +229,7 @@ class BookingReceiptCanvasBuilder {
     ReceiptCanvas canvas,
     BookingDetailsEntity booking,
   ) {
-    final securityDeposit = booking.securitySummary.securityAmount;
+    final securityDeposit = booking.securityTransactionSummary.totalSecurityAmount;
     if (booking.securityPayment == null || securityDeposit <= 0) return;
     canvas.row([
       ReceiptColumn(
@@ -275,7 +275,7 @@ class BookingReceiptCanvasBuilder {
     canvas.row([
       const ReceiptColumn('Paid'),
       ReceiptColumn(
-        (booking.paidAmountWithSecurity ?? 0).toCurrency(),
+        booking.paidAmountWithSecurity.toCurrency(),
         align: TextAlign.right,
       ),
     ]);

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_security_refund_history_entity/booking_security_refund_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

@@ -1,8 +1,8 @@
+import 'package:bookie_buddy_core/core/constants/enums/payment_method_enums.dart';
 import 'package:collection/collection.dart';
 
 import 'package:bookie_buddy_web/core/common/models/applied_tax_model/applied_tax_model.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
@@ -55,7 +55,8 @@ abstract class SaleDetailsPaymentHistoryModel
   const factory SaleDetailsPaymentHistoryModel({
     @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'account_name') String? accountName,
-    @JsonKey(name: 'method') PaymentMethod? paymentMethod,
+    @JsonKey(name: 'method', toJson: PaymentMethod.toJson)
+    PaymentMethod? paymentMethod,
   }) = _SaleDetailsPaymentHistoryModel;
 
   factory SaleDetailsPaymentHistoryModel.fromJson(Map<String, dynamic> json) =>

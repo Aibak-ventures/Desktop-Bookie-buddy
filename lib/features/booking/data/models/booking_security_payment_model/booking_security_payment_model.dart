@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_security_payment_entity/booking_security_payment_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_security_payment_entity/booking_security_payment_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_security_payment_model.freezed.dart';

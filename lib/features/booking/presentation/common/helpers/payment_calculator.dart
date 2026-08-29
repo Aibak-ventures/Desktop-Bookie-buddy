@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 // import 'package:bookie_buddy_web/features/booking/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';

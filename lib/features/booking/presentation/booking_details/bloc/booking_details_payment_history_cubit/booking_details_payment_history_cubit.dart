@@ -1,4 +1,5 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_refund_history_entity/booking_refund_history_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,10 +11,15 @@ class BookingDetailsPaymentHistoryCubit
   BookingDetailsPaymentHistoryCubit() : super(const _Collapsed());
 
   /// Show payment history using data from booking details API
-  /// No separate API call needed - data comes from booking.payments and booking.refunds
+  /// No separate API call needed - data comes from booking.paymentHistory and
+  /// booking.refundHistory. [refunds] isn't stored in state — the caller
+  /// (BookingDetailsPaymentSection) passes booking.refundHistory straight
+  /// into BookingPaymentHistoryTile itself; kept as a parameter here only
+  /// so this method's signature documents what the caller actually has
+  /// available at the call site.
   void showPaymentHistory(
     List<BookingPaymentHistoryEntity> payments,
-    List<dynamic> refunds,
+    List<BookingRefundHistoryEntity> refunds,
   ) {
     emit(const _Loading());
 

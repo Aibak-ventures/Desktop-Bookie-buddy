@@ -237,7 +237,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
     updates['purchase_mode'] = purchaseMode.value;
 
     if (_hasDeliveryStatusChanged()) {
-      updates['delivery_status'] = deliveryStatus.toValue();
+      updates['delivery_status'] = deliveryStatus.value;
     }
 
     final description = descriptionController.text.trim();

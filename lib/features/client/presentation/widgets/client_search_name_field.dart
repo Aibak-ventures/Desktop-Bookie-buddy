@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -246,8 +246,7 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    client.phone1E164 ??
-                        (client.phone1 > 0 ? client.phone1.toString() : ''),
+                    client.phone1,
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ],
@@ -269,7 +268,7 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                       const ClientEntity(
                         id: -1,
                         name: 'No client found',
-                        phone1: 0,
+                        phone1: '',
                       ),
                     ]
                   : results;
@@ -284,7 +283,7 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                     const ClientEntity(
                       id: -1,
                       name: 'No client found',
-                      phone1: 0,
+                      phone1: '',
                     ),
                   ]
                 : results;

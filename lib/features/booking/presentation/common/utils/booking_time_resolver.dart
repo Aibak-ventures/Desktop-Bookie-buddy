@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+
 import '../../../../../utils/extensions/date_time_extensions.dart';
 import '../../../../../utils/extensions/string_extensions.dart';
-import '../../../domain/entities/booking_details_entity/booking_details_entity.dart';
 
 /// Resolves the pickup/return time actually worth *showing* for a booking —
 /// shared by the booking details screen and the printed receipt so both

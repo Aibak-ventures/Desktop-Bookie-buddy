@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_refund_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_security_refund_usecase.dart';
@@ -165,7 +166,7 @@ class BookingDetailsBloc
       log('✅ Payment updated, refetching booking details...');
       final booking = await _getBooking(event.bookingId);
       log(
-        '📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}',
+        '📥 Fetched booking with ${booking.paymentHistory.length} payments, total: ${booking.actualPaidAmount}',
       );
       emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {
@@ -253,7 +254,7 @@ class BookingDetailsBloc
 
       final booking = await _getBooking(event.bookingId);
       log(
-        '📥 Fetched booking with ${booking.payments.length} payments, total: ${booking.actualPaidAmount}',
+        '📥 Fetched booking with ${booking.paymentHistory.length} payments, total: ${booking.actualPaidAmount}',
       );
       emit(BookingDetailsState.loaded(booking: booking));
     } catch (e, stack) {

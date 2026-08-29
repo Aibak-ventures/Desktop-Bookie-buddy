@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
@@ -11,11 +11,11 @@ import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
@@ -320,7 +320,9 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             variantId: variant.id,
             productId: product.id,
             name: product.name,
-            image: product.image,
+            productImage: product.image,
+            thumbnailImage: product.thumbnailImage,
+            fabricLength: 0,
             amount: price,
             category: product.category,
             color: product.color,

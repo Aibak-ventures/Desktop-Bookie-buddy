@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_core/features/service/domain/entities/service_entity/service_entity.dart';
 
 class ShopFieldHelper {
   const ShopFieldHelper._();

@@ -12,14 +12,11 @@ class SalesDetailsCustomerSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final phone1 = _preferredPhone(
-      sale.client?.phone1E164,
-      sale.client?.phone1.toString(),
+      sale.client?.phone1,
+      null,
       fallback: sale.clientPhone?.toString(),
     );
-    final phone2 = _preferredPhone(
-      sale.client?.phone2E164,
-      sale.client?.phone2?.toString(),
-    );
+    final phone2 = _preferredPhone(sale.client?.phone2, null);
     final name = sale.client?.name;
 
     if (phone1 == null || phone1.isEmpty) return const SizedBox.shrink();

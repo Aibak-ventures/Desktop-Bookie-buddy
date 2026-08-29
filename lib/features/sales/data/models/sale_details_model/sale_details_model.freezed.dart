@@ -387,7 +387,7 @@ $ClientModelCopyWith<$Res>? get client {
 /// @nodoc
 mixin _$SaleDetailsPaymentHistoryModel {
 
-@JsonKey(name: 'account_id') int? get accountId;@JsonKey(name: 'account_name') String? get accountName;@JsonKey(name: 'method') PaymentMethod? get paymentMethod;
+@JsonKey(name: 'account_id') int? get accountId;@JsonKey(name: 'account_name') String? get accountName;@JsonKey(name: 'method', toJson: PaymentMethod.toJson) PaymentMethod? get paymentMethod;
 /// Create a copy of SaleDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -420,7 +420,7 @@ abstract mixin class $SaleDetailsPaymentHistoryModelCopyWith<$Res>  {
   factory $SaleDetailsPaymentHistoryModelCopyWith(SaleDetailsPaymentHistoryModel value, $Res Function(SaleDetailsPaymentHistoryModel) _then) = _$SaleDetailsPaymentHistoryModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'method') PaymentMethod? paymentMethod
+@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'method', toJson: PaymentMethod.toJson) PaymentMethod? paymentMethod
 });
 
 
@@ -527,7 +527,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method')  PaymentMethod? paymentMethod)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method', toJson: PaymentMethod.toJson)  PaymentMethod? paymentMethod)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SaleDetailsPaymentHistoryModel() when $default != null:
 return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
@@ -548,7 +548,7 @@ return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method')  PaymentMethod? paymentMethod)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method', toJson: PaymentMethod.toJson)  PaymentMethod? paymentMethod)  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsPaymentHistoryModel():
 return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
@@ -568,7 +568,7 @@ return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method')  PaymentMethod? paymentMethod)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'account_id')  int? accountId, @JsonKey(name: 'account_name')  String? accountName, @JsonKey(name: 'method', toJson: PaymentMethod.toJson)  PaymentMethod? paymentMethod)?  $default,) {final _that = this;
 switch (_that) {
 case _SaleDetailsPaymentHistoryModel() when $default != null:
 return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
@@ -583,12 +583,12 @@ return $default(_that.accountId,_that.accountName,_that.paymentMethod);case _:
 @JsonSerializable()
 
 class _SaleDetailsPaymentHistoryModel implements SaleDetailsPaymentHistoryModel {
-  const _SaleDetailsPaymentHistoryModel({@JsonKey(name: 'account_id') this.accountId, @JsonKey(name: 'account_name') this.accountName, @JsonKey(name: 'method') this.paymentMethod});
+  const _SaleDetailsPaymentHistoryModel({@JsonKey(name: 'account_id') this.accountId, @JsonKey(name: 'account_name') this.accountName, @JsonKey(name: 'method', toJson: PaymentMethod.toJson) this.paymentMethod});
   factory _SaleDetailsPaymentHistoryModel.fromJson(Map<String, dynamic> json) => _$SaleDetailsPaymentHistoryModelFromJson(json);
 
 @override@JsonKey(name: 'account_id') final  int? accountId;
 @override@JsonKey(name: 'account_name') final  String? accountName;
-@override@JsonKey(name: 'method') final  PaymentMethod? paymentMethod;
+@override@JsonKey(name: 'method', toJson: PaymentMethod.toJson) final  PaymentMethod? paymentMethod;
 
 /// Create a copy of SaleDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
@@ -623,7 +623,7 @@ abstract mixin class _$SaleDetailsPaymentHistoryModelCopyWith<$Res> implements $
   factory _$SaleDetailsPaymentHistoryModelCopyWith(_SaleDetailsPaymentHistoryModel value, $Res Function(_SaleDetailsPaymentHistoryModel) _then) = __$SaleDetailsPaymentHistoryModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'method') PaymentMethod? paymentMethod
+@JsonKey(name: 'account_id') int? accountId,@JsonKey(name: 'account_name') String? accountName,@JsonKey(name: 'method', toJson: PaymentMethod.toJson) PaymentMethod? paymentMethod
 });
 
 

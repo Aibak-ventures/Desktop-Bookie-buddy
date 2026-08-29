@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -40,7 +40,7 @@ abstract class BookingsModel with _$BookingsModel {
     required String clientName,
     @JsonKey(
       name: 'booking_status',
-      fromJson: BookingStatus.fromString,
+      fromJson: BookingStatus.fromJson,
       toJson: BookingStatus.toJson,
       readValue: _bookingStatusCustomRead,
     )
@@ -50,7 +50,7 @@ abstract class BookingsModel with _$BookingsModel {
     @JsonKey(name: 'return_date') String? returnDate,
     @JsonKey(
       name: 'delivery_status',
-      fromJson: DeliveryStatus.fromString,
+      fromJson: DeliveryStatus.fromJson,
       toJson: DeliveryStatus.toJson,
       defaultValue: DeliveryStatus.booked,
     )

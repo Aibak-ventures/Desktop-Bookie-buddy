@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -113,7 +113,7 @@ Future<void> showUnavailableProductsDialog({
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: CustomNetworkImage(
-                              imageUrl: product.image ?? '',
+                              imageUrl: product.productImage ?? '',
                               height: 64,
                               width: 64,
                             ),
