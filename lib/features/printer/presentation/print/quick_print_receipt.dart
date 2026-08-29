@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/quick_print_result.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/quick_print_receipt_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/pages/qz_print_screen.dart';

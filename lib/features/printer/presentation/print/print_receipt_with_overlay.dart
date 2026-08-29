@@ -5,7 +5,7 @@ import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart'
     show kIsDevelopment;
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/quick_print_receipt.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/preview/receipt_ticket_preview_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';

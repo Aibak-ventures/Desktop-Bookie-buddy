@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_invoice_pdf_bytes_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/print_receipt_with_overlay.dart';
-import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/builders/booking_receipt_canvas_builder.dart';
+import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/builders/booking_receipt_canvas_builder.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;

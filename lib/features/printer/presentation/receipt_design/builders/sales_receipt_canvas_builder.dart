@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 
 import 'package:bookie_buddy_core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/shared/receipt_canvas.dart';
+import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/shared/receipt_date_formatter.dart';
+import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/shared/receipt_shared_sections.dart';
+import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/shared/shop_receipt_sections.dart';
+
 import '../../../../../utils/extensions/list_extensions.dart';
 import '../../../../../utils/extensions/number_extensions.dart';
 import '../../../../../utils/extensions/string_extensions.dart';
 import '../../../../sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import '../../../domain/entities/print_ticket_entity/print_ticket_entity.dart';
-import '../shared/receipt_canvas.dart';
-import '../shared/receipt_date_formatter.dart';
-import '../shared/receipt_shared_sections.dart';
-import '../shared/shop_receipt_sections.dart';
 
 class SalesReceiptCanvasBuilder {
   const SalesReceiptCanvasBuilder();

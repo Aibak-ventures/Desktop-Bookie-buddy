@@ -32,6 +32,8 @@ dependencies:
   # actively co-developing; switch to a git ref pinned tag before merging.
   bookie_buddy_core:
     path: ../bookie-buddy-shared/packages/core
+  bookie_buddy_ui:
+    path: ../bookie-buddy-shared/packages/ui
 
   # Functional programming & error handling
   dartz: ^0.10.1
