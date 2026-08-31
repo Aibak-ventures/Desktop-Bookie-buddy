@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app/my_app.dart';
-import 'package:bookie_buddy_web/core/common/helpers/shop_field_helper.dart';
+import 'package:bookie_buddy_core/core/common/helpers/shop_field_helper.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter_model.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/date_filter_button.dart';
