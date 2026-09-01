@@ -13,6 +13,13 @@ extension BookingDetailsEntityWebX on BookingDetailsEntity {
     return paymentHistory.fold<int>(0, (sum, payment) => sum + payment.amount);
   }
 
+  /// The booking's service type, taken from its items — web has no shop-level
+  /// service selection to read it from, so service-specific wording (Return vs
+  /// Check-Out, Product vs Room) is derived per booking.
+  MainServiceType? get mainServiceType => bookedItems
+      .map((e) => e.mainServiceType)
+      .firstWhere((type) => type != null, orElse: () => null);
+
   int get remainingSecurityBalance => securityTransactionSummary.pendingDeposit;
 
   int get totalSecurityDeducted => securityTransactionSummary.totalDeducted;

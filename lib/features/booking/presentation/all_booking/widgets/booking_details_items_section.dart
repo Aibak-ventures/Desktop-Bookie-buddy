@@ -1,4 +1,6 @@
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_ui/theme/status_ui_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -12,6 +14,15 @@ class BookingDetailsItemsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Per-item return badges only matter while the booking is still running
+    // and part of it has already come back — otherwise the booking-level
+    // status already says everything.
+    final showProductDeliveryStatus =
+        !booking.deliveryStatus.isCancelled &&
+        !booking.deliveryStatus.isReturned &&
+        booking.bookingStatus.isUpcoming &&
+        booking.bookedItems.any((item) => item.deliveryStatus.isReturned);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -126,6 +137,12 @@ class BookingDetailsItemsSection extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          if (showProductDeliveryStatus) ...[
+                            _ProductDeliveryStatusBadge(
+                              status: item.deliveryStatus,
+                            ),
+                            const SizedBox(height: 6),
+                          ],
                           Text(
                             'Qty : ${item.quantity}',
                             style: const TextStyle(
@@ -401,6 +418,33 @@ class BookingDetailsItemsSection extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Small "Returned" / "Not Returned" pill shown against an individual booked
+/// item during a partial return.
+class _ProductDeliveryStatusBadge extends StatelessWidget {
+  const _ProductDeliveryStatusBadge({required this.status});
+
+  final ProductDeliveryStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: status.color.shade100.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        status.name,
+        style: TextStyle(
+          color: status.color,
+          fontSize: 11,
+          fontWeight: .w600,
+        ),
       ),
     );
   }

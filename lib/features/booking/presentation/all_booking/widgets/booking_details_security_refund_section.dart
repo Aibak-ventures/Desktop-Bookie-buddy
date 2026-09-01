@@ -279,7 +279,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
         .firstWhere(
           (state) => state.maybeWhen(
             loaded: (_) => true,
-            failed: (_) => true,
+            failed: (_, _, _) => true,
             orElse: () => false,
           ),
         )
@@ -290,7 +290,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
 
     return state.maybeWhen(
       loaded: (_) => null,
-      failed: (error) => error,
+      failed: (error, _, _) => error,
       orElse: () => null,
     );
   }
@@ -310,7 +310,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize ?? 13,
             color: Colors.black87,
-            fontWeight: isBold ? FontWeight.w600 : FontWeight.w400,
+            fontWeight: isBold ? .w600 : .w400,
           ),
         ),
         Text(

@@ -685,4 +685,31 @@ class BookingRepositoryImpl implements IBookingRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<CustomResponseModel> updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.updatePartialReturn(
+          bookingId: bookingId,
+          returnedProductIds: returnedProductIds,
+          notReturnedProductIds: notReturnedProductIds,
+          newReturnDate: newReturnDate,
+        ),
+      );
+      if (response.status.isSuccess || response.status.isInsufficientStock) {
+        return response;
+      }
+      log('Error updating partial return: ${response.devMessage}');
+      throw response.message ?? 'Failed to update partial return';
+    } catch (e, stack) {
+      log('Error updating partial return: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

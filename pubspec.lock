@@ -95,14 +95,14 @@ packages:
       path: "../bookie-buddy-shared/packages/core"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.2.0"
   bookie_buddy_ui:
     dependency: "direct main"
     description:
       path: "../bookie-buddy-shared/packages/ui"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.2.0"
   boolean_selector:
     dependency: transitive
     description:

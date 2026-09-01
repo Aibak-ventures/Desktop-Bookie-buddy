@@ -739,13 +739,26 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                 ),
               ),
             ),
-            // Remove
+            // Remove — replaced by a badge once the item has been returned
             SizedBox(
               width: 50,
-              child: IconButton(
-                icon: const Icon(Icons.close, size: 20, color: Colors.black87),
-                onPressed: () => _removeProduct(product),
-              ),
+              child: _isReturned(product)
+                  ? const Tooltip(
+                      message: 'Returned items can no longer be edited',
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 20,
+                        color: Colors.green,
+                      ),
+                    )
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black87,
+                      ),
+                      onPressed: () => _removeProduct(product),
+                    ),
             ),
           ],
         ),
@@ -977,6 +990,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _incrementQuantity(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final updatedProducts = SelectedProductsManager.incrementQuantity(
       currentProducts: widget.selectedProductsNotifier.value,
       product: product,
@@ -1008,6 +1024,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _decrementQuantity(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final currentProducts = widget.selectedProductsNotifier.value;
     final updatedProducts = SelectedProductsManager.decrementQuantity(
       currentProducts: currentProducts,
@@ -1087,6 +1106,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _startEditingPrice(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     setState(() {
       _editingVariantId = product.variant.variantId;
       _inlinePriceController.text = product.amount.toString();
@@ -1119,6 +1141,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     _focusNextProductRowOrClient(product);
   }
 
+  /// Whether this line item has already been marked returned by a (partial)
+  /// return — such rows are read-only.
+  bool _isReturned(ProductSelectedEntity product) =>
+      product.variant.deliveryStatus.isReturned;
+
   void _removeRowFocusNodes(int key) {
     _rowFocusNodes.remove(key)?.dispose();
     _rowElementFocusNodes.remove(key)?.forEach((n) => n.dispose());
@@ -1126,6 +1153,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _removeProduct(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final products = widget.selectedProductsNotifier.value;
     final key = _quantityKey(product);
     _quantityControllers.remove(key)?.dispose();

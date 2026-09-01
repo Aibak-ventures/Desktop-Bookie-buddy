@@ -115,4 +115,13 @@ abstract interface class IBookingRepository {
   });
 
   Future<void> deleteSecurityRefundedPayment({required int refundId});
+
+  /// Marks a subset of the booking's items as returned, optionally moving the
+  /// expected return date of the items that are still out.
+  Future<CustomResponseModel> updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  });
 }

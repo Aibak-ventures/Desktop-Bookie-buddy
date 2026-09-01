@@ -506,7 +506,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
         .firstWhere(
           (state) => state.maybeWhen(
             loaded: (_) => true,
-            failed: (_) => true,
+            failed: (_, _, _) => true,
             orElse: () => false,
           ),
         )
@@ -517,7 +517,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
 
     return state.maybeWhen(
       loaded: (_) => null,
-      failed: (error) => error,
+      failed: (error, _, _) => error,
       orElse: () => null,
     );
   }

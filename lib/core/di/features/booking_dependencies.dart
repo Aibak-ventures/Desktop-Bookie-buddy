@@ -26,6 +26,7 @@ import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usec
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_partial_return_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
@@ -150,6 +151,10 @@ class BookingDependencies {
       getIt.registerLazySingleton(
         () => DeleteSecurityRefundedPaymentUseCase(getIt()),
       );
+    }
+
+    if (!getIt.isRegistered<UpdatePartialReturnUseCase>()) {
+      getIt.registerLazySingleton(() => UpdatePartialReturnUseCase(getIt()));
     }
 
     if (!getIt.isRegistered<AddBookingCubit>()) {

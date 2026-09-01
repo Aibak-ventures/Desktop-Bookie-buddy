@@ -745,4 +745,30 @@ class BookingRemoteDatasource {
       throw e;
     }
   }
+
+  Future<CustomResponseModel> updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.bookings.updatePartialReturn(bookingId),
+        data: {
+          'returned_items': returnedProductIds,
+          'not_returned_items': notReturnedProductIds,
+          'expected_return_date': ?newReturnDate,
+        },
+      );
+
+      log(
+        'update partial return response: ${response.realUri.toString()}, \nrequest body: ${response.requestOptions.data}, \nresponse data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating partial return: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
 }

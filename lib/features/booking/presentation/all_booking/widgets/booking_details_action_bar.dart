@@ -302,8 +302,10 @@ class BookingDetailsActionBar extends StatelessWidget {
                 }
 
                 if (booking.deliveryStatus != DeliveryStatus.returned) {
+                  final returnedLabel = DeliveryStatus.returned
+                      .getServiceSpecificName(booking.mainServiceType);
                   context.showSnackBar(
-                    'Cannot mark as completed. Booking must be marked as "Returned" first.',
+                    'Cannot mark as completed. Booking must be marked as "$returnedLabel" first.',
                     isError: true,
                   );
                   return;

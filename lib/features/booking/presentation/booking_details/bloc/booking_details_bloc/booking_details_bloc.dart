@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
@@ -12,6 +13,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_securit
 import 'package:bookie_buddy_web/features/booking/domain/usecases/get_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_partial_return_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/cancel_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking_usecase.dart';
@@ -37,6 +39,7 @@ class BookingDetailsBloc
   final DeleteRefundUseCase _deleteRefund;
   final UpdateSecurityRefundUseCase _updateSecurityRefund;
   final DeleteSecurityRefundedPaymentUseCase _deleteSecurityRefundedPayment;
+  final UpdatePartialReturnUseCase _updatePartialReturn;
 
   BookingDetailsBloc({
     required GetBookingUseCase getBooking,
@@ -50,6 +53,7 @@ class BookingDetailsBloc
     required DeleteRefundUseCase deleteRefund,
     required UpdateSecurityRefundUseCase updateSecurityRefund,
     required DeleteSecurityRefundedPaymentUseCase deleteSecurityRefundedPayment,
+    required UpdatePartialReturnUseCase updatePartialReturn,
   }) : _getBooking = getBooking,
        _updateDeliveryStatus = updateDeliveryStatus,
        _updateBookingStatus = updateBookingStatus,
@@ -61,6 +65,7 @@ class BookingDetailsBloc
        _deleteRefund = deleteRefund,
        _updateSecurityRefund = updateSecurityRefund,
        _deleteSecurityRefundedPayment = deleteSecurityRefundedPayment,
+       _updatePartialReturn = updatePartialReturn,
        super(const BookingDetailsState.loading()) {
     on<_FetchBookingDetails>(
       _onFetchBookingDetails,
@@ -79,6 +84,7 @@ class BookingDetailsBloc
     on<_DeleteRefund>(_onDeleteRefund);
     on<_UpdateSecurityRefund>(_onUpdateSecurityRefund);
     on<_DeleteSecurityRefundedPayment>(_onDeleteSecurityRefundedPayment);
+    on<_UpdatePartialReturn>(_onUpdatePartialReturn);
   }
 
   Future<void> _onFetchBookingDetails(
@@ -324,6 +330,49 @@ class BookingDetailsBloc
       emit(
         BookingDetailsState.success(
           'Security ${event.securityPaymentType.isRefund ? 'refund' : 'deduction'} deleted successfully',
+          needRefresh: true,
+        ),
+      );
+      emit(BookingDetailsState.loaded(booking: booking));
+    } catch (e, stack) {
+      log(e.toString(), stackTrace: stack);
+      _emitFailedWithRollback(emit, e.toString(), oldState);
+    }
+  }
+
+  //
+  FutureOr<void> _onUpdatePartialReturn(
+    _UpdatePartialReturn event,
+    Emitter<BookingDetailsState> emit,
+  ) async {
+    final oldState = state;
+    try {
+      final response = await _updatePartialReturn(
+        bookingId: event.bookingId,
+        returnedProductIds: event.returnedProductIds,
+        notReturnedProductIds: event.notReturnedProductIds,
+        newReturnDate: event.newReturnDate,
+      );
+
+      if (response.status.isInsufficientStock) {
+        // Hand the raw payload and the booked items to the UI so it can name
+        // the products behind the conflict instead of just failing.
+        emit(
+          BookingDetailsState.failed(
+            'Partial return update failed due to insufficient stock',
+            error: response.data,
+            products: oldState is _Loaded ? oldState.booking.bookedItems : null,
+          ),
+        );
+        if (oldState is _Loaded) emit(oldState);
+        return;
+      }
+
+      final booking = await _getBooking(event.bookingId);
+      emit(BookingDetailsState.loaded(booking: booking));
+      emit(
+        const BookingDetailsState.success(
+          'Partial return updated successfully',
           needRefresh: true,
         ),
       );

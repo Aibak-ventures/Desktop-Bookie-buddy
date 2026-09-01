@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
@@ -19,6 +20,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/b
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/models/unavailable_products_response_model.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/unavailable_products_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -164,8 +167,42 @@ class BookingDetailsDrawer extends StatelessWidget {
               );
             }
           },
-          failed: (error) {
-            context.showSnackBar(error, isError: true);
+          failed: (message, error, products) {
+            // A structured payload means the API named the conflicting
+            // variant — show which products blocked the action instead of a
+            // bare snackbar.
+            if (error is Map<String, dynamic>) {
+              try {
+                final conflict = UnavailableProductsResponseModel.fromJson(
+                  error,
+                ).toEntity();
+
+                // Without a window, or without an item the conflict actually
+                // points at, there is nothing for the dialog to show — say it
+                // in a snackbar instead of failing silently.
+                final unavailableItems = UnavailableProductsDialog
+                    .matchingItems(conflict, products ?? const []);
+
+                if (conflict.dateFrom != null &&
+                    conflict.dateTo != null &&
+                    unavailableItems.isNotEmpty) {
+                  UnavailableProductsDialog.show(
+                    context: context,
+                    conflict: conflict,
+                    unavailableItems: unavailableItems,
+                  );
+                  return;
+                }
+                context.showSnackBar(
+                  conflict.message ?? message,
+                  isError: true,
+                );
+                return;
+              } catch (e, stack) {
+                log('Failed to parse stock conflict: $e', stackTrace: stack);
+              }
+            }
+            context.showSnackBar(message, isError: true);
           },
         );
       },

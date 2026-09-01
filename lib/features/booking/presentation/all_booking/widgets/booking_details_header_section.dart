@@ -5,8 +5,12 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/cancel_booking_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/partial_return_dialogs.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +25,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
     final status = booking.deliveryStatus;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
+    final mainServiceType = booking.mainServiceType;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +117,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          status.name,
+                          status.getServiceSpecificName(mainServiceType),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -158,12 +163,17 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                       return;
                     }
 
+                    if (newStatus == DeliveryStatus.returned) {
+                      _onStatusChangeToReturned(context);
+                      return;
+                    }
+
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Change Delivery Status'),
                         content: Text(
-                          'Are you sure you want to change delivery status to "${newStatus.name}"?',
+                          'Are you sure you want to change delivery status to "${newStatus.getServiceSpecificName(mainServiceType)}"?',
                         ),
                         actions: [
                           TextButton(
@@ -193,7 +203,10 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                       );
                     }
                   },
-                  itemBuilder: (context) => DeliveryStatus.values.map((s) {
+                  itemBuilder: (context) =>
+                      DeliveryStatus.getServiceSpecificStatus(
+                        mainServiceType,
+                      ).map((s) {
                     return PopupMenuItem(
                       value: s,
                       child: Row(
@@ -208,7 +221,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            s.name,
+                            s.getServiceSpecificName(mainServiceType),
                             style: TextStyle(
                               fontSize: 13,
                               color: s.color,
@@ -256,6 +269,64 @@ class BookingDetailsHeaderSection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  /// Return flow: confirm all items came back, or pick the ones that did and
+  /// re-confirm the expected return date for the rest.
+  void _onStatusChangeToReturned(BuildContext context) {
+    final bloc = context.read<BookingDetailsBloc>();
+    // only the items that haven't come back yet can be returned
+    final notReturnedProducts = booking.bookedItems
+        .where((e) => e.deliveryStatus.isNotReturned)
+        .toList();
+    final mainServiceType = booking.mainServiceType;
+
+    showReturnConfirmationDialog(
+      context,
+      mainServiceType: mainServiceType,
+      // partial return only makes sense with more than one item still out
+      isPartialReturnButtonVisible: notReturnedProducts.length > 1,
+      onAllReturned: () {
+        bloc.add(
+          BookingDetailsEvent.updatePartialReturn(
+            bookingId: booking.id,
+            returnedProductIds: notReturnedProducts.map((e) => e.id).toList(),
+            notReturnedProductIds: const [],
+            newReturnDate: null,
+          ),
+        );
+      },
+      onPartialReturn: () {
+        showPartialReturnProductSelector(
+          context,
+          mainServiceType: mainServiceType,
+          products: notReturnedProducts,
+          onReturnConfirmed: (returnedProductIds, notReturnedProductIds) {
+            showReturnDateUpdateDialog(
+              context,
+              mainServiceType: mainServiceType,
+              currentReturnDate: booking.returnDate,
+              onConfirmed: (selectedDate) {
+                bloc.add(
+                  BookingDetailsEvent.updatePartialReturn(
+                    bookingId: booking.id,
+                    returnedProductIds: returnedProductIds,
+                    notReturnedProductIds: notReturnedProductIds,
+                    // only send a date when it actually moved
+                    newReturnDate:
+                        selectedDate.isSameDay(
+                          booking.returnDate.parseToDateTime(),
+                        )
+                        ? null
+                        : selectedDate.format(),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
@@ -67,6 +68,15 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     List<MeasurementValueModel> measurements,
     int? stock,
     @JsonKey(name: 'remaining_stock') int? remainingStock,
+    @JsonKey(
+      name: 'return_status',
+      fromJson: ProductDeliveryStatus.fromJson,
+      toJson: ProductDeliveryStatus.toJson,
+      defaultValue: ProductDeliveryStatus.notReturned,
+    )
+    @Default(ProductDeliveryStatus.notReturned)
+    ProductDeliveryStatus deliveryStatus,
+    @JsonKey(name: 'returned_at') String? returnedAt,
   }) = _ProductInfoModel;
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>
@@ -92,6 +102,8 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         measurements: entity.measurements.map((e) => e.toModel()).toList(),
         stock: entity.stock,
         remainingStock: entity.remainingStock,
+        deliveryStatus: entity.deliveryStatus,
+        returnedAt: entity.returnedAt,
       );
 }
 
@@ -115,5 +127,7 @@ extension ProductInfoModelMapper on ProductInfoModel {
     measurements: measurements.map((e) => e.toEntity()).toList(),
     stock: stock,
     remainingStock: remainingStock,
+    deliveryStatus: deliveryStatus,
+    returnedAt: returnedAt,
   );
 }
