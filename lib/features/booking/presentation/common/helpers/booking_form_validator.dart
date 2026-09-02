@@ -17,18 +17,13 @@ class BookingFormValidator {
   // Product
   // ---------------------------------------------------------------------------
 
-  /// Products must be non-empty and at least one must have a unit price > 0.
+  /// Products must be non-empty. A zero amount is allowed.
   static BookingValidationResult validateProductSelection(
     List<ProductSelectedEntity> products,
   ) {
     if (products.isEmpty) {
       return BookingValidationResult.invalid(
         errors: ['Please select at least one product to continue'],
-      );
-    }
-    if (!products.any((p) => p.amount > 0)) {
-      return BookingValidationResult.invalid(
-        errors: ['At least one product must have a price greater than 0'],
       );
     }
     return BookingValidationResult.valid();
@@ -68,7 +63,8 @@ class BookingFormValidator {
   /// Validates payment fields before the final submit.
   ///
   /// Rules differ by booking type:
-  /// - **Sales**: payment account is always required.
+  /// - **Sales**: total payable must be greater than zero (individual products
+  ///   may still be priced at 0) and a payment account is always required.
   /// - **Booking**: advance must not exceed total payable; advance account
   ///   required when advance > 0; security account required when security > 0.
   ///
@@ -88,6 +84,13 @@ class BookingFormValidator {
     AdvanceSplitPayment? advanceSplit,
   }) {
     if (bookingType == BookingType.sales) {
+      // Individual products may be priced at 0, but the sale as a whole must
+      // still be worth something.
+      if (totalPayable <= 0) {
+        return BookingValidationResult.invalid(
+          errors: ['Total amount must be greater than zero'],
+        );
+      }
       if (advanceAccount == null) {
         return BookingValidationResult.invalid(
           errors: ['Please select a payment option'],

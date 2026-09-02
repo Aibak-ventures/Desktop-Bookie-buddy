@@ -347,11 +347,8 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     if (form.editingVariantId == null) return;
 
     final newPrice = int.tryParse(form.inlinePriceController.text);
-    if (newPrice == null || newPrice <= 0) {
-      context.showSnackBar(
-        'Product price cannot be zero or empty',
-        isError: true,
-      );
+    if (newPrice == null || newPrice < 0) {
+      context.showSnackBar('Please enter a valid product price', isError: true);
       return;
     }
 
