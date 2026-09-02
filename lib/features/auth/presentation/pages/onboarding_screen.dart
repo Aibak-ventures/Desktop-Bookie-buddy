@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart' show SvgPicture;
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -23,7 +24,10 @@ class OnboardingScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 12),
 
-                  Image.asset('assets/images/app_icon_dart.png', height: 82),
+                  SvgPicture.asset(
+                    'assets/images/new_splash_color_img.svg',
+                    height: 40,
+                  ),
 
                   const Spacer(),
 
