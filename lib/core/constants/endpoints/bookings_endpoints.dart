@@ -36,4 +36,7 @@ class BookingsEndpoints {
       '${bookingsV5}security-adjustment/$bookingId/';
   static String deleteSecurityRefundedPayment({required int refundId}) =>
       '${bookingsV5}delete-security-adjustment/$refundId/';
+
+  static String updatePartialReturn(int bookingId) =>
+      '${bookingsV5}partial-return/$bookingId/';
 }

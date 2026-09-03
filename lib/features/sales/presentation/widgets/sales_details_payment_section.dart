@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +38,7 @@ class SalesDetailsPaymentSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          if (sale.accountName != null)
+          if (sale.payment.accountName != null)
             Row(
               children: [
                 Text(
@@ -51,7 +51,7 @@ class SalesDetailsPaymentSection extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  sale.accountName ?? '—',
+                  sale.payment.accountName ?? '—',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black87,

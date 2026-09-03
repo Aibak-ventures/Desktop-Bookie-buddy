@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_client_by_id_usecase.dart';
 import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
 import 'package:flutter/material.dart';

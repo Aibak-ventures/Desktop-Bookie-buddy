@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/tax_configuration_model/tax_configuration_model.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/data/datasources/tax_configuration_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/data/models/tax_configuration_request_model/tax_configuration_request_model.dart';

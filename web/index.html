@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -18,30 +19,30 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Rental business management app.">
   <meta name="viewport" content="width=1280, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="bookie_buddy_web">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" href="favicon.ico" sizes="any">
 
- <title>Bookie buddy - Business management software</title>
+  <title>Bookie buddy - Business management software</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(function(registration) {
+      navigator.serviceWorker.ready.then(function (registration) {
         // Periodic update check — browsers throttle this, so we nudge it every hour
-        setInterval(function() { registration.update(); }, 60 * 60 * 1000);
+        setInterval(function () { registration.update(); }, 60 * 60 * 1000);
 
-        registration.addEventListener('updatefound', function() {
+        registration.addEventListener('updatefound', function () {
           var newWorker = registration.installing;
-          newWorker.addEventListener('statechange', function() {
+          newWorker.addEventListener('statechange', function () {
             // 'installed' + existing controller = new version waiting, not first install
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               window.dispatchEvent(new CustomEvent('bookiebuddy-update'));
@@ -75,7 +76,8 @@
     }
 
     /* Flutter container with fixed minimum size */
-    #root, flt-glass-pane {
+    #root,
+    flt-glass-pane {
       min-width: 1280px;
       min-height: 720px;
       width: 100%;
@@ -101,11 +103,19 @@
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="loading"></div>
 
@@ -128,4 +138,5 @@
 
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
 </html>

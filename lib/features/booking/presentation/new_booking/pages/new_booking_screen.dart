@@ -1,7 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
@@ -15,15 +17,13 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/su
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
@@ -51,7 +51,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_entity
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
@@ -540,12 +540,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     if (selectedClient != null && selectedClientId != null) {
       final currentPhone1 = clientPhone1Controller.text.trim();
       final currentPhone2 = clientPhone2Controller.text.trim();
-      final selectedPhone1 = selectedClient.phone1 > 0
-          ? selectedClient.phone1.toString().trim()
-          : extractPhoneFromE164(selectedClient.phone1E164);
-      final selectedPhone2 = (selectedClient.phone2 ?? 0) > 0
-          ? selectedClient.phone2.toString().trim()
-          : extractPhoneFromE164(selectedClient.phone2E164);
+      final selectedPhone1 = extractPhoneFromE164(selectedClient.phone1);
+      final selectedPhone2 = extractPhoneFromE164(selectedClient.phone2);
 
       // If phones don't match, user has manually edited - treat as new client
       if (currentPhone1 != selectedPhone1 || currentPhone2 != selectedPhone2) {
@@ -642,13 +638,38 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   int _calculateBookingTotalPayable() {
     final discountInput =
         discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final products = selectedProductsNotifier.value;
+    final additionalCharges = additionalChargesNotifier.value;
+    final effectiveRentalDays = _getEffectiveRentalDays();
+    final productTotal = PaymentCalculator.calculateProductTotal(
+      selectedProducts: products,
+      bookingType: selectedBookingType,
+      effectiveRentalDays: effectiveRentalDays,
+    );
+    final additionalTotal = PaymentCalculator.calculateAdditionalChargesTotal(
+      additionalCharges,
+    );
+    // Mirror BookingAmountSummary's own math so this gate never rejects an
+    // amount the summary card itself shows as payable.
+    final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+      isDiscountPercentage: isDiscountPercentage,
+      discountInput: discountInput,
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
+    );
+    final taxSummary = _calculateTaxSummary(
+      productTotal: productTotal.toDouble(),
+      additionalCharges: additionalTotal.toDouble(),
+      discountAmount: actualDiscount.toDouble(),
+    );
     return PaymentCalculator.calculateBookingTotalPayable(
-      selectedProducts: selectedProductsNotifier.value,
-      additionalCharges: additionalChargesNotifier.value,
+      selectedProducts: products,
+      additionalCharges: additionalCharges,
       discountAmount: discountInput,
       isDiscountPercentage: isDiscountPercentage,
       bookingType: selectedBookingType,
-      effectiveRentalDays: _getEffectiveRentalDays(),
+      effectiveRentalDays: effectiveRentalDays,
+      additionalTaxAmount: taxSummary.additionalTaxAmount,
     );
   }
 
@@ -904,9 +925,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       label: label,
     );
   }
-
-  bool _shouldMultiplyByDays(MainServiceType? serviceType) =>
-      PaymentCalculator.shouldMultiplyByDays(serviceType);
 
   TaxSummaryEntity _calculateTaxSummary({
     double productTotal = 0,

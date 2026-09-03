@@ -69,6 +69,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteRefund: getIt(),
               updateSecurityRefund: getIt(),
               deleteSecurityRefundedPayment: getIt(),
+              updatePartialReturn: getIt(),
             ),
           ),
           BlocProvider(
@@ -110,6 +111,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteRefund: getIt(),
               updateSecurityRefund: getIt(),
               deleteSecurityRefundedPayment: getIt(),
+              updatePartialReturn: getIt(),
             ),
           ),
           BlocProvider(
@@ -139,6 +141,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteRefund: getIt(),
               updateSecurityRefund: getIt(),
               deleteSecurityRefundedPayment: getIt(),
+              updatePartialReturn: getIt(),
             ),
           ),
           BlocProvider(
@@ -179,6 +182,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
               deleteRefund: getIt(),
               updateSecurityRefund: getIt(),
               deleteSecurityRefundedPayment: getIt(),
+              updatePartialReturn: getIt(),
             ),
           ),
           BlocProvider(

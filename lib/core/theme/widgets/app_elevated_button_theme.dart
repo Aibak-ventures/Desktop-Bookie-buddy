@@ -11,6 +11,7 @@ class AppElevatedButtonTheme {
         borderRadius: 5.radiusBorder,
         side: BorderSide.none,
       ),
+      foregroundColor: AppColors.white,
       textStyle: TextStyle(color: AppColors.white, fontSize: 14.sp),
       iconColor: AppColors.white,
     ),

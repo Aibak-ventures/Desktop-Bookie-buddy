@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:bookie_buddy_web/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_add_payment_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_payment_history_tile.dart';
@@ -37,10 +38,10 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     );
     // final totalAmount = booking.totalAmountWithSecurity ?? booking.totalAmount;
     final totalPayable = booking.totalPayable;
-    final paid = booking.paidAmountWithSecurity ?? booking.actualPaidAmount;
+    final paid = booking.paidAmountWithSecurity;
     final discount = booking.discountAmount ?? 0;
     final balance = booking.balanceAmount;
-    final securityAmount = booking.securityAmount ?? 0;
+    final securityAmount = booking.securityPayment?.amount ?? 0;
     final isPaymentCompleted = balance <= 0;
     final appliedTaxes = booking.appliedTaxes.appliedOnly;
     final totalTaxAmount = appliedTaxes.totalTaxAmount;
@@ -236,7 +237,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               if (securityAmount > 0 && booking.showSecurityInPayments) ...[
-                if (booking.securityAccountName != null)
+                if (booking.securityPayment?.accountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -259,7 +260,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            booking.securityAccountName!,
+                            booking.securityPayment!.accountName!,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -385,18 +386,18 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 const SizedBox(height: 12),
                 const Divider(height: 24),
                 const SizedBox(height: 8),
-                if (booking.totalRefunded > 0)
+                if (booking.refundTotal > 0)
                   _buildPaymentRow(
                     'Refunded',
-                    booking.totalRefunded.toInt().toCurrency(),
+                    booking.refundTotal.toInt().toCurrency(),
                     valueColor: Colors.green.shade600,
                     fontSize: 13,
                   ),
-                if (booking.totalRefunded < paid) ...[
-                  if (booking.totalRefunded > 0) const SizedBox(height: 6),
+                if (booking.refundTotal < paid) ...[
+                  if (booking.refundTotal > 0) const SizedBox(height: 6),
                   _buildPaymentRow(
                     'Deducted',
-                    (paid - booking.totalRefunded.toInt()).toCurrency(),
+                    (paid - booking.refundTotal.toInt()).toCurrency(),
                     valueColor: Colors.red.shade600,
                     fontSize: 13,
                   ),
@@ -411,8 +412,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                     paymentHistoryCubit.collapsePaymentHistory();
                   } else {
                     paymentHistoryCubit.showPaymentHistory(
-                      booking.payments,
-                      booking.refunds,
+                      booking.paymentHistory,
+                      booking.refundHistory,
                     );
                   }
                 },
@@ -456,14 +457,14 @@ class BookingDetailsPaymentSection extends StatelessWidget {
             loading: () => BookingPaymentHistoryTile(
               bookingId: booking.id,
               paymentHistory: const [],
-              refunds: booking.refunds,
+              refunds: booking.refundHistory,
               isLoading: true,
               canDeletePayments: false,
             ),
             expanded: (paymentHistory) => BookingPaymentHistoryTile(
               bookingId: booking.id,
               paymentHistory: paymentHistory,
-              refunds: booking.refunds,
+              refunds: booking.refundHistory,
               canDeletePayments: !isCancelled && !isCompleted,
               canDeleteRefunds: true,
             ),
@@ -505,7 +506,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
         .firstWhere(
           (state) => state.maybeWhen(
             loaded: (_) => true,
-            failed: (_) => true,
+            failed: (_, _, _) => true,
             orElse: () => false,
           ),
         )
@@ -516,7 +517,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
 
     return state.maybeWhen(
       loaded: (_) => null,
-      failed: (error) => error,
+      failed: (error, _, _) => error,
       orElse: () => null,
     );
   }

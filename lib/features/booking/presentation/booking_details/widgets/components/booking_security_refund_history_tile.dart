@@ -3,7 +3,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_security_refund_history_entity/booking_security_refund_history_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 
 class BookingSecurityRefundHistoryTile extends StatelessWidget {

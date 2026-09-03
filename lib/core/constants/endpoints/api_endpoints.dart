@@ -121,6 +121,9 @@ class _BookingsNamespace {
 
   String deleteSecurityRefundedPayment({required int refundId}) =>
       BookingsEndpoints.deleteSecurityRefundedPayment(refundId: refundId);
+
+  String updatePartialReturn(int bookingId) =>
+      BookingsEndpoints.updatePartialReturn(bookingId);
 }
 
 class _SalesNamespace {

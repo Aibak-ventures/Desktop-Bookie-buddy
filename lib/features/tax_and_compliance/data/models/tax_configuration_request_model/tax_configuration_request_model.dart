@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/constants/enums/tax_calculation_type_enum.dart';
-import 'package:bookie_buddy_web/core/constants/enums/taxable_component_enum.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/tax_calculation_type_enum.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/taxable_component_enum.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/domain/entities/tax_configuration_request_entity/tax_configuration_request_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

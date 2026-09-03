@@ -34,6 +34,10 @@ _ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
           : _parseMeasurements(json['measurements']),
       stock: (json['stock'] as num?)?.toInt(),
       remainingStock: (json['remaining_stock'] as num?)?.toInt(),
+      deliveryStatus: json['return_status'] == null
+          ? ProductDeliveryStatus.notReturned
+          : ProductDeliveryStatus.fromJson(json['return_status'] as String?),
+      returnedAt: json['returned_at'] as String?,
     );
 
 Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
@@ -56,4 +60,6 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'measurements': instance.measurements,
       'stock': instance.stock,
       'remaining_stock': instance.remainingStock,
+      'return_status': ProductDeliveryStatus.toJson(instance.deliveryStatus),
+      'returned_at': instance.returnedAt,
     };

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/domain/entities/tax_configuration_request_entity/tax_configuration_request_entity.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/domain/usecases/create_tax_configuration_usecase.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/domain/usecases/get_tax_configurations_usecase.dart';

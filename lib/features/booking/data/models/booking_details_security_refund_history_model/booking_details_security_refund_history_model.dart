@@ -1,5 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_security_refund_history_entity/booking_security_refund_history_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_security_refund_history_model.freezed.dart';

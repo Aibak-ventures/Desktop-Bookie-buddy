@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
@@ -743,6 +743,32 @@ class BookingRemoteDatasource {
     } catch (e, stack) {
       log('Error deleting security refunded payment: $e', stackTrace: stack);
       throw e;
+    }
+  }
+
+  Future<CustomResponseModel> updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  }) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.bookings.updatePartialReturn(bookingId),
+        data: {
+          'returned_items': returnedProductIds,
+          'not_returned_items': notReturnedProductIds,
+          'expected_return_date': ?newReturnDate,
+        },
+      );
+
+      log(
+        'update partial return response: ${response.realUri.toString()}, \nrequest body: ${response.requestOptions.data}, \nresponse data: ${response.data}',
+      );
+      return CustomResponseModel.fromJson(response.data);
+    } catch (e, stack) {
+      log('Error updating partial return: $e', stackTrace: stack);
+      rethrow;
     }
   }
 }

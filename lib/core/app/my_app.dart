@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
             deleteRefund: getIt(),
             updateSecurityRefund: getIt(),
             deleteSecurityRefundedPayment: getIt(),
+            updatePartialReturn: getIt(),
           ),
         ),
         BlocProvider(

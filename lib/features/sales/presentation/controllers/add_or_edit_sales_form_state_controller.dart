@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -92,9 +92,10 @@ class AddOrEditSalesFormStateController {
               productId: e.productId,
               variantId: e.variantId,
               name: e.name,
-              image: e.image,
+              productImage: e.image,
+              thumbnailImage: e.thumbnailImage,
+              fabricLength: 0,
               quantity: e.quantity,
-              // fabricLength: e.fabricLength,
               amount: e.price,
               category: e.category,
               color: e.color,
@@ -166,7 +167,7 @@ class AddOrEditSalesFormStateController {
     if ((!isEditMode && selectedAccountNotifier.value?.id == null) ||
         (isEditMode &&
             selectedAccountNotifier.value?.id == null &&
-            saleDetails.accountId == null)) {
+            saleDetails.payment.accountId == null)) {
       context.showSnackBar(
         'Please select a payment option',
         title: 'Payment Option Required',
@@ -203,7 +204,7 @@ class AddOrEditSalesFormStateController {
       final discountAmount = discountController.text.trim().toIntOrNull() ?? 0;
       final discountChanged = discountAmount != original.discountAmount;
       final accountChanged =
-          selectedAccountNotifier.value?.id != original.accountId;
+          selectedAccountNotifier.value?.id != original.payment.accountId;
 
       // Compare products (id + variantId + quantity + amount)
       bool productsChanged = false;

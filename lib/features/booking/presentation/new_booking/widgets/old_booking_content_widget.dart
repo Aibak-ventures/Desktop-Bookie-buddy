@@ -135,18 +135,20 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                         BookingPhonePopulator.setPhoneFieldValue(
                           widget.phone1FieldController,
                           widget.clientPhone1Controller,
-                          phoneNumber: client.phone1 > 0
-                              ? client.phone1.toString()
-                              : null,
-                          e164: client.phone1E164,
+                          phoneNumber: extractPhoneFromE164(
+                            client.phone1,
+                          ).nullIfEmpty,
+                          e164: client.phone1,
                         );
                         BookingPhonePopulator.setPhoneFieldValue(
                           widget.phone2FieldController,
                           widget.clientPhone2Controller,
-                          phoneNumber: (client.phone2 ?? 0) > 0
-                              ? client.phone2.toString()
-                              : null,
-                          e164: client.phone2E164,
+                          phoneNumber: client.phone2 == null
+                              ? null
+                              : extractPhoneFromE164(
+                                  client.phone2,
+                                ).nullIfEmpty,
+                          e164: client.phone2,
                         );
                         widget.onClientIdChanged(client.id);
                       }

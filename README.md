@@ -10,7 +10,7 @@ A professional desktop booking management application built with Flutter, design
 
 This project follows **Clean Architecture** principles with strict layer separation:
 
-```
+```text
 lib/src/
 ├── domain/          # Business logic (pure Dart, no Flutter)
 │   ├── entities/    # Business objects
@@ -34,6 +34,7 @@ lib/src/
 ```
 
 **Key Architectural Patterns:**
+
 - ✅ Clean Architecture with domain/data/presentation layers
 - ✅ Either<Failure, Success> for functional error handling
 - ✅ Repository pattern with interface segregation
@@ -46,6 +47,7 @@ lib/src/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Flutter SDK**: 3.24.5 or higher
 - **Dart SDK**: 3.5.0 or higher
 - **Platform Requirements**:
@@ -56,17 +58,20 @@ lib/src/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Aibak-ventures/Desktop-Bookie-buddy.git
    cd Desktop-Bookie-buddy
    ```
 
 2. **Install dependencies**
+
    ```bash
    flutter pub get
    ```
 
 3. **Verify installation**
+
    ```bash
    flutter doctor -v
    flutter analyze
@@ -76,6 +81,7 @@ lib/src/
 ### Running the Application
 
 #### Development Mode
+
 ```bash
 # Run with desktop-specific entrypoint
 flutter run -d windows lib/src/main_desktop.dart
@@ -86,6 +92,16 @@ flutter run -d linux lib/src/main_desktop.dart
 ```
 
 #### Production Build
+
+⚠️ Before releasing, move aside any local shared-package override — see
+[Shared Package](#-shared-package-bookie_buddy_shared)
+below:
+
+```bash
+mv pubspec_overrides.yaml pubspec_overrides.yaml.bak
+flutter pub get
+```
+
 ```bash
 # Windows
 flutter build windows --release
@@ -100,6 +116,7 @@ flutter build linux --release
 ## 🧪 Testing
 
 ### Running Tests
+
 ```bash
 # All tests
 flutter test
@@ -115,6 +132,7 @@ flutter test --watch
 ```
 
 ### Test Coverage
+
 Current coverage: **80%+**
 
 ```bash
@@ -125,13 +143,14 @@ open coverage/html/index.html
 ```
 
 ### Test Structure
+
 - **Unit Tests**: Domain layer (use cases) and BLoCs
 - **Widget Tests**: Individual UI components
 - **Integration Tests**: Full user flows
 
 ## 📁 Project Structure
 
-```
+```text
 bookie_buddy_web/
 ├── lib/
 │   ├── src/                    # Source code (Clean Architecture)
@@ -160,12 +179,43 @@ bookie_buddy_web/
 
 ## 🛠️ Development
 
+### 📦 Shared Package (bookie_buddy_shared)
+
+Formerly two packages (`bookie_buddy_core`, `bookie_buddy_ui`) — merged
+into one, `bookie_buddy_shared`, with `core/`/`ui/` as folders instead of
+package boundaries (see that repo's `CHANGELOG.md`).
+
+Pulled from a git tag in `bookie-buddy-shared` by default (see
+`pubspec.yaml`). For active cross-repo dev, add a local `path:` override
+in `pubspec_overrides.yaml` (git-ignored) — full workflow, including how
+to cut a release tag, is in `docs/SHARED_PACKAGE_DEV_GUIDE.md` in that
+repo.
+
+`pubspec_overrides.yaml` always wins over the pinned tag if it exists —
+so check for it, and move it aside (not delete — you'd have to retype
+it) before a local production build:
+
+```bash
+ls pubspec_overrides.yaml 2>/dev/null && echo "LOCAL override active — move aside before releasing"
+
+mv pubspec_overrides.yaml pubspec_overrides.yaml.bak   # release build
+flutter pub get
+
+mv pubspec_overrides.yaml.bak pubspec_overrides.yaml    # back to local dev
+flutter pub get
+```
+
+CI is unaffected — it clones fresh, so the override file never exists
+there.
+
 ### Code Style
+
 - Follow [Effective Dart](https://dart.dev/guides/language/effective-dart) guidelines
 - Use `dart format` before committing
 - Maximum line length: 100 characters
 
 ### Linting
+
 ```bash
 # Analyze code
 flutter analyze
@@ -175,6 +225,7 @@ dart fix --apply
 ```
 
 ### Pre-commit Checklist
+
 - [ ] `dart format .` (format code)
 - [ ] `flutter analyze` (no warnings)
 - [ ] `flutter test` (all tests pass)
@@ -183,6 +234,7 @@ dart fix --apply
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on:
+
 - Setting up your development environment
 - Following our branching strategy
 - Writing tests (80%+ coverage required)
@@ -190,6 +242,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for de
 - Architecture compliance
 
 **Quick start for contributors:**
+
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feat/your-feature`
 3. Follow architecture guidelines in [ARCHITECTURE.md](./lib/src/ARCHITECTURE.md)
@@ -199,14 +252,16 @@ We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for de
 ## 📋 Development Workflow
 
 ### Branching Strategy
-```
+
+```text
 main (production) ← dev (integration) ← feat/your-feature (your work)
 ```
 
 ### Commit Message Format
+
 We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -217,7 +272,8 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 **Types**: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `ci`
 
 **Example**:
-```
+
+```text
 feat(auth): add biometric authentication
 
 - Implement fingerprint authentication
@@ -230,6 +286,7 @@ Closes #123
 ## 🧩 Dependencies
 
 ### Core Dependencies
+
 - `flutter_bloc` - State management
 - `get_it` - Dependency injection
 - `dartz` - Functional programming (Either, Option)
@@ -238,6 +295,7 @@ Closes #123
 - `flutter_secure_storage` - Secure storage
 
 ### Development Dependencies
+
 - `mocktail` - Mocking for tests
 - `bloc_test` - BLoC testing utilities
 - `flutter_test` - Testing framework
@@ -260,7 +318,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-**Aibak Ventures**
+### Aibak Ventures
+
 - GitHub: [@Aibak-ventures](https://github.com/Aibak-ventures)
 
 ## 🙏 Acknowledgments
@@ -271,4 +330,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ using Flutter**
+### *Built with ❤️ using Flutter*
