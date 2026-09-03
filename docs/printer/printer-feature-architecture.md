@@ -27,7 +27,7 @@ Tapping "Print" on a booking/sale detail screen should just print. The
 user picked a default printer once; every print after that should be one
 tap, one loading spinner, done — never "go pick a printer" again.
 
-```
+```text
 User taps Print
    → printReceiptQuickly(context, ticket)
        → shows a loading overlay
@@ -55,6 +55,7 @@ print attempt be the check.
 
 A full screen listing available printers, with Connect/Disconnect actions
 and a "Save as default" action, only needed for:
+
 - the very first time a shop sets up a printer,
 - deliberately switching to a different printer later (Settings),
 - as the **fallback** when quick print fails or nothing's configured yet
@@ -79,7 +80,7 @@ whole job is "don't make the user choose again."
 
 ## Layer-by-layer (Clean Architecture, matches this project's `CLAUDE.md`)
 
-```
+```text
 domain/
 ├── entities/
 │   ├── print_ticket_entity.dart        → the print job: ordered commands + paper size
@@ -124,6 +125,7 @@ data/                                    ← THE PART THAT'S PLATFORM-SPECIFIC, 
 
 **What's genuinely platform-specific (only this needs a mobile-native
 rewrite):**
+
 - `data/datasources/` — on web this is QZ Tray's JS client; on mobile
   it'd be whatever Bluetooth/USB/network printer SDK you're using
   (`unified_esc_pos_printer` per this feature's own doc comments,

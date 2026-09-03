@@ -46,3 +46,19 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Flutter web build output — must live only in /build/web/, never at repo
+# root. `flutter build web` writes these from source in /web/; if you ever
+# see them reappear at root, you ran the build from the wrong place.
+/canvaskit/
+/main.dart.js
+/main.dart.js.map
+/flutter_bootstrap.js
+/flutter_service_worker.js
+/version.json
+/index.html
+/manifest.json
+/favicon.png
+/icons/
+/.last_build_id
+/temp_reload.txt

@@ -134,7 +134,7 @@ certificate?" prompt (not pursued here).
 
 ## Architecture (mirrors this repo's `lib/features/thermal_printer/`)
 
-```
+```text
 Presentation (Cubit + Pages)
       │ entities only, no JS/browser types
       ▼

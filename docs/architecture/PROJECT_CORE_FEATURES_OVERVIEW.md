@@ -5,6 +5,7 @@
 **BookieBuddy Desktop** is a comprehensive booking/rental management system that has been converted from a mobile application to a web/desktop application, with primary focus on Windows platform.
 
 The application helps businesses manage:
+
 - Product rentals (bookings with pickup/return dates)
 - Direct sales transactions
 - Inventory/stock management
@@ -21,6 +22,7 @@ The application helps businesses manage:
 **Location:** `lib/features/new_booking/view/`
 
 **Features:**
+
 - ✅ Create bookings (rental items with pickup/return dates)
 - ✅ Create sales (direct purchases)
 - ✅ Create custom work orders
@@ -34,6 +36,7 @@ The application helps businesses manage:
 - ✅ Dynamic field labels based on service type
 
 **Key Components:**
+
 - `ProductSelectedModel` - Selected products/variants
 - `ClientCubit` - Client management
 - `StaffSearchCubit` - Staff selection
@@ -44,13 +47,15 @@ The application helps businesses manage:
 
 ### 2. Edit Booking / Edit Sales
 
-**Screens:** 
+**Screens:**
+
 - `edit_booking_screen.dart`
 - `add_or_edit_sales_screen.dart`
 
 **Location:** `lib/features/edit_booking/view/`
 
 **Features:**
+
 - ✅ Edit existing bookings/sales
 - ✅ Same structure as new booking screen
 - ✅ Uses `EditBookingFormStateController`
@@ -60,6 +65,7 @@ The application helps businesses manage:
 - ✅ Document management
 
 **Key Components:**
+
 - `EditBookingFormStateController` - State management for editing
 - `BookingModel` - Booking data structure
 - `SalesModel` - Sales data structure
@@ -72,6 +78,7 @@ The application helps businesses manage:
 **Location:** `lib/features/stock_management/`
 
 **Features:**
+
 - ✅ Full CRUD operations (Create, Read, Update, Delete)
 - ✅ Filter by service type (Dress, Vehicle, Equipment, Gadgets, Material, Room, Costume, Jewellery)
 - ✅ Search by name, category, price range
@@ -82,12 +89,14 @@ The application helps businesses manage:
 - ✅ Image upload and management
 
 **Key Components:**
+
 - `ProductModel` - Product data structure
 - `ProductVariantModel` - Variant information
 - `MainServiceType` enum - Service type classification
 - `ProductRepository` - Data operations
 
 **Service Types:**
+
 - **Dress** - Multi-variant (Size, Color)
 - **Vehicle** - Non-variant (Brand, Model)
 - **Equipment** - Multi-variant (variants)
@@ -106,6 +115,7 @@ The application helps businesses manage:
 **Location:** `lib/features/all_bookings/view/`
 
 **Features:**
+
 - ✅ View all bookings/sales in a grid layout
 - ✅ Filter by status (Upcoming, Ongoing, Past, Completed, Cancelled)
 - ✅ Search by client name, booking ID, phone number
@@ -116,11 +126,13 @@ The application helps businesses manage:
 - ✅ Pagination support
 
 **Key Components:**
+
 - `AllBookingsCubit` - Booking list management
 - `BookingDetailsDrawer` - Right panel for details
 - `BookingCardWidget` - Individual booking card
 
 **Status Types:**
+
 - **Upcoming** - Not yet started
 - **Ongoing** - Currently active
 - **Past** - Completed
@@ -135,6 +147,7 @@ The application helps businesses manage:
 **Location:** `lib/features/home/view/`
 
 **Features:**
+
 - ✅ Overview cards displaying key metrics:
   - Upcoming bookings count
   - Completed bookings count
@@ -150,6 +163,7 @@ The application helps businesses manage:
 - ✅ Date range filtering
 
 **Key Components:**
+
 - `DashboardCubit` - Dashboard data management
 - `BookingSummaryWidget` - Metric cards
 - `QuickBookingCard` - Individual booking preview
@@ -159,6 +173,7 @@ The application helps businesses manage:
 ## 🔧 CURRENT STATUS
 
 ### ✅ Completed
+
 - Mobile app built and functional
 - UI conversion to web/desktop (Windows) completed
 - Core architecture with Clean Architecture + BLoC pattern
@@ -169,12 +184,14 @@ The application helps businesses manage:
 - Payment tracking system
 
 ### ⚠️ In Progress
+
 - Bug fixes and issue resolution in all 5 core features
 - UI/UX refinements for desktop experience
 - Performance optimizations
 - Enhanced validation and error handling
 
 ### 📝 Focus Areas (4-5 Sessions)
+
 1. **New Booking Screen** - Issue fixes (cooling period, search, filters, UI improvements)
 2. **Edit Booking Screen** - Issue resolution
 3. **Stock Management** - Bug fixes and enhancements
@@ -186,11 +203,13 @@ The application helps businesses manage:
 ## 🏗️ Technical Architecture
 
 ### State Management
+
 - **BLoC Pattern** - Business logic separation
 - **Cubit** - Simple state management
 - **ValueNotifier** - Local UI state
 
 ### Key Technologies
+
 - **Flutter 3.24.5+** - Framework
 - **Clean Architecture** - Code organization
 - **GetIt** - Dependency injection
@@ -198,6 +217,7 @@ The application helps businesses manage:
 - **Dartz** - Functional programming
 
 ### API Integration
+
 - RESTful API endpoints
 - Token-based authentication
 - User profile with shop settings
@@ -207,7 +227,7 @@ The application helps businesses manage:
 
 ## 📂 Project Structure
 
-```
+```text
 lib/
 ├── core/
 │   ├── models/           # Data models (ProductModel, BookingModel, etc.)
@@ -227,6 +247,7 @@ lib/
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary:** `#6132E4` (Purple)
 - **Success:** Green shades
 - **Warning:** Orange/Yellow shades
@@ -234,12 +255,14 @@ lib/
 - **Background:** `#F8F9FA`
 
 ### Typography
+
 - **Font Family:** Inter
 - **Heading:** 20px, Bold (700)
 - **Subheading:** 15px, Semi-bold (600)
 - **Body:** 14px, Medium (500)
 
 ### Components
+
 - Rounded corners (8-12px border radius)
 - Subtle shadows for elevation
 - Animated transitions (200ms duration)

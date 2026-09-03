@@ -3,6 +3,7 @@
 ## Branch: `feature/booking-cancellation-refund`
 
 ### 1. Booking Cancellation Flow
+
 **Location**: Booking Details Screen → Cancel Booking Button
 
 - [ ] **Test 1.1**: Cancel button visibility
@@ -92,6 +93,7 @@
 ## Branch: `feature/payment-method-premium-features`
 
 ### 2. Payment Method in Expenses
+
 **Location**: Add Expense Screen / Edit Expense Screen
 
 - [ ] **Test 2.1**: Payment method selector visibility (Add Expense)
@@ -172,6 +174,7 @@
 ## Branch: `feature/remaining-features`
 
 ### 3. Additional Charges Edit Access
+
 **Location**: Booking Details Screen → Payment Details → Additional Charges
 
 - [ ] **Test 3.1**: Edit button visibility (with charges)
@@ -255,6 +258,7 @@
 ## Already Implemented Features (Verify Working)
 
 ### 4. Premium Badge & Dialog
+
 **Location**: Various screens with premium features
 
 - [ ] **Test 4.1**: Premium badge visibility
@@ -275,6 +279,7 @@
   - Verify no dialog blocks access
 
 ### 5. Availability Check Feature
+
 **Location**: Profile Screen → Check Availability
 
 - [ ] **Test 5.1**: Profile tile navigation
@@ -310,6 +315,7 @@
   - Verify can change date and check again
 
 ### 6. Date Range Filters
+
 **Location**: All Bookings, Sales List, Ledger Screens
 
 - [ ] **Test 6.1**: Filter button visibility (All Bookings)
@@ -533,18 +539,21 @@
 ## Priority Levels
 
 🔴 **High Priority (Must Test)**:
+
 - All Test 1.x (Booking Cancellation)
 - Tests 2.1-2.7 (Payment Method)
 - Tests 3.1-3.6 (Additional Charges)
 - Tests 6.1-6.9 (Date Filters)
 
 🟡 **Medium Priority (Should Test)**:
+
 - Tests 1.9-1.10 (Error handling, responsive)
 - Tests 2.8-2.10 (Edit scenarios)
 - Tests 3.7-3.10 (Edge cases)
 - Tests 6.10-6.11 (Combined scenarios)
 
 🟢 **Low Priority (Nice to Test)**:
+
 - Tests 4.x-5.x (Already working features)
 - Tests 8.x (Performance)
 - Tests 9.x-11.x (Platform specific)

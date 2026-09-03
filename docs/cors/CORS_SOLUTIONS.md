@@ -3,35 +3,44 @@
 ## 🚀 RECOMMENDED SOLUTIONS (Pick One)
 
 ### ✅ OPTION 1: Use Enhanced Batch Script (EASIEST)
+
 ```bash
 # Run this command in your project directory:
 .\run_web_dev.bat
 ```
+
 This script automatically:
+
 - Kills existing Chrome processes
 - Launches Chrome with CORS disabled
 - Uses temporary profile to avoid conflicts
 - Provides detailed logging
 
 ### ✅ OPTION 2: Install CORS Chrome Extension (PERMANENT & SIMPLE)
+
 1. Go to Chrome Web Store
 2. Install **"CORS Unblock"** or **"Disable CORS"** extension
 3. Enable the extension when developing
 4. Run normal Flutter command: `flutter run -d chrome`
 
 ### ✅ OPTION 3: Create Chrome Shortcut with Flags (PERMANENT)
+
 1. Create a new Chrome shortcut on desktop
 2. Right-click → Properties
 3. In Target field, add these flags at the end:
-   ```
+
+   ```text
    --disable-web-security --disable-features=VizDisplayCompositor --user-data-dir="C:/temp/chrome_dev"
    ```
+
 4. Full example:
-   ```
+
+   ```text
    "C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-features=VizDisplayCompositor --user-data-dir="C:/temp/chrome_dev"
    ```
 
 ### ✅ OPTION 4: Manual Command Line (FOR TESTING)
+
 ```bash
 # Kill Chrome first
 taskkill /f /im chrome.exe
@@ -45,6 +54,7 @@ flutter run -d chrome --web-browser-flag "--disable-web-security" --web-browser-
 ## 🔧 PRODUCTION SOLUTIONS
 
 ### OPTION 5: Backend CORS Configuration (PRODUCTION READY)
+
 Ask your backend team to add these headers to the API server:
 
 ```javascript
@@ -63,13 +73,15 @@ app.use((req, res, next) => {
 ```
 
 For **dev.bookiebuddy.in**, the server needs:
-```
+
+```text
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
 Access-Control-Allow-Headers: Content-Type, Authorization, Accept
 ```
 
 ### OPTION 6: Use Proxy Server (ADVANCED)
+
 Create a proxy server that forwards requests to avoid CORS:
 
 1. Install http-proxy-middleware in a Node.js project
@@ -80,7 +92,8 @@ Create a proxy server that forwards requests to avoid CORS:
 
 ## ❗ TROUBLESHOOTING
 
-### If CORS errors persist:
+### If CORS errors persist
+
 1. **Clear browser cache** completely
 2. **Close ALL Chrome instances** before running scripts
 3. **Check Windows Defender** - it might block the temp directory
@@ -88,6 +101,7 @@ Create a proxy server that forwards requests to avoid CORS:
 5. **Use incognito mode** with extensions enabled
 
 ### Error: "Chrome didn't start"
+
 ```bash
 # Try this alternative:
 flutter run -d web-server --web-port=8080
@@ -95,14 +109,17 @@ flutter run -d web-server --web-port=8080
 ```
 
 ### Error: "Bad Certificate"
+
 Add this flag to Chrome:
-```
+
+```text
 --ignore-certificate-errors
 ```
 
 ---
 
 ## 📝 CURRENT API ENDPOINT
+
 - **Development API**: `https://dev.bookiebuddy.in/api/v3/`
 - **Production API**: `https://flutter.bookiebuddy.in/api/v3/`
 

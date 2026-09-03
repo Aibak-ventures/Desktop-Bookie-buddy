@@ -20,7 +20,7 @@ JSDoc is misleading (see `qz.printers.setPrinterCallbacks` under
 
 Load order matters, wired in `web/index.html`:
 
-```
+```text
 qz/qz-tray.js            → defines the global `qz` object
 qz/jsrsasign-all-min.js  → defines KEYUTIL/KJUR, used for signing
 qz/qz-sign-message.js    → wires request signing using the two above
@@ -45,7 +45,7 @@ nothing in the Dart code has to think about signing.
 ## Namespaces at a glance
 
 | Namespace | Used by this app? | What it's for |
-|---|---|---|
+| --- | --- | --- |
 | `qz.websocket` | ✅ | Connect/disconnect to QZ Tray, connection status |
 | `qz.printers` | ✅ | List printers, live status |
 | `qz.configs` | ✅ | Build a `Config` object naming a target printer + print options |
@@ -61,7 +61,7 @@ nothing in the Dart code has to think about signing.
 
 Only the first six are documented in detail below. If a future feature needs
 one of the "not used" namespaces, the pattern in
-["Adding a new binding" ](#adding-a-new-binding-in-dart) applies the same way —
+["Adding a new binding"](#adding-a-new-binding-in-dart) applies the same way —
 open `qz-tray.js`, search for `@namespace qz.<name>`, and read its JSDoc block.
 
 ---
@@ -72,12 +72,14 @@ The connection to the QZ Tray desktop app itself. Nothing else works until
 this is connected.
 
 ### `qz.websocket.isActive()`
+
 - **Takes:** nothing
 - **Returns:** `boolean` — synchronous, not a promise
 - Used by this app (`QzTrayDatasource.connect()`/`isAvailable()`) to skip
   reconnecting if already connected.
 
 ### `qz.websocket.connect([options])`
+
 - **Takes:** optional `options` object — `host`, `port.secure`/`port.insecure`
   (defaults try `localhost`/`localhost.qz.io` on ports 8181/8282/8383/8484
   secure, 8182/8283/8384/8485 insecure), `usingSecure`, `keepAlive` (seconds,
@@ -89,16 +91,19 @@ this is connected.
   the request isn't signed (see [connect/wiring](#how-it-loads-and-connects-this-app-specifically)).
 
 ### `qz.websocket.disconnect()`
+
 - **Takes:** nothing · **Returns:** `Promise<null | Error>` — rejects if
   there's no open connection.
 
 ### `qz.websocket.setErrorCallbacks(calls)` / `setClosedCallbacks(calls)`
+
 - **Takes:** a function or array of functions, each `Function(event)`,
   fired for connection errors/close events that happen **outside** a
   specific API call (e.g. QZ Tray crashes mid-session). Not currently
   wired up by this app — errors are instead caught per-call.
 
 ### `qz.websocket.getConnectionInfo()`
+
 - **Takes:** nothing · **Returns:** `{socket, host, port}` object,
   synchronous. Not currently used by this app.
 
@@ -107,6 +112,7 @@ this is connected.
 ## `qz.printers`
 
 ### `qz.printers.find([query])`
+
 - **Takes:** optional `query` string to filter to one printer name.
 - **Returns:** `Promise<Array<string> | string | Error>` — the OS/driver's
   installed printer list (or the one matching `query`). This is a **static
@@ -116,11 +122,13 @@ this is connected.
 - Wrapped by this app in `QzTrayDatasource.findPrinters()`.
 
 ### `qz.printers.details()`
+
 - **Takes:** nothing · **Returns:** `Promise<Array<Object> | Object | Error>`
   — same idea as `find()` but with extra per-printer metadata (driver info).
   Not used by this app; `find()` is enough for a name-only picker.
 
 ### `qz.printers.startListening(printers[, options])`
+
 - **Takes:** `printers` — `null` (all), a single printer name string, or an
   array of names. `options` (Windows-only, unused here): `jobData`,
   `maxJobData`, `flavor`.
@@ -129,6 +137,7 @@ this is connected.
 - Required before `getStatus()` will report anything for those printers.
 
 ### `qz.printers.getStatus()`
+
 - **Takes:** nothing · **Returns:** `Promise<null | Error>` — resolving this
   promise only means *the request was sent*. The actual status data is
   delivered **asynchronously**, one event at a time, to whatever callback
@@ -136,6 +145,7 @@ this is connected.
   resolved value.
 
 ### `qz.printers.setPrinterCallbacks(calls)` {#qzprintenanterssetprintercallbacks}
+
 - **Takes:** a function or array of functions.
 - **⚠️ The JSDoc here is easy to misread.** It's documented as
   `Function({Object} eventData)` — singular — and that's exactly right, but
@@ -143,6 +153,7 @@ this is connected.
   per event**, each call passing **one plain object**, never a batched
   array. Confirmed from `qz-tray.js`'s own implementation, not just its
   doc comment:
+
   ```js
   callPrinter: function(streamEvent) {
       if (Array.isArray(_qz.printers.printerCallbacks)) {
@@ -154,20 +165,25 @@ this is connected.
       }
   }
   ```
+
 - **⚠️ Second JSDoc mismatch, also confirmed wrong against a real device:**
   the doc claims the event carries `printerName`/`status`. The actual
   runtime payload (logged from a real QZ Tray instance/printer) is:
-  ```
+
+  ```text
   {printerName, eventType, statusText, severity, statusCode, message, type}
   ```
+
   — the human-readable status field is **`statusText`**, not `status`
   (`status` doesn't exist on the real object at all). Example events seen
   from a real 2-printer setup:
-  ```
+
+  ```text
   {printerName: "Printer POS-80", eventType: PRINTER, statusText: OK, severity: INFO, statusCode: idle, ...}
   {printerName: "4BARCODE 4B-2054TF", eventType: PRINTER, statusText: OFFLINE, severity: FATAL, statusCode: offline-report, ...}
   {printerName: "4BARCODE 4B-2054TF", eventType: PRINTER, statusText: PAUSED, severity: WARN, statusCode: paused, ...}
   ```
+
   `severity` (`INFO`/`WARN`/`ERROR`/`FATAL`) turned out to be the more
   reliable field to key off of — it's a small, QZ-assigned set, unlike
   `statusText`, which is driver-specific free text with no fixed enum
@@ -178,10 +194,12 @@ this is connected.
   twice over in this one call alone.
 
 ### `qz.printers.stopListening()`
+
 - **Takes:** nothing · **Returns:** `Promise<null | Error>` — stops all
   status listening (not per-printer).
 
 ### `qz.printers.clearQueue([options])`
+
 - **Takes:** a printer name string, or `{printerName, jobId}` to cancel one
   specific job. **Returns:** `Promise<null | Error>`. Not used by this app.
 
@@ -190,6 +208,7 @@ this is connected.
 ## `qz.configs`
 
 ### `qz.configs.create(printer[, options])`
+
 - **Takes:** `printer` — a printer name string, or an object
   (`{name}`/`{file}`/`{host, port}`) to target a file or network host
   instead of a named printer. `options` overrides any of `setDefaults`'
@@ -201,6 +220,7 @@ this is connected.
   printer name.
 
 ### `qz.configs.setDefaults(options)`
+
 - **Takes:** the same `options` shape as `create()`'s second argument, but
   applied globally to all future configs that don't override it. Not used
   by this app — every config is per-print with app-level defaults baked
