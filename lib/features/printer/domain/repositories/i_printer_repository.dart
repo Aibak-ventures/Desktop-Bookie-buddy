@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_shared/core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
 
 abstract interface class IPrinterRepository {

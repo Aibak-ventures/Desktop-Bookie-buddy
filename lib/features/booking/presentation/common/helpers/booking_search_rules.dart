@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 
 /// Pure rules for product search type resolution.
 /// Shared by both the New Booking and Edit Booking search flows.

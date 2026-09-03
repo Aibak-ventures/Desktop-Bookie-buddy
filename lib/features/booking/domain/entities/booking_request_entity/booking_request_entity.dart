@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
-import 'package:bookie_buddy_core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_request_entity/booking_payment_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';

@@ -1,8 +1,8 @@
-import 'package:bookie_buddy_core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';

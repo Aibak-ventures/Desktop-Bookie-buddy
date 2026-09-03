@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 

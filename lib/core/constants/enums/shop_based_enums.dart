@@ -2,8 +2,8 @@
 // CoolingPeriodMode all moved into bookie_buddy_core — see
 // docs/shared-packages-plan.md in the mobile app repo. AppMainFeatureType
 // stays local: web-only, mobile has no equivalent concept.
-export 'package:bookie_buddy_core/core/constants/enums/shop_based_enums.dart';
-export 'package:bookie_buddy_core/core/constants/enums/cooling_period_mode_enum.dart';
+export 'package:bookie_buddy_shared/core/core/constants/enums/shop_based_enums.dart';
+export 'package:bookie_buddy_shared/core/core/constants/enums/cooling_period_mode_enum.dart';
 
 enum AppMainFeatureType {
   bookings('bookings'),

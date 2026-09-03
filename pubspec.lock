@@ -89,20 +89,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0"
-  bookie_buddy_core:
+  bookie_buddy_shared:
     dependency: "direct main"
     description:
-      path: "../bookie-buddy-shared/packages/core"
+      path: "../bookie-buddy-shared"
       relative: true
     source: path
-    version: "0.2.0"
-  bookie_buddy_ui:
-    dependency: "direct main"
-    description:
-      path: "../bookie-buddy-shared/packages/ui"
-      relative: true
-    source: path
-    version: "0.2.0"
+    version: "1.0.0"
   boolean_selector:
     dependency: transitive
     description:

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

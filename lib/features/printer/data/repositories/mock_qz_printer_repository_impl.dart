@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:math' show Random;
 
 import 'package:bookie_buddy_web/features/printer/data/models/printer_device_model/printer_device_model.dart';
-import 'package:bookie_buddy_core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:bookie_buddy_shared/core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_device_entity.dart';
 import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device_entity/printer_online_status.dart';
 import 'package:bookie_buddy_web/features/printer/domain/repositories/i_printer_repository.dart';

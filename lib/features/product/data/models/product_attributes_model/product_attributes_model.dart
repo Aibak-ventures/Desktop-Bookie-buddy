@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/features/product/domain/entities/product_entity/product_attributes_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_entity/product_attributes_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_attributes_model.freezed.dart';

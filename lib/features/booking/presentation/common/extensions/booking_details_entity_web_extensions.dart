@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/bookie_buddy_core.dart';
+import 'package:bookie_buddy_shared/bookie_buddy_shared.dart';
 
 // BookingDetailsEntity now comes from bookie_buddy_core (see
 // docs/shared-packages-plan.md in the mobile repo). These getters were on

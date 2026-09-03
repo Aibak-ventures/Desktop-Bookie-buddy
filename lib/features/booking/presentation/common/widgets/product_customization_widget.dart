@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_core/core/constants/enums/gender_type_enums.dart';
-import 'package:bookie_buddy_core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';

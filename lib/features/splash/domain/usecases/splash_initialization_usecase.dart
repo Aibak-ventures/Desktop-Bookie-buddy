@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_core/utils/async/run_for_at_least.dart';
+import 'package:bookie_buddy_shared/core/utils/async/run_for_at_least.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/app/my_app.dart';

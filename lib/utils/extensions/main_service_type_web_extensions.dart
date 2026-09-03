@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 
 // MainServiceType now comes from bookie_buddy_core (see
 // docs/shared-packages-plan.md in the mobile repo). These two getters were

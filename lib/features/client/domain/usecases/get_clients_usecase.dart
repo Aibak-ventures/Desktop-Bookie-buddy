@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
-import 'package:bookie_buddy_core/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
 
 class GetClientsUseCase {

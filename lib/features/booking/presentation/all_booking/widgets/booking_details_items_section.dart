@@ -1,8 +1,8 @@
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_ui/theme/status_ui_extensions.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/ui/theme/status_ui_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 

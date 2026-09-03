@@ -1,6 +1,6 @@
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';

@@ -44,6 +44,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Xcode related
+macos/DerivedData
+ios/DerivedData
+
 # FVM Version Cache
 .fvm/
 
@@ -62,3 +66,5 @@ app.*.map.json
 /icons/
 /.last_build_id
 /temp_reload.txt
+# Local-only override for shared package dev (see SHARED_PACKAGE_DEV_GUIDE.md)
+pubspec_overrides.yaml*

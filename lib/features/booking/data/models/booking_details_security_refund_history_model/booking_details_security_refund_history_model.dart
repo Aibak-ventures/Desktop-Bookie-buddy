@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_security_refund_history_model.freezed.dart';

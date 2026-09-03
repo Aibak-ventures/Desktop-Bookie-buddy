@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/core/constants/enums/date_and_time_enums.dart';

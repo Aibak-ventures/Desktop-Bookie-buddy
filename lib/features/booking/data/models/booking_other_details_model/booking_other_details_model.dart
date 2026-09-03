@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_other_details_model.freezed.dart';

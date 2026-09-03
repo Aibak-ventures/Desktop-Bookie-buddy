@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:bookie_buddy_ui/features/thermal_printer/presentation/receipt_design/builders/sales_receipt_canvas_builder.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/ui/features/thermal_printer/presentation/receipt_design/builders/sales_receipt_canvas_builder.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/print_output_dispatcher.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';

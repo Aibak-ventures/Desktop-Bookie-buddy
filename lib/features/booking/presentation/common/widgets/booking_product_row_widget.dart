@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

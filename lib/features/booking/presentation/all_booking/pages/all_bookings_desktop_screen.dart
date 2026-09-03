@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bookie_buddy_core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';

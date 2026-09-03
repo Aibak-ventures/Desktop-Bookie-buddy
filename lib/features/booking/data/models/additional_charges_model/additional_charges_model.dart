@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

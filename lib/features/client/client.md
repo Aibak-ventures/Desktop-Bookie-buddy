@@ -27,7 +27,7 @@ client/
 │       └── client_repository_impl.dart      # Maps models → entities; handles "already exists" error
 ├── domain/
 │   ├── entities/
-│   │   ├── client_entity/                   # from bookie_buddy_core — id, name, phone1/phone2 (always E.164)
+│   │   ├── client_entity/                   # from bookie_buddy_shared (core/) — id, name, phone1/phone2 (always E.164)
 │   │   └── client_request_entity/           # id?, name?, phone1?, phone2? (all optional)
 │   ├── repositories/
 │   │   └── i_client_repository.dart
@@ -92,7 +92,7 @@ AddClientUseCase.call(ClientRequestEntity, allowExisting: true)
 
 | Entity | Fields | Notes |
 |---|---|---|
-| `ClientEntity` | id, name, phone1, phone2 | From bookie_buddy_core — phone1/phone2 are always E.164-formatted (unified with mobile; `ClientModel` still parses both raw and E.164 forms, mapping into this single field) |
+| `ClientEntity` | id, name, phone1, phone2 | From bookie_buddy_shared (core/) — phone1/phone2 are always E.164-formatted (unified with mobile; `ClientModel` still parses both raw and E.164 forms, mapping into this single field) |
 | `ClientRequestEntity` | id?, name?, phone1?, phone2? | Write entity — all fields optional for partial updates |
 
 ---

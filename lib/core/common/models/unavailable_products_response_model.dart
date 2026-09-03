@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_core/core/common/entities/unavailable_products_entity/unavailable_products_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/unavailable_products_entity/unavailable_products_entity.dart';
 
 /// Parses the insufficient-stock payload the API returns in `data` — the shape
 /// is flat rather than a list, so a single conflicting variant comes back per

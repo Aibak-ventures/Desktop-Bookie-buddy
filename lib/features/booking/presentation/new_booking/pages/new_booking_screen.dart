@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
-import 'package:bookie_buddy_core/core/common/entities/user_shop_entity/user_shop_entity.dart';
-import 'package:bookie_buddy_core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/user_shop_entity/user_shop_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
@@ -19,11 +19,11 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/se
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
-import 'package:bookie_buddy_core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
@@ -51,7 +51,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_entity
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
