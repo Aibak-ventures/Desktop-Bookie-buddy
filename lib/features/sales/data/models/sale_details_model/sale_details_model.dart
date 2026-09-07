@@ -1,9 +1,9 @@
+import 'package:bookie_buddy_shared/core/core/common/models/applied_tax_model/applied_tax_model.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:collection/collection.dart';
 
-import 'package:bookie_buddy_web/core/common/models/applied_tax_model/applied_tax_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

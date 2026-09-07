@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/models/applied_tax_model/applied_tax_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/applied_tax_model/applied_tax_model.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_rental_unit_enum.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
