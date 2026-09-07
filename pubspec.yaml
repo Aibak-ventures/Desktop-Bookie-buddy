@@ -34,7 +34,15 @@ dependencies:
   # commit SHA here instead of a tag — see that repo's CHANGELOG.md for
   # why; merging into one package removed that constraint). For active
   # cross-repo dev, override locally in pubspec_overrides.yaml instead of
-  # editing this block.
+  # editing this block, e.g.:
+  #
+  #   dependency_overrides:
+  #     bookie_buddy_shared:
+  #       path: ../bookie-buddy-shared
+  #
+  # (path is relative to this repo's root; remove the override before
+  # merging — pubspec_overrides.yaml is gitignored so it won't accidentally
+  # get committed, but don't rely on that).
   bookie_buddy_shared:
     git:
       url: https://github.com/Aibak-ventures/bookie-buddy-shared.git

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
-import 'package:bookie_buddy_web/features/tax_and_compliance/data/models/tax_configuration_request_model/tax_configuration_request_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/tax_configuration_request_model/tax_configuration_request_model.dart';
 import 'package:dio/dio.dart';
 
 class TaxConfigurationRemoteDatasource {
