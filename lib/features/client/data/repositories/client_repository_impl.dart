@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';

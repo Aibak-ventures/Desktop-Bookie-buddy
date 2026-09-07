@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/global_search/domain/entities/global_search_entity/global_search_entity.dart';
 import 'package:bookie_buddy_web/features/global_search/domain/usecases/get_global_search_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

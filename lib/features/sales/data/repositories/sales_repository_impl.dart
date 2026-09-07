@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sale_details_model/sale_details_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/datasources/sales_remote_datasource.dart';
