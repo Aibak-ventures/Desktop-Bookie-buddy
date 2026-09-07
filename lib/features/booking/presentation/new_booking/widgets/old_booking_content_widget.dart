@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';

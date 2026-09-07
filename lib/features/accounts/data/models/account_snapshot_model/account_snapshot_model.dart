@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_snapshot_entity/account_snapshot_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_snapshot_entity/account_snapshot_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

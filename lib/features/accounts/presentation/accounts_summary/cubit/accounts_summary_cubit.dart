@@ -1,9 +1,9 @@
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/usecases/create_account_usecase.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/usecases/delete_account_usecase.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/usecases/get_accounts_summary_usecase.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/usecases/update_account_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/create_account_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/delete_account_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/get_accounts_summary_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/update_account_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

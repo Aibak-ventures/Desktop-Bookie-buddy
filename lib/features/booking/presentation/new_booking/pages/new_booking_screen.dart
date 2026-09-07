@@ -17,7 +17,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/su
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';

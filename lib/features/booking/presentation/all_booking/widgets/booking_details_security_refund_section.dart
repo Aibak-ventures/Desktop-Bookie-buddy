@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dar
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_security_adjustment_dialog.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';

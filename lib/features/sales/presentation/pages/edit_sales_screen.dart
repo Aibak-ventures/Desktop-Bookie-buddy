@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cub
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_app_bar.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_date_section.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_list_header.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
