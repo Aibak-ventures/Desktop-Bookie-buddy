@@ -83,9 +83,16 @@ class BookingDateCalculator {
     required int coolingDays,
     required bool isBooking,
   }) {
-    return (isBooking && mode.isAfter)
+    final base = (isBooking && mode.isAfter)
         ? returnDate.add(Duration(days: coolingDays))
         : returnDate;
+    // Mirrors the pickup-side clamp: when both pickup and return fall in the
+    // past, only clamping the pickup date to today would leave the (unclamped,
+    // still-past) return date before it, making the effective pickup appear
+    // after the effective return and failing availability validation. Clamping
+    // the return date the same way keeps the pair consistent. The real
+    // (possibly back-dated) return date is still sent in the booking payload.
+    return isBooking ? clampToTodayForAvailability(base) : base;
   }
 
   /// String form of [effectiveReturnDate].
