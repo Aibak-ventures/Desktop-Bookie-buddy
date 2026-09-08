@@ -126,7 +126,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                           BlocProvider(
                             create: (_) => ClientCubit(
                               getClients: getIt(),
-                              getClientById: getIt(),
+                              getClientDetails: getIt(),
                             ),
                           ),
                           BlocProvider(

@@ -1,14 +1,14 @@
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_request_entity/client_request_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
@@ -102,8 +102,8 @@ class BookingRequestBuilder {
       clientData = ClientRequestEntity(
         id: null,
         name: clientName.isEmpty ? null : clientName,
-        phone1E164: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
-        phone2E164: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
+        phone1: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
+        phone2: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
       );
     }
 
@@ -280,8 +280,8 @@ class BookingRequestBuilder {
           ? ClientRequestEntity(
               id: null,
               name: clientName.isEmpty ? null : clientName,
-              phone1E164: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
-              phone2E164: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
+              phone1: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
+              phone2: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
             )
           : null,
       address: address.isEmpty ? null : address,
