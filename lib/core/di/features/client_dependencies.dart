@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/client/data/repositories/client_repository_impl.dart';
 import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
@@ -9,8 +10,9 @@ import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_use
 import 'package:bookie_buddy_web/features/client/domain/usecases/update_client_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class ClientDependencies {
-  static void register() {
+class ClientDependencies implements IAppDependency {
+  @override
+  void register() {
     getIt.registerLazySingleton(
       () => ClientRemoteDatasource(dio: DioClient.dio),
     );

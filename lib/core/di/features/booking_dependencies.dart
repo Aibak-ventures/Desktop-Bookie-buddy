@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_refund_usecase.dart';
@@ -30,8 +31,9 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/update_partial
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class BookingDependencies {
-  static void register() {
+class BookingDependencies implements IAppDependency {
+  @override
+  void register() {
     if (!getIt.isRegistered<BookingRemoteDatasource>()) {
       getIt.registerLazySingleton(
         () => BookingRemoteDatasource(dio: DioClient.dio),

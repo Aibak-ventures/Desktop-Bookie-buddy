@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/accounts/data/datasources/account_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/accounts/data/repositories/account_repository_impl.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/repositories/i_account_repository.dart';
@@ -9,8 +10,9 @@ import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/get_a
 import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/update_account_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class AccountDependencies {
-  static void register() {
+class AccountDependencies implements IAppDependency {
+  @override
+  void register() {
     getIt
       ..registerLazySingleton(() => AccountRemoteDatasource(DioClient.dio))
       ..registerLazySingleton<IAccountRepository>(
