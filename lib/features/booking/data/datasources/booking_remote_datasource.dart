@@ -145,7 +145,7 @@ class BookingRemoteDatasource {
     try {
       log('Creating sale with data: $saleData');
       final response = await _dio.post(
-        ApiEndpoints.sales.salesV4,
+        ApiEndpoints.sales.sales,
         data: saleData,
       );
 

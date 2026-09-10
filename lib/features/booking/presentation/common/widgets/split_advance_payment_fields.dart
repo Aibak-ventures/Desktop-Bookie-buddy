@@ -25,6 +25,14 @@ class SplitAdvancePaymentFields extends StatelessWidget {
   final AccountEntity? bankAccount;
   final ValueChanged<AccountEntity?> onBankAccountChanged;
 
+  /// If set and [cashAccount]/[bankAccount] is still null, auto-selects the
+  /// matching account once the accounts list loads — same as
+  /// [AccountSelectionField.initialAccountId], forwarded here since this
+  /// widget owns those fields directly. Needed on an edit screen so a
+  /// split sale/booking's legs come up pre-selected instead of blank.
+  final int? cashInitialAccountId;
+  final int? bankInitialAccountId;
+
   /// Shown instead of the cash/bank fields when [isSplit] is false — pass the
   /// screen's existing single `AccountSelectionField`.
   final Widget singlePaymentSelector;
@@ -51,6 +59,8 @@ class SplitAdvancePaymentFields extends StatelessWidget {
     this.bankAccountLabel = 'Bank/UPI Account',
     this.spacing = 12,
     this.spacingBetweenBankAccount = 20,
+    this.cashInitialAccountId,
+    this.bankInitialAccountId,
   });
 
   @override
@@ -63,6 +73,7 @@ class SplitAdvancePaymentFields extends StatelessWidget {
         AccountSelectionField(
           selectedAccount: cashAccount,
           onChanged: onCashAccountChanged,
+          initialAccountId: cashInitialAccountId,
           label: cashAccountLabel,
           filterType: AccountFilterType.cashOnly,
         ),
@@ -77,6 +88,7 @@ class SplitAdvancePaymentFields extends StatelessWidget {
         AccountSelectionField(
           selectedAccount: bankAccount,
           onChanged: onBankAccountChanged,
+          initialAccountId: bankInitialAccountId,
           label: bankAccountLabel,
           filterType: AccountFilterType.bankOnly,
           width: double.infinity,

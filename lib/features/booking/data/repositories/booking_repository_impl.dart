@@ -103,7 +103,16 @@ class BookingRepositoryImpl implements IBookingRepository {
             )
             .toList(),
         'paid_amount': saleData.paidAmount ?? 0,
-        if (saleData.accountId != null) 'account_id': saleData.accountId,
+        if (saleData.payments != null && saleData.payments!.isNotEmpty)
+          'payments': saleData.payments!
+              .map(
+                (p) => <String, dynamic>{
+                  if (p.id != null) 'id': p.id,
+                  'account_id': p.accountId,
+                  'amount': p.amount,
+                },
+              )
+              .toList(),
         'discount': saleData.discountAmount ?? 0,
         'decrease_stock': saleData.stockCountDecrease ?? true,
       };

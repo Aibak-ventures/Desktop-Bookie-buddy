@@ -2,6 +2,7 @@ import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity
 import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 /// Payment details section for [SalesDetailsDrawer].
@@ -38,7 +39,15 @@ class SalesDetailsPaymentSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          if (sale.payment.accountName != null)
+          if (sale.payments.length > 1)
+            for (final payment in sale.payments) ...[
+              _buildPaymentRow(
+                (payment.accountName ?? '—'),
+                payment.amount.toCurrency(),
+              ),
+              if (payment != sale.payments.last) const SizedBox(height: 8),
+            ]
+          else if (sale.payments.firstOrNull?.accountName != null)
             Row(
               children: [
                 Text(
@@ -51,7 +60,7 @@ class SalesDetailsPaymentSection extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  sale.payment.accountName ?? '—',
+                  sale.payments.first.accountName ?? '—',
                   style: const TextStyle(
                     fontSize: 13,
                     color: Colors.black87,
@@ -60,7 +69,11 @@ class SalesDetailsPaymentSection extends StatelessWidget {
                 ),
               ],
             ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: 5),
+          const Divider(),
+          const SizedBox(height: 5),
+
           _buildPaymentRow('Subtotal', '₹$subtotal'),
           const SizedBox(height: 8),
           if (sale.discountAmount > 0) ...[

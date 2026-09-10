@@ -128,14 +128,11 @@ class _BookingsNamespace {
 
 class _SalesNamespace {
   const _SalesNamespace();
-  // v4 paths (all CRUD operations use v4)
   String get sales => SalesEndpoints.sales;
-  String get salesV4 => SalesEndpoints.salesV4;
-  String salesDetailV4(int id) => SalesEndpoints.salesDetailV4(id);
-  String updateSaleV4(int id) => SalesEndpoints.updateSaleV4(id);
-  String deleteSaleV4(int id) => SalesEndpoints.deleteSaleV4(id);
+  String salesDetail(int id) => SalesEndpoints.salesDetail(id);
+  String updateSale(int id) => SalesEndpoints.updateSale(id);
+  String deleteSale(int id) => SalesEndpoints.deleteSale(id);
 
-  // v3 paths (invoice only)
   String downloadInvoice(int id) => SalesEndpoints.downloadInvoice(id);
 }
 

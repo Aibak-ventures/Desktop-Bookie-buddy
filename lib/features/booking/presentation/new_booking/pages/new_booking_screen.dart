@@ -66,6 +66,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/pr
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -146,6 +147,83 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     cashAccount: selectedAdvanceCashAccount,
     bankAccount: selectedAdvanceBankAccount,
   );
+
+  /// Sales-mode reading of the same split state as [_advanceSplit]. Unlike
+  /// booking's advance (a partial amount), a sale is always paid in full,
+  /// so the two legs must always sum to the sale's payable total — kept in
+  /// sync by [_autoBalanceSalesSplit] and cleared by
+  /// [_handleSalesTotalMayHaveChanged] whenever that total actually moves.
+  SalesSplitPayment get _salesSplit => SalesSplitPayment(
+    isSplit: isAdvanceSplit,
+    cashAmount: advanceAmountController.text.trim().toIntOrNull() ?? 0,
+    bankAmount: splitBankAmountController.text.trim().toIntOrNull() ?? 0,
+    cashAccount: selectedAdvanceCashAccount,
+    bankAccount: selectedAdvanceBankAccount,
+  );
+
+  bool _isBalancingSalesSplit = false;
+  int? _lastSalesTotal;
+
+  int _salesPayableTotal() {
+    final products = selectedProductsNotifier.value;
+    final productTotal = products.fold<int>(
+      0,
+      (sum, p) => sum + (p.amount * p.quantity),
+    );
+    final discountInput =
+        discountAmountController.text.trim().toIntOrNull() ?? 0;
+    final discountAmount = isDiscountPercentage
+        ? (productTotal * discountInput / 100).round()
+        : discountInput;
+    final taxSummary = _calculateTaxSummary(
+      productTotal: productTotal.toDouble(),
+      discountAmount: discountAmount.toDouble(),
+    );
+    final total =
+        productTotal - discountAmount + taxSummary.additionalTaxAmount.round();
+    return total > 0 ? total : 0;
+  }
+
+  /// Clears the sales split fields when the payable total actually changed
+  /// (products or discount) — never on an event that didn't move it.
+  void _handleSalesTotalMayHaveChanged() {
+    if (selectedBookingType != BookingType.sales) return;
+    final total = _salesPayableTotal();
+    if (_lastSalesTotal != null &&
+        _lastSalesTotal != total &&
+        (advanceAmountController.text.isNotEmpty ||
+            splitBankAmountController.text.isNotEmpty)) {
+      advanceAmountController.clear();
+      splitBankAmountController.clear();
+    }
+    _lastSalesTotal = total;
+  }
+
+  /// Auto-balances the sales split's other leg to `total - edited`,
+  /// clamped to [0, total], guarding against listener feedback loops.
+  void _autoBalanceSalesSplit(TextEditingController edited) {
+    if (selectedBookingType != BookingType.sales || !isAdvanceSplit) return;
+    if (_isBalancingSalesSplit) return;
+    final total = _salesPayableTotal();
+    final other = edited == advanceAmountController
+        ? splitBankAmountController
+        : advanceAmountController;
+    final editedAmount = edited.text.trim().toIntOrNull() ?? 0;
+    final clamped = editedAmount.clamp(0, total);
+    _isBalancingSalesSplit = true;
+    // Reclamp the edited field itself too — an out-of-range typed value
+    // (e.g. exceeding the total) would otherwise leave the two legs
+    // summing to something other than the total.
+    if (clamped != editedAmount) edited.text = clamped.toString();
+    other.text = (total - clamped).toString();
+    _isBalancingSalesSplit = false;
+  }
+
+  void _onAdvanceAmountChangedForSalesBalance() =>
+      _autoBalanceSalesSplit(advanceAmountController);
+
+  void _onSplitBankAmountChangedForSalesBalance() =>
+      _autoBalanceSalesSplit(splitBankAmountController);
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isSecurityPaid = true;
@@ -313,6 +391,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     clientPhone2Controller.addListener(_onClientPhoneChanged);
     _searchResultsScrollController.addListener(_handleSearchOverlayScroll);
 
+    // Sales split payment: auto-balance the two legs against each other,
+    // and clear both whenever the payable total actually changes. No-ops
+    // outside sales mode.
+    advanceAmountController.addListener(_onAdvanceAmountChangedForSalesBalance);
+    splitBankAmountController.addListener(
+      _onSplitBankAmountChangedForSalesBalance,
+    );
+    selectedProductsNotifier.addListener(_handleSalesTotalMayHaveChanged);
+    discountAmountController.addListener(_handleSalesTotalMayHaveChanged);
+
     // Set up web before unload listener to prevent accidental browser close
     if (kIsWeb) {
       web_helper.setupBeforeUnloadListener(() => hasUnsavedChanges());
@@ -346,6 +434,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     clientPhone1Controller.removeListener(_onClientPhoneChanged);
     clientPhone2Controller.removeListener(_onClientPhoneChanged);
     _searchResultsScrollController.removeListener(_handleSearchOverlayScroll);
+    advanceAmountController.removeListener(
+      _onAdvanceAmountChangedForSalesBalance,
+    );
+    splitBankAmountController.removeListener(
+      _onSplitBankAmountChangedForSalesBalance,
+    );
+    selectedProductsNotifier.removeListener(_handleSalesTotalMayHaveChanged);
+    discountAmountController.removeListener(_handleSalesTotalMayHaveChanged);
     for (final f in _overlayItemFocusNodes.values) f.dispose();
     for (final d in <ChangeNotifier>[
       clientNameController,
@@ -1109,7 +1205,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       saleDate: pickupDate,
       description: _buildDescriptionWithPaymentSummary(),
       sendInvoice: sendPdfToWhatsApp,
-      accountId: selectedAdvanceAccount?.id,
+      account: selectedAdvanceAccount,
+      salesSplit: _salesSplit,
       decreaseStockForPastDate: decreaseStockForPastDate,
       isPastDate: _isPastDate(),
     );

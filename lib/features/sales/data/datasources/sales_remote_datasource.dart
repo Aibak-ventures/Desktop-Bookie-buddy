@@ -47,7 +47,7 @@ class SalesRemoteDatasource {
 
   Future<CustomResponseModel> getSaleDetails(int saleId) async {
     try {
-      final response = await _dio.get(ApiEndpoints.sales.salesDetailV4(saleId));
+      final response = await _dio.get(ApiEndpoints.sales.salesDetail(saleId));
       log('Sales get response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -64,7 +64,7 @@ class SalesRemoteDatasource {
         data['phone_1_e164'] = phone1E164;
       }
 
-      final response = await _dio.post(ApiEndpoints.sales.salesV4, data: data);
+      final response = await _dio.post(ApiEndpoints.sales.sales, data: data);
       log('Sales create response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -82,7 +82,7 @@ class SalesRemoteDatasource {
       }
 
       final response = await _dio.patch(
-        ApiEndpoints.sales.updateSaleV4(salesRequest.id!),
+        ApiEndpoints.sales.updateSale(salesRequest.id!),
         data: data,
       );
       log('Sales update response: ${response.data}');
@@ -116,9 +116,7 @@ class SalesRemoteDatasource {
 
   Future<CustomResponseModel> deleteSale(int saleId) async {
     try {
-      final response = await _dio.delete(
-        ApiEndpoints.sales.deleteSaleV4(saleId),
-      );
+      final response = await _dio.delete(ApiEndpoints.sales.deleteSale(saleId));
       log('Sales delete response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {

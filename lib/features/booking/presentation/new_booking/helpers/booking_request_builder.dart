@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/ad
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +191,8 @@ class BookingRequestBuilder {
     required DateTime saleDate,
     required String? description,
     required bool sendInvoice,
-    required int? accountId,
+    required AccountEntity? account,
+    required SalesSplitPayment salesSplit,
     required bool decreaseStockForPastDate,
     required bool isPastDate,
   }) {
@@ -212,6 +214,19 @@ class BookingRequestBuilder {
         ? (grossTotal * discountInput / 100).round()
         : discountInput;
 
+    // In single (non-split) mode there's no amount field at all — the sale
+    // is always paid in full — so [salesSplit]'s own `cashAmount` (bound to
+    // an amount field that's only shown when split) would read as 0.
+    // Substitute the actual payable total so `buildPayments` doesn't drop
+    // the payment entirely.
+    final payableTotal = grossTotal - discount;
+    final effectiveSplit = salesSplit.isSplit
+        ? salesSplit
+        : SalesSplitPayment(
+            isSplit: false,
+            cashAmount: payableTotal > 0 ? payableTotal : 0,
+          );
+
     return SalesRequestEntity(
       staffId: staffId,
       clientPhone: clientPhone.isEmpty ? null : clientPhone,
@@ -226,7 +241,7 @@ class BookingRequestBuilder {
       // AddOrEditSalesFormStateController — see there for details).
       discountAmount: discount,
       stockCountDecrease: decreaseStockForPastDate || !isPastDate,
-      accountId: accountId,
+      payments: effectiveSplit.buildPayments(singleAccount: account),
     );
   }
 

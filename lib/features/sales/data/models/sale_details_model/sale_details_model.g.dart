@@ -12,7 +12,7 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       client: json['client'] == null
           ? null
           : ClientModel.fromJson(json['client'] as Map<String, dynamic>),
-      clientPhone: json['client_phone_e164'],
+      clientPhone: json['client_phone_e164'] as String?,
       address: json['address'] as String? ?? '',
       description: json['description'] as String,
       saleDate: json['sale_date'] as String,
@@ -67,12 +67,12 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
 _SaleDetailsPaymentHistoryModel _$SaleDetailsPaymentHistoryModelFromJson(
   Map<String, dynamic> json,
 ) => _SaleDetailsPaymentHistoryModel(
-  id: (json['id'] as num?)?.toInt() ?? 0,
+  id: (json['id'] as num).toInt(),
   amount: (json['amount'] as num?)?.toInt() ?? 0,
-  accountId: (json['account_id'] as num?)?.toInt(),
   accountName: json['account_name'] as String?,
+  accountId: (json['account_id'] as num?)?.toInt(),
   date: json['date'] as String? ?? '',
-  paymentMethod: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
+  paymentMethod: PaymentMethod.tryFromJson(json['method'] as String?),
 );
 
 Map<String, dynamic> _$SaleDetailsPaymentHistoryModelToJson(
@@ -80,15 +80,9 @@ Map<String, dynamic> _$SaleDetailsPaymentHistoryModelToJson(
 ) => <String, dynamic>{
   'id': instance.id,
   'amount': instance.amount,
-  'account_id': instance.accountId,
   'account_name': instance.accountName,
+  'account_id': instance.accountId,
   'date': instance.date,
-  'method': PaymentMethod.toJson(instance.paymentMethod),
-};
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.upi: 'upi',
-  PaymentMethod.cash: 'cash',
 };
 
 _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(

@@ -2,8 +2,7 @@ import 'package:bookie_buddy_shared/core/core/common/models/applied_tax_model/ap
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:collection/collection.dart';
-
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_payment_entity/sale_payment_entity.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,7 +15,7 @@ abstract class SaleDetailsModel with _$SaleDetailsModel {
   const factory SaleDetailsModel({
     required int id,
     @JsonKey(name: 'client') ClientModel? client,
-    @JsonKey(name: 'client_phone_e164') dynamic clientPhone,
+    @JsonKey(name: 'client_phone_e164') String? clientPhone,
     @JsonKey(name: 'address', defaultValue: '') required String address,
     @JsonKey(name: 'description') required String description,
     @JsonKey(name: 'sale_date') required String saleDate,
@@ -54,54 +53,21 @@ abstract class SaleDetailsModel with _$SaleDetailsModel {
 abstract class SaleDetailsPaymentHistoryModel
     with _$SaleDetailsPaymentHistoryModel {
   const factory SaleDetailsPaymentHistoryModel({
-    @JsonKey(name: 'id', defaultValue: 0) required int id,
+    @JsonKey(name: 'id') required int id,
     @JsonKey(name: 'amount', defaultValue: 0) required int amount,
-    @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'account_name') String? accountName,
+    @JsonKey(name: 'account_id') int? accountId,
     @JsonKey(name: 'date', defaultValue: '') required String date,
-    @JsonKey(name: 'method', toJson: PaymentMethod.toJson)
+    @JsonKey(
+      name: 'method',
+      fromJson: PaymentMethod.tryFromJson,
+      includeToJson: false,
+    )
     PaymentMethod? paymentMethod,
   }) = _SaleDetailsPaymentHistoryModel;
 
   factory SaleDetailsPaymentHistoryModel.fromJson(Map<String, dynamic> json) =>
       _$SaleDetailsPaymentHistoryModelFromJson(json);
-}
-
-extension SaleDetailsModelMapper on SaleDetailsModel {
-  SaleDetailsEntity toEntity() {
-    // The API returns a full payment history, but a sale's account/payment
-    // method are only ever shown as a single value on the receipt/details
-    // screen — the first (most recent) payment is the one that reflects
-    // that, same as mobile.
-    final firstPayment = paymentHistory.firstOrNull;
-    return SaleDetailsEntity(
-      id: id,
-      client: client?.toEntity(),
-      clientPhone: clientPhone?.toString() ?? '',
-      address: address,
-      description: description,
-      saleDate: saleDate,
-      createdAt: createdAt,
-      totalAmount: totalAmount,
-      discountAmount: discountAmount,
-      paidAmount: paidAmount,
-      productTotal: productTotal,
-      invoiceId: invoiceId,
-      balanceDueAmount: balanceDueAmount,
-      products: products.map((e) => e.toEntity()).toList(),
-      staffId: staffId,
-      staffName: staffName,
-      payment: SaleDetailsPaymentHistoryEntity(
-        id: firstPayment?.id ?? 0,
-        amount: firstPayment?.amount ?? paidAmount,
-        accountId: firstPayment?.accountId,
-        accountName: firstPayment?.accountName,
-        date: firstPayment?.date ?? saleDate,
-        paymentMethod: firstPayment?.paymentMethod ?? PaymentMethod.cash,
-      ),
-      appliedTaxes: appliedTaxes.map((e) => e.toEntity()).toList(),
-    );
-  }
 }
 
 @freezed
@@ -136,6 +102,41 @@ abstract class ProductSaleInfoModel with _$ProductSaleInfoModel {
 
   factory ProductSaleInfoModel.fromJson(Map<String, dynamic> json) =>
       _$ProductSaleInfoModelFromJson(json);
+}
+
+extension SaleDetailsModelMapper on SaleDetailsModel {
+  SaleDetailsEntity toEntity() => SaleDetailsEntity(
+    id: id,
+    client: client?.toEntity(),
+    clientPhone: clientPhone ?? '',
+    address: address,
+    description: description,
+    saleDate: saleDate,
+    createdAt: createdAt,
+    totalAmount: totalAmount,
+    discountAmount: discountAmount,
+    paidAmount: paidAmount,
+    invoiceId: invoiceId,
+    balanceDueAmount: balanceDueAmount,
+    products: products.map((e) => e.toEntity()).toList(),
+    staffId: staffId,
+    staffName: staffName,
+    appliedTaxes: appliedTaxes.map((e) => e.toEntity()).toList(),
+    payments: paymentHistory.map((e) => e.toEntity()).toList(),
+    productTotal: productTotal,
+  );
+}
+
+extension SaleDetailsPaymentHistoryModelMapper
+    on SaleDetailsPaymentHistoryModel {
+  SalePaymentEntity toEntity() => SalePaymentEntity(
+    id: id,
+    accountId: accountId,
+    accountName: accountName,
+    amount: amount,
+    date: date,
+    paymentMethod: paymentMethod ?? PaymentMethod.cash,
+  );
 }
 
 extension ProductSaleInfoModelMapper on ProductSaleInfoModel {

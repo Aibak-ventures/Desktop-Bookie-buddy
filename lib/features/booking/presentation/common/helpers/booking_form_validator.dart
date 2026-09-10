@@ -84,14 +84,27 @@ class BookingFormValidator {
     AdvanceSplitPayment? advanceSplit,
   }) {
     if (bookingType == BookingType.sales) {
-      // Individual products may be priced at 0, but the sale as a whole must
-      // still be worth something.
-      if (totalPayable <= 0) {
-        return BookingValidationResult.invalid(
-          errors: ['Total amount must be greater than zero'],
-        );
-      }
-      if (advanceAccount == null) {
+      final split = advanceSplit;
+      if (split != null && split.isSplit) {
+        if (!split.hasAmount) {
+          return BookingValidationResult.invalid(
+            errors: ['Please enter cash and/or bank/UPI split amounts'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+        if (split.cashAmount > 0 && split.cashAccount == null) {
+          return BookingValidationResult.invalid(
+            errors: ['Please select a cash account'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+        if (split.bankAmount > 0 && split.bankAccount == null) {
+          return BookingValidationResult.invalid(
+            errors: ['Please select a bank/UPI account'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+      } else if (advanceAccount == null) {
         return BookingValidationResult.invalid(
           errors: ['Please select a payment option'],
           firstErrorField: 'advanceAccount',
