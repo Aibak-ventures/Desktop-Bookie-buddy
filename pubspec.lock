@@ -95,7 +95,7 @@ packages:
       path: "../bookie-buddy-shared"
       relative: true
     source: path
-    version: "1.2.0"
+    version: "1.4.0"
   boolean_selector:
     dependency: transitive
     description:

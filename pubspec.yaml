@@ -46,7 +46,7 @@ dependencies:
   bookie_buddy_shared:
     git:
       url: https://github.com/Aibak-ventures/bookie-buddy-shared.git
-      ref: v1.2.0 # tag name
+      ref: v1.4.0 # tag name
 
   # Functional programming & error handling
   dartz: ^0.10.1
