@@ -90,7 +90,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     final isSaleType = selectedBookingType == BookingType.sales;
     final secAmt = securityAmountController.text.trim().toIntOrNull() ?? 0;
-    if (!isSaleType && secAmt > 0 && selectedSecurityAccount == null) {
+    if (!isSaleType &&
+        secAmt > 0 &&
+        isSecurityPaid &&
+        selectedSecurityAccount == null) {
       context.showSnackBar(
         'Please select a payment option for security amount',
         isError: true,
@@ -208,7 +211,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
           : discountInput;
     }
     final secAmt = securityAmountController.text.trim().toIntOrNull();
-    if (secAmt != null && secAmt > 0 && selectedSecurityAccount?.id != null) {
+    if (secAmt != null &&
+        secAmt > 0 &&
+        isSecurityPaid &&
+        selectedSecurityAccount?.id != null) {
       updates['security_account_id'] = selectedSecurityAccount!.id;
     }
 

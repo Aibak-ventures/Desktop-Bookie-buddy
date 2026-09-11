@@ -1108,6 +1108,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       totalPayable: _calculateBookingTotalPayable(),
       advanceAccount: selectedAdvanceAccount,
       securityAccount: selectedSecurityAccount,
+      isSecurityPaid: isSecurityPaid,
       advanceSplit: advanceSplit,
     );
     if (!paymentResult.isValid) {

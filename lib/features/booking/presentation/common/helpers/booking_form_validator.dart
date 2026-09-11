@@ -81,6 +81,7 @@ class BookingFormValidator {
     required int totalPayable,
     required AccountEntity? advanceAccount,
     required AccountEntity? securityAccount,
+    required bool isSecurityPaid,
     AdvanceSplitPayment? advanceSplit,
   }) {
     if (bookingType == BookingType.sales) {
@@ -152,7 +153,7 @@ class BookingFormValidator {
         firstErrorField: 'advanceAccount',
       );
     }
-    if (securityAmount > 0 && securityAccount == null) {
+    if (securityAmount > 0 && isSecurityPaid && securityAccount == null) {
       return BookingValidationResult.invalid(
         errors: ['Please select a payment option for security amount'],
         firstErrorField: 'securityAccount',

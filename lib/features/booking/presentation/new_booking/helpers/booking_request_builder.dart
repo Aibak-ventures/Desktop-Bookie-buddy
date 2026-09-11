@@ -154,7 +154,8 @@ class BookingRequestBuilder {
       isSecurityPaid: securityAmount != null && securityAmount > 0
           ? isSecurityPaid
           : null,
-      securityPaymentAccountId: securityAmount != null
+      securityPaymentAccountId:
+          securityAmount != null && securityAmount > 0 && isSecurityPaid
           ? securityAccountId
           : null,
       discountAmount: actualDiscount,

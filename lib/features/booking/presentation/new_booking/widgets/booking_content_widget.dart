@@ -668,14 +668,16 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            AccountSelectionField(
-                              selectedAccount: selectedSecurityAccount,
-                              onChanged: (account) => rebuild(
-                                () => selectedSecurityAccount = account,
+                            if (isSecurityPaid) ...[
+                              AccountSelectionField(
+                                selectedAccount: selectedSecurityAccount,
+                                onChanged: (account) => rebuild(
+                                  () => selectedSecurityAccount = account,
+                                ),
+                                label: 'Security Payment Option',
                               ),
-                              label: 'Security Payment Option',
-                            ),
-                            const SizedBox(height: 15),
+                              const SizedBox(height: 15),
+                            ],
                             Row(
                               children: [
                                 SizedBox(

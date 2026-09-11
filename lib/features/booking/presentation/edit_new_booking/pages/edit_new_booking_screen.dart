@@ -1357,15 +1357,17 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 8),
-                  AccountSelectionField(
-                    selectedAccount: selectedSecurityAccount,
-                    initialAccountId:
-                        widget.bookingDetails?.securityPayment?.accountId,
-                    onChanged: (account) =>
-                        rebuild(() => selectedSecurityAccount = account),
-                    label: 'Security Payment Option',
-                  ),
-                  const SizedBox(height: 15),
+                  if (isSecurityPaid) ...[
+                    AccountSelectionField(
+                      selectedAccount: selectedSecurityAccount,
+                      initialAccountId:
+                          widget.bookingDetails?.securityPayment?.accountId,
+                      onChanged: (account) =>
+                          rebuild(() => selectedSecurityAccount = account),
+                      label: 'Security Payment Option',
+                    ),
+                    const SizedBox(height: 15),
+                  ],
                   Row(
                     children: [
                       SizedBox(
