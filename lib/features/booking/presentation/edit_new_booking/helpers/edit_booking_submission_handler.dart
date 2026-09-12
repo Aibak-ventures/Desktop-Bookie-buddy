@@ -101,6 +101,20 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       return;
     }
 
+    // Security deposit can't be lowered below what's already been
+    // refunded/deducted against it.
+    final minSecurityAmount =
+        (_originalBooking?.totalSecurityRefunded ?? 0) +
+        (_originalBooking?.totalSecurityDeducted ?? 0);
+    if (minSecurityAmount > 0 && secAmt < minSecurityAmount) {
+      context.showSnackBar(
+        'Security Deposit can\'t be less than $minSecurityAmount (already refunded/returned)',
+        title: 'Security Deposit',
+        isError: true,
+      );
+      return;
+    }
+
     if (widget.bookingDetails != null) {
       final partialUpdate = _buildPartialUpdateRequest();
       if (sendPdfToWhatsApp) {
