@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_request_entity/client_request_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/repositories/i_client_repository.dart';
 import 'package:bookie_buddy_web/features/client/data/datasources/client_remote_datasource.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
-import 'package:bookie_buddy_web/features/client/domain/repositories/i_client_repository.dart';
+import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 
 class ClientRepositoryImpl implements IClientRepository {
@@ -18,7 +18,7 @@ class ClientRepositoryImpl implements IClientRepository {
   Future<PaginationModel<ClientEntity>> getClients({
     int page = 1,
     String? searchName,
-    String? searchPhone,
+    int? searchPhone,
   }) async {
     try {
       final response = await safeApiCall(
@@ -44,7 +44,7 @@ class ClientRepositoryImpl implements IClientRepository {
   }
 
   @override
-  Future<ClientEntity> getClientById(int clientId) async {
+  Future<ClientEntity> getClientDetails(int clientId) async {
     try {
       final response = await safeApiCall(
         () => _datasource.getClientById(clientId),

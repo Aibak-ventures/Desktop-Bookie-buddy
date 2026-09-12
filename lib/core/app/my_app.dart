@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
             deleteRefund: getIt(),
             updateSecurityRefund: getIt(),
             deleteSecurityRefundedPayment: getIt(),
+            updatePartialReturn: getIt(),
           ),
         ),
         BlocProvider(
@@ -129,7 +130,7 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (context) =>
-              ClientCubit(getClients: getIt.get(), getClientById: getIt.get()),
+              ClientCubit(getClients: getIt.get(), getClientDetails: getIt.get()),
         ),
         BlocProvider(create: (context) => AccountsCubit(getAccounts: getIt())),
         BlocProvider(

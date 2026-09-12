@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -52,12 +52,14 @@ abstract class ClientModel with _$ClientModel {
 }
 
 extension ClientModelMapper on ClientModel {
+  // ClientEntity.phone1/phone2 are always E.164-formatted (matches mobile,
+  // which only ever stores the phone number this one way) — prefer the
+  // e164 fields, falling back to the raw-digits ones only if e164 is
+  // somehow absent, so entity.phone1 is never left empty.
   ClientEntity toEntity() => ClientEntity(
     id: id,
     name: name,
-    phone1: phone1,
-    phone2: phone2,
-    phone1E164: phone1E164,
-    phone2E164: phone2E164,
+    phone1: phone1E164 ?? phone1.toString(),
+    phone2: phone2E164 ?? phone2?.toString(),
   );
 }

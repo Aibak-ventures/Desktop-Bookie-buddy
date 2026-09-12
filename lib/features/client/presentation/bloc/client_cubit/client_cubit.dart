@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/features/client/domain/entities/client_entity/client_entity.dart';
-import 'package:bookie_buddy_web/features/client/domain/usecases/get_client_by_id_usecase.dart';
-import 'package:bookie_buddy_web/features/client/domain/usecases/get_clients_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/usecases/get_client_details_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/usecases/get_clients_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,13 +12,13 @@ part 'client_state.dart';
 
 class ClientCubit extends Cubit<ClientState> {
   final GetClientsUseCase _getClients;
-  final GetClientByIdUseCase _getClientById;
+  final GetClientDetailsUseCase _getClientDetails;
 
   ClientCubit({
     required GetClientsUseCase getClients,
-    required GetClientByIdUseCase getClientById,
+    required GetClientDetailsUseCase getClientDetails,
   }) : _getClients = getClients,
-       _getClientById = getClientById,
+       _getClientDetails = getClientDetails,
        super(
          const ClientState(
            selectedClient: null,
@@ -87,7 +87,7 @@ class ClientCubit extends Cubit<ClientState> {
 
     _fetchingById = true;
     try {
-      final fresh = await _getClientById.call(selectedClient.id!);
+      final fresh = await _getClientDetails.call(selectedClient.id!);
       _clientModel = fresh;
       emit(
         ClientState(

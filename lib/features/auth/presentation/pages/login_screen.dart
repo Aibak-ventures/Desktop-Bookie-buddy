@@ -45,9 +45,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // TOP LEFT APP LOGO
           Positioned(
-            top: 20,
-            left: 20,
-            child: Image.asset('assets/images/app_icon_dart.png', height: 110),
+            top: 30,
+            left: 30,
+            child: SvgPicture.asset(
+              'assets/images/new_splash_color_img.svg',
+              height: 40,
+            ),
           ),
 
           Center(

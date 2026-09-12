@@ -1,10 +1,9 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-// import 'package:bookie_buddy_web/core/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_colorpicker/flutter_colorpicker.dart' as colorpicker;
 import 'package:intl/intl.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 extension StringXDateFormat on String {
   /// Parses any valid date string and auto handles both `yyyy-MM-dd` and `dd-MM-yyyy`.
@@ -425,18 +424,40 @@ extension StringColorXNullable on String? {
     // toColor extension method from colorpicker package
     return this!.toColor() ?? defaultColor;
   }
+}
 
-  // Color? toColor() {
-  //   if (this == null || this!.isEmpty) {
-  //     return null;
-  //   }
-  //   String hex = this!.trim().toUpperCase().replaceAll('#', '');
-  //   if (hex.length == 6) {
-  //     hex = 'FF$hex'; // Add full opacity if alpha not provided
-  //   } else if (hex.length != 8) {
-  //     return null; // Invalid format
-  //   }
-  //   final intVal = int.parse(hex, radix: 16);
-  //   return Color(intVal);
-  // }
+extension StringXPhoneNumber on String {
+  /// Parses the string to a PhoneNumber object. Throws FormatException if parsing fails.
+  PhoneNumber parsePhoneNumber() {
+    try {
+      return PhoneNumber.parse(this);
+    } catch (e) {
+      throw FormatException('Invalid phone number format: $this', e);
+    }
+  }
+
+  /// Parses the string to a PhoneNumber object, returning `null` if parsing fails.
+  PhoneNumber? tryParsePhoneNumber() {
+    try {
+      return PhoneNumber.parse(this);
+    } catch (e) {
+      log('Failed to parse phone number: $this, error: $e');
+      return null;
+    }
+  }
+
+  /// Formats a raw e164 phone number string into a more readable format.
+  String formatPhoneNumber({bool includeCountryCode = true}) {
+    // Parse the raw e164 number (e.g., +919876543210)
+    try {
+      final phoneNumber = PhoneNumber.parse(this);
+      if (includeCountryCode) {
+        return '+${phoneNumber.countryCode} ${phoneNumber.formatNsn()}';
+      }
+      // Format it for display (e.g., +91 98765-43210)
+      return phoneNumber.formatNsn();
+    } catch (e) {
+      return this; // If parsing fails, return the original string
+    }
+  }
 }

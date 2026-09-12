@@ -12,6 +12,7 @@ import 'package:bookie_buddy_web/core/di/features/global_search_dependencies.dar
 import 'package:bookie_buddy_web/core/di/features/shop_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/staff_dependencies.dart';
 import 'package:bookie_buddy_web/core/di/features/tax_and_compliance_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
 import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
@@ -25,28 +26,43 @@ final getIt = GetIt.instance;
 class AppDependencies {
   /// Initializes the dependencies for the application
   static void init(SharedPreferences prefs) {
+    _registerCommon(prefs);
     _registerFeatures(prefs);
   }
 
   /// register feature specific dependencies
   static void _registerFeatures(SharedPreferences prefs) {
-    _registerCommon(prefs);
-    ShopDependencies.register();
-    AuthDependencies.register();
-    ClientDependencies.register();
-    StaffDependencies.register();
-    DashboardDependencies.register();
-    SalesDependencies.register();
-    ProductDependencies.register();
-    BookingDependencies.register();
-    AccountDependencies.register();
-    TaxAndComplianceDependencies.register();
-    GlobalSearchDependencies.register();
-    PrinterDependencies.register();
+    final dependencies = <IAppDependency>[
+      ShopDependencies(),
+      AuthDependencies(),
+      ClientDependencies(),
+      StaffDependencies(),
+      DashboardDependencies(),
+      SalesDependencies(),
+      ProductDependencies(),
+      BookingDependencies(),
+      AccountDependencies(),
+      TaxAndComplianceDependencies(),
+      GlobalSearchDependencies(),
+      PrinterDependencies(),
+    ];
+
+    for (final dep in dependencies) {
+      dep.register();
+    }
   }
 
   // ================== common ==================
-  static void _registerCommon(SharedPreferences prefs) {
+  static void _registerCommon(SharedPreferences prefs) =>
+      _CommonDependencies(prefs).register();
+}
+
+class _CommonDependencies implements IAppDependency {
+  final SharedPreferences prefs;
+  const _CommonDependencies(this.prefs);
+
+  @override
+  void register() {
     getIt.registerLazySingleton(() => SharedPreferenceHelper(prefs));
     getIt.registerLazySingleton(
       () => SessionStorage(getIt<SharedPreferenceHelper>()),

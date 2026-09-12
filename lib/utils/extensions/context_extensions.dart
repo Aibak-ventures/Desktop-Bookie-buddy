@@ -20,6 +20,20 @@ extension MediaQueryX on BuildContext {
   /// Returns the screen current orientation
   Orientation get orientation => MediaQuery.orientationOf(this);
 
+  /// Returns the screen current width clamped between [minWidth] and [maxWidth], optionally scaled by [maxWidthInPercent].
+  ///
+  /// - [maxWidth] is the maximum width to clamp to.
+  /// - [minWidth] is the minimum width to clamp to. Defaults to 0.
+  /// - [maxWidthInPercent] is the percentage of the screen width to use for clamping. Defaults to 1 (100% of the screen width).
+  ///
+  /// This method is useful for responsive layouts where you want to limit the width of a widget based on the screen size,
+  /// but also want to ensure it doesn't exceed certain bounds
+  double screenWidthClamped({
+    required double maxWidth,
+    double minWidth = 0,
+    double maxWidthInPercent = 1,
+  }) => (screenWidth * maxWidthInPercent).clamp(minWidth, maxWidth);
+
   /// Calculates a height based on a proportion of the screen height.
   ///
   /// [value] is the proportion of the screen height to return. For example,

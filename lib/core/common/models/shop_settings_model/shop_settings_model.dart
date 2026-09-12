@@ -22,6 +22,7 @@ abstract class ShopSettingsModel with _$ShopSettingsModel {
       name: 'default_action',
       fromJson: AddButtonDefaultAction.fromString,
       defaultValue: AddButtonDefaultAction.booking,
+      toJson: AddButtonDefaultAction.toJson,
     )
     required AddButtonDefaultAction addButtonDefaultAction,
     @JsonKey(name: 'search_client', defaultValue: false)

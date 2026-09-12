@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'desktop_booking_item_entity.freezed.dart';

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/utils/async/run_for_at_least.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/app/my_app.dart';
@@ -20,18 +21,17 @@ class SplashInitializationUseCase {
   final SessionStorage _sessionStorage;
 
   Future<void> call() async {
-    await Future.delayed(const Duration(seconds: 2));
+    final initialScreen = await runForAtLeast(() async {
+      final onboarding = _prefs.instance.getBool(AppConstants.onboardingKey);
+      log('onboarding: $onboarding');
 
-    final onboarding = _prefs.instance.getBool(AppConstants.onboardingKey);
-    log('onboarding: $onboarding');
-
-    final initialScreen = !(onboarding ?? false)
-        ? const OnboardingScreen()
-        : _sessionStorage.refreshToken != null &&
-              _sessionStorage.accessToken != null
-        ? const BottomBarScreen()
-        : const LoginScreen();
-
+      return !(onboarding ?? false)
+          ? const OnboardingScreen()
+          : _sessionStorage.refreshToken != null &&
+                _sessionStorage.accessToken != null
+          ? const BottomBarScreen()
+          : const LoginScreen();
+    }, Duration(milliseconds: 2500));
     navigatorKey.currentContext!.pushReplacement(initialScreen);
   }
 }

@@ -12,7 +12,7 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       client: json['client'] == null
           ? null
           : ClientModel.fromJson(json['client'] as Map<String, dynamic>),
-      clientPhone: json['client_phone'],
+      clientPhone: json['client_phone_e164'] as String?,
       address: json['address'] as String? ?? '',
       description: json['description'] as String,
       saleDate: json['sale_date'] as String,
@@ -20,6 +20,7 @@ _SaleDetailsModel _$SaleDetailsModelFromJson(Map<String, dynamic> json) =>
       totalAmount: (json['total_amount_after_discount'] as num).toInt(),
       discountAmount: (json['discount'] as num).toInt(),
       paidAmount: (json['paid_amount'] as num).toInt(),
+      productTotal: (json['items_subtotal'] as num?)?.toInt() ?? 0,
       invoiceId: json['shop_sale_id'] as String? ?? '',
       balanceDueAmount: (json['balance_due'] as num).toInt(),
       products: (json['items'] as List<dynamic>)
@@ -45,7 +46,7 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'client': instance.client,
-      'client_phone': instance.clientPhone,
+      'client_phone_e164': instance.clientPhone,
       'address': instance.address,
       'description': instance.description,
       'sale_date': instance.saleDate,
@@ -53,6 +54,7 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
       'total_amount_after_discount': instance.totalAmount,
       'discount': instance.discountAmount,
       'paid_amount': instance.paidAmount,
+      'items_subtotal': instance.productTotal,
       'shop_sale_id': instance.invoiceId,
       'balance_due': instance.balanceDueAmount,
       'items': instance.products,
@@ -65,22 +67,22 @@ Map<String, dynamic> _$SaleDetailsModelToJson(_SaleDetailsModel instance) =>
 _SaleDetailsPaymentHistoryModel _$SaleDetailsPaymentHistoryModelFromJson(
   Map<String, dynamic> json,
 ) => _SaleDetailsPaymentHistoryModel(
-  accountId: (json['account_id'] as num?)?.toInt(),
+  id: (json['id'] as num).toInt(),
+  amount: (json['amount'] as num?)?.toInt() ?? 0,
   accountName: json['account_name'] as String?,
-  paymentMethod: $enumDecodeNullable(_$PaymentMethodEnumMap, json['method']),
+  accountId: (json['account_id'] as num?)?.toInt(),
+  date: json['date'] as String? ?? '',
+  paymentMethod: PaymentMethod.tryFromJson(json['method'] as String?),
 );
 
 Map<String, dynamic> _$SaleDetailsPaymentHistoryModelToJson(
   _SaleDetailsPaymentHistoryModel instance,
 ) => <String, dynamic>{
-  'account_id': instance.accountId,
+  'id': instance.id,
+  'amount': instance.amount,
   'account_name': instance.accountName,
-  'method': instance.paymentMethod,
-};
-
-const _$PaymentMethodEnumMap = {
-  PaymentMethod.upi: 'upi',
-  PaymentMethod.cash: 'cash',
+  'account_id': instance.accountId,
+  'date': instance.date,
 };
 
 _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(
@@ -94,7 +96,8 @@ _ProductSaleInfoModel _$ProductSaleInfoModelFromJson(
   quantity: (json['quantity'] as num).toInt(),
   price: (json['price'] as num).toInt(),
   subtotal: (json['subtotal'] as num).toInt(),
-  image: json['thumbnail'] as String?,
+  image: json['image'] as String?,
+  thumbnailImage: json['thumbnail'] as String?,
   color: json['color'] as String?,
   category: json['category'] as String?,
   model: json['model'] as String?,
@@ -120,7 +123,8 @@ Map<String, dynamic> _$ProductSaleInfoModelToJson(
   'quantity': instance.quantity,
   'price': instance.price,
   'subtotal': instance.subtotal,
-  'thumbnail': instance.image,
+  'image': instance.image,
+  'thumbnail': instance.thumbnailImage,
   'color': instance.color,
   'category': instance.category,
   'model': instance.model,

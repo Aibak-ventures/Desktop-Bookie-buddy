@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/staff/data/repositories/staff_repository_impl.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
@@ -11,8 +12,9 @@ import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staff_monthl
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class StaffDependencies {
-  static void register() {
+class StaffDependencies implements IAppDependency {
+  @override
+  void register() {
     getIt.registerLazySingleton(
       () => StaffRemoteDatasource(dio: DioClient.dio),
     );

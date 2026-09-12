@@ -1,16 +1,15 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_app_bar.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_date_section.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_product_list_header.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
@@ -19,7 +18,8 @@ import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_form_
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
@@ -32,6 +32,7 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/product/presentation/common/widgets/select_product_dialog.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,6 +83,20 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       _formController.discountController,
       _formController.selectedProductsNotifier,
     ]);
+    // Clear the split amounts whenever the payable total actually moves
+    // (products or discount changed) — never on an event that didn't
+    // actually change the computed total.
+    _formController.recomputePayableTotalAndClearSplitIfChanged(
+      widget.saleDetails,
+    );
+    _totalAmountListener.addListener(_handleTotalMayHaveChanged);
+    // Auto-balance the two split amount fields against each other.
+    _formController.splitCashAmountController.addListener(
+      _handleSplitCashAmountChanged,
+    );
+    _formController.splitBankAmountController.addListener(
+      _handleSplitBankAmountChanged,
+    );
     _selectProductBloc = SelectProductBloc(
       getAvailableProducts: getIt.get(),
       getProducts: getIt.get(),
@@ -107,8 +122,33 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     }
   }
 
+  void _handleTotalMayHaveChanged() {
+    _formController.recomputePayableTotalAndClearSplitIfChanged(
+      widget.saleDetails,
+    );
+  }
+
+  void _handleSplitCashAmountChanged() {
+    _formController.onSplitCashAmountChanged(
+      _formController.computePayableTotal(widget.saleDetails),
+    );
+  }
+
+  void _handleSplitBankAmountChanged() {
+    _formController.onSplitBankAmountChanged(
+      _formController.computePayableTotal(widget.saleDetails),
+    );
+  }
+
   @override
   void dispose() {
+    _totalAmountListener.removeListener(_handleTotalMayHaveChanged);
+    _formController.splitCashAmountController.removeListener(
+      _handleSplitCashAmountChanged,
+    );
+    _formController.splitBankAmountController.removeListener(
+      _handleSplitBankAmountChanged,
+    );
     _removeSearchOverlay();
     _formController.dispose();
     _serviceSearchController.dispose();
@@ -326,7 +366,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   Widget _buildSelectedProductsTable() {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final tableWidth = constraints.maxWidth < SalesProductTableFlex.minTableWidth
+        final tableWidth =
+            constraints.maxWidth < SalesProductTableFlex.minTableWidth
             ? SalesProductTableFlex.minTableWidth
             : constraints.maxWidth;
         return Scrollbar(
@@ -483,18 +524,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                   ),
                   const SizedBox(height: _fieldSpacing),
                   const SizedBox(height: _fieldSpacing),
-                  ValueListenableBuilder<AccountEntity?>(
-                    valueListenable: _formController.selectedAccountNotifier,
-                    builder: (context, selectedAccount, _) =>
-                        AccountSelectionField(
-                          selectedAccount: selectedAccount,
-                          onChanged: (account) {
-                            _formController.selectedAccountNotifier.value =
-                                account;
-                          },
-                          initialAccountId: widget.saleDetails.accountId,
-                        ),
-                  ),
+
+                  _buildPaymentSection(),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -535,6 +566,100 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // ---- Payment (single / cash+bank split) ----
+  Widget _buildPaymentSection() {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        _formController.splitCashAmountController,
+        _formController.splitBankAmountController,
+        _formController.selectedAccountNotifier,
+      ]),
+      builder: (context, _) {
+        final isSplit = _formController.isSplitPayment;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Payment',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const Spacer(),
+                // Split/merge is locked once a sale exists — it stays
+                // editable only in the payment shape it was created with.
+                if (!_formController.isSplitToggleLocked)
+                  PopupMenuButton<bool>(
+                    tooltip: 'Payment options',
+                    iconSize: 20,
+                    icon: const Icon(Icons.more_vert_rounded),
+                    onSelected: (v) => setState(() {
+                      _formController.isSplitPayment = v;
+                      if (!v) {
+                        _formController.splitCashAmountController.clear();
+                        _formController.splitBankAmountController.clear();
+                        _formController.selectedCashAccount = null;
+                        _formController.selectedBankAccount = null;
+                      }
+                    }),
+                    itemBuilder: (context) => [
+                      if (!isSplit)
+                        const PopupMenuItem<bool>(
+                          value: true,
+                          child: Text('Split Cash & UPI'),
+                        ),
+                      if (isSplit)
+                        const PopupMenuItem<bool>(
+                          value: false,
+                          child: Text('Merge Cash & UPI'),
+                        ),
+                    ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            if (isSplit)
+              BookingTextFieldBuilder.buildRightPanelTextField(
+                controller: _formController.splitCashAmountController,
+                hint: 'Enter cash amount',
+                label: 'Amount (Cash)',
+                isNumber: true,
+              ),
+            if (isSplit) const SizedBox(height: _fieldSpacing),
+            SplitAdvancePaymentFields(
+              isSplit: isSplit,
+              bankAmountController: _formController.splitBankAmountController,
+              cashAccount: _formController.selectedCashAccount,
+              onCashAccountChanged: (account) =>
+                  setState(() => _formController.selectedCashAccount = account),
+              bankAccount: _formController.selectedBankAccount,
+              onBankAccountChanged: (account) =>
+                  setState(() => _formController.selectedBankAccount = account),
+              cashInitialAccountId: _formController.originalCashAccountId,
+              bankInitialAccountId: _formController.originalBankAccountId,
+              cashAccountLabel: 'Cash Account',
+              bankAmountHint: 'Enter bank/UPI amount',
+              bankAmountLabel: 'Amount (Bank/UPI)',
+              bankAccountLabel: 'Bank/UPI Account',
+              singlePaymentSelector: AccountSelectionField(
+                selectedAccount: _formController.selectedAccountNotifier.value,
+                onChanged: (account) {
+                  _formController.selectedAccountNotifier.value = account;
+                },
+                initialAccountId:
+                    widget.saleDetails.payments.firstOrNull?.accountId,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -971,7 +1096,9 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
             variantId: variant.id,
             productId: product.id,
             name: product.name,
-            image: product.image,
+            productImage: product.image,
+            thumbnailImage: product.thumbnailImage,
+            fabricLength: 0,
             amount: price,
             category: product.category,
             color: product.color,
@@ -1051,11 +1178,8 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
   void _saveEditingPrice(ProductSelectedEntity product) {
     if (_editingVariantId == null) return;
     final newPrice = int.tryParse(_inlinePriceController.text);
-    if (newPrice == null || newPrice <= 0) {
-      context.showSnackBar(
-        'Product price cannot be zero or empty',
-        isError: true,
-      );
+    if (newPrice == null || newPrice < 0) {
+      context.showSnackBar('Please enter a valid product price', isError: true);
       return;
     }
     _updateProductList(
@@ -1187,9 +1311,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
     final discountChanged =
         (discountText.isNotEmpty ? discountText.toIntOrNull() ?? 0 : 0) !=
         widget.saleDetails.discountAmount;
-    final accountChanged =
-        _formController.selectedAccountNotifier.value?.id !=
-        widget.saleDetails.accountId;
+    final paymentChanged = _formController.hasPaymentChanged;
     final productsChanged =
         products.length != widget.saleDetails.products.length;
 
@@ -1198,7 +1320,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
         placeChanged ||
         descChanged ||
         discountChanged ||
-        accountChanged ||
+        paymentChanged ||
         productsChanged;
   }
 }

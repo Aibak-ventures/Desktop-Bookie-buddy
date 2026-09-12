@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/add_refund_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_refund_usecase.dart';
@@ -26,11 +27,13 @@ import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usec
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_delivery_status_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/update_partial_return_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_payment_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class BookingDependencies {
-  static void register() {
+class BookingDependencies implements IAppDependency {
+  @override
+  void register() {
     if (!getIt.isRegistered<BookingRemoteDatasource>()) {
       getIt.registerLazySingleton(
         () => BookingRemoteDatasource(dio: DioClient.dio),
@@ -150,6 +153,10 @@ class BookingDependencies {
       getIt.registerLazySingleton(
         () => DeleteSecurityRefundedPaymentUseCase(getIt()),
       );
+    }
+
+    if (!getIt.isRegistered<UpdatePartialReturnUseCase>()) {
+      getIt.registerLazySingleton(() => UpdatePartialReturnUseCase(getIt()));
     }
 
     if (!getIt.isRegistered<AddBookingCubit>()) {

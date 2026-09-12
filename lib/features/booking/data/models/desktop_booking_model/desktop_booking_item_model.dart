@@ -1,6 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,7 +25,7 @@ abstract class DesktopBookingItemModel with _$DesktopBookingItemModel {
     @JsonKey(name: 'staff_color') String? staffColor,
     @JsonKey(
       name: 'delivery_status',
-      fromJson: DeliveryStatus.fromString,
+      fromJson: DeliveryStatus.fromJson,
       toJson: DeliveryStatus.toJson,
     )
     DeliveryStatus? deliveryStatus,

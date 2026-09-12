@@ -32,13 +32,13 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
       : PurchaseMode.fromJson(json['purchase_mode'] as String?),
   bookingStatus: json['booking_status'] == null
       ? BookingStatus.upcoming
-      : BookingStatus.fromString(json['booking_status'] as String),
+      : BookingStatus.fromJson(json['booking_status'] as String?),
   paymentStatus: json['payment_status'] == null
       ? PaymentStatus.pending
       : PaymentStatus.fromBool(json['payment_status'] as bool?),
   deliveryStatus: json['delivery_status'] == null
       ? DeliveryStatus.booked
-      : DeliveryStatus.fromString(json['delivery_status']),
+      : DeliveryStatus.fromJson(json['delivery_status'] as String?),
   staffName: json['staff_name'] as String?,
   staffId: (json['staff_id'] as num?)?.toInt(),
   otherDetails: json['details'] == null
@@ -71,7 +71,9 @@ _BookingDetailsModel _$BookingDetailsModelFromJson(
           )
           .toList() ??
       const [],
-  refunds: json['refunds'] as List<dynamic>? ?? const [],
+  refunds: json['refunds'] == null
+      ? const []
+      : _refundsFromJson(json['refunds'] as List?),
   totalRefunded: (json['total_refunded'] as num?)?.toDouble() ?? 0.0,
   refundableBalance: (json['refundable_balance'] as num?)?.toDouble() ?? 0.0,
   securitySummary: json['security_summary'] == null

@@ -10,15 +10,15 @@ _BookingsModel _$BookingsModelFromJson(Map<String, dynamic> json) =>
     _BookingsModel(
       id: (_idCustomRead(json, 'id') as num?)?.toInt(),
       clientName: _clientCustomRead(json, 'client') as String? ?? 'Unknown',
-      bookingStatus: BookingStatus.fromString(
-        _bookingStatusCustomRead(json, 'booking_status') as String,
+      bookingStatus: BookingStatus.fromJson(
+        _bookingStatusCustomRead(json, 'booking_status') as String?,
       ),
       bookedDate: json['booking_date'] as String?,
       pickupDate: json['pickup_date'] as String?,
       returnDate: json['return_date'] as String?,
       deliveryStatus: json['delivery_status'] == null
           ? DeliveryStatus.booked
-          : DeliveryStatus.fromString(json['delivery_status']),
+          : DeliveryStatus.fromJson(json['delivery_status'] as String?),
       paymentStatus: json['payment_status'] == null
           ? PaymentStatus.pending
           : PaymentStatus.fromBool(json['payment_status'] as bool?),

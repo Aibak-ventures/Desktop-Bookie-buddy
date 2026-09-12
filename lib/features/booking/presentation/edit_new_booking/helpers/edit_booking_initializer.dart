@@ -66,24 +66,22 @@ extension EditBookingInitializer on EditNewBookingScreenState {
 
     // Set client details
     clientNameController.text = booking.client.name;
-    // phone1/phone2 are non-nullable ints in ClientEntity but the API may return null,
-    // in which case the entity defaults to 0. Check > 0 before trusting the raw int,
-    // and fall back to extracting from the E.164 string.
+    // ClientEntity.phone1/phone2 are always E.164-formatted now (shared
+    // with mobile) — extract the local digits for phoneNumber, same value
+    // for e164.
     BookingPhonePopulator.setPhoneFieldValue(
       _clientPhone1FieldController,
       clientPhone1Controller,
-      phoneNumber: booking.client.phone1 > 0
-          ? booking.client.phone1.toString()
-          : null,
-      e164: booking.client.phone1E164,
+      phoneNumber: extractPhoneFromE164(booking.client.phone1).nullIfEmpty,
+      e164: booking.client.phone1,
     );
     BookingPhonePopulator.setPhoneFieldValue(
       _clientPhone2FieldController,
       clientPhone2Controller,
-      phoneNumber: (booking.client.phone2 ?? 0) > 0
-          ? booking.client.phone2.toString()
-          : null,
-      e164: booking.client.phone2E164,
+      phoneNumber: booking.client.phone2 == null
+          ? null
+          : extractPhoneFromE164(booking.client.phone2).nullIfEmpty,
+      e164: booking.client.phone2,
     );
     if (booking.address != null) {
       clientAddressController.text = booking.address!;
@@ -100,8 +98,9 @@ extension EditBookingInitializer on EditNewBookingScreenState {
 
     // Set payment details
     advanceAmountController.text = booking.paidAmount.toString();
-    if (booking.securityAmount != null && booking.securityAmount! > 0) {
-      securityAmountController.text = booking.securityAmount.toString();
+    final securityAmount = booking.securityPayment?.amount;
+    if (securityAmount != null && securityAmount > 0) {
+      securityAmountController.text = securityAmount.toString();
     }
     isSecurityPaid = booking.isSecurityPaid;
     // selectedSecurityAccount is auto-selected via initialAccountId in AccountSelectionField
@@ -142,7 +141,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
         }
       }
     }
-    runningKmValue ??= booking.otherDetails.end;
+    runningKmValue ??= booking.otherDetails.runningKilometers;
     if (runningKmValue != null && runningKmValue.isNotEmpty) {
       runningKilometersController.text = runningKmValue;
     }
@@ -174,18 +173,12 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     );
     if (booking.documents.isNotEmpty) {
       final docs = booking.documents
-          .map((doc) {
-            if (doc is Map<String, dynamic>) {
-              final url = doc['url'] ?? doc['file'] ?? '';
-              final name = doc['name'] ?? _extractFilenameFromUrl(url);
-              return DocumentFileEntity(name: name, path: url);
-            } else if (doc is String) {
-              final filename = _extractFilenameFromUrl(doc);
-              return DocumentFileEntity(name: filename, path: doc);
-            }
-            return null;
-          })
-          .whereType<DocumentFileEntity>()
+          .map(
+            (doc) => DocumentFileEntity(
+              name: _extractFilenameFromUrl(doc),
+              path: doc,
+            ),
+          )
           .toList();
       log('✅ Loaded ${docs.length} documents for preview');
       documentsNotifier.value = docs;
@@ -214,13 +207,11 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       BookingPhonePopulator.setPhoneFieldValue(
         _clientPhone1FieldController,
         clientPhone1Controller,
-        phoneNumber: saleClient.phone1 > 0
-            ? saleClient.phone1.toString()
-            : null,
-        e164: saleClient.phone1E164,
+        phoneNumber: extractPhoneFromE164(saleClient.phone1).nullIfEmpty,
+        e164: saleClient.phone1,
       );
-    } else if (sale.clientPhone != null) {
-      final phoneStr = sale.clientPhone.toString();
+    } else {
+      final phoneStr = sale.clientPhone;
       if (phoneStr.isNotEmpty) {
         BookingPhonePopulator.setPhoneFieldValue(
           _clientPhone1FieldController,
@@ -255,7 +246,9 @@ extension EditBookingInitializer on EditNewBookingScreenState {
           variantId: item.variantId,
           productId: item.productId,
           name: item.name,
-          image: item.image,
+          productImage: item.image,
+          thumbnailImage: item.thumbnailImage,
+          fabricLength: 0,
           amount: item.price,
           category: item.category,
           color: item.color,
@@ -298,27 +291,17 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     }
 
     _originalClientName = booking.client.name;
-    // Mirror the same zero-guard used in _initializeFromBooking so that
-    // original vs current comparisons are accurate.
-    _originalClientPhone1 = (booking.client.phone1) > 0
-        ? booking.client.phone1.toString()
-        : (booking.client.phone1E164 != null &&
-                  booking.client.phone1E164!.isNotEmpty
-              ? _extractPhoneFromE164(booking.client.phone1E164!)
-              : '');
-    _originalClientPhone2 = (booking.client.phone2 ?? 0) > 0
-        ? booking.client.phone2.toString()
-        : (booking.client.phone2E164 != null &&
-                  booking.client.phone2E164!.isNotEmpty
-              ? _extractPhoneFromE164(booking.client.phone2E164!)
-              : null);
-    __originalClientPhone1E164 = booking.client.phone1E164;
-    __originalClientPhone2E164 = booking.client.phone2E164;
+    _originalClientPhone1 = _extractPhoneFromE164(booking.client.phone1);
+    _originalClientPhone2 = booking.client.phone2 == null
+        ? null
+        : _extractPhoneFromE164(booking.client.phone2!);
+    __originalClientPhone1E164 = booking.client.phone1;
+    __originalClientPhone2E164 = booking.client.phone2;
     _originalClientAddress = booking.address;
 
     _originalStaffId = booking.staffId;
 
-    _originalSecurityAmount = booking.securityAmount;
+    _originalSecurityAmount = booking.securityPayment?.amount;
     _originalIsSecurityPaid = booking.isSecurityPaid;
     _originalDiscountAmount = booking.discountAmount;
 
@@ -354,7 +337,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
         }
       }
     }
-    _originalRunningKm = originalKm ?? booking.otherDetails.end;
+    _originalRunningKm = originalKm ?? booking.otherDetails.runningKilometers;
     _originalDeliveryStatus = booking.deliveryStatus;
     _originalPurchaseMode = booking.purchaseMode;
     _originalCoolingPeriodDays = coolingPeriodDays;

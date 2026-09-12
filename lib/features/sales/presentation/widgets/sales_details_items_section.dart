@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Item details section for [SalesDetailsDrawer].
@@ -31,6 +32,20 @@ class SalesDetailsItemsSection extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...sale.products.map((item) {
+            // Small leading thumbnail: prefer the dedicated thumbnail
+            // (lighter/faster), falling back to the full-quality image.
+            // The zoom preview does the opposite — a full-size view should
+            // show the quality image, only falling back to the thumbnail
+            // if that's all there is. Same split mobile's
+            // ProductSimpleDetailsTile makes between `thumbnailImage` and
+            // `qualityImage`.
+            final thumbnail = item.thumbnailImage.isNotNullOrEmpty
+                ? item.thumbnailImage
+                : item.image;
+            final qualityImage = item.image.isNotNullOrEmpty
+                ? item.image
+                : item.thumbnailImage;
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
@@ -44,20 +59,20 @@ class SalesDetailsItemsSection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.grey.shade200),
                     ),
-                    child: item.image != null && item.image!.isNotEmpty
+                    child: thumbnail.isNotNullOrEmpty
                         ? Material(
                             color: Colors.transparent,
                             child: InkWell(
                               borderRadius: BorderRadius.circular(8),
                               onTap: () => ZoomableImageDialog.show(
                                 context,
-                                imageUrl: item.image!,
+                                imageUrl: qualityImage!,
                                 title: item.name,
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  item.image!,
+                                  thumbnail!,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
                                       Icon(

@@ -86,7 +86,7 @@ extension BookingDetailsEventPatterns on BookingDetailsEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult Function( _UpdatePayment value)?  updatePayment,TResult Function( _DeletePayment value)?  deletePayment,TResult Function( _CancelBooking value)?  cancelBooking,TResult Function( _DeleteBooking value)?  deleteBooking,TResult Function( _AddRefund value)?  addRefund,TResult Function( _DeleteRefund value)?  deleteRefund,TResult Function( _UpdateSecurityRefund value)?  updateSecurityRefund,TResult Function( _DeleteSecurityRefundedPayment value)?  deleteSecurityRefundedPayment,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult Function( _UpdatePayment value)?  updatePayment,TResult Function( _DeletePayment value)?  deletePayment,TResult Function( _CancelBooking value)?  cancelBooking,TResult Function( _DeleteBooking value)?  deleteBooking,TResult Function( _AddRefund value)?  addRefund,TResult Function( _DeleteRefund value)?  deleteRefund,TResult Function( _UpdateSecurityRefund value)?  updateSecurityRefund,TResult Function( _DeleteSecurityRefundedPayment value)?  deleteSecurityRefundedPayment,TResult Function( _UpdatePartialReturn value)?  updatePartialReturn,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
@@ -100,7 +100,8 @@ return deleteBooking(_that);case _AddRefund() when addRefund != null:
 return addRefund(_that);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that);case _UpdateSecurityRefund() when updateSecurityRefund != null:
 return updateSecurityRefund(_that);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
-return deleteSecurityRefundedPayment(_that);case _:
+return deleteSecurityRefundedPayment(_that);case _UpdatePartialReturn() when updatePartialReturn != null:
+return updatePartialReturn(_that);case _:
   return orElse();
 
 }
@@ -118,7 +119,7 @@ return deleteSecurityRefundedPayment(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchBookingDetails value)  fetchBookingDetails,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _UpdateBookingStatus value)  updateBookingStatus,required TResult Function( _UpdatePayment value)  updatePayment,required TResult Function( _DeletePayment value)  deletePayment,required TResult Function( _CancelBooking value)  cancelBooking,required TResult Function( _DeleteBooking value)  deleteBooking,required TResult Function( _AddRefund value)  addRefund,required TResult Function( _DeleteRefund value)  deleteRefund,required TResult Function( _UpdateSecurityRefund value)  updateSecurityRefund,required TResult Function( _DeleteSecurityRefundedPayment value)  deleteSecurityRefundedPayment,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchBookingDetails value)  fetchBookingDetails,required TResult Function( _UpdateDeliveryStatus value)  updateDeliveryStatus,required TResult Function( _UpdateBookingStatus value)  updateBookingStatus,required TResult Function( _UpdatePayment value)  updatePayment,required TResult Function( _DeletePayment value)  deletePayment,required TResult Function( _CancelBooking value)  cancelBooking,required TResult Function( _DeleteBooking value)  deleteBooking,required TResult Function( _AddRefund value)  addRefund,required TResult Function( _DeleteRefund value)  deleteRefund,required TResult Function( _UpdateSecurityRefund value)  updateSecurityRefund,required TResult Function( _DeleteSecurityRefundedPayment value)  deleteSecurityRefundedPayment,required TResult Function( _UpdatePartialReturn value)  updatePartialReturn,}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails():
@@ -132,7 +133,8 @@ return deleteBooking(_that);case _AddRefund():
 return addRefund(_that);case _DeleteRefund():
 return deleteRefund(_that);case _UpdateSecurityRefund():
 return updateSecurityRefund(_that);case _DeleteSecurityRefundedPayment():
-return deleteSecurityRefundedPayment(_that);case _:
+return deleteSecurityRefundedPayment(_that);case _UpdatePartialReturn():
+return updatePartialReturn(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -149,7 +151,7 @@ return deleteSecurityRefundedPayment(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult? Function( _UpdatePayment value)?  updatePayment,TResult? Function( _DeletePayment value)?  deletePayment,TResult? Function( _CancelBooking value)?  cancelBooking,TResult? Function( _DeleteBooking value)?  deleteBooking,TResult? Function( _AddRefund value)?  addRefund,TResult? Function( _DeleteRefund value)?  deleteRefund,TResult? Function( _UpdateSecurityRefund value)?  updateSecurityRefund,TResult? Function( _DeleteSecurityRefundedPayment value)?  deleteSecurityRefundedPayment,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchBookingDetails value)?  fetchBookingDetails,TResult? Function( _UpdateDeliveryStatus value)?  updateDeliveryStatus,TResult? Function( _UpdateBookingStatus value)?  updateBookingStatus,TResult? Function( _UpdatePayment value)?  updatePayment,TResult? Function( _DeletePayment value)?  deletePayment,TResult? Function( _CancelBooking value)?  cancelBooking,TResult? Function( _DeleteBooking value)?  deleteBooking,TResult? Function( _AddRefund value)?  addRefund,TResult? Function( _DeleteRefund value)?  deleteRefund,TResult? Function( _UpdateSecurityRefund value)?  updateSecurityRefund,TResult? Function( _DeleteSecurityRefundedPayment value)?  deleteSecurityRefundedPayment,TResult? Function( _UpdatePartialReturn value)?  updatePartialReturn,}){
 final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
@@ -163,7 +165,8 @@ return deleteBooking(_that);case _AddRefund() when addRefund != null:
 return addRefund(_that);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that);case _UpdateSecurityRefund() when updateSecurityRefund != null:
 return updateSecurityRefund(_that);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
-return deleteSecurityRefundedPayment(_that);case _:
+return deleteSecurityRefundedPayment(_that);case _UpdatePartialReturn() when updatePartialReturn != null:
+return updatePartialReturn(_that);case _:
   return null;
 
 }
@@ -180,7 +183,7 @@ return deleteSecurityRefundedPayment(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult Function( int bookingId,  int paymentId)?  deletePayment,TResult Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult Function( int bookingId,  int refundId)?  deleteRefund,TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult Function( int bookingId,  int paymentId)?  deletePayment,TResult Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult Function( int bookingId,  int refundId)?  deleteRefund,TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
@@ -193,7 +196,8 @@ return deleteBooking(_that.bookingId);case _AddRefund() when addRefund != null:
 return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund() when updateSecurityRefund != null:
 return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
-return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _:
+return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn() when updatePartialReturn != null:
+return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   return orElse();
 
 }
@@ -211,7 +215,7 @@ return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.secur
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)  updatePayment,required TResult Function( int bookingId,  int paymentId)  deletePayment,required TResult Function( int bookingId,  int? refundAmount,  int? accountId)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)  addRefund,required TResult Function( int bookingId,  int refundId)  deleteRefund,required TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)  updateSecurityRefund,required TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)  deleteSecurityRefundedPayment,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)  updatePayment,required TResult Function( int bookingId,  int paymentId)  deletePayment,required TResult Function( int bookingId,  int? refundAmount,  int? accountId)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)  addRefund,required TResult Function( int bookingId,  int refundId)  deleteRefund,required TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)  updateSecurityRefund,required TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)  deleteSecurityRefundedPayment,required TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)  updatePartialReturn,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails():
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus():
@@ -224,7 +228,8 @@ return deleteBooking(_that.bookingId);case _AddRefund():
 return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund():
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund():
 return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment():
-return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _:
+return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn():
+return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -241,7 +246,7 @@ return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.secur
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult? Function( int bookingId,  int paymentId)?  deletePayment,TResult? Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult? Function( int bookingId,  int refundId)?  deleteRefund,TResult? Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult? Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult? Function( int bookingId,  int paymentId)?  deletePayment,TResult? Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult? Function( int bookingId,  int refundId)?  deleteRefund,TResult? Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult? Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult? Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
@@ -254,7 +259,8 @@ return deleteBooking(_that.bookingId);case _AddRefund() when addRefund != null:
 return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund() when updateSecurityRefund != null:
 return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
-return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _:
+return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn() when updatePartialReturn != null:
+return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   return null;
 
 }
@@ -1027,6 +1033,90 @@ as SecurityPaymentHistoryType,
 }
 
 /// @nodoc
+
+
+class _UpdatePartialReturn implements BookingDetailsEvent {
+  const _UpdatePartialReturn({required this.bookingId, required final  List<int> returnedProductIds, required final  List<int> notReturnedProductIds, required this.newReturnDate}): _returnedProductIds = returnedProductIds,_notReturnedProductIds = notReturnedProductIds;
+  
+
+@override final  int bookingId;
+ final  List<int> _returnedProductIds;
+ List<int> get returnedProductIds {
+  if (_returnedProductIds is EqualUnmodifiableListView) return _returnedProductIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_returnedProductIds);
+}
+
+ final  List<int> _notReturnedProductIds;
+ List<int> get notReturnedProductIds {
+  if (_notReturnedProductIds is EqualUnmodifiableListView) return _notReturnedProductIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_notReturnedProductIds);
+}
+
+ final  String? newReturnDate;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UpdatePartialReturnCopyWith<_UpdatePartialReturn> get copyWith => __$UpdatePartialReturnCopyWithImpl<_UpdatePartialReturn>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePartialReturn&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other._returnedProductIds, _returnedProductIds)&&const DeepCollectionEquality().equals(other._notReturnedProductIds, _notReturnedProductIds)&&(identical(other.newReturnDate, newReturnDate) || other.newReturnDate == newReturnDate));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bookingId,const DeepCollectionEquality().hash(_returnedProductIds),const DeepCollectionEquality().hash(_notReturnedProductIds),newReturnDate);
+
+@override
+String toString() {
+  return 'BookingDetailsEvent.updatePartialReturn(bookingId: $bookingId, returnedProductIds: $returnedProductIds, notReturnedProductIds: $notReturnedProductIds, newReturnDate: $newReturnDate)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UpdatePartialReturnCopyWith<$Res> implements $BookingDetailsEventCopyWith<$Res> {
+  factory _$UpdatePartialReturnCopyWith(_UpdatePartialReturn value, $Res Function(_UpdatePartialReturn) _then) = __$UpdatePartialReturnCopyWithImpl;
+@override @useResult
+$Res call({
+ int bookingId, List<int> returnedProductIds, List<int> notReturnedProductIds, String? newReturnDate
+});
+
+
+
+
+}
+/// @nodoc
+class __$UpdatePartialReturnCopyWithImpl<$Res>
+    implements _$UpdatePartialReturnCopyWith<$Res> {
+  __$UpdatePartialReturnCopyWithImpl(this._self, this._then);
+
+  final _UpdatePartialReturn _self;
+  final $Res Function(_UpdatePartialReturn) _then;
+
+/// Create a copy of BookingDetailsEvent
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? returnedProductIds = null,Object? notReturnedProductIds = null,Object? newReturnDate = freezed,}) {
+  return _then(_UpdatePartialReturn(
+bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
+as int,returnedProductIds: null == returnedProductIds ? _self._returnedProductIds : returnedProductIds // ignore: cast_nullable_to_non_nullable
+as List<int>,notReturnedProductIds: null == notReturnedProductIds ? _self._notReturnedProductIds : notReturnedProductIds // ignore: cast_nullable_to_non_nullable
+as List<int>,newReturnDate: freezed == newReturnDate ? _self.newReturnDate : newReturnDate // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$BookingDetailsState {
 
 
@@ -1146,13 +1236,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( BookingDetailsEntity booking)?  loaded,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,TResult Function( String message)?  failed,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  loading,TResult Function( BookingDetailsEntity booking)?  loaded,TResult Function( String message,  bool didPop,  bool needRefresh)?  success,TResult Function( String message,  dynamic error,  List<ProductInfoEntity>? products)?  failed,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.booking);case _Success() when success != null:
 return success(_that.message,_that.didPop,_that.needRefresh);case _Failed() when failed != null:
-return failed(_that.message);case _Error() when error != null:
+return failed(_that.message,_that.error,_that.products);case _Error() when error != null:
 return error(_that.error);case _:
   return orElse();
 
@@ -1171,13 +1261,13 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( BookingDetailsEntity booking)  loaded,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,required TResult Function( String message)  failed,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  loading,required TResult Function( BookingDetailsEntity booking)  loaded,required TResult Function( String message,  bool didPop,  bool needRefresh)  success,required TResult Function( String message,  dynamic error,  List<ProductInfoEntity>? products)  failed,required TResult Function( String error)  error,}) {final _that = this;
 switch (_that) {
 case _Loading():
 return loading();case _Loaded():
 return loaded(_that.booking);case _Success():
 return success(_that.message,_that.didPop,_that.needRefresh);case _Failed():
-return failed(_that.message);case _Error():
+return failed(_that.message,_that.error,_that.products);case _Error():
 return error(_that.error);case _:
   throw StateError('Unexpected subclass');
 
@@ -1195,13 +1285,13 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( BookingDetailsEntity booking)?  loaded,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,TResult? Function( String message)?  failed,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  loading,TResult? Function( BookingDetailsEntity booking)?  loaded,TResult? Function( String message,  bool didPop,  bool needRefresh)?  success,TResult? Function( String message,  dynamic error,  List<ProductInfoEntity>? products)?  failed,TResult? Function( String error)?  error,}) {final _that = this;
 switch (_that) {
 case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.booking);case _Success() when success != null:
 return success(_that.message,_that.didPop,_that.needRefresh);case _Failed() when failed != null:
-return failed(_that.message);case _Error() when error != null:
+return failed(_that.message,_that.error,_that.products);case _Error() when error != null:
 return error(_that.error);case _:
   return null;
 
@@ -1391,10 +1481,20 @@ as bool,
 
 
 class _Failed implements BookingDetailsState {
-  const _Failed(this.message);
+  const _Failed(this.message, {this.error, final  List<ProductInfoEntity>? products}): _products = products;
   
 
  final  String message;
+ final  dynamic error;
+ final  List<ProductInfoEntity>? _products;
+ List<ProductInfoEntity>? get products {
+  final value = _products;
+  if (value == null) return null;
+  if (_products is EqualUnmodifiableListView) return _products;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of BookingDetailsState
 /// with the given fields replaced by the non-null parameter values.
@@ -1406,16 +1506,16 @@ _$FailedCopyWith<_Failed> get copyWith => __$FailedCopyWithImpl<_Failed>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failed&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failed&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.error, error)&&const DeepCollectionEquality().equals(other._products, _products));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,message,const DeepCollectionEquality().hash(error),const DeepCollectionEquality().hash(_products));
 
 @override
 String toString() {
-  return 'BookingDetailsState.failed(message: $message)';
+  return 'BookingDetailsState.failed(message: $message, error: $error, products: $products)';
 }
 
 
@@ -1426,7 +1526,7 @@ abstract mixin class _$FailedCopyWith<$Res> implements $BookingDetailsStateCopyW
   factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) = __$FailedCopyWithImpl;
 @useResult
 $Res call({
- String message
+ String message, dynamic error, List<ProductInfoEntity>? products
 });
 
 
@@ -1443,10 +1543,12 @@ class __$FailedCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? error = freezed,Object? products = freezed,}) {
   return _then(_Failed(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+as String,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as dynamic,products: freezed == products ? _self._products : products // ignore: cast_nullable_to_non_nullable
+as List<ProductInfoEntity>?,
   ));
 }
 

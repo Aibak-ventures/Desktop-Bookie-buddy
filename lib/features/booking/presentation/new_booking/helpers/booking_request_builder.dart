@@ -1,16 +1,17 @@
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/additional_charges_entity/additional_charges_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_other_details_entity/booking_other_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
-import 'package:bookie_buddy_web/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
@@ -86,13 +87,15 @@ class BookingRequestBuilder {
       0,
       (sum, p) => sum + (p.amount * p.quantity),
     );
-    final additionalTotal = additionalCharges.fold<int>(
-      0,
-      (sum, c) => sum + (c.amount ?? 0),
+    final additionalTotal = PaymentCalculator.calculateAdditionalChargesTotal(
+      additionalCharges,
     );
-    final actualDiscount = isDiscountPercentage
-        ? ((productTotal + additionalTotal) * discountInput / 100).round()
-        : discountInput;
+    final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+      isDiscountPercentage: isDiscountPercentage,
+      discountInput: discountInput,
+      productTotal: productTotal,
+      additionalTotal: additionalTotal,
+    );
 
     // --- Client data: only when no existing client is linked ---
     ClientRequestEntity? clientData;
@@ -100,8 +103,8 @@ class BookingRequestBuilder {
       clientData = ClientRequestEntity(
         id: null,
         name: clientName.isEmpty ? null : clientName,
-        phone1E164: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
-        phone2E164: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
+        phone1: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
+        phone2: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
       );
     }
 
@@ -151,7 +154,8 @@ class BookingRequestBuilder {
       isSecurityPaid: securityAmount != null && securityAmount > 0
           ? isSecurityPaid
           : null,
-      securityPaymentAccountId: securityAmount != null
+      securityPaymentAccountId:
+          securityAmount != null && securityAmount > 0 && isSecurityPaid
           ? securityAccountId
           : null,
       discountAmount: actualDiscount,
@@ -188,7 +192,8 @@ class BookingRequestBuilder {
     required DateTime saleDate,
     required String? description,
     required bool sendInvoice,
-    required int? accountId,
+    required AccountEntity? account,
+    required SalesSplitPayment salesSplit,
     required bool decreaseStockForPastDate,
     required bool isPastDate,
   }) {
@@ -210,6 +215,19 @@ class BookingRequestBuilder {
         ? (grossTotal * discountInput / 100).round()
         : discountInput;
 
+    // In single (non-split) mode there's no amount field at all — the sale
+    // is always paid in full — so [salesSplit]'s own `cashAmount` (bound to
+    // an amount field that's only shown when split) would read as 0.
+    // Substitute the actual payable total so `buildPayments` doesn't drop
+    // the payment entirely.
+    final payableTotal = grossTotal - discount;
+    final effectiveSplit = salesSplit.isSplit
+        ? salesSplit
+        : SalesSplitPayment(
+            isSplit: false,
+            cashAmount: payableTotal > 0 ? payableTotal : 0,
+          );
+
     return SalesRequestEntity(
       staffId: staffId,
       clientPhone: clientPhone.isEmpty ? null : clientPhone,
@@ -224,7 +242,7 @@ class BookingRequestBuilder {
       // AddOrEditSalesFormStateController — see there for details).
       discountAmount: discount,
       stockCountDecrease: decreaseStockForPastDate || !isPastDate,
-      accountId: accountId,
+      payments: effectiveSplit.buildPayments(singleAccount: account),
     );
   }
 
@@ -278,8 +296,8 @@ class BookingRequestBuilder {
           ? ClientRequestEntity(
               id: null,
               name: clientName.isEmpty ? null : clientName,
-              phone1E164: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
-              phone2E164: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
+              phone1: phone1Raw.isEmpty ? null : toPhone1E164(phone1Raw),
+              phone2: phone2Raw.isEmpty ? null : toPhone1E164(phone2Raw),
             )
           : null,
       address: address.isEmpty ? null : address,

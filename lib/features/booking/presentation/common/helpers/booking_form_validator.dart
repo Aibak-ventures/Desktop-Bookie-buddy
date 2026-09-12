@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
@@ -17,18 +17,13 @@ class BookingFormValidator {
   // Product
   // ---------------------------------------------------------------------------
 
-  /// Products must be non-empty and at least one must have a unit price > 0.
+  /// Products must be non-empty. A zero amount is allowed.
   static BookingValidationResult validateProductSelection(
     List<ProductSelectedEntity> products,
   ) {
     if (products.isEmpty) {
       return BookingValidationResult.invalid(
         errors: ['Please select at least one product to continue'],
-      );
-    }
-    if (!products.any((p) => p.amount > 0)) {
-      return BookingValidationResult.invalid(
-        errors: ['At least one product must have a price greater than 0'],
       );
     }
     return BookingValidationResult.valid();
@@ -68,7 +63,8 @@ class BookingFormValidator {
   /// Validates payment fields before the final submit.
   ///
   /// Rules differ by booking type:
-  /// - **Sales**: payment account is always required.
+  /// - **Sales**: total payable must be greater than zero (individual products
+  ///   may still be priced at 0) and a payment account is always required.
   /// - **Booking**: advance must not exceed total payable; advance account
   ///   required when advance > 0; security account required when security > 0.
   ///
@@ -85,10 +81,31 @@ class BookingFormValidator {
     required int totalPayable,
     required AccountEntity? advanceAccount,
     required AccountEntity? securityAccount,
+    required bool isSecurityPaid,
     AdvanceSplitPayment? advanceSplit,
   }) {
     if (bookingType == BookingType.sales) {
-      if (advanceAccount == null) {
+      final split = advanceSplit;
+      if (split != null && split.isSplit) {
+        if (!split.hasAmount) {
+          return BookingValidationResult.invalid(
+            errors: ['Please enter cash and/or bank/UPI split amounts'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+        if (split.cashAmount > 0 && split.cashAccount == null) {
+          return BookingValidationResult.invalid(
+            errors: ['Please select a cash account'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+        if (split.bankAmount > 0 && split.bankAccount == null) {
+          return BookingValidationResult.invalid(
+            errors: ['Please select a bank/UPI account'],
+            firstErrorField: 'advanceAccount',
+          );
+        }
+      } else if (advanceAccount == null) {
         return BookingValidationResult.invalid(
           errors: ['Please select a payment option'],
           firstErrorField: 'advanceAccount',
@@ -136,7 +153,7 @@ class BookingFormValidator {
         firstErrorField: 'advanceAccount',
       );
     }
-    if (securityAmount > 0 && securityAccount == null) {
+    if (securityAmount > 0 && isSecurityPaid && securityAccount == null) {
       return BookingValidationResult.invalid(
         errors: ['Please select a payment option for security amount'],
         firstErrorField: 'securityAccount',

@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/security_summary_entity/security_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'security_summary_model.freezed.dart';
@@ -21,10 +21,14 @@ abstract class SecuritySummaryModel with _$SecuritySummaryModel {
 }
 
 extension SecuritySummaryModelMapper on SecuritySummaryModel {
-  SecuritySummaryEntity toEntity() => SecuritySummaryEntity(
-    securityAmount: securityAmount,
-    totalRefunded: totalRefunded,
-    totalDeducted: totalDeducted,
-    remainingBalance: remainingBalance,
+  // BookingSecuritySummaryEntity models money as int (matching every other
+  // amount field on BookingDetailsEntity, and mobile's own convention) —
+  // this model's fields are double, inconsistent with the rest of web's
+  // own amount handling elsewhere; rounding here, not truncating.
+  BookingSecuritySummaryEntity toEntity() => BookingSecuritySummaryEntity(
+    totalSecurityAmount: securityAmount.round(),
+    totalRefunded: totalRefunded.round(),
+    totalDeducted: totalDeducted.round(),
+    pendingDeposit: remainingBalance.round(),
   );
 }

@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
@@ -283,11 +283,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.image;
+    final imageUrl = product.variant.thumbnailImage ?? product.variant.productImage;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
     final fullImageUrl =
-        product.variant.image ?? product.variant.thumbnailImage;
+        product.variant.productImage ?? product.variant.thumbnailImage;
     final effectiveDaysMultiplier =
         PaymentCalculator.getDaysMultiplierForProduct(
           bookingType: widget.selectedBookingType,
@@ -739,13 +739,26 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                 ),
               ),
             ),
-            // Remove
+            // Remove — replaced by a badge once the item has been returned
             SizedBox(
               width: 50,
-              child: IconButton(
-                icon: const Icon(Icons.close, size: 20, color: Colors.black87),
-                onPressed: () => _removeProduct(product),
-              ),
+              child: _isReturned(product)
+                  ? const Tooltip(
+                      message: 'Returned items can no longer be edited',
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 20,
+                        color: Colors.green,
+                      ),
+                    )
+                  : IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        size: 20,
+                        color: Colors.black87,
+                      ),
+                      onPressed: () => _removeProduct(product),
+                    ),
             ),
           ],
         ),
@@ -977,6 +990,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _incrementQuantity(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final updatedProducts = SelectedProductsManager.incrementQuantity(
       currentProducts: widget.selectedProductsNotifier.value,
       product: product,
@@ -1008,6 +1024,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _decrementQuantity(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final currentProducts = widget.selectedProductsNotifier.value;
     final updatedProducts = SelectedProductsManager.decrementQuantity(
       currentProducts: currentProducts,
@@ -1087,6 +1106,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _startEditingPrice(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     setState(() {
       _editingVariantId = product.variant.variantId;
       _inlinePriceController.text = product.amount.toString();
@@ -1101,11 +1123,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
 
     final newPrice = int.tryParse(_inlinePriceController.text);
 
-    if (newPrice == null || newPrice <= 0) {
-      context.showSnackBar(
-        'Product price cannot be zero or empty',
-        isError: true,
-      );
+    if (newPrice == null || newPrice < 0) {
+      context.showSnackBar('Please enter a valid product price', isError: true);
       return;
     }
 
@@ -1119,6 +1138,11 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     _focusNextProductRowOrClient(product);
   }
 
+  /// Whether this line item has already been marked returned by a (partial)
+  /// return — such rows are read-only.
+  bool _isReturned(ProductSelectedEntity product) =>
+      product.variant.deliveryStatus.isReturned;
+
   void _removeRowFocusNodes(int key) {
     _rowFocusNodes.remove(key)?.dispose();
     _rowElementFocusNodes.remove(key)?.forEach((n) => n.dispose());
@@ -1126,6 +1150,9 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
   }
 
   void _removeProduct(ProductSelectedEntity product) {
+    // An item that already came back is settled — it can't be
+    // re-priced, re-counted or dropped from the booking.
+    if (_isReturned(product)) return;
     final products = widget.selectedProductsNotifier.value;
     final key = _quantityKey(product);
     _quantityControllers.remove(key)?.dispose();

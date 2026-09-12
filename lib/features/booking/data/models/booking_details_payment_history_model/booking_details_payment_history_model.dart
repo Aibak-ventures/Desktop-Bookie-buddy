@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_payment_history_model.freezed.dart';
@@ -30,7 +30,7 @@ abstract class BookingDetailsPaymentHistoryModel
 extension BookingPaymentHistoryModelMapper
     on BookingDetailsPaymentHistoryModel {
   BookingPaymentHistoryEntity toEntity() => BookingPaymentHistoryEntity(
-    id: id,
+    id: id ?? 0,
     amount: amount,
     accountName: accountName,
     accountId: accountId,

@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/printer/data/datasources/qz_tray_datasource.dart';
 import 'package:bookie_buddy_web/features/printer/data/repositories/mock_qz_printer_repository_impl.dart';
 import 'package:bookie_buddy_web/features/printer/data/repositories/qz_printer_repository_impl.dart';
@@ -22,8 +23,9 @@ import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 /// **Must be `false` before shipping/merging.**
 const _useMockPrinterRepository = bool.fromEnvironment('MOCK_PRINTER') && !kIsProduction;
 
-class PrinterDependencies {
-  static void register() {
+class PrinterDependencies implements IAppDependency {
+  @override
+  void register() {
     getIt.registerLazySingleton(() => QzTrayDatasource());
     getIt.registerLazySingleton<IPrinterRepository>(
       () => _useMockPrinterRepository

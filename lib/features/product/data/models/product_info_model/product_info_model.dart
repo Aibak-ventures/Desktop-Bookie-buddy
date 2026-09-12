@@ -1,8 +1,9 @@
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_info_model.freezed.dart';
@@ -67,6 +68,15 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     List<MeasurementValueModel> measurements,
     int? stock,
     @JsonKey(name: 'remaining_stock') int? remainingStock,
+    @JsonKey(
+      name: 'return_status',
+      fromJson: ProductDeliveryStatus.fromJson,
+      toJson: ProductDeliveryStatus.toJson,
+      defaultValue: ProductDeliveryStatus.notReturned,
+    )
+    @Default(ProductDeliveryStatus.notReturned)
+    ProductDeliveryStatus deliveryStatus,
+    @JsonKey(name: 'returned_at') String? returnedAt,
   }) = _ProductInfoModel;
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) =>
@@ -78,7 +88,7 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         productId: entity.productId,
         variantId: entity.variantId,
         name: entity.name,
-        image: entity.image,
+        image: entity.productImage,
         thumbnailImage: entity.thumbnailImage,
         mainServiceType: entity.mainServiceType,
         variantAttribute: entity.variantAttribute,
@@ -92,6 +102,8 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         measurements: entity.measurements.map((e) => e.toModel()).toList(),
         stock: entity.stock,
         remainingStock: entity.remainingStock,
+        deliveryStatus: entity.deliveryStatus,
+        returnedAt: entity.returnedAt,
       );
 }
 
@@ -101,7 +113,7 @@ extension ProductInfoModelMapper on ProductInfoModel {
     productId: productId,
     variantId: variantId,
     name: name,
-    image: image,
+    productImage: image,
     thumbnailImage: thumbnailImage,
     mainServiceType: mainServiceType,
     variantAttribute: variantAttribute,
@@ -115,5 +127,7 @@ extension ProductInfoModelMapper on ProductInfoModel {
     measurements: measurements.map((e) => e.toEntity()).toList(),
     stock: stock,
     remainingStock: remainingStock,
+    deliveryStatus: deliveryStatus,
+    returnedAt: returnedAt,
   );
 }

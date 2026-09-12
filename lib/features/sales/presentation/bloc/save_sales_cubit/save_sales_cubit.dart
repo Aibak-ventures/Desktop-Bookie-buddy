@@ -39,8 +39,8 @@ class SaveSalesCubit extends Cubit<SaveSalesState> {
     }
 
     for (final product in products) {
-      if (product.amount <= 0) {
-        emit(const SaveSalesState.failure('Product price cannot be zero'));
+      if (product.amount < 0) {
+        emit(const SaveSalesState.failure('Product price cannot be negative'));
         return;
       }
 
