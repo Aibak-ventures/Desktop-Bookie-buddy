@@ -23,6 +23,10 @@ migrate_working_dir/
 # is commented out by default.
 #.vscode/
 
+# Local-only auto-login credentials launch config
+# see .vscode/examples/auto_login.example.jsonc for the format.
+.vscode/auto_login.json
+
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id

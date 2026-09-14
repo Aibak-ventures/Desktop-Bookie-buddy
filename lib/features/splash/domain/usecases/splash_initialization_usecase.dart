@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/utils/async/run_for_at_least.dart';
+import 'package:bookie_buddy_web/core/config/dev_config.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/core/app/my_app.dart';
@@ -25,7 +26,7 @@ class SplashInitializationUseCase {
       final onboarding = _prefs.instance.getBool(AppConstants.onboardingKey);
       log('onboarding: $onboarding');
 
-      return !(onboarding ?? false)
+      return !(DevConfig.skipOnboarding || (onboarding ?? false))
           ? const OnboardingScreen()
           : _sessionStorage.refreshToken != null &&
                 _sessionStorage.accessToken != null
