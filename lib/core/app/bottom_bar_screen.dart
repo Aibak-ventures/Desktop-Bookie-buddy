@@ -244,9 +244,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   void _navigateToBookingsTab(String statusTab) {
     setState(() {
-      currentIndex = 2;
+      currentIndex = 3;
     });
-    pageController.jumpToPage(1);
+    pageController.jumpToPage(currentIndex - 1);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _allBookingsKey.currentState?.changeStatusTab(statusTab);
     });
