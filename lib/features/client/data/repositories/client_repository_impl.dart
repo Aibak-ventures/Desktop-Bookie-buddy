@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/utils/cancellation_token.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_request_entity/client_request_entity.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/repositories/i_client_repository.dart';
@@ -130,5 +131,13 @@ class ClientRepositoryImpl implements IClientRepository {
       log('Error deleting client: $e', stackTrace: stackTrace);
       rethrow;
     }
+  }
+
+  @override
+  Future<String> downloadClientPdfReport({
+    required String defaultFileName,
+    required CancellationToken funCancelToken,
+  }) {
+    throw UnimplementedError('downloadClientPdfReport is not implemented');
   }
 }

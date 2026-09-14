@@ -93,11 +93,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v1.5.0"
-      resolved-ref: a518470b9019decfc4207198e993fc76d59f170b
+      ref: "v1.6.0"
+      resolved-ref: "738c641e8919f9a691d9959b3ea6814d77e4fcea"
       url: "https://github.com/Aibak-ventures/bookie-buddy-shared.git"
     source: git
-    version: "1.5.0"
+    version: "1.6.0"
   boolean_selector:
     dependency: transitive
     description:
