@@ -17,14 +17,14 @@ import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BottomBarScreen extends StatefulWidget {
-  const BottomBarScreen({super.key});
+class AppShellScreen extends StatefulWidget {
+  const AppShellScreen({super.key});
 
   @override
-  State<BottomBarScreen> createState() => _BottomBarScreenState();
+  State<AppShellScreen> createState() => _AppShellScreenState();
 }
 
-class _BottomBarScreenState extends State<BottomBarScreen> {
+class _AppShellScreenState extends State<AppShellScreen> {
   int currentIndex = 1;
   late PageController pageController;
   bool newOrderActive = false;
