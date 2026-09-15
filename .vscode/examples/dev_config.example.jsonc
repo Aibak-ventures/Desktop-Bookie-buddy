@@ -1,5 +1,14 @@
+// IMPLEMENTATION STEPS:
+// This file just documents every available --dart-define flag (see
+// lib/core/config/dev_config.dart) — it isn't read directly. Set only the
+// flags you need, either inline on the command line / a launch config's
+// toolArgs:
+//   flutter run --dart-define=PROD=false --dart-define=MOCK_PRINTER=true
+// or by copying flags into your own comment-free JSON file and pointing a
+// launch config's toolArgs at it with --dart-define-from-file, the way
+// "Flutter: Run Dev" does for .vscode/auto_login.json.
+
 {
-    // All available --dart-define flags (see lib/core/config/dev_config.dart).
     "PROD": "false",
     "SKIP_ONBOARDING": "false",
     "MOCK_PRINTER": "false",
