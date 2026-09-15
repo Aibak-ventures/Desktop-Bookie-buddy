@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_action_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/datasources/product_query_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/product/data/repositories/product_repository_impl.dart';
@@ -19,8 +20,9 @@ import 'package:bookie_buddy_web/features/product/domain/usecases/transfer_produ
 import 'package:bookie_buddy_web/features/product/domain/usecases/update_variant_usecase.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 
-class ProductDependencies {
-  static void register() {
+class ProductDependencies implements IAppDependency {
+  @override
+  void register() {
     if (!getIt.isRegistered<ProductQueryRemoteDatasource>()) {
       getIt.registerLazySingleton(
         () => ProductQueryRemoteDatasource(dio: DioClient.dio),

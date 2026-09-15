@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,10 +46,7 @@ class BookingDetailsDocumentsSection extends StatelessWidget {
               itemCount: booking.documents.length,
               separatorBuilder: (context, index) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
-                final doc = booking.documents[index];
-                final docUrl = doc is String
-                    ? doc
-                    : (doc is Map ? (doc['url'] ?? doc['file'] ?? '') : '');
+                final docUrl = booking.documents[index];
 
                 if (docUrl.isEmpty) return const SizedBox.shrink();
 

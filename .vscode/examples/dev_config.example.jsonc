@@ -1,0 +1,7 @@
+{
+    // All available --dart-define flags (see lib/core/config/dev_config.dart).
+    "PROD": "false",
+    "SKIP_ONBOARDING": "false",
+    "MOCK_PRINTER": "false",
+    "FULL_NETWORK_LOG": "false"
+}

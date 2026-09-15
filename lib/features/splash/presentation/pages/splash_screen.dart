@@ -1,8 +1,9 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/splash/domain/usecases/splash_initialization_usecase.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,6 +13,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  static const _brandImagePath = 'assets/images/brand_light_img.png';
+  static const _logoImagePath = 'assets/images/new_splash_color_img.svg';
+  static const _logoAnimationPath = 'assets/animations/splash_animation.json';
+
   @override
   void initState() {
     super.initState();
@@ -20,20 +25,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop =
-        kIsWeb ||
-        Theme.of(context).platform == TargetPlatform.windows ||
-        Theme.of(context).platform == TargetPlatform.macOS ||
-        Theme.of(context).platform == TargetPlatform.linux;
-
-    return Scaffold(
-      body: isDesktop
-          ? _buildDesktopLayout(context)
-          : _buildMobileLayout(context),
-    );
+    return Scaffold(body: _buildBody(context));
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildBody(BuildContext context) {
+    final animationWidth = context.screenWidthClamped(
+      maxWidth: 550,
+      minWidth: 200,
+      maxWidthInPercent: 0.45,
+    );
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -44,11 +44,25 @@ class _SplashScreenState extends State<SplashScreen> {
           // Logo
           Flexible(
             flex: 2,
-            child: Container(
-              constraints: BoxConstraints(maxWidth: 400),
-              child: Image.asset(
-                'assets/images/logo_light.png',
-                fit: BoxFit.contain,
+            child: SizedBox(
+              width: animationWidth,
+              child: ClipRect(
+                child: LottieBuilder.asset(
+                  _logoAnimationPath,
+                  fit: BoxFit.contain,
+                  addRepaintBoundary: true,
+                  repeat: false,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Transform.scale(
+                      scale: 0.5,
+                      child: SvgPicture.asset(
+                        _logoImagePath,
+                        fit: BoxFit.contain,
+                        width: animationWidth,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -67,62 +81,12 @@ class _SplashScreenState extends State<SplashScreen> {
                 const SizedBox(height: 8),
                 Container(
                   constraints: BoxConstraints(maxWidth: 200),
-                  child: Image.asset(
-                    'assets/images/brand_light_img.png',
-                    fit: BoxFit.contain,
-                  ),
+                  child: Image.asset(_brandImagePath, fit: BoxFit.contain),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMobileLayout(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            const SizedBox(height: 40),
-            Flexible(
-              flex: 2,
-              child: Image.asset(
-                'assets/images/logo_light.png',
-                width: MediaQuery.of(context).size.width * 0.8,
-                fit: BoxFit.contain,
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Developed by',
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Image.asset(
-                    'assets/images/brand_light_img.png',
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    fit: BoxFit.contain,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 40),
-          ],
-        ),
       ),
     );
   }

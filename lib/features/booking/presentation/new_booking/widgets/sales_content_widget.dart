@@ -1,6 +1,87 @@
 part of '../pages/new_booking_screen.dart';
 
 extension SalesFlowBuilders on NewBookingScreenState {
+  // Builds the sales payment section: a single account picker, or a
+  // cash/bank split — mirrors [_buildAdvanceAmountSection]'s toggle, but
+  // for the sale's full payable total rather than a partial advance.
+  Widget _buildSalesPaymentSection() {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        advanceAmountController,
+        splitBankAmountController,
+      ]),
+      builder: (context, _) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Payment Option',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                const Spacer(),
+                PopupMenuButton<bool>(
+                  tooltip: 'Payment options',
+                  iconSize: 20,
+                  icon: const Icon(Icons.more_vert_rounded),
+                  onSelected: (v) {
+                    rebuild(() {
+                      isAdvanceSplit = v;
+                      if (!isAdvanceSplit) {
+                        advanceAmountController.clear();
+                        splitBankAmountController.clear();
+                        selectedAdvanceCashAccount = null;
+                        selectedAdvanceBankAccount = null;
+                      }
+                    });
+                  },
+                  itemBuilder: (context) => [
+                    if (!isAdvanceSplit)
+                      const PopupMenuItem<bool>(
+                        value: true,
+                        child: Text('Split Cash & UPI'),
+                      ),
+                    if (isAdvanceSplit)
+                      const PopupMenuItem<bool>(
+                        value: false,
+                        child: Text('Merge Cash & UPI'),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            if (isAdvanceSplit)
+              BookingTextFieldBuilder.buildRightPanelTextField(
+                controller: advanceAmountController,
+                hint: 'Enter cash amount',
+                label: 'Amount (Cash)',
+                isNumber: true,
+              ),
+            if (isAdvanceSplit)
+              const SizedBox(height: NewBookingScreenState._fieldSpacing),
+            SplitAdvancePaymentFields(
+              isSplit: isAdvanceSplit,
+              bankAmountController: splitBankAmountController,
+              cashAccount: selectedAdvanceCashAccount,
+              onCashAccountChanged: (account) =>
+                  rebuild(() => selectedAdvanceCashAccount = account),
+              bankAccount: selectedAdvanceBankAccount,
+              onBankAccountChanged: (account) =>
+                  rebuild(() => selectedAdvanceBankAccount = account),
+              cashAccountLabel: 'Cash Account',
+              bankAmountHint: 'Enter bank/UPI amount',
+              bankAmountLabel: 'Amount (Bank/UPI)',
+              bankAccountLabel: 'Bank/UPI Account',
+              singlePaymentSelector: _buildPaymentMethodSection(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildSalesSinglePanel() {
     return Container(
       key: const ValueKey(2),
@@ -111,7 +192,7 @@ extension SalesFlowBuilders on NewBookingScreenState {
                   ),
 
                   // Payment Method
-                  _buildPaymentMethodSection(),
+                  _buildSalesPaymentSection(),
                   const SizedBox(height: 16),
 
                   // WhatsApp Checkbox

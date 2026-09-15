@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,18 +16,8 @@ class BookingDetailsCustomerSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Prefer the raw integer phone (reliably updated by backend) over E.164
-    // which the backend may not update when phone_1 changes.
-    // Derive E.164 client-side for WhatsApp/tel links.
-    final phone1Raw = booking.client.phone1;
-    final phone2Raw = booking.client.phone2;
-
-    final phone1Display = phone1Raw > 0
-        ? phone1Raw.toString()
-        : _phoneFromE164(booking.client.phone1E164);
-    final phone2Display = (phone2Raw ?? 0) > 0
-        ? phone2Raw.toString()
-        : _phoneFromE164(booking.client.phone2E164);
+    final phone1Display = booking.client.phone1.formatPhoneNumber();
+    final phone2Display = booking.client.phone2?.formatPhoneNumber();
 
     final place = booking.address?.trim();
     final hasPlace = place != null && place.isNotEmpty;
@@ -70,17 +61,12 @@ class BookingDetailsCustomerSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (phone1Display != null)
+                    if (phone1Display.isNotNullOrEmpty) ...[
                       _buildPhoneCell(label: 'Phone 1', phone: phone1Display),
-                    if (phone1Display != null &&
-                        phone2Display != null &&
-                        phone2Display.isNotEmpty &&
-                        phone2Display != '0')
                       const SizedBox(height: 12),
-                    if (phone2Display != null &&
-                        phone2Display.isNotEmpty &&
-                        phone2Display != '0')
-                      _buildPhoneCell(label: 'Phone 2', phone: phone2Display),
+                    ],
+                    if (phone2Display.isNotNullOrEmpty)
+                      _buildPhoneCell(label: 'Phone 2', phone: phone2Display!),
                   ],
                 ),
               ),
@@ -89,15 +75,6 @@ class BookingDetailsCustomerSection extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  /// Extracts 10-digit phone from E.164 string (e.g. "+919745123456" → "9745123456").
-  String? _phoneFromE164(String? e164) {
-    if (e164 == null || e164.isEmpty) return null;
-    var digits = e164.replaceAll(RegExp(r'[^0-9]'), '');
-    if (digits.startsWith('91') && digits.length == 12)
-      digits = digits.substring(2);
-    return digits.isNotEmpty ? digits : null;
   }
 
   Widget _buildInfoCell({required String label, required String value}) {

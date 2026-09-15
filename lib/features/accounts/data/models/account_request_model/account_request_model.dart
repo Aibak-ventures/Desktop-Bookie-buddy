@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/core/constants/enums/account_type_enum.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/account_type_enum.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'account_request_model.freezed.dart';
@@ -36,6 +36,6 @@ abstract class AccountRequestModel with _$AccountRequestModel {
         description: entity.description,
         isActive: entity.isActive,
         isDefault: entity.isDefault,
-        accountType: entity.accountType,
+        accountType: entity.accountType ?? AccountType.bank,
       );
 }

@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_customization_widget.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter/material.dart';
 
 class BookingLeftPanel extends StatelessWidget {

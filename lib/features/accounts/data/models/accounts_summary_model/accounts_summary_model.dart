@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/features/accounts/data/models/account_model/account_model.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_balance_entity/account_balance_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_balance_entity/account_balance_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'accounts_summary_model.freezed.dart';

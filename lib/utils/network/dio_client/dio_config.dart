@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/config/dev_config.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
@@ -5,13 +6,7 @@ import 'package:bookie_buddy_web/utils/network/dio_client/auth_interceptor.dart'
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-/// Verbose request/response logging (bodies, headers, per-request prints)
-/// is opt-in via `--dart-define=FULL_NETWORK_LOG=true` — off by default
-/// even in debug builds, since every request's full payload printed to
-/// console is more noise than most debugging sessions want. Error logging
-/// is unaffected by this flag; it always happens (in debug builds, and via
-/// the production error interceptor below).
-const bool _kFullNetworkLog = bool.fromEnvironment('FULL_NETWORK_LOG');
+const _kFullNetworkLog = DevConfig.showFullNetworkLog;
 
 class DioClient {
   /// A dio client with a base url and a auth interceptor
@@ -100,7 +95,8 @@ class DioClient {
           dio.interceptors.add(
             LogInterceptor(
               requestBody: true,
-              responseBody: false, // Disabled to prevent printing binary PDF data
+              responseBody:
+                  false, // Disabled to prevent printing binary PDF data
               error: true,
               requestHeader: true,
               responseHeader: false,
