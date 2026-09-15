@@ -527,6 +527,15 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _closeScreen() =>
       widget.onClose != null ? widget.onClose!() : Navigator.of(context).pop();
 
+  /// Called by an ancestor (the shell) before navigating away from this
+  /// screen. Owns the unsaved-changes check and discard dialog itself,
+  /// rather than exposing [hasUnsavedChanges] for the ancestor to act on.
+  Future<bool> confirmLeave() async {
+    if (!hasUnsavedChanges()) return true;
+    final shouldDiscard = await showDiscardDialog(context);
+    return shouldDiscard ?? false;
+  }
+
   Future<void> _handleBackNavigation() async {
     _removeSearchOverlay();
     if (hasUnsavedChanges()) {

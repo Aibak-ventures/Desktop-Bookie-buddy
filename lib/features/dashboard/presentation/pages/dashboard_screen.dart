@@ -30,24 +30,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<all_booking.AllBookingBloc>().stream.listen((state) {
-        state.maybeWhen(
-          loaded:
-              (
-                _,
-                __,
-                ___,
-                ____,
-                _____,
-                ______,
-                _______,
-                ________,
-                _________,
-                __________,
-              ) {
-                context.read<DashboardBloc>().add(
-                  const DashboardEvent.loadDashboardData(useOldState: true),
-                );
-              },
+        state.maybeMap(
+          loaded: (_) {
+            context.read<DashboardBloc>().add(
+              const DashboardEvent.loadDashboardData(useOldState: true),
+            );
+          },
           orElse: () {},
         );
       });
@@ -113,32 +101,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           title: 'Overview',
                           child: BlocBuilder<DashboardBloc, DashboardState>(
                             builder: (context, state) {
-                              return state.maybeWhen(
-                                loaded:
-                                    (
-                                      _,
-                                      __,
-                                      carouselData,
-                                      ___,
-                                      ____,
-                                      _____,
-                                      ______,
-                                    ) => SizedBox(
-                                      height: 120,
-                                      child: CarouselDashboard(
-                                        data: carouselData,
-                                        onNavigateToBookings:
-                                            widget.onNavigateToBookings,
-                                      ),
-                                    ),
-                                orElse: () => SizedBox(
-                                  height: 120,
-                                  child: CarouselDashboard(
-                                    data:
-                                        DesktopDashboardCarouselEntity.empty(),
-                                    onNavigateToBookings:
-                                        widget.onNavigateToBookings,
-                                  ),
+                              final carouselData = state.maybeMap(
+                                loaded: (value) => value.carouselData,
+                                orElse: () =>
+                                    DesktopDashboardCarouselEntity.empty(),
+                              );
+
+                              return SizedBox(
+                                height: 120,
+                                child: CarouselDashboard(
+                                  data: carouselData,
+                                  onNavigateToBookings:
+                                      widget.onNavigateToBookings,
                                 ),
                               );
                             },

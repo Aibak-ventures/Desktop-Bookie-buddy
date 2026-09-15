@@ -61,14 +61,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     'Cancelled': 'cancelled',
   };
 
-  /// Public method to change the active status tab from outside (via GlobalKey)
-  void changeStatusTab(String statusTab) {
-    if (mounted) {
-      setState(() => _activeStatusTab = statusTab);
-      _loadData();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -181,6 +173,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     if (s.actionError != null) {
                       // Show SnackBar
                       context.showSnackBar(s.actionError!, isError: true);
+                    }
+                    // Keeps the status-tab highlight in sync when the active
+                    // status is changed externally (e.g. a deep link from
+                    // Dashboard dispatching loadBookings directly), not just
+                    // via this screen's own tab taps.
+                    if (s.status != null && s.status != _activeStatusTab) {
+                      setState(() => _activeStatusTab = s.status!);
                     }
                   },
                 );

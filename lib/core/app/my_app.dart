@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
 import 'package:bookie_buddy_web/core/pwa/pwa_update_service.dart';
 import 'package:bookie_buddy_web/core/pwa/update_available_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
@@ -34,6 +35,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Lets any screen navigate the shell programmatically, e.g.
+/// `appShellKey.currentState?.navigateTo(ShellTabId.newOrder)`.
+final GlobalKey<AppShellScreenState> appShellKey =
+    GlobalKey<AppShellScreenState>();
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
