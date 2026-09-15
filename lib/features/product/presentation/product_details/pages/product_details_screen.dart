@@ -78,86 +78,83 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
-      ],
-      child: BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
-        listener: (context, drawerState) {
-          if (drawerState.isOpen && drawerState.selectedBookingId != null) {
-            context.read<BookingDetailsBloc>().add(
-              BookingDetailsEvent.fetchBookingDetails(
-                drawerState.selectedBookingId!,
-              ),
-            );
-          }
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF5F7FA),
-          body: Stack(
-            children: [
-              BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const Center(child: Text('Initializing...')),
-                    loading: () => const Center(
-                      child: CircularProgressIndicator(color: AppColors.purple),
-                    ),
-                    loaded:
-                        (
-                          product,
-                          bookings,
-                          monthlySummary,
-                          nextPageUrl,
-                          isPaginatingBookings,
-                        ) => _buildContent(
-                          context,
-                          product,
-                          bookings,
-                          monthlySummary,
-                        ),
-                    error: (message) => Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 64,
-                            color: Colors.red.shade300,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            message,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.red.shade600,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<ProductDetailsCubit>()
-                                  .loadProductDetails(
-                                    widget.productId,
-                                    bookingStatus: _currentBookingStatus,
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.purple,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text('Retry'),
-                          ),
-                        ],
+    // BookingDetailsDrawerCubit and BookingDetailsBloc are provided app-wide
+    // in MyApp — no need to re-provide them here.
+    return BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+      listener: (context, drawerState) {
+        if (drawerState.isOpen && drawerState.selectedBookingId != null) {
+          context.read<BookingDetailsBloc>().add(
+            BookingDetailsEvent.fetchBookingDetails(
+              drawerState.selectedBookingId!,
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: Stack(
+          children: [
+            BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+              builder: (context, state) {
+                return state.when(
+                  initial: () => const Center(child: Text('Initializing...')),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(color: AppColors.purple),
+                  ),
+                  loaded:
+                      (
+                        product,
+                        bookings,
+                        monthlySummary,
+                        nextPageUrl,
+                        isPaginatingBookings,
+                      ) => _buildContent(
+                        context,
+                        product,
+                        bookings,
+                        monthlySummary,
                       ),
+                  error: (message) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Colors.red.shade300,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          message,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.red.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<ProductDetailsCubit>()
+                                .loadProductDetails(
+                                  widget.productId,
+                                  bookingStatus: _currentBookingStatus,
+                                );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.purple,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text('Retry'),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-              const BookingDetailsDrawer(),
-            ],
-          ),
+                  ),
+                );
+              },
+            ),
+            const BookingDetailsDrawer(),
+          ],
         ),
       ),
     );

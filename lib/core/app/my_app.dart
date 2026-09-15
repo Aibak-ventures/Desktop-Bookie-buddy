@@ -1,7 +1,9 @@
 import 'package:bookie_buddy_web/core/pwa/pwa_update_service.dart';
 import 'package:bookie_buddy_web/core/pwa/update_available_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
+import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_theme.dart';
@@ -13,6 +15,7 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/produ
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
@@ -21,6 +24,9 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +78,7 @@ class _MyAppState extends State<MyApp> {
             loadDesktopBookings: getIt.get(),
           ),
         ),
+        BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
         BlocProvider(
           create: (context) => BookingDetailsBloc(
             getBooking: getIt.get(),
@@ -87,6 +94,10 @@ class _MyAppState extends State<MyApp> {
             deleteSecurityRefundedPayment: getIt(),
             updatePartialReturn: getIt(),
           ),
+        ),
+        BlocProvider(
+          create: (context) =>
+              GlobalSearchBloc(getGlobalSearchUseCase: getIt()),
         ),
         BlocProvider(
           create: (context) => SelectProductBloc(
@@ -129,13 +140,33 @@ class _MyAppState extends State<MyApp> {
               ShopListBloc(getShops: getIt.get(), userRepo: getIt.get()),
         ),
         BlocProvider(
-          create: (context) =>
-              ClientCubit(getClients: getIt.get(), getClientDetails: getIt.get()),
+          create: (context) => ClientCubit(
+            getClients: getIt.get(),
+            getClientDetails: getIt.get(),
+          ),
         ),
         BlocProvider(create: (context) => AccountsCubit(getAccounts: getIt())),
         BlocProvider(
           create: (context) =>
               ProductSearchCubit(searchAllProductsUseCase: getIt.get()),
+        ),
+        BlocProvider(
+          create: (context) => AllSalesBloc(getSalesUseCase: getIt.get()),
+        ),
+        BlocProvider(create: (context) => SalesDetailsDrawerCubit()),
+        BlocProvider(
+          create: (context) => SalesDetailsBloc(
+            getSaleDetailsUseCase: getIt.get(),
+            deleteSaleUseCase: getIt.get(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => StockManagementCubit(
+            getProducts: getIt.get(),
+            deleteProduct: getIt.get(),
+            searchAllProducts: getIt.get(),
+            searchAndFilterProducts: getIt.get(),
+          ),
         ),
       ],
       child: MaterialApp(
@@ -143,7 +174,6 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme(),
-        // darkTheme: AppTheme.darkTheme, // Dark theme is not complete
         themeMode: ThemeMode.light,
         locale: const Locale('en', 'US'), // 12-hour format
         localizationsDelegates: [

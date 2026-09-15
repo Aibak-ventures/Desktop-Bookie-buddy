@@ -4,27 +4,14 @@ import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
-import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
-import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/sales/domain/usecases/delete_sale_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sale_details_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -52,165 +39,18 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   void initState() {
     pageController = PageController();
     screens = [
-      // dashboard
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
-          BlocProvider(
-            create: (context) => BookingDetailsBloc(
-              getBooking: getIt(),
-              updateDeliveryStatus: getIt(),
-              updateBookingStatus: getIt(),
-              updatePayment: getIt(),
-              deletePayment: getIt(),
-              cancelBooking: getIt(),
-              deleteBooking: getIt(),
-              addRefund: getIt(),
-              deleteRefund: getIt(),
-              updateSecurityRefund: getIt(),
-              deleteSecurityRefundedPayment: getIt(),
-              updatePartialReturn: getIt(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => AllBookingBloc(
-              updateDeliveryStatus: getIt(),
-              deleteBooking: getIt(),
-              updateBookingStatus: getIt(),
-              loadDesktopBookings: getIt(),
-            ),
-          ),
-        ],
-        child: DashboardScreen(onNavigateToBookings: _navigateToBookingsTab),
-      ),
+      DashboardScreen(onNavigateToBookings: _navigateToBookingsTab),
 
       // Global Search
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) =>
-                GlobalSearchBloc(getGlobalSearchUseCase: getIt()),
-          ),
-          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
-          BlocProvider(
-            create: (context) => BookingDetailsBloc(
-              getBooking: getIt(),
-              updateDeliveryStatus: getIt(),
-              updateBookingStatus: getIt(),
-              updatePayment: getIt(),
-              deletePayment: getIt(),
-              cancelBooking: getIt(),
-              deleteBooking: getIt(),
-              addRefund: getIt(),
-              deleteRefund: getIt(),
-              updateSecurityRefund: getIt(),
-              deleteSecurityRefundedPayment: getIt(),
-              updatePartialReturn: getIt(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
-          ),
-        ],
-        child: GlobalSearchScreen(),
-      ),
+      GlobalSearchScreen(),
 
       // All Bookings
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
-          BlocProvider(
-            create: (context) => BookingDetailsBloc(
-              getBooking: getIt(),
-              updateDeliveryStatus: getIt(),
-              updateBookingStatus: getIt(),
-              updatePayment: getIt(),
-              deletePayment: getIt(),
-              cancelBooking: getIt(),
-              deleteBooking: getIt(),
-              addRefund: getIt(),
-              deleteRefund: getIt(),
-              updateSecurityRefund: getIt(),
-              deleteSecurityRefundedPayment: getIt(),
-              updatePartialReturn: getIt(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) =>
-                AllSalesBloc(getSalesUseCase: getIt<GetSalesUseCase>()),
-          ),
-          BlocProvider(create: (context) => SalesDetailsDrawerCubit()),
-          BlocProvider(
-            create: (context) => SalesDetailsBloc(
-              getSaleDetailsUseCase: getIt<GetSaleDetailsUseCase>(),
-              deleteSaleUseCase: getIt<DeleteSaleUseCase>(),
-            ),
-          ),
-        ],
-        child: AllBookingsDesktopScreen(key: _allBookingsKey),
-      ),
+      AllBookingsDesktopScreen(key: _allBookingsKey),
 
       // stock management
-      MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
-          BlocProvider(
-            create: (context) => BookingDetailsBloc(
-              getBooking: getIt(),
-              updateDeliveryStatus: getIt(),
-              updateBookingStatus: getIt(),
-              updatePayment: getIt(),
-              deletePayment: getIt(),
-              cancelBooking: getIt(),
-              deleteBooking: getIt(),
-              addRefund: getIt(),
-              deleteRefund: getIt(),
-              updateSecurityRefund: getIt(),
-              deleteSecurityRefundedPayment: getIt(),
-              updatePartialReturn: getIt(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsPaymentHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => BookingDetailsSecurityRefundHistoryCubit(),
-          ),
-          BlocProvider(
-            create: (context) => AllBookingBloc(
-              updateDeliveryStatus: getIt(),
-              deleteBooking: getIt(),
-              updateBookingStatus: getIt(),
-              loadDesktopBookings: getIt(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => StockManagementCubit(
-              getProducts: getIt(),
-              deleteProduct: getIt(),
-              searchAllProducts: getIt(),
-              searchAndFilterProducts: getIt(),
-            ),
-          ),
-        ],
-        child: const StockManagementScreen(),
-      ),
-      const SettingsScreen(), //Currently not using
+      const StockManagementScreen(),
+
+      const SettingsScreen(),
     ];
     _warmUpPrinterBridge();
     super.initState();

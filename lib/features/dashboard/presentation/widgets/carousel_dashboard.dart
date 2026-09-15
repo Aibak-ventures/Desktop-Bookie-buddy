@@ -1,17 +1,7 @@
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselDashboard extends StatelessWidget {
   final DesktopDashboardCarouselEntity data;
@@ -146,53 +136,9 @@ class CarouselDashboard extends StatelessWidget {
       return;
     }
 
-    // Fallback to pushing a new route
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (_) => AllBookingBloc(
-                updateDeliveryStatus: getIt.get(),
-                deleteBooking: getIt.get(),
-                updateBookingStatus: getIt.get(),
-                loadDesktopBookings: getIt.get(),
-              ),
-            ),
-            BlocProvider(create: (_) => BookingDetailsDrawerCubit()),
-            BlocProvider(
-              create: (_) => BookingDetailsBloc(
-                getBooking: getIt.get(),
-                updateDeliveryStatus: getIt.get(),
-                updateBookingStatus: getIt.get(),
-                updatePayment: getIt.get(),
-                deletePayment: getIt.get(),
-                cancelBooking: getIt.get(),
-                deleteBooking: getIt.get(),
-                addRefund: getIt.get(),
-                deleteRefund: getIt.get(),
-                updateSecurityRefund: getIt.get(),
-                deleteSecurityRefundedPayment: getIt.get(),
-                updatePartialReturn: getIt.get(),
-              ),
-            ),
-            BlocProvider(create: (_) => BookingDetailsPaymentHistoryCubit()),
-            BlocProvider(
-              create: (_) => BookingDetailsSecurityRefundHistoryCubit(),
-            ),
-            BlocProvider(
-              create: (_) => AllSalesBloc(getSalesUseCase: getIt.get()),
-            ),
-            BlocProvider(create: (_) => SalesDetailsDrawerCubit()),
-            BlocProvider(
-              create: (_) => SalesDetailsBloc(
-                getSaleDetailsUseCase: getIt.get(),
-                deleteSaleUseCase: getIt.get(),
-              ),
-            ),
-          ],
-          child: AllBookingsDesktopScreen(initialStatusTab: statusTab),
-        ),
+        builder: (_) => AllBookingsDesktopScreen(initialStatusTab: statusTab),
       ),
     );
   }
