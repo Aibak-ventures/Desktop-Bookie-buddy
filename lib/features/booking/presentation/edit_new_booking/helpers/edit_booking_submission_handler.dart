@@ -44,13 +44,40 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
     // Validate paid amount doesn't exceed total payable
     {
       final paidAmount = advanceAmountController.text.trim().toIntOrNull() ?? 0;
+      final discountAmount =
+          discountAmountController.text.trim().toIntOrNull() ?? 0;
+      final additionalCharges = additionalChargesNotifier.value;
+      final effectiveRentalDays = _calculateRentalDays();
+      final productTotal = PaymentCalculator.calculateProductTotal(
+        selectedProducts: products,
+        bookingType: selectedBookingType,
+        effectiveRentalDays: effectiveRentalDays,
+      );
+      final additionalTotal = PaymentCalculator.calculateAdditionalChargesTotal(
+        additionalCharges,
+      );
+      // Mirror BookingAmountSummary's own math so this gate never rejects an
+      // amount the summary card itself shows as payable (see tax note on
+      // `_calculateTaxSummary` above — same frozen snapshot is used here).
+      final actualDiscount = PaymentCalculator.resolveDiscountAmount(
+        isDiscountPercentage: isDiscountPercentage,
+        discountInput: discountAmount,
+        productTotal: productTotal,
+        additionalTotal: additionalTotal,
+      );
+      final taxSummary = _calculateTaxSummary(
+        productTotal: productTotal.toDouble(),
+        additionalCharges: additionalTotal.toDouble(),
+        discountAmount: actualDiscount.toDouble(),
+      );
       final totalPayable = PaymentCalculator.calculateBookingTotalPayable(
         selectedProducts: products,
-        additionalCharges: additionalChargesNotifier.value,
-        discountAmount: discountAmountController.text.trim().toIntOrNull() ?? 0,
+        additionalCharges: additionalCharges,
+        discountAmount: discountAmount,
         isDiscountPercentage: isDiscountPercentage,
         bookingType: selectedBookingType,
-        effectiveRentalDays: _calculateRentalDays(),
+        effectiveRentalDays: effectiveRentalDays,
+        additionalTaxAmount: taxSummary.additionalTaxAmount,
       );
       if (paidAmount > totalPayable) {
         context.showSnackBar(
@@ -63,9 +90,26 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
 
     final isSaleType = selectedBookingType == BookingType.sales;
     final secAmt = securityAmountController.text.trim().toIntOrNull() ?? 0;
-    if (!isSaleType && secAmt > 0 && selectedSecurityAccount == null) {
+    if (!isSaleType &&
+        secAmt > 0 &&
+        isSecurityPaid &&
+        selectedSecurityAccount == null) {
       context.showSnackBar(
         'Please select a payment option for security amount',
+        isError: true,
+      );
+      return;
+    }
+
+    // Security deposit can't be lowered below what's already been
+    // refunded/deducted against it.
+    final minSecurityAmount =
+        (_originalBooking?.totalSecurityRefunded ?? 0) +
+        (_originalBooking?.totalSecurityDeducted ?? 0);
+    if (minSecurityAmount > 0 && secAmt < minSecurityAmount) {
+      context.showSnackBar(
+        'Security Deposit can\'t be less than $minSecurityAmount (already refunded/returned)',
+        title: 'Security Deposit',
         isError: true,
       );
       return;
@@ -181,7 +225,10 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
           : discountInput;
     }
     final secAmt = securityAmountController.text.trim().toIntOrNull();
-    if (secAmt != null && secAmt > 0 && selectedSecurityAccount?.id != null) {
+    if (secAmt != null &&
+        secAmt > 0 &&
+        isSecurityPaid &&
+        selectedSecurityAccount?.id != null) {
       updates['security_account_id'] = selectedSecurityAccount!.id;
     }
 
@@ -237,7 +284,7 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
     updates['purchase_mode'] = purchaseMode.value;
 
     if (_hasDeliveryStatusChanged()) {
-      updates['delivery_status'] = deliveryStatus.toValue();
+      updates['delivery_status'] = deliveryStatus.value;
     }
 
     final description = descriptionController.text.trim();

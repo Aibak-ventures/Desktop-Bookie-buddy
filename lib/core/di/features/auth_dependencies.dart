@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/di/i_app_dependency.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
 import 'package:bookie_buddy_web/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -17,8 +18,9 @@ import 'package:bookie_buddy_web/features/auth/domain/usecases/switch_shop_useca
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 
-class AuthDependencies {
-  static void register() {
+class AuthDependencies implements IAppDependency {
+  @override
+  void register() {
     // auth
     getIt.registerLazySingleton(
       () => AuthRemoteDatasource(

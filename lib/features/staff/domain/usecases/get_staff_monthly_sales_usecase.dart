@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 

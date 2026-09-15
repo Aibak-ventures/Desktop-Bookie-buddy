@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:bookie_buddy_web/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
@@ -15,7 +15,7 @@ import 'package:bookie_buddy_web/features/booking/data/models/booking_model/book
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/desktop_booking_model/desktop_booking_item_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/desktop_booking_model/status_counts_model.dart';
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/datasources/booking_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
@@ -103,7 +103,16 @@ class BookingRepositoryImpl implements IBookingRepository {
             )
             .toList(),
         'paid_amount': saleData.paidAmount ?? 0,
-        if (saleData.accountId != null) 'account_id': saleData.accountId,
+        if (saleData.payments != null && saleData.payments!.isNotEmpty)
+          'payments': saleData.payments!
+              .map(
+                (p) => <String, dynamic>{
+                  if (p.id != null) 'id': p.id,
+                  'account_id': p.accountId,
+                  'amount': p.amount,
+                },
+              )
+              .toList(),
         'discount': saleData.discountAmount ?? 0,
         'decrease_stock': saleData.stockCountDecrease ?? true,
       };
@@ -321,7 +330,7 @@ class BookingRepositoryImpl implements IBookingRepository {
       final response = await safeApiCall(
         () => _datasource.updateBookingStatus(
           bookingId: bookingId,
-          bookingStatus: bookingStatus.toValue(),
+          bookingStatus: bookingStatus.value,
         ),
       );
       if (response.status.isSuccess) {
@@ -345,7 +354,7 @@ class BookingRepositoryImpl implements IBookingRepository {
       final response = await safeApiCall(
         () => _datasource.updateDeliveryStatus(
           bookingId: bookingId,
-          deliveryStatus: deliveryStatus.toValue(),
+          deliveryStatus: deliveryStatus.value,
         ),
       );
 
@@ -682,6 +691,33 @@ class BookingRepositoryImpl implements IBookingRepository {
       throw response.message ?? 'Failed to delete security refunded payment';
     } catch (e, stack) {
       log('Error deleting security refunded payment: $e', stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<CustomResponseModel> updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  }) async {
+    try {
+      final response = await safeApiCall(
+        () => _datasource.updatePartialReturn(
+          bookingId: bookingId,
+          returnedProductIds: returnedProductIds,
+          notReturnedProductIds: notReturnedProductIds,
+          newReturnDate: newReturnDate,
+        ),
+      );
+      if (response.status.isSuccess || response.status.isInsufficientStock) {
+        return response;
+      }
+      log('Error updating partial return: ${response.devMessage}');
+      throw response.message ?? 'Failed to update partial return';
+    } catch (e, stack) {
+      log('Error updating partial return: $e', stackTrace: stack);
       rethrow;
     }
   }

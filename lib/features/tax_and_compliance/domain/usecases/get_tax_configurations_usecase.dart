@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
+import 'package:bookie_buddy_shared/core/core/common/entities/tax_configuration_entity/tax_configuration_entity.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/domain/repositories/i_tax_configuration_repository.dart';
 
 class GetTaxConfigurationsUseCase {

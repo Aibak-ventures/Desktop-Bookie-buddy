@@ -62,4 +62,11 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int paymentId,
     required SecurityPaymentHistoryType securityPaymentType,
   }) = _DeleteSecurityRefundedPayment;
+
+  const factory BookingDetailsEvent.updatePartialReturn({
+    required int bookingId,
+    required List<int> returnedProductIds,
+    required List<int> notReturnedProductIds,
+    required String? newReturnDate,
+  }) = _UpdatePartialReturn;
 }

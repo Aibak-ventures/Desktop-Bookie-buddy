@@ -12,7 +12,14 @@ abstract class BookingDetailsState with _$BookingDetailsState {
     @Default(false) bool didPop,
     @Default(true) bool needRefresh,
   }) = _Success;
-  const factory BookingDetailsState.failed(String message) = _Failed;
+  /// [error] carries the raw API payload when the failure has structured
+  /// detail worth rendering (an insufficient-stock conflict), and [products]
+  /// the booked items it should be resolved against.
+  const factory BookingDetailsState.failed(
+    String message, {
+    dynamic error,
+    List<ProductInfoEntity>? products,
+  }) = _Failed;
   const factory BookingDetailsState.error(String error) = _Error;
 }
 

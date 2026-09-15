@@ -71,15 +71,15 @@ class SalesFormProductTableRow extends StatelessWidget {
                     border: Border.all(color: Colors.grey.shade200),
                     image:
                         (product.variant.thumbnailImage ??
-                                    product.variant.image) !=
+                                    product.variant.productImage) !=
                                 null &&
                             (product.variant.thumbnailImage ??
-                                    product.variant.image)!
+                                    product.variant.productImage)!
                                 .isNotEmpty
                         ? DecorationImage(
                             image: NetworkImage(
                               product.variant.thumbnailImage ??
-                                  product.variant.image!,
+                                  product.variant.productImage!,
                             ),
                             fit: BoxFit.cover,
                           )
@@ -87,9 +87,9 @@ class SalesFormProductTableRow extends StatelessWidget {
                   ),
                   child:
                       (product.variant.thumbnailImage ??
-                                  product.variant.image) ==
+                                  product.variant.productImage) ==
                               null ||
-                          product.variant.image!.isEmpty
+                          product.variant.productImage!.isEmpty
                       ? const Icon(
                           Icons.image_not_supported,
                           size: 20,

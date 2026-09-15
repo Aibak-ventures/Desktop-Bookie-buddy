@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/config/auto_login_config.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/common/usecases/launch_whatsapp_support_usecase.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
@@ -19,10 +20,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
+  final phoneController = TextEditingController(text: AutoLoginConfig.phone);
+  final passwordController = TextEditingController(
+    text: AutoLoginConfig.password,
+  );
   final formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (AutoLoginConfig.isEnabled) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _login());
+    }
+  }
 
   @override
   void dispose() {
@@ -45,9 +56,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // TOP LEFT APP LOGO
           Positioned(
-            top: 20,
-            left: 20,
-            child: Image.asset('assets/images/app_icon_dart.png', height: 110),
+            top: 30,
+            left: 30,
+            child: SvgPicture.asset(
+              'assets/images/new_splash_color_img.svg',
+              height: 40,
+            ),
           ),
 
           Center(

@@ -1,15 +1,17 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
+import 'package:bookie_buddy_shared/core/core/common/utils/cancellation_token.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/repositories/i_account_repository.dart';
 import 'package:bookie_buddy_web/features/accounts/data/datasources/account_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/accounts/data/models/account_model/account_model.dart';
 import 'package:bookie_buddy_web/features/accounts/data/models/account_request_model/account_request_model.dart';
 import 'package:bookie_buddy_web/features/accounts/data/models/accounts_summary_model/accounts_summary_model.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/entities/accounts_summary_entity/accounts_summary_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/repositories/i_account_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
+import 'package:dio/dio.dart';
 
 class AccountRepositoryImpl implements IAccountRepository {
   final AccountRemoteDatasource _datasource;
@@ -117,5 +119,21 @@ class AccountRepositoryImpl implements IAccountRepository {
       log('Error deleting account: $e', stackTrace: stack);
       rethrow;
     }
+  }
+
+  @override
+  Future<String> downloadAccountStatementPdf({
+    required int accountId,
+    required String startDate,
+    required String endDate,
+    required CancellationToken funCancelToken,
+    CancelToken? dioCancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) {
+    // Not built for web yet — no account-statement-download flow exists
+    // here. Implement once the web app grows this feature.
+    throw UnimplementedError(
+      'downloadAccountStatementPdf is not implemented for web.',
+    );
   }
 }

@@ -20,7 +20,11 @@ _SalesRequestModel _$SalesRequestModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
       discountAmount: (json['discount'] as num?)?.toInt(),
       paidAmount: (json['paid_amount'] as num?)?.toInt(),
-      accountId: (json['account_id'] as num?)?.toInt(),
+      payments: (json['payments'] as List<dynamic>?)
+          ?.map(
+            (e) => SalesPaymentRequestModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
     );
 
 Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
@@ -34,6 +38,6 @@ Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
       'description': ?instance.description,
       'discount': ?instance.discountAmount,
       'paid_amount': ?instance.paidAmount,
-      'account_id': ?instance.accountId,
+      'payments': ?_paymentsToJson(instance.payments),
       'send_invoice': instance.sendPdfToWhatsApp,
     };

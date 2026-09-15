@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/domain/usecases/get_accounts_usecase.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/usecases/get_accounts_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

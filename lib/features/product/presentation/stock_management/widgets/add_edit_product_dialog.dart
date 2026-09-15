@@ -1,10 +1,11 @@
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
-import 'package:bookie_buddy_web/core/constants/enums/service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/utils/extensions/main_service_type_web_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
-import 'package:bookie_buddy_web/features/shop/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_button.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';

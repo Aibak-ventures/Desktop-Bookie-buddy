@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
+import 'package:bookie_buddy_web/features/sales/data/models/sales_payment_request_model/sales_payment_request_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -10,6 +11,12 @@ List<Map<String, dynamic>>? _variantsToJson(
 ) => variants == null || variants.isEmpty
     ? null
     : variants.map((e) => e.toCustomJson(includeMeasurement: false)).toList();
+
+List<Map<String, dynamic>>? _paymentsToJson(
+  List<SalesPaymentRequestModel>? payments,
+) => payments == null || payments.isEmpty
+    ? null
+    : payments.map((e) => e.toJson()).toList();
 
 @freezed
 abstract class SalesRequestModel with _$SalesRequestModel {
@@ -26,7 +33,8 @@ abstract class SalesRequestModel with _$SalesRequestModel {
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'discount') int? discountAmount,
     @JsonKey(name: 'paid_amount') int? paidAmount,
-    @JsonKey(name: 'account_id') int? accountId,
+    @JsonKey(name: 'payments', toJson: _paymentsToJson)
+    List<SalesPaymentRequestModel>? payments,
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
@@ -47,7 +55,9 @@ abstract class SalesRequestModel with _$SalesRequestModel {
         description: entity.description,
         discountAmount: entity.discountAmount,
         paidAmount: entity.paidAmount,
-        accountId: entity.accountId,
+        payments: entity.payments
+            ?.map((e) => SalesPaymentRequestModel.fromEntity(e))
+            .toList(),
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
       );
 }

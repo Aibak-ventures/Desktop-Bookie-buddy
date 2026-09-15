@@ -27,7 +27,9 @@ Map<String, dynamic> _$ShopSettingsModelToJson(
 ) => <String, dynamic>{
   'cooling_days': instance.coolingPeriodDuration,
   'cooling_period_mode': CoolingPeriodMode.toJson(instance.coolingPeriodMode),
-  'default_action': instance.addButtonDefaultAction,
+  'default_action': AddButtonDefaultAction.toJson(
+    instance.addButtonDefaultAction,
+  ),
   'search_client': instance.searchClient,
   'printer_preference': PrintOutputPreference.toJson(
     instance.printOutputPreference,
