@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
@@ -14,6 +15,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
@@ -25,8 +27,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mo
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
-  final String?
-  initialStatusTab; // Optional: 'upcoming', 'completed', 'not_returned'
+  final BookingListFilter? initialStatusTab;
 
   const AllBookingsDesktopScreen({super.key, this.initialStatusTab});
 
@@ -37,7 +38,7 @@ class AllBookingsDesktopScreen extends StatefulWidget {
 
 class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
-  String _activeStatusTab = 'upcoming'; // API status value
+  BookingListFilter _activeStatusTab = BookingListFilter.upcoming;
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<DateFilter> _dateFilterNotifier = ValueNotifier(
     const DateFilter(),
@@ -50,16 +51,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   bool _hasSalesFeature(UserEntity? userState) =>
       userState?.subscription?.features.contains(AppPremiumFeatures.sales) ??
       false;
-
-  // Map display labels to API status values
-  final Map<String, String> _statusApiMap = {
-    'Upcoming': 'upcoming',
-    'Returns': 'returns',
-    'Pending': 'pending',
-    'Not Returned': 'not_returned',
-    'Completed': 'completed',
-    'Cancelled': 'cancelled',
-  };
 
   @override
   void initState() {
@@ -134,15 +125,12 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     }
   }
 
-  void _onStatusTabChanged(String displayLabel) {
-    final apiStatus = _statusApiMap[displayLabel];
-    if (apiStatus != null) {
-      setState(() => _activeStatusTab = apiStatus);
-      _loadData();
-      // Close the booking details drawer when switching status tabs
-      context.read<BookingDetailsDrawerCubit>().closeDrawer();
-      context.read<SalesDetailsDrawerCubit>().closeDrawer();
-    }
+  void _onStatusTabChanged(BookingListFilter filter) {
+    setState(() => _activeStatusTab = filter);
+    _loadData();
+    // Close the booking details drawer when switching status tabs
+    context.read<BookingDetailsDrawerCubit>().closeDrawer();
+    context.read<SalesDetailsDrawerCubit>().closeDrawer();
   }
 
   @override
@@ -320,33 +308,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: _statusApiMap.keys.map((displayLabel) {
-                    final apiStatus = _statusApiMap[displayLabel]!;
-                    final isActive = _activeStatusTab == apiStatus;
+                  children: BookingListFilter.values.map((filter) {
+                    final isActive = _activeStatusTab == filter;
 
                     // Get count from API response
                     int count = 0;
                     if (statusCounts != null) {
-                      switch (apiStatus) {
-                        case 'upcoming':
-                          count = statusCounts.upcoming;
-                          break;
-                        case 'returns':
-                          count = statusCounts.returns;
-                          break;
-                        case 'pending':
-                          count = statusCounts.pending;
-                          break;
-                        case 'not_returned':
-                          count = statusCounts.notReturned;
-                          break;
-                        case 'completed':
-                          count = statusCounts.completed;
-                          break;
-                        case 'cancelled':
-                          count = statusCounts.cancelled;
-                          break;
-                      }
+                      count = statusCounts.fromFilter(filter);
                     }
 
                     return Padding(
@@ -358,7 +326,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                             : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
-                          onTap: () => _onStatusTabChanged(displayLabel),
+                          onTap: () => _onStatusTabChanged(filter),
                           borderRadius: BorderRadius.circular(8),
                           hoverColor: const Color(
                             0xFFE7E4FF,
@@ -389,7 +357,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  displayLabel,
+                                  filter.label,
                                   style: TextStyle(
                                     color: isActive
                                         ? const Color(0xFF8A63FE)
@@ -461,7 +429,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               decoration: InputDecoration(
                 hintText: _activeActionTab == 1
                     ? 'Search sales...'
-                    : 'Search in ${_activeStatusTab.replaceAll('_', ' ')}...',
+                    : 'Search in ${_activeStatusTab.label}...',
                 hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                 border: InputBorder.none,
                 isDense: true,

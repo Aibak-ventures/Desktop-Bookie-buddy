@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
@@ -130,7 +131,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         add(
           AllBookingEvent.loadBookings(
             status: s
-                .status, // If status was 'pending', removing item should happen via reload naturally
+                .status, // If status was BookingListFilter.pending, removing item should happen via reload naturally
             startDate: s.startDate,
             endDate: s.endDate,
             searchQuery: s.searchQuery,
@@ -165,7 +166,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
     try {
       final result = await _loadDesktopBookings(
-        status: event.status ?? 'pending',
+        status: event.status ?? BookingListFilter.pending,
         startDate: event.startDate,
         endDate: event.endDate,
         searchQuery: event.searchQuery.isNotNullOrEmpty
@@ -181,7 +182,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
           endDate: event.endDate,
           startDate: event.startDate,
           searchQuery: event.searchQuery,
-          status: event.status ?? 'pending',
+          status: event.status ?? BookingListFilter.pending,
           purchaseMode: event.purchaseMode,
           statusCounts: result.statusCounts,
         ),
@@ -204,7 +205,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
     try {
       final result = await _loadDesktopBookings(
-        status: s.status ?? 'pending',
+        status: s.status ?? BookingListFilter.pending,
         startDate: s.startDate,
         endDate: s.endDate,
         page: 1,

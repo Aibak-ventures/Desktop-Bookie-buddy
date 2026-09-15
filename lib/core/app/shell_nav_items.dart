@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
@@ -28,7 +29,7 @@ class ShellNavItem {
 /// existing ones) is exactly one entry in this list, nothing else to touch.
 List<ShellNavItem> buildShellNavItems({
   required VoidCallback onNewOrderClosed,
-  required void Function(String statusTab) onNavigateToBookings,
+  required void Function(BookingListFilter statusTab) onNavigateToBookings,
   required GlobalKey<NewBookingScreenState> newBookingKey,
 }) => [
   ShellNavItem(

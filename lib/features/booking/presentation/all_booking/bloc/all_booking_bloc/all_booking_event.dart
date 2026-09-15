@@ -3,7 +3,7 @@ part of 'all_booking_bloc.dart';
 @freezed
 abstract class AllBookingEvent with _$AllBookingEvent {
   const factory AllBookingEvent.loadBookings({
-    String? status,
+    BookingListFilter? status,
     String? startDate,
     String? endDate,
     String? searchQuery,

@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
@@ -16,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final void Function(String statusTab)? onNavigateToBookings;
+  final void Function(BookingListFilter statusTab)? onNavigateToBookings;
 
   const DashboardScreen({super.key, this.onNavigateToBookings});
 

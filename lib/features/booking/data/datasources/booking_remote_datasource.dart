@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -433,7 +434,7 @@ class BookingRemoteDatasource {
   }
 
   Future<CustomResponseModel> fetchDesktopBookingsPagination({
-    required String status,
+    required BookingListFilter status,
     String? searchQuery,
     String? startDate,
     String? endDate,
@@ -447,8 +448,7 @@ class BookingRemoteDatasource {
         queryParameters: nextPageUrl != null
             ? null
             : {
-                'status':
-                    status, // pending, upcoming, returns, not_returned, completed
+                'status': status.value,
                 if (searchQuery != null && searchQuery.isNotEmpty)
                   'search': searchQuery,
                 if (startDate != null && startDate.isNotEmpty)

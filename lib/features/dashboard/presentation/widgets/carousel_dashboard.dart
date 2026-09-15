@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class CarouselDashboard extends StatelessWidget {
   final DesktopDashboardCarouselEntity data;
-  final void Function(String statusTab)? onNavigateToBookings;
+  final void Function(BookingListFilter statusTab)? onNavigateToBookings;
 
   const CarouselDashboard({
     required this.data,
@@ -28,7 +29,10 @@ class CarouselDashboard extends StatelessWidget {
                 value: data.upcomingCount.toString(),
                 gradient: const [Color(0xFF4C0FFF), Color(0xFF8A63FE)],
                 icon: Icons.schedule,
-                onTap: () => _openAllBookingsWithTab(context, 'upcoming'),
+                onTap: () => _openAllBookingsWithTab(
+                  context,
+                  BookingListFilter.upcoming,
+                ),
               ),
             ),
             const SizedBox(width: 20),
@@ -39,7 +43,10 @@ class CarouselDashboard extends StatelessWidget {
                 value: data.completedCount.toString(),
                 gradient: const [Color(0xFF015DFF), Color(0xFF05ADFF)],
                 icon: Icons.check_circle,
-                onTap: () => _openAllBookingsWithTab(context, 'completed'),
+                onTap: () => _openAllBookingsWithTab(
+                  context,
+                  BookingListFilter.completed,
+                ),
               ),
             ),
             const SizedBox(width: 20),
@@ -50,7 +57,10 @@ class CarouselDashboard extends StatelessWidget {
                 value: data.expiredCount.toString(),
                 gradient: const [Color(0xFFFF4757), Color(0xFFFF6B7A)],
                 icon: Icons.event_busy,
-                onTap: () => _openAllBookingsWithTab(context, 'not_returned'),
+                onTap: () => _openAllBookingsWithTab(
+                  context,
+                  BookingListFilter.notReturned,
+                ),
               ),
             ),
           ],
@@ -129,7 +139,10 @@ class CarouselDashboard extends StatelessWidget {
   }
 
   /// Navigate to AllBookingsDesktopScreen with specific tab
-  void _openAllBookingsWithTab(BuildContext context, String statusTab) {
+  void _openAllBookingsWithTab(
+    BuildContext context,
+    BookingListFilter statusTab,
+  ) {
     // Use callback if available (navigates within bottom bar)
     if (onNavigateToBookings != null) {
       onNavigateToBookings!(statusTab);

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/app/widgets/logout_confirmation_dialog.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
@@ -69,7 +70,7 @@ class AppShellScreenState extends State<AppShellScreen> {
     } catch (_) {}
   }
 
-  void _navigateToBookingsTab(String statusTab) {
+  void _navigateToBookingsTab(BookingListFilter statusTab) {
     navigateTo(ShellTabId.orders);
     context.read<AllBookingBloc>().add(
       AllBookingEvent.loadBookings(status: statusTab),
