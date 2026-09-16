@@ -1,20 +1,18 @@
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/core/common/widgets/details_drawer_shell.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_action_bar.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_customer_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_dates_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_documents_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_header_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_items_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_other_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_payment_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_security_refund_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/booking_details_action_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_customer_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_dates_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_documents_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_header_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_items_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_other_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_payment_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_security_refund_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
@@ -25,64 +23,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-/// Rendered by [GlobalDetailsDrawer], permanently mounted alongside
-/// [SalesDetailsDrawer] so its `BlocListener` is always subscribed and never
-/// misses the transition into `DetailsDrawerType.booking` — including the
-/// very first time it opens. Every listener/visibility check below is
-/// therefore gated on `drawerState.type == DetailsDrawerType.booking`, not
-/// just `isOpen`, so a sales-drawer id change never triggers this drawer.
-///
-/// Callers never build this directly — open it from anywhere via
-/// `context.read<DetailsDrawerCubit>().open(DetailsDrawerType.booking, id)`.
-class BookingDetailsDrawer extends StatelessWidget {
-  const BookingDetailsDrawer({super.key});
+/// The actual booking-details view: every section (header, dates, items,
+/// customer, payment, security/refund, other, documents) plus the bottom
+/// action bar, driven by [BookingDetailsBloc]. Content-wise this is
+/// screen-equivalent — it just happens to always be shown inside
+/// [BookingDetailsDrawer]'s slide-in chrome rather than a full-screen route.
+class BookingDetailsContent extends StatelessWidget {
+  final int selectedBookingId;
+
+  const BookingDetailsContent({super.key, required this.selectedBookingId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<DetailsDrawerCubit, DetailsDrawerState>(
-      listenWhen: detailsDrawerOpenedFor(DetailsDrawerType.booking),
-      listener: (context, drawerState) {
-        context.read<BookingDetailsBloc>().add(
-          BookingDetailsEvent.fetchBookingDetails(drawerState.selectedId!),
-        );
-      },
-      child: BlocBuilder<DetailsDrawerCubit, DetailsDrawerState>(
-        builder: (context, drawerState) {
-          final isThisOpen = drawerState.isOpenFor(DetailsDrawerType.booking);
-          return DetailsDrawerShell(
-            isOpen: isThisOpen,
-            onClose: () => context.read<DetailsDrawerCubit>().closeDrawer(),
-            trailing: !isThisOpen || drawerState.selectedId == null
-                ? null
-                : IconButton(
-                    icon: Icon(Icons.refresh, size: 24),
-                    onPressed: () {
-                      context.read<BookingDetailsBloc>().add(
-                        BookingDetailsEvent.fetchBookingDetails(
-                          drawerState.selectedId!,
-                        ),
-                      );
-                    },
-                    tooltip: 'Refresh',
-                    color: Colors.grey.shade600,
-                    hoverColor: Colors.grey.shade100,
-                  ),
-            child: _buildContent(context, drawerState.selectedId, isThisOpen),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildContent(
-    BuildContext context,
-    int? selectedBookingId,
-    bool isThisOpen,
-  ) {
-    if (!isThisOpen || selectedBookingId == null) {
-      return const SizedBox.shrink();
-    }
-
     return BlocListener<BookingDetailsBloc, BookingDetailsState>(
       listener: (context, state) {
         state.maybeWhen(
