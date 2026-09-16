@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/staff_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_request_model/staff_request_model.dart';
@@ -11,10 +12,12 @@ class StaffRemoteDatasource {
 
   StaffRemoteDatasource({required this.dio});
 
+  StaffEndpoints get _endpoint => ApiEndpoints.staff;
+
   Future<CustomResponseModel> fetchStaffs({required int page}) async {
     try {
       final response = await dio.get(
-        ApiEndpoints.staff.staff,
+        _endpoint.staff,
         queryParameters: {'page': page},
       );
       log(response.realUri.toString());
@@ -28,7 +31,7 @@ class StaffRemoteDatasource {
 
   Future<CustomResponseModel> fetchStaffDetails(int staffId) async {
     try {
-      final response = await dio.get(ApiEndpoints.staff.staffById(staffId));
+      final response = await dio.get(_endpoint.staffById(staffId));
       log(
         'Fetch staff details response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -42,7 +45,7 @@ class StaffRemoteDatasource {
   Future<CustomResponseModel> addStaff(StaffRequestModel staffData) async {
     try {
       final response = await dio.post(
-        ApiEndpoints.staff.staff,
+        _endpoint.staff,
         data: staffData.toJson(),
       );
       log(
@@ -57,7 +60,7 @@ class StaffRemoteDatasource {
 
   Future<CustomResponseModel> deleteStaff(int staffId) async {
     try {
-      final response = await dio.delete(ApiEndpoints.staff.staffById(staffId));
+      final response = await dio.delete(_endpoint.staffById(staffId));
       log(
         'Delete staff response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -74,7 +77,7 @@ class StaffRemoteDatasource {
       final data = staffData.toJson();
       log('edit staff request body: $data');
       final response = await dio.patch(
-        ApiEndpoints.staff.staffById(staffData.id!),
+        _endpoint.staffById(staffData.id!),
         data: data,
       );
       log(
@@ -94,7 +97,7 @@ class StaffRemoteDatasource {
   }) async {
     try {
       final response = await dio.get(
-        ApiEndpoints.staff.staffAnalyticsReportById(staffId),
+        _endpoint.staffAnalyticsReportById(staffId),
         queryParameters: {'year': year, 'month': month},
       );
       log(
@@ -116,7 +119,7 @@ class StaffRemoteDatasource {
   }) async {
     try {
       final response = await dio.post(
-        ApiEndpoints.staff.staffMonthlyBookingsOrSales,
+        _endpoint.staffMonthlyBookingsOrSales,
         data: {
           'page': page,
           'staff_id': staffId,

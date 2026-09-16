@@ -1,42 +1,47 @@
 import 'package:bookie_buddy_web/core/constants/endpoints/api_config.dart';
 
 class BookingsEndpoints {
+  const BookingsEndpoints();
+
   static const _rootV3 = '${ApiConfig.v3}/bookings/';
   static const _rootV4 = '${ApiConfig.v4}/bookings/';
   static const _rootV5 = '${ApiConfig.v5}/bookings/';
 
-  static const bookingsV3 = '${_rootV3}bookings/';
-  static const bookingsV4 = '${_rootV4}bookings/';
-  static const bookingsV5 = '${_rootV5}bookings/';
-  static const desktopList = '${_rootV5}bookings/desktop-list/';
-  static const addPayment = '${bookingsV5}add-payment/';
-  static const updateDetails = '${bookingsV5}update-details/';
-  static const updateDeliveryStatus = '${bookingsV5}update-delivery-status/';
-  static const updateBookingStatus = '${bookingsV5}update-booking-status/';
-  static const oldBookings = '${bookingsV3}old-bookings/';
-  static const clients = '${_rootV4}clients/';
-  static const clientsV4 = '${_rootV4}clients/';
-  static const availableProducts = '${bookingsV3}desktop-available-products/';
-  static const dashboard = '${_rootV4}dashboard/';
-  static const cancelBooking = '${bookingsV5}cancel-booking/';
+  static const _bookingsV3 = '${_rootV3}bookings/';
+  static const _bookingsV5 = '${_rootV5}bookings/';
 
-  // Dynamic methods
-  static String deletePayment(int id) => '${bookingsV5}delete-payment/$id/';
-  static String sendBookingInvoice(int bookingId) =>
-      '${bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)
-  static String downloadBookingInvoice(int bookingId) =>
-      '${bookingsV5}send-invoice/$bookingId/'; // Same endpoint for download
-  static String clientById(int id) => '${clientsV4}$id/';
+  final bookingsV3 = _bookingsV3;
+  final bookingsV5 = _bookingsV5;
+  final desktopList = '${_rootV5}bookings/desktop-list/';
+  final oldBookings = '${_bookingsV3}old-bookings/';
+  final dashboard = '${_rootV4}dashboard/';
 
-  static String addRefund(int bookingId) => '${bookingsV5}refund/$bookingId/';
-  static String deleteRefund({required int bookingId, required int refundId}) =>
-      '${bookingsV5}refund/$bookingId/$refundId/';
+  String bookingDetailV3(int id) => '${_bookingsV3}$id/';
+  String bookingDetailV5(int id) => '${_bookingsV5}$id/';
+  String paymentHistory(int bookingId) =>
+      '${_bookingsV3}payment-details/$bookingId/';
+  String addPayment(int bookingId) => '${_bookingsV5}add-payment/$bookingId/';
+  String deletePayment(int id) => '${_bookingsV5}delete-payment/$id/';
+  String updateDetails(int bookingId) =>
+      '${_bookingsV5}update-details/$bookingId/';
+  String updateDeliveryStatus(int bookingId) =>
+      '${_bookingsV5}update-delivery-status/$bookingId/';
+  String updateBookingStatus(int bookingId) =>
+      '${_bookingsV5}update-booking-status/$bookingId/';
+  String sendBookingInvoice(int bookingId) =>
+      '${_bookingsV5}send-invoice/$bookingId/'; // Send invoice endpoint (returns PDF)
+  String downloadBookingInvoice(int bookingId) =>
+      '${_bookingsV5}send-invoice/$bookingId/'; // Same endpoint for download
 
-  static String updateSecurityRefund(int bookingId) =>
-      '${bookingsV5}security-adjustment/$bookingId/';
-  static String deleteSecurityRefundedPayment({required int refundId}) =>
-      '${bookingsV5}delete-security-adjustment/$refundId/';
+  String addRefund(int bookingId) => '${_bookingsV5}refund/$bookingId/';
+  String deleteRefund({required int bookingId, required int refundId}) =>
+      '${_bookingsV5}refund/$bookingId/$refundId/';
 
-  static String updatePartialReturn(int bookingId) =>
-      '${bookingsV5}partial-return/$bookingId/';
+  String updateSecurityRefund(int bookingId) =>
+      '${_bookingsV5}security-adjustment/$bookingId/';
+  String deleteSecurityRefundedPayment({required int refundId}) =>
+      '${_bookingsV5}delete-security-adjustment/$refundId/';
+
+  String updatePartialReturn(int bookingId) =>
+      '${_bookingsV5}partial-return/$bookingId/';
 }

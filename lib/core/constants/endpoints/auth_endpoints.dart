@@ -5,10 +5,11 @@ class AuthEndpoints {
 
   static const _rootV3 = '${ApiConfig.v3}/auth/';
   static const _rootV5 = '${ApiConfig.v5}/auth/';
-  static const login = '${_rootV3}login/';
-  static const walletLogin = '${_rootV3}wallet-login/';
-  static const changePassword = '${_rootV3}change-password/';
-  static const changeSecondaryPassword = '${_rootV3}update-secondary-password/';
-  static const refresh = '${ApiConfig.v}/token/refresh/';
-  static const profile = '${_rootV5}profile/';
+
+  final login = '${_rootV3}login/';
+  final walletLogin = '${_rootV3}wallet-login/';
+  final changePassword = '${_rootV3}change-password/';
+  final changeSecondaryPassword = '${_rootV3}update-secondary-password/';
+  final refresh = '${ApiConfig.v}/token/refresh/';
+  final profile = '${_rootV5}profile/';
 }

@@ -6,6 +6,8 @@ import 'dart:typed_data';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/sales_endpoints.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
@@ -19,13 +21,12 @@ class BookingRemoteDatasource {
   final Dio _dio;
   BookingRemoteDatasource({required Dio dio}) : _dio = dio;
 
-  final bookingManagementUrl = ApiEndpoints.bookings.bookingsV3;
+  BookingsEndpoints get _endpoint => ApiEndpoints.bookings;
+  SalesEndpoints get _salesEndpoint => ApiEndpoints.sales;
 
   Future<CustomResponseModel> getBooking(int bookingId) async {
     try {
-      final response = await _dio.get(
-        '${ApiEndpoints.bookings.bookingsV5}$bookingId/',
-      );
+      final response = await _dio.get(_endpoint.bookingDetailV5(bookingId));
       // log('booking details response: ${response.realUri.toString()} , ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -50,13 +51,13 @@ class BookingRemoteDatasource {
         // the files ride along with the booking fields.
         final formData = _buildBookingFormData(data, documents: documents);
         response = await _dio.post(
-          ApiEndpoints.bookings.bookingsV5,
+          _endpoint.bookingsV5,
           data: formData,
           options: Options(contentType: 'multipart/form-data'),
         );
       } else {
         response = await _dio.post(
-          ApiEndpoints.bookings.bookingsV5,
+          _endpoint.bookingsV5,
           data: data,
         );
       }
@@ -146,7 +147,7 @@ class BookingRemoteDatasource {
     try {
       log('Creating sale with data: $saleData');
       final response = await _dio.post(
-        ApiEndpoints.sales.sales,
+        _salesEndpoint.sales,
         data: saleData,
       );
 
@@ -168,7 +169,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        '${ApiEndpoints.bookings.addPayment}$bookingId/',
+        _endpoint.addPayment(bookingId),
         data: {
           'amount': amount,
           'account_id': accountId,
@@ -190,7 +191,7 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> deletePayment(int paymentId) async {
     try {
       final response = await _dio.delete(
-        ApiEndpoints.bookings.deletePayment(paymentId),
+        _endpoint.deletePayment(paymentId),
       );
 
       log(
@@ -209,7 +210,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.bookings.updateBookingStatus}$bookingId/',
+        _endpoint.updateBookingStatus(bookingId),
         data: {'booking_status': bookingStatus},
       );
       log(
@@ -228,7 +229,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.bookings.updateDeliveryStatus}$bookingId/',
+        _endpoint.updateDeliveryStatus(bookingId),
         data: {'delivery_status': deliveryStatus},
       );
 
@@ -248,7 +249,7 @@ class BookingRemoteDatasource {
   ) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.bookings.updateDetails}$bookingId/',
+        _endpoint.updateDetails(bookingId),
         data: updatedBooking.toBookingJson(),
       );
 
@@ -360,7 +361,7 @@ class BookingRemoteDatasource {
       log('└─────────────────────────────────────────────────────────────');
 
       final response = await _dio.patch(
-        '${ApiEndpoints.bookings.updateDetails}$bookingId/',
+        _endpoint.updateDetails(bookingId),
         data: formData,
         options: Options(contentType: 'multipart/form-data'),
       );
@@ -377,7 +378,7 @@ class BookingRemoteDatasource {
 
   Future<CustomResponseModel> deleteBooking(int bookingId) async {
     try {
-      final response = await _dio.delete('${bookingManagementUrl}$bookingId/');
+      final response = await _dio.delete(_endpoint.bookingDetailV3(bookingId));
       log(
         'delete booking response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -392,7 +393,7 @@ class BookingRemoteDatasource {
     try {
       // Update delivery status to cancelled
       final response = await _dio.patch(
-        '${ApiEndpoints.bookings.updateDeliveryStatus}$bookingId/',
+        _endpoint.updateDeliveryStatus(bookingId),
         data: {'delivery_status': 'cancelled'},
       );
       log(
@@ -415,7 +416,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        '${bookingManagementUrl}',
+        _endpoint.bookingsV3,
         queryParameters: {
           'page': page,
           'status': status.value, // upcoming, completed, past, future, all
@@ -444,7 +445,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        nextPageUrl ?? ApiEndpoints.bookings.desktopList,
+        nextPageUrl ?? _endpoint.desktopList,
         queryParameters: nextPageUrl != null
             ? null
             : {
@@ -469,9 +470,7 @@ class BookingRemoteDatasource {
 
   Future<CustomResponseModel> fetchPaymentHistory(int bookingId) async {
     try {
-      final response = await _dio.get(
-        '${bookingManagementUrl}payment-details/$bookingId/',
-      );
+      final response = await _dio.get(_endpoint.paymentHistory(bookingId));
       log(
         'fetch payment history response: ${response.realUri.toString()}, data: ${response.data}',
       );
@@ -489,7 +488,7 @@ class BookingRemoteDatasource {
       final data = bookingData.toBookingJson();
       log('request old booking data: $data');
       final response = await _dio.post(
-        ApiEndpoints.bookings.oldBookings,
+        _endpoint.oldBookings,
         data: data,
       );
 
@@ -508,7 +507,7 @@ class BookingRemoteDatasource {
     required String filePath,
   }) async {
     try {
-      final url = ApiEndpoints.bookings.downloadBookingInvoice(bookingId);
+      final url = _endpoint.downloadBookingInvoice(bookingId);
       log('Downloading booking invoice from: $url');
 
       final response = await _dio.get(
@@ -562,7 +561,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       // Use the correct endpoint format: /api/v5/bookings/bookings/send-invoice/{id}/
-      final url = ApiEndpoints.bookings.sendBookingInvoice(bookingId);
+      final url = _endpoint.sendBookingInvoice(bookingId);
       log('Sending booking invoice from: $url');
 
       final response = await _dio.get(
@@ -609,7 +608,7 @@ class BookingRemoteDatasource {
   /// Get invoice PDF bytes for viewing/downloading
   Future<Uint8List> getInvoicePdfBytes(int bookingId) async {
     try {
-      final url = ApiEndpoints.bookings.sendBookingInvoice(bookingId);
+      final url = _endpoint.sendBookingInvoice(bookingId);
       log('Fetching booking invoice PDF from: $url');
 
       final response = await _dio.get(
@@ -661,7 +660,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.bookings.addRefund(bookingId),
+        _endpoint.addRefund(bookingId),
         data: {
           'amount': amount,
           'account_id': accountId,
@@ -685,7 +684,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.delete(
-        ApiEndpoints.bookings.deleteRefund(
+        _endpoint.deleteRefund(
           bookingId: bookingId,
           refundId: refundId,
         ),
@@ -709,7 +708,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.bookings.updateSecurityRefund(bookingId),
+        _endpoint.updateSecurityRefund(bookingId),
         data: {
           if (refundAmount != null) 'refund_amount': refundAmount,
           if (deductionAmount != null) 'deduction_amount': deductionAmount,
@@ -734,7 +733,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.delete(
-        ApiEndpoints.bookings.deleteSecurityRefundedPayment(refundId: refundId),
+        _endpoint.deleteSecurityRefundedPayment(refundId: refundId),
       );
       log(
         'delete security refunded payment response: ${response.realUri.toString()}, data: ${response.data}',
@@ -754,7 +753,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.bookings.updatePartialReturn(bookingId),
+        _endpoint.updatePartialReturn(bookingId),
         data: {
           'returned_items': returnedProductIds,
           'not_returned_items': notReturnedProductIds,

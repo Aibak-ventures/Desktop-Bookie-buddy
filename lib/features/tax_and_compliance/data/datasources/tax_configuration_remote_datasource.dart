@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/tax_configuration_endpoints.dart';
 import 'package:bookie_buddy_shared/core/features/tax_and_compliance/data/models/tax_configuration_request_model/tax_configuration_request_model.dart';
 import 'package:dio/dio.dart';
 
@@ -10,12 +11,12 @@ class TaxConfigurationRemoteDatasource {
 
   const TaxConfigurationRemoteDatasource(this._dio);
 
+  TaxConfigurationEndpoints get _endpoint => ApiEndpoints.taxConfiguration;
+
   /// Fetch all tax configuration rules for the shop
   Future<CustomResponseModel> getTaxConfigurations() async {
     try {
-      final response = await _dio.get(
-        ApiEndpoints.taxConfiguration.taxConfigurations,
-      );
+      final response = await _dio.get(_endpoint.taxConfigurations);
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error fetching tax configurations: $e', stackTrace: stack);
@@ -29,7 +30,7 @@ class TaxConfigurationRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.taxConfiguration.taxConfigurations,
+        _endpoint.taxConfigurations,
         data: taxConfiguration.toJson(),
       );
       return CustomResponseModel.fromJson(response.data);
@@ -46,7 +47,7 @@ class TaxConfigurationRemoteDatasource {
   }) async {
     try {
       final response = await _dio.patch(
-        ApiEndpoints.taxConfiguration.taxConfigurationById(id),
+        _endpoint.taxConfigurationById(id),
         data: taxConfiguration.toJson(),
       );
       return CustomResponseModel.fromJson(response.data);

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/product_endpoints.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
@@ -12,6 +13,8 @@ class ProductActionRemoteDatasource {
   final Dio _dio;
 
   ProductActionRemoteDatasource({required Dio dio}) : _dio = dio;
+
+  ProductEndpoints get _endpoint => ApiEndpoints.products;
 
   Future<CustomResponseModel> addOrUpdateProduct({
     required ProductRequestModel product,
@@ -26,8 +29,9 @@ class ProductActionRemoteDatasource {
       print('📍 Product Name: ${product.name}');
       print('📍 Has Image: ${product.image != null}');
 
-      final String url =
-          "${ApiEndpoints.service.productsRoot}${isAdding ? '' : '$productId/'}";
+      final String url = isAdding
+          ? _endpoint.productsRoot
+          : _endpoint.productById(productId);
       print('📍 URL: $url');
       print('📍 Method: ${isAdding ? 'POST' : 'PATCH'}');
 
@@ -125,7 +129,7 @@ class ProductActionRemoteDatasource {
   }) async {
     try {
       final res = await _dio.post(
-        '${ApiEndpoints.service.productsRoot}$productId/variants/',
+        _endpoint.productVariants(productId),
         data: {
           'attribute': attribute,
           'stock': stock,
@@ -151,7 +155,7 @@ class ProductActionRemoteDatasource {
   }) async {
     try {
       final res = await _dio.patch(
-        '${ApiEndpoints.service.productsRoot}$productId/variants/$variantId/',
+        _endpoint.productVariantById(productId, variantId),
         data: {
           if (updatedAttribute != null) 'attribute': updatedAttribute,
           // "price": 250001,
@@ -175,7 +179,7 @@ class ProductActionRemoteDatasource {
   }) async {
     try {
       final res = await _dio.delete(
-        '${ApiEndpoints.service.productsRoot}$productId/${variantId == null ? '' : 'variants/$variantId/'}',
+        _endpoint.productOrVariant(productId, variantId: variantId),
       );
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
@@ -183,20 +187,6 @@ class ProductActionRemoteDatasource {
       rethrow;
     }
   }
-
-  // Future<CustomResponseModel> deleteExpense(int expenseId) async {
-  //   try {
-  //     // final res = await _dio.delete("/expenses/product_expenses/$expenseId");
-  //     final res = await _dio.delete(
-  //       '${ApiEndpoints.expenses.variantExpenses}$expenseId/',
-  //     );
-
-  //     return CustomResponseModel.fromJson(res.data);
-  //   } catch (e, stack) {
-  //     log('delete expense error: $e', stackTrace: stack);
-  //     rethrow;
-  //   }
-  // }
 
   Future<CustomResponseModel> transferProductToAnotherShop({
     required int fromVariantId,
@@ -206,7 +196,7 @@ class ProductActionRemoteDatasource {
   }) async {
     try {
       final res = await _dio.post(
-        ApiEndpoints.service.transferStock,
+        _endpoint.transferStock,
         data: {
           'from_variant_id': fromVariantId,
           'to_shop_id': toShopId,

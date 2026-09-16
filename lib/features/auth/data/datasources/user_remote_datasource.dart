@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/auth_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/notifications_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -10,9 +12,13 @@ class UserRemoteDatasource {
 
   UserRemoteDatasource({required Dio dio}) : _dio = dio;
 
+  AuthEndpoints get _authEndpoint => ApiEndpoints.auth;
+  NotificationsEndpoints get _notificationsEndpoint =>
+      ApiEndpoints.notifications;
+
   Future<CustomResponseModel> fetchUserData() async {
     try {
-      final response = await _dio.get(ApiEndpoints.auth.profile);
+      final response = await _dio.get(_authEndpoint.profile);
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Fetch user data error: $e', stackTrace: stack);
@@ -32,7 +38,7 @@ class UserRemoteDatasource {
       };
       log('Registering FCM token with body: $body');
       final response = await _dio.post(
-        ApiEndpoints.notifications.register,
+        _notificationsEndpoint.register,
         data: body,
       );
       return CustomResponseModel.fromJson(response.data);
@@ -45,7 +51,7 @@ class UserRemoteDatasource {
   Future<CustomResponseModel> removeFCMToken(String token) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.notifications.remove,
+        _notificationsEndpoint.remove,
         data: {'token': token},
       );
       return CustomResponseModel.fromJson(response.data);
@@ -61,7 +67,7 @@ class UserRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.notifications.updateShop,
+        _notificationsEndpoint.updateShop,
         data: {'token': token, 'shop_id': shopId},
       );
       return CustomResponseModel.fromJson(response.data);
