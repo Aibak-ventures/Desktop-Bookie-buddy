@@ -1,10 +1,11 @@
 import 'dart:developer';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/widgets/details_drawer_shell.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_action_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_customer_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_dates_section.dart';
@@ -18,101 +19,55 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/b
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/common/models/unavailable_products_response_model.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/unavailable_products_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+/// Rendered by [GlobalDetailsDrawer], permanently mounted alongside
+/// [SalesDetailsDrawer] so its `BlocListener` is always subscribed and never
+/// misses the transition into `DetailsDrawerType.booking` — including the
+/// very first time it opens. Every listener/visibility check below is
+/// therefore gated on `drawerState.type == DetailsDrawerType.booking`, not
+/// just `isOpen`, so a sales-drawer id change never triggers this drawer.
+///
+/// Callers never build this directly — open it from anywhere via
+/// `context.read<DetailsDrawerCubit>().open(DetailsDrawerType.booking, id)`.
 class BookingDetailsDrawer extends StatelessWidget {
   const BookingDetailsDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserEntity?>(
-      listenWhen: (previous, current) {
-        if (previous == null || current == null) return false;
-        return previous.shopDetails.id != current.shopDetails.id;
+    return BlocListener<DetailsDrawerCubit, DetailsDrawerState>(
+      listenWhen: detailsDrawerOpenedFor(DetailsDrawerType.booking),
+      listener: (context, drawerState) {
+        context.read<BookingDetailsBloc>().add(
+          BookingDetailsEvent.fetchBookingDetails(drawerState.selectedId!),
+        );
       },
-      listener: (context, user) {
-        context.read<BookingDetailsDrawerCubit>().closeDrawer();
-      },
-      child: BlocBuilder<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
+      child: BlocBuilder<DetailsDrawerCubit, DetailsDrawerState>(
         builder: (context, drawerState) {
-          return AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            right: drawerState.isOpen ? 0 : -650,
-            top: 0,
-            bottom: 0,
-            width: 470,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {},
-              child: Material(
-                elevation: 16,
-                shadowColor: Colors.black.withValues(alpha: 0.3),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 20,
-                        offset: const Offset(-4, 0),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Close button header
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border(
-                            bottom: BorderSide(color: Colors.grey.shade200),
-                          ),
+          final isThisOpen = drawerState.isOpenFor(DetailsDrawerType.booking);
+          return DetailsDrawerShell(
+            isOpen: isThisOpen,
+            onClose: () => context.read<DetailsDrawerCubit>().closeDrawer(),
+            trailing: !isThisOpen || drawerState.selectedId == null
+                ? null
+                : IconButton(
+                    icon: Icon(Icons.refresh, size: 24),
+                    onPressed: () {
+                      context.read<BookingDetailsBloc>().add(
+                        BookingDetailsEvent.fetchBookingDetails(
+                          drawerState.selectedId!,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.chevron_right, size: 28),
-                              onPressed: () {
-                                context
-                                    .read<BookingDetailsDrawerCubit>()
-                                    .closeDrawer();
-                              },
-                              tooltip: 'Close',
-                              color: Colors.grey.shade600,
-                              hoverColor: Colors.grey.shade100,
-                            ),
-                            if (drawerState.selectedBookingId != null)
-                              IconButton(
-                                icon: Icon(Icons.refresh, size: 28.sp),
-                                onPressed: () {
-                                  context.read<BookingDetailsBloc>().add(
-                                    BookingDetailsEvent.fetchBookingDetails(
-                                      drawerState.selectedBookingId!,
-                                    ),
-                                  );
-                                },
-                                tooltip: 'Refresh',
-                                color: Colors.grey.shade600,
-                                hoverColor: Colors.grey.shade100,
-                              ),
-                          ],
-                        ),
-                      ),
-                      Expanded(child: _buildContent(context, drawerState)),
-                    ],
+                      );
+                    },
+                    tooltip: 'Refresh',
+                    color: Colors.grey.shade600,
+                    hoverColor: Colors.grey.shade100,
                   ),
-                ),
-              ),
-            ),
+            child: _buildContent(context, drawerState.selectedId, isThisOpen),
           );
         },
       ),
@@ -121,9 +76,10 @@ class BookingDetailsDrawer extends StatelessWidget {
 
   Widget _buildContent(
     BuildContext context,
-    BookingDetailsDrawerState drawerState,
+    int? selectedBookingId,
+    bool isThisOpen,
   ) {
-    if (!drawerState.isOpen || drawerState.selectedBookingId == null) {
+    if (!isThisOpen || selectedBookingId == null) {
       return const SizedBox.shrink();
     }
 
@@ -146,11 +102,9 @@ class BookingDetailsDrawer extends StatelessWidget {
           success: (message, didPop, needRefresh) {
             context.showSnackBar(message);
 
-            if (needRefresh && drawerState.selectedBookingId != null) {
+            if (needRefresh) {
               context.read<BookingDetailsBloc>().add(
-                BookingDetailsEvent.fetchBookingDetails(
-                  drawerState.selectedBookingId!,
-                ),
+                BookingDetailsEvent.fetchBookingDetails(selectedBookingId),
               );
 
               final allBookingBloc = context.read<AllBookingBloc>();
@@ -180,8 +134,11 @@ class BookingDetailsDrawer extends StatelessWidget {
                 // Without a window, or without an item the conflict actually
                 // points at, there is nothing for the dialog to show — say it
                 // in a snackbar instead of failing silently.
-                final unavailableItems = UnavailableProductsDialog
-                    .matchingItems(conflict, products ?? const []);
+                final unavailableItems =
+                    UnavailableProductsDialog.matchingItems(
+                      conflict,
+                      products ?? const [],
+                    );
 
                 if (conflict.dateFrom != null &&
                     conflict.dateTo != null &&
@@ -221,13 +178,9 @@ class BookingDetailsDrawer extends StatelessWidget {
               child: CustomErrorWidget(
                 errorText: error,
                 onRetry: () {
-                  if (drawerState.selectedBookingId != null) {
-                    context.read<BookingDetailsBloc>().add(
-                      BookingDetailsEvent.fetchBookingDetails(
-                        drawerState.selectedBookingId!,
-                      ),
-                    );
-                  }
+                  context.read<BookingDetailsBloc>().add(
+                    BookingDetailsEvent.fetchBookingDetails(selectedBookingId),
+                  );
                 },
               ),
             ),

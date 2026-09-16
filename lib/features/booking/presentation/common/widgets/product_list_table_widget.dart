@@ -283,7 +283,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.productImage;
+    final imageUrl =
+        product.variant.thumbnailImage ?? product.variant.productImage;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
     final fullImageUrl =

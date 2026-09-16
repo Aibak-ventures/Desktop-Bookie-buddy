@@ -54,8 +54,10 @@ class MockQzPrinterRepositoryImpl implements IPrinterRepository {
   @override
   Future<List<PrinterDeviceEntity>> findPrinters() async {
     await _delay();
-    log('findPrinters() -> ${_fakePrinterNames.length} fake printer(s)',
-        name: _logName);
+    log(
+      'findPrinters() -> ${_fakePrinterNames.length} fake printer(s)',
+      name: _logName,
+    );
     return _fakePrinterNames
         .map((name) => PrinterDeviceModel(name: name).toEntity())
         .toList();
@@ -109,7 +111,6 @@ class MockQzPrinterRepositoryImpl implements IPrinterRepository {
   Future<void> clearLastPrinter() =>
       _prefs.instance.remove(_lastPrinterPrefKey);
 
-  Future<void> _delay({bool longer = false}) => Future.delayed(
-        Duration(milliseconds: longer ? 900 : 400),
-      );
+  Future<void> _delay({bool longer = false}) =>
+      Future.delayed(Duration(milliseconds: longer ? 900 : 400));
 }

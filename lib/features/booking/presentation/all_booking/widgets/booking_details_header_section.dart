@@ -207,31 +207,31 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                       DeliveryStatus.getServiceSpecificStatus(
                         mainServiceType,
                       ).map((s) {
-                    return PopupMenuItem(
-                      value: s,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: s.color,
-                              shape: BoxShape.circle,
-                            ),
+                        return PopupMenuItem(
+                          value: s,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: s.color,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                s.getServiceSpecificName(mainServiceType),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: s.color,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            s.getServiceSpecificName(mainServiceType),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: s.color,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      }).toList(),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,

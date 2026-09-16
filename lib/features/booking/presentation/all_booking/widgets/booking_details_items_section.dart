@@ -67,7 +67,9 @@ class BookingDetailsItemsSection extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.grey.shade200),
                         ),
-                        child: item.productImage != null && item.productImage!.isNotEmpty
+                        child:
+                            item.productImage != null &&
+                                item.productImage!.isNotEmpty
                             ? Material(
                                 color: Colors.transparent,
                                 child: InkWell(
@@ -440,11 +442,7 @@ class _ProductDeliveryStatusBadge extends StatelessWidget {
       ),
       child: Text(
         status.name,
-        style: TextStyle(
-          color: status.color,
-          fontSize: 11,
-          fontWeight: .w600,
-        ),
+        style: TextStyle(color: status.color, fontSize: 11, fontWeight: .w600),
       ),
     );
   }

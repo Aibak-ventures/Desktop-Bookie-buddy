@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/pwa/pwa_update_service.dart';
 import 'package:bookie_buddy_web/core/pwa/update_available_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
@@ -16,7 +17,6 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/produ
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
@@ -27,7 +27,6 @@ import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selec
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +83,7 @@ class _MyAppState extends State<MyApp> {
             loadDesktopBookings: getIt.get(),
           ),
         ),
-        BlocProvider(create: (context) => BookingDetailsDrawerCubit()),
+        BlocProvider(create: (context) => DetailsDrawerCubit()),
         BlocProvider(
           create: (context) => BookingDetailsBloc(
             getBooking: getIt.get(),
@@ -159,7 +158,6 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create: (context) => AllSalesBloc(getSalesUseCase: getIt.get()),
         ),
-        BlocProvider(create: (context) => SalesDetailsDrawerCubit()),
         BlocProvider(
           create: (context) => SalesDetailsBloc(
             getSaleDetailsUseCase: getIt.get(),

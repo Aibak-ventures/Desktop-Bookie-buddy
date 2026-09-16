@@ -57,10 +57,7 @@ void showReturnConfirmationDialog(
                 controlAffinity: .leading,
                 title: Text(
                   mainServiceType.physicalCheckConfirmationLabel,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: .w500,
-                  ),
+                  style: const TextStyle(fontSize: 14, fontWeight: .w500),
                 ),
               ),
             ],

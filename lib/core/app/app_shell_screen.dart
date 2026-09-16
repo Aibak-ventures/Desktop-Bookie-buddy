@@ -5,6 +5,8 @@ import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/app/widgets/logout_confirmation_dialog.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/app/widgets/global_details_drawer.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
@@ -88,6 +90,9 @@ class AppShellScreenState extends State<AppShellScreen> {
       final shouldNavigate = await _checkNavigationFromNewBooking();
       if (!shouldNavigate) return;
     }
+    if (tab != activeTab) {
+      context.read<DetailsDrawerCubit>().closeDrawer();
+    }
     setState(() {
       activeTab = tab;
     });
@@ -130,6 +135,10 @@ class AppShellScreenState extends State<AppShellScreen> {
               onLogout: () => _handleLogout(context),
             ),
           ),
+          // Rendered once here so any screen can open a drawer via
+          // `context.read<DetailsDrawerCubit>().open(type, id)` without
+          // wrapping itself in a Stack.
+          const GlobalDetailsDrawer(),
         ],
       ),
     );

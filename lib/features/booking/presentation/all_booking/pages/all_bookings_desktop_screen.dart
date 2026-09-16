@@ -5,21 +5,18 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/cu
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_drawer.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -129,8 +126,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     setState(() => _activeStatusTab = filter);
     _loadData();
     // Close the booking details drawer when switching status tabs
-    context.read<BookingDetailsDrawerCubit>().closeDrawer();
-    context.read<SalesDetailsDrawerCubit>().closeDrawer();
+    context.read<DetailsDrawerCubit>().closeDrawer();
   }
 
   @override
@@ -146,8 +142,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         if (userState != null) {
           _loadData();
           // Close drawers when shop changes
-          context.read<BookingDetailsDrawerCubit>().closeDrawer();
-          context.read<SalesDetailsDrawerCubit>().closeDrawer();
+          context.read<DetailsDrawerCubit>().closeDrawer();
         }
       },
       child: Scaffold(
@@ -187,29 +182,18 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               },
             ),
           ],
-          child: Stack(
-            children: [
-              // Main content
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTopHeader(),
-                    const SizedBox(height: 24),
-                    _buildFilterRow(),
-                    const SizedBox(height: 16),
-                    Expanded(child: _buildMainContent()),
-                  ],
-                ),
-              ),
-              // Drawer overlay - drawers stay open unless:
-              // 1. User explicitly closes via X button
-              // 2. Tab is switched (handled in _onStatusTabChanged and action tabs)
-              // 3. Shop is switched (handled in UserCubit listener)
-              const BookingDetailsDrawer(),
-              const SalesDetailsDrawer(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTopHeader(),
+                const SizedBox(height: 24),
+                _buildFilterRow(),
+                const SizedBox(height: 16),
+                Expanded(child: _buildMainContent()),
+              ],
+            ),
           ),
         ),
       ),
@@ -267,8 +251,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             setState(() => _activeActionTab = index);
             _loadData();
             // Close the booking details drawer when switching tabs
-            context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            context.read<SalesDetailsDrawerCubit>().closeDrawer();
+            context.read<DetailsDrawerCubit>().closeDrawer();
           },
           tabs: [
             const ModeToggleTab(

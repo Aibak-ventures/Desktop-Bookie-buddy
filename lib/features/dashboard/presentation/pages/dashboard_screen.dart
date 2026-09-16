@@ -8,11 +8,8 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_bookings_columns.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_card.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_header.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart'
     as all_booking;
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,22 +51,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           bloc.add(const DashboardEvent.loadDashboardData(useOldState: true));
         }
       },
-      child: BlocListener<BookingDetailsDrawerCubit, BookingDetailsDrawerState>(
-        listener: (context, drawerState) {
-          if (drawerState.isOpen && drawerState.selectedBookingId != null) {
-            context.read<BookingDetailsBloc>().add(
-              BookingDetailsEvent.fetchBookingDetails(
-                drawerState.selectedBookingId!,
-              ),
-            );
-          }
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF5F7FA),
-          body: Stack(
-            children: [_buildDesktopLayout(bloc), const BookingDetailsDrawer()],
-          ),
-        ),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: _buildDesktopLayout(bloc),
       ),
     );
   }

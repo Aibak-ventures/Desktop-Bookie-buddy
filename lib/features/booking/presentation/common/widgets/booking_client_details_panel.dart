@@ -83,9 +83,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                         if (state.selectedClient != null) {
                           final client = state.selectedClient!;
                           form.clientNameController.text = client.name;
-                          final phone1 = extractPhoneFromE164(
-                            client.phone1,
-                          );
+                          final phone1 = extractPhoneFromE164(client.phone1);
                           if (phone1.isNotEmpty) {
                             cachePhoneE164(
                               rawPhoneNumber: phone1,
@@ -94,9 +92,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                             form.clientPhone1Controller.text = phone1;
                           }
                           if (client.phone2 != null) {
-                            final phone2 = extractPhoneFromE164(
-                              client.phone2,
-                            );
+                            final phone2 = extractPhoneFromE164(client.phone2);
                             if (phone2.isNotEmpty) {
                               cachePhoneE164(
                                 rawPhoneNumber: phone2,

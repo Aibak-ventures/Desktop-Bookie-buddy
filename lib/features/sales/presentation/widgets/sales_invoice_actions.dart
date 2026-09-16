@@ -42,10 +42,7 @@ class SalesInvoiceActions {
           shop: shop,
         ),
       ),
-      printPdfInvoice: () => SalesInvoiceActions.printInvoicePdf(
-        context,
-        sale,
-      ),
+      printPdfInvoice: () => SalesInvoiceActions.printInvoicePdf(context, sale),
     );
   }
 

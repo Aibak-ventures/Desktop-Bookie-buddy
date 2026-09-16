@@ -1,10 +1,9 @@
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/widgets/details_drawer_shell.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_action_bar.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_customer_section.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_dates_section.dart';
@@ -18,18 +17,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+/// Rendered by [GlobalDetailsDrawer], permanently mounted alongside
+/// [BookingDetailsDrawer] so its `BlocListener` is always subscribed and
+/// never misses the transition into `DetailsDrawerType.sales` — including
+/// the very first time it opens. Every listener/visibility check below is
+/// therefore gated on `drawerState.type == DetailsDrawerType.sales`, not
+/// just `isOpen`, so a booking-drawer id change never triggers this drawer.
+///
+/// Callers never build this directly — open it from anywhere via
+/// `context.read<DetailsDrawerCubit>().open(DetailsDrawerType.sales, id)`.
 class SalesDetailsDrawer extends StatelessWidget {
   const SalesDetailsDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserCubit, UserEntity?>(
-      listenWhen: (previous, current) {
-        if (previous == null || current == null) return false;
-        return previous.shopDetails.id != current.shopDetails.id;
-      },
-      listener: (context, user) {
-        context.read<SalesDetailsDrawerCubit>().closeDrawer();
+    return BlocListener<DetailsDrawerCubit, DetailsDrawerState>(
+      listenWhen: detailsDrawerOpenedFor(DetailsDrawerType.sales),
+      listener: (context, drawerState) {
+        context.read<SalesDetailsBloc>().add(
+          SalesDetailsEvent.fetchSaleDetails(drawerState.selectedId!),
+        );
       },
       child: BlocListener<SalesDetailsBloc, SalesDetailsState>(
         listener: (context, state) {
@@ -42,7 +49,7 @@ class SalesDetailsDrawer extends StatelessWidget {
                 );
               }
               if (didPop) {
-                context.read<SalesDetailsDrawerCubit>().closeDrawer();
+                context.read<DetailsDrawerCubit>().closeDrawer();
               }
             },
             error: (message) {
@@ -50,62 +57,28 @@ class SalesDetailsDrawer extends StatelessWidget {
             },
           );
         },
-        child: BlocBuilder<SalesDetailsDrawerCubit, SalesDetailsDrawerState>(
+        child: BlocBuilder<DetailsDrawerCubit, DetailsDrawerState>(
           builder: (context, drawerState) {
-            return AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              right: drawerState.isOpen ? 0 : -650,
-              top: 0,
-              bottom: 0,
-              width: 470,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {},
-                child: Material(
-                  elevation: 16,
-                  shadowColor: Colors.black.withValues(alpha: 0.3),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 20,
-                          offset: const Offset(-4, 0),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                              bottom: BorderSide(color: Colors.grey.shade200),
-                            ),
+            final isThisOpen = drawerState.isOpenFor(DetailsDrawerType.sales);
+            return DetailsDrawerShell(
+              isOpen: isThisOpen,
+              onClose: () => context.read<DetailsDrawerCubit>().closeDrawer(),
+              trailing: !isThisOpen || drawerState.selectedId == null
+                  ? null
+                  : IconButton(
+                      icon: Icon(Icons.refresh, size: 24),
+                      onPressed: () {
+                        context.read<SalesDetailsBloc>().add(
+                          SalesDetailsEvent.fetchSaleDetails(
+                            drawerState.selectedId!,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.chevron_right, size: 28),
-                                onPressed: () => context
-                                    .read<SalesDetailsDrawerCubit>()
-                                    .closeDrawer(),
-                                tooltip: 'Close',
-                                color: Colors.grey.shade600,
-                                hoverColor: Colors.grey.shade100,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(child: _buildContent(context, drawerState)),
-                      ],
+                        );
+                      },
+                      tooltip: 'Refresh',
+                      color: Colors.grey.shade600,
+                      hoverColor: Colors.grey.shade100,
                     ),
-                  ),
-                ),
-              ),
+              child: _buildContent(context, drawerState.selectedId, isThisOpen),
             );
           },
         ),
@@ -115,9 +88,10 @@ class SalesDetailsDrawer extends StatelessWidget {
 
   Widget _buildContent(
     BuildContext context,
-    SalesDetailsDrawerState drawerState,
+    int? selectedSaleId,
+    bool isThisOpen,
   ) {
-    if (!drawerState.isOpen || drawerState.selectedSaleId == null) {
+    if (!isThisOpen || selectedSaleId == null) {
       return const SizedBox.shrink();
     }
 
@@ -136,13 +110,9 @@ class SalesDetailsDrawer extends StatelessWidget {
             child: CustomErrorWidget(
               errorText: error,
               onRetry: () {
-                if (drawerState.selectedSaleId != null) {
-                  context.read<SalesDetailsBloc>().add(
-                    SalesDetailsEvent.fetchSaleDetails(
-                      drawerState.selectedSaleId!,
-                    ),
-                  );
-                }
+                context.read<SalesDetailsBloc>().add(
+                  SalesDetailsEvent.fetchSaleDetails(selectedSaleId),
+                );
               },
             ),
           ),

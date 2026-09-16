@@ -6,7 +6,7 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_acti
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_invoice_actions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
@@ -90,7 +90,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                     context.read<AllBookingBloc>().add(
                       AllBookingEvent.deleteBooking(bookingId: booking.id),
                     );
-                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                    context.read<DetailsDrawerCubit>().closeDrawer();
                   }
                 },
               );
@@ -113,7 +113,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                   // the bloc from it (or gating on context.mounted) would skip
                   // the list refresh — the exact bug we're fixing here.
                   final allBookingBloc = context.read<AllBookingBloc>();
-                  context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                  context.read<DetailsDrawerCubit>().closeDrawer();
 
                   final result = await Navigator.of(context).push(
                     MaterialPageRoute(
@@ -216,7 +216,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                     context.read<AllBookingBloc>().add(
                       AllBookingEvent.deleteBooking(bookingId: booking.id),
                     );
-                    context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                    context.read<DetailsDrawerCubit>().closeDrawer();
                   }
                 },
               );
@@ -357,7 +357,7 @@ class BookingDetailsActionBar extends StatelessWidget {
                     currentStatus: booking.deliveryStatus,
                   ),
                 );
-                context.read<BookingDetailsDrawerCubit>().closeDrawer();
+                context.read<DetailsDrawerCubit>().closeDrawer();
               }
             },
             style: ElevatedButton.styleFrom(
