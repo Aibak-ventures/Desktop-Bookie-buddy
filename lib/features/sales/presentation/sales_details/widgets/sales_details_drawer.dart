@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/details_drawer_shell.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widgets/sales_details_content.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';

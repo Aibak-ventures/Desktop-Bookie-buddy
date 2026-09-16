@@ -25,7 +25,7 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/foundation.dart';

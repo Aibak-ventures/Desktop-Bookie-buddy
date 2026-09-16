@@ -16,7 +16,7 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';

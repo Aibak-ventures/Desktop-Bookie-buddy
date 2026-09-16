@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

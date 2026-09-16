@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_product_table_flex.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 
 /// Column headers for the selected products table in [EditSalesScreen].
