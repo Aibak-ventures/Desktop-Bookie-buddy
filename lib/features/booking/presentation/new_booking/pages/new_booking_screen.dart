@@ -289,6 +289,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // changes stop auto-deriving it once they have taken over.
   bool _isBookedDateManuallySet = false;
   int _manualExtraRentalDays = 0; // Optional extra days added by user
+  // Set once the booking/sale save succeeds, so confirmLeave() doesn't treat
+  // the still-populated form fields as unsaved changes when onClose fires.
+  bool _bookingSavedSuccessfully = false;
 
   /// Booked date as it should be sent to the API: mirrors mobile's rule —
   /// a booked date that isn't actually in the past (i.e. today or later)
@@ -537,6 +540,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   /// screen. Owns the unsaved-changes check and discard dialog itself,
   /// rather than exposing [hasUnsavedChanges] for the ancestor to act on.
   Future<bool> confirmLeave() async {
+    // A successful save still leaves the form fields populated, so skip the
+    // unsaved-changes check when `onClose` is firing because the booking
+    // was just saved rather than because the user is navigating away.
+    if (_bookingSavedSuccessfully) return true;
     if (!hasUnsavedChanges()) return true;
     final shouldDiscard = await showDiscardDialog(context);
     return shouldDiscard ?? false;
@@ -1150,6 +1157,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _showBookingResult(int id, BookingType type) {
     if (!mounted) return;
+    _bookingSavedSuccessfully = true;
     if (id != 0) {
       showBookingSuccessDialog(
         context: context,
