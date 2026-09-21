@@ -38,12 +38,12 @@ import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/select_date_failure_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_availability_checker.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
@@ -54,16 +54,12 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
-import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-// Only used by the commented-out (unreachable) `_buildSalesRequest` in
-// `edit_booking_submission_handler.dart` — see the note there.
-// import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
@@ -165,6 +161,11 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Product loading coordinator — owns debouncer; replaces _loadProductsDebouncer
   late BookingProductLoader _productLoader;
+
+  // Shared "are selected products still available" checker (new/edit booking)
+  final _availabilityChecker = SelectedProductsAvailabilityChecker(
+    productRepository: getIt(),
+  );
 
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
@@ -526,6 +527,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         _updateCoolingPeriod();
       });
       _loadAvailableProducts();
+      _checkSelectedProductsAvailability();
     }
   }
 
@@ -543,6 +545,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         isPickup ? pickupTime = picked : returnTime = picked;
       });
       _loadAvailableProducts();
+      _checkSelectedProductsAvailability();
     }
   }
 
@@ -581,70 +584,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   /// Check if already-selected products are still available for the current
   /// date range. Uses booking_id to exclude the current booking from conflict
   /// checks (edit mode). Shows [showUnavailableProductsDialog] if any are not.
-  Future<void> _checkSelectedProductsAvailability() async {
-    final isSales = selectedBookingType == BookingType.sales;
-    final isBooking = selectedBookingType == BookingType.booking;
-    if (isSales) return;
-
-    final selected = selectedProductsNotifier.value;
-    if (selected.isEmpty) return;
-
-    final variantIds = selected
-        .map((p) => p.variant.variantId)
-        .whereType<int>()
-        .toList();
-    if (variantIds.isEmpty) return;
-
-    final effectivePickupDate = BookingDateCalculator.effectivePickupDate(
+  Future<void> _checkSelectedProductsAvailability() {
+    return _availabilityChecker.check(
+      context: context,
+      bookingType: selectedBookingType,
       pickupDate: pickupDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectivePickupTime = BookingDateCalculator.effectivePickupTime(
-      pickupDate: pickupDate,
+      returnDate: returnDate,
       pickupTime: pickupTime,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnDate = BookingDateCalculator.effectiveReturnDateStr(
-      returnDate: returnDate,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
-    );
-    final effectiveReturnTime = BookingDateCalculator.effectiveReturnTime(
-      returnDate: returnDate,
       returnTime: returnTime,
-      mode: coolingPeriodMode,
-      coolingDays: coolingPeriodDays,
-      isBooking: isBooking,
+      coolingPeriodDays: coolingPeriodDays,
+      coolingPeriodMode: coolingPeriodMode,
+      selectedProductsNotifier: selectedProductsNotifier,
+      bookingId: widget.bookingId, // Pass booking_id in edit mode
     );
-
-    try {
-      final notFoundIds = await getIt<IProductRepository>()
-          .checkVariantAvailability(
-            pickupDate: effectivePickupDate.format(),
-            returnDate: effectiveReturnDate,
-            variantIds: variantIds,
-            bookingId: widget.bookingId, // Pass booking_id in edit mode
-            pickupTime: effectivePickupTime,
-            returnTime: effectiveReturnTime,
-          );
-
-      if (notFoundIds.isNotEmpty && mounted) {
-        await showUnavailableProductsDialog(
-          context: context,
-          unavailableDateFrom: pickupDate.format(),
-          unavailableDateTo: returnDate.format(),
-          unavailableProducts: notFoundIds,
-          selectedProductsNotifier: selectedProductsNotifier,
-        );
-      }
-    } catch (e) {
-      log('Error checking selected product availability: $e');
-    }
   }
 
   Widget _buildServiceSelectionSection() {

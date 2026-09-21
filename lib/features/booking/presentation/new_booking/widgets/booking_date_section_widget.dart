@@ -1,6 +1,22 @@
 ﻿part of '../pages/new_booking_screen.dart';
 
 extension BookingDateSectionBuilders on NewBookingScreenState {
+  /// Check if already-selected products are still available for the
+  /// current date range and shows [showUnavailableProductsDialog] if not.
+  Future<void> _checkSelectedProductsAvailability() {
+    return _availabilityChecker.check(
+      context: context,
+      bookingType: selectedBookingType,
+      pickupDate: pickupDate,
+      returnDate: returnDate,
+      pickupTime: pickupTime,
+      returnTime: returnTime,
+      coolingPeriodDays: coolingPeriodDays,
+      coolingPeriodMode: coolingPeriodMode,
+      selectedProductsNotifier: selectedProductsNotifier,
+    );
+  }
+
   Future<void> _selectDate({required bool isPickup}) async {
     final isSales = selectedBookingType == BookingType.sales;
     final isOldBooking = selectedBookingType == BookingType.oldBooking;
@@ -51,6 +67,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         });
 
         _loadProductsForService(selectedServiceId);
+        _checkSelectedProductsAvailability();
         if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
       }
     } else {
@@ -75,6 +92,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
             returnDate = picked;
           });
           _loadProductsForService(selectedServiceId);
+          _checkSelectedProductsAvailability();
           if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
         }
         return;
@@ -104,6 +122,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         });
 
         _loadProductsForService(selectedServiceId);
+        _checkSelectedProductsAvailability();
         if (_searchOverlayEntry != null) _searchAllProductsForOverlay();
       }
     }
@@ -168,6 +187,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         }
 
         _loadProductsForService(selectedServiceId);
+        _checkSelectedProductsAvailability();
       } else {
         if (returnDate.isDateToday &&
             BookingFormValidator.isTimeInPast(picked)) {
@@ -188,6 +208,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         });
 
         _loadProductsForService(selectedServiceId);
+        _checkSelectedProductsAvailability();
       }
     }
   }
