@@ -398,7 +398,7 @@ class ProductRepositoryImpl implements IProductRepository {
   }
 
   @override
-  Future<List<int>> checkVariantAvailability({
+  Future<VariantAvailabilityResult> checkVariantAvailability({
     required String pickupDate,
     required String returnDate,
     required List<int> variantIds,
@@ -423,29 +423,40 @@ class ProductRepositoryImpl implements IProductRepository {
         final products = (innerData?['products'] as List<dynamic>?) ?? [];
 
         final unavailableIds = <int>[];
+        final remainingStockByVariantId = <int, int>{};
         for (final product in products) {
           final productMap = product as Map<String, dynamic>?;
           final variants = (productMap?['variants'] as List<dynamic>?) ?? [];
           for (final variant in variants) {
             final variantMap = variant as Map<String, dynamic>?;
+            final variantId = (variantMap?['id'] as num?)?.toInt();
             final remainingStock =
                 (variantMap?['remaining_stock'] as num?)?.toInt() ?? 0;
-            if (remainingStock == 0) {
-              final variantId = (variantMap?['id'] as num?)?.toInt();
-              if (variantId != null) unavailableIds.add(variantId);
+            if (variantId != null) {
+              remainingStockByVariantId[variantId] = remainingStock;
+              if (remainingStock == 0) unavailableIds.add(variantId);
             }
           }
         }
         log(
           'checkVariantAvailability: variants with remaining_stock=0: $unavailableIds',
         );
-        return unavailableIds;
+        return VariantAvailabilityResult(
+          unavailableVariantIds: unavailableIds,
+          remainingStockByVariantId: remainingStockByVariantId,
+        );
       }
       log('checkVariantAvailability failed: ${response.devMessage}');
-      return [];
+      return const VariantAvailabilityResult(
+        unavailableVariantIds: [],
+        remainingStockByVariantId: {},
+      );
     } catch (e, stack) {
       log('Error checking variant availability: $e', stackTrace: stack);
-      return [];
+      return const VariantAvailabilityResult(
+        unavailableVariantIds: [],
+        remainingStockByVariantId: {},
+      );
     }
   }
 }

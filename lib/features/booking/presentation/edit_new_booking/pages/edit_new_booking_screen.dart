@@ -43,7 +43,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_availability_checker.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
@@ -161,11 +160,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
 
   // Product loading coordinator — owns debouncer; replaces _loadProductsDebouncer
   late BookingProductLoader _productLoader;
-
-  // Shared "are selected products still available" checker (new/edit booking)
-  final _availabilityChecker = SelectedProductsAvailabilityChecker(
-    productRepository: getIt(),
-  );
 
   // Search overlay management
   final LayerLink _searchLayerLink = LayerLink();
@@ -527,7 +521,6 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         _updateCoolingPeriod();
       });
       _loadAvailableProducts();
-      _checkSelectedProductsAvailability();
     }
   }
 
@@ -545,12 +538,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         isPickup ? pickupTime = picked : returnTime = picked;
       });
       _loadAvailableProducts();
-      _checkSelectedProductsAvailability();
     }
   }
 
-  /// Load available products using the check-availability API.
-  /// Called on screen entry and whenever pickup/return date or time changes.
+  /// Load available products and reconcile already-selected products'
+  /// stock/availability against the result (see [BookingProductLoader]).
+  /// Called on screen entry and whenever pickup/return date, time, or
+  /// cooling settings change.
   void _loadAvailableProducts() {
     _productLoader.load(
       bookingType: selectedBookingType,
@@ -561,42 +555,18 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       returnTime: returnTime,
       coolingPeriodDays: coolingPeriodDays,
       coolingPeriodMode: coolingPeriodMode,
-      selectedProducts: selectedProductsNotifier.value,
+      context: context,
+      selectedProductsNotifier: selectedProductsNotifier,
       bookingId: widget.bookingId,
     );
   }
 
-  /// Handles the cooling-settings change cascade:
-  /// recalculates cooling period → checks selected availability.
-  ///
-  /// Note: this intentionally does NOT also call [_loadAvailableProducts].
-  /// Both that loader and [_checkSelectedProductsAvailability] hit the same
-  /// `available-products` endpoint, which previously caused the availability
-  /// API to fire twice on every cooling change. The availability check already
-  /// sends the selected variant ids for the new cooling window (and surfaces the
-  /// unavailable-products dialog); the searchable product list refreshes on the
-  /// next search interaction. Called from the cooling-mode toggle and dropdown.
+  /// Handles the cooling-settings change cascade: recalculates cooling
+  /// period → reloads products for the new window. Called from the
+  /// cooling-mode toggle and dropdown.
   void _onCoolingSettingsChanged() {
     _updateCoolingPeriod();
-    _checkSelectedProductsAvailability();
-  }
-
-  /// Check if already-selected products are still available for the current
-  /// date range. Uses booking_id to exclude the current booking from conflict
-  /// checks (edit mode). Shows [showUnavailableProductsDialog] if any are not.
-  Future<void> _checkSelectedProductsAvailability() {
-    return _availabilityChecker.check(
-      context: context,
-      bookingType: selectedBookingType,
-      pickupDate: pickupDate,
-      returnDate: returnDate,
-      pickupTime: pickupTime,
-      returnTime: returnTime,
-      coolingPeriodDays: coolingPeriodDays,
-      coolingPeriodMode: coolingPeriodMode,
-      selectedProductsNotifier: selectedProductsNotifier,
-      bookingId: widget.bookingId, // Pass booking_id in edit mode
-    );
+    _loadAvailableProducts();
   }
 
   Widget _buildServiceSelectionSection() {

@@ -63,7 +63,6 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_success_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_availability_checker.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
@@ -236,11 +235,6 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // Products/Services
   final selectedProductsNotifier = ValueNotifier<List<ProductSelectedEntity>>(
     [],
-  );
-
-  // Shared "are selected products still available" checker (new/edit booking)
-  final _availabilityChecker = SelectedProductsAvailabilityChecker(
-    productRepository: getIt(),
   );
 
   // Additional charges
@@ -810,7 +804,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       returnTime: returnTime,
       coolingPeriodDays: coolingPeriodDays,
       coolingPeriodMode: coolingPeriodMode,
-      selectedProducts: selectedProductsNotifier.value,
+      context: context,
+      selectedProductsNotifier: selectedProductsNotifier,
     );
   }
 

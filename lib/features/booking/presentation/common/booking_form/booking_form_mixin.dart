@@ -672,7 +672,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
         isBooking: isBooking,
       );
 
-      final notFoundIds = await getIt<CheckVariantAvailabilityUseCase>()(
+      final availability = await getIt<CheckVariantAvailabilityUseCase>()(
         variantIds: variantIds,
         pickupDate: effectivePickupDate.format(),
         returnDate: effectiveReturnDate,
@@ -681,8 +681,8 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
         bookingId: bookingId,
       );
 
-      if (notFoundIds.isNotEmpty && mounted) {
-        log('Unavailable products: $notFoundIds');
+      if (availability.unavailableVariantIds.isNotEmpty && mounted) {
+        log('Unavailable products: ${availability.unavailableVariantIds}');
       }
     } catch (e) {
       log('Error checking availability: $e');

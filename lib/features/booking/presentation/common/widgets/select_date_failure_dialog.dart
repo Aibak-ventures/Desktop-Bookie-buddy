@@ -201,6 +201,11 @@ Future<void> showUnavailableProductsDialog({
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
+                    // The caller (BookingProductLoader) already refreshes
+                    // remainingStock/stock on selectedProductsNotifier — from
+                    // the same response this dialog's unavailable list came
+                    // from — before opening this dialog, so the "Available"
+                    // badge is already accurate here. Nothing to update.
                     onPressed: () => dialogContext.pop(),
                     child: const Text(
                       'Keep Selected',
