@@ -1,10 +1,9 @@
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/unavailable_products_entity/unavailable_products_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
@@ -34,8 +33,7 @@ class UnavailableProductsDialog {
     required UnavailableProductsEntity conflict,
     required List<ProductInfoEntity> unavailableItems,
   }) async {
-    final drawerCubit = context.read<BookingDetailsDrawerCubit>();
-    final bookingDetailsBloc = context.read<BookingDetailsBloc>();
+    final drawerCubit = context.read<DetailsDrawerCubit>();
     final dateFrom = conflict.dateFrom;
     final dateTo = conflict.dateTo;
 
@@ -85,12 +83,7 @@ class UnavailableProductsDialog {
                             // Swap the drawer over to the conflicting booking
                             // — opening it alone would leave the previous
                             // booking's details on screen.
-                            drawerCubit.openDrawer(conflict.bookingId!);
-                            bookingDetailsBloc.add(
-                              BookingDetailsEvent.fetchBookingDetails(
-                                conflict.bookingId!,
-                              ),
-                            );
+                            drawerCubit.openBooking(conflict.bookingId!);
                           },
                       ),
                       const TextSpan(text: ' (View Booking)'),

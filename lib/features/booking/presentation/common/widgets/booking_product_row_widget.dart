@@ -44,7 +44,8 @@ class BookingProductRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.productImage;
+    final imageUrl =
+        product.variant.thumbnailImage ?? product.variant.productImage;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
     final fullImageUrl =

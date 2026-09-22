@@ -7,7 +7,6 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/date_filter_button.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_active_filter_indicator.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/widgets/global_search_invoice_search_results.dart';
@@ -104,99 +103,91 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Padding(
-            padding: 16.padding,
-            child: Column(
+      body: Padding(
+        padding: 16.padding,
+        child: Column(
+          children: [
+            15.height,
+            Row(
               children: [
-                15.height,
-                Row(
-                  children: [
-                    Text(
-                      'Global Search',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF2D3436),
-                      ),
-                    ),
-                    const Spacer(),
-                    _buildActionTabs(),
-                  ],
-                ),
-                35.height,
-
-                // Search Field
-                Builder(
-                  builder: (context) {
-                    final clientName = context
-                        .select<ServiceBloc, MainServiceType>(
-                          (bloc) => ShopFieldHelper.getEffectiveServiceType(
-                            bloc.getServices(),
-                          ),
-                        )
-                        .clientNameType;
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: CustomSearchField(
-                            searchController: searchController,
-                            onChanged: (_) => _performSearch(),
-                            padding: 0.padding,
-                            hintText:
-                                '$clientName name, staff name, or invoice ID',
-                            suffixFunction: () {
-                              _resetAll();
-                              _clearDateFilter(search: false);
-                            },
-                          ),
-                        ),
-                        15.width,
-                        ValueListenableBuilder(
-                          valueListenable: dateFilterNotifier,
-                          builder: (context, value, _) => DateFilterButton(
-                            hasActiveFilter: value.hasActiveFilter,
-                            onTap: () => _showDateFilterBottomSheet(
-                              navigatorKey.currentContext ?? context,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-
-                // Active Date Filter Indicator
-                ValueListenableBuilder(
-                  valueListenable: dateFilterNotifier,
-                  builder: (context, value, child) => value.hasActiveFilter
-                      ? CustomActiveFilterIndicator(
-                          dateFilterNotifier: dateFilterNotifier,
-                          onClearFilter: (ctx) => _clearDateFilter(),
-                          padding: 20.paddingOnly(top: true),
-                        )
-                      : 10.height,
-                ),
-
-                // Results
-                Expanded(
-                  child: GlobalSearchInvoiceSearchResults(
-                    searchController: searchController,
-                    dateFilterNotifier: dateFilterNotifier,
-                    scrollController: scrollController,
-                    onLoadNextPage: () => _loadNextPage(),
-                    onClearFilter: (_) => _clearDateFilter(),
-                    onRetry: _performSearch,
+                Text(
+                  'Global Search',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF2D3436),
                   ),
                 ),
+                const Spacer(),
+                _buildActionTabs(),
               ],
             ),
-          ),
-          // Renders when BookingDetailsDrawerCubit.openDrawer() is called
-          // from a tapped row (see AllBookingsBookingTableRow.onTap).
-          const BookingDetailsDrawer(),
-        ],
+            35.height,
+
+            // Search Field
+            Builder(
+              builder: (context) {
+                final clientName = context
+                    .select<ServiceBloc, MainServiceType>(
+                      (bloc) => ShopFieldHelper.getEffectiveServiceType(
+                        bloc.getServices(),
+                      ),
+                    )
+                    .clientNameType;
+                return Row(
+                  children: [
+                    Expanded(
+                      child: CustomSearchField(
+                        searchController: searchController,
+                        onChanged: (_) => _performSearch(),
+                        padding: 0.padding,
+                        hintText: '$clientName name, staff name, or invoice ID',
+                        suffixFunction: () {
+                          _resetAll();
+                          _clearDateFilter(search: false);
+                        },
+                      ),
+                    ),
+                    15.width,
+                    ValueListenableBuilder(
+                      valueListenable: dateFilterNotifier,
+                      builder: (context, value, _) => DateFilterButton(
+                        hasActiveFilter: value.hasActiveFilter,
+                        onTap: () => _showDateFilterBottomSheet(
+                          navigatorKey.currentContext ?? context,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+
+            // Active Date Filter Indicator
+            ValueListenableBuilder(
+              valueListenable: dateFilterNotifier,
+              builder: (context, value, child) => value.hasActiveFilter
+                  ? CustomActiveFilterIndicator(
+                      dateFilterNotifier: dateFilterNotifier,
+                      onClearFilter: (ctx) => _clearDateFilter(),
+                      padding: 20.paddingOnly(top: true),
+                    )
+                  : 10.height,
+            ),
+
+            // Results
+            Expanded(
+              child: GlobalSearchInvoiceSearchResults(
+                searchController: searchController,
+                dateFilterNotifier: dateFilterNotifier,
+                scrollController: scrollController,
+                onLoadNextPage: () => _loadNextPage(),
+                onClearFilter: (_) => _clearDateFilter(),
+                onRetry: _performSearch,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

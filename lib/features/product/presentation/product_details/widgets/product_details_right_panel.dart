@@ -1,6 +1,6 @@
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
@@ -170,7 +170,7 @@ class ProductDetailsRightPanel extends StatelessWidget {
             booking: booking,
             useReturnDate: isOngoing,
             onTap: () {
-              context.read<BookingDetailsDrawerCubit>().openDrawer(booking.id!);
+              context.read<DetailsDrawerCubit>().openBooking(booking.id!);
             },
           ),
         );

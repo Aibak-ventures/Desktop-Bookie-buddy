@@ -283,7 +283,8 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
     final isSales = widget.selectedBookingType == BookingType.sales;
     final isOldBooking = widget.selectedBookingType == BookingType.oldBooking;
     final rentalDays = !isSales ? widget.effectiveRentalDays : 0;
-    final imageUrl = product.variant.thumbnailImage ?? product.variant.productImage;
+    final imageUrl =
+        product.variant.thumbnailImage ?? product.variant.productImage;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // On click open the original (OG) image, not the thumbnail.
     final fullImageUrl =
@@ -435,44 +436,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             if (!isOldBooking) ...[
               Expanded(
                 flex: _flexColumn,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 11,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0x1C1FD300),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF27AE60),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          product.variant.remainingStock != null
-                              ? '${product.variant.remainingStock} left'
-                              : product.variant.stock != null
-                              ? '${product.variant.stock} left'
-                              : '-',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF27AE60),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: Center(child: _buildAvailabilityBadge(product)),
               ),
               const SizedBox(width: 4),
             ],
@@ -759,6 +723,53 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                       ),
                       onPressed: () => _removeProduct(product),
                     ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvailabilityBadge(ProductSelectedEntity product) {
+    final availableQty =
+        product.variant.remainingStock ?? product.variant.stock;
+    final isOutOfStock = availableQty != null && availableQty <= 0;
+    final backgroundColor = isOutOfStock
+        ? const Color(0x1CFF3B30)
+        : const Color(0x1C1FD300);
+    final foregroundColor = isOutOfStock
+        ? const Color(0xFFE53935)
+        : const Color(0xFF27AE60);
+
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 4),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: foregroundColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              isOutOfStock
+                  ? 'No stock'
+                  : (availableQty != null ? '$availableQty left' : '-'),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: foregroundColor,
+              ),
             ),
           ],
         ),

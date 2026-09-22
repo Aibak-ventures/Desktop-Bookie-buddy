@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/product_endpoints.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
@@ -13,6 +14,8 @@ class ProductQueryRemoteDatasource {
 
   ProductQueryRemoteDatasource({required Dio dio}) : _dio = dio;
 
+  ProductEndpoints get _endpoint => ApiEndpoints.products;
+
   Future<CustomResponseModel> searchAllProducts({
     required String? query,
     required int page,
@@ -20,7 +23,7 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.service.productSearch,
+        _endpoint.productSearch,
         queryParameters: {
           'page': page,
           'search_by': 'name',
@@ -29,7 +32,6 @@ class ProductQueryRemoteDatasource {
         },
       );
       log('Search all product url: ${response.realUri.toString()}');
-      // log('Search all products response: ${response.realUri.toString()}, data: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error searching all products: $e', stackTrace: stack);
@@ -39,10 +41,7 @@ class ProductQueryRemoteDatasource {
 
   Future<CustomResponseModel> fetchProductInfo(int productId) async {
     try {
-      final res = await _dio.get(
-        ApiEndpoints.service.productById('$productId'),
-      );
-      // log("Fetch product info: ${res.realUri.toString()}, data: ${res.data}");
+      final res = await _dio.get(_endpoint.productById(productId));
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
       log('fetch product info error: $e', stackTrace: stack);
@@ -65,8 +64,8 @@ class ProductQueryRemoteDatasource {
 
       final response = await _dio.get(
         useProductSearchEndpoint
-            ? ApiEndpoints.service.productSearch
-            : ApiEndpoints.service.productsRoot,
+            ? _endpoint.productSearch
+            : _endpoint.productsRoot,
         queryParameters: {
           'page': page,
           if (query != null && query.isNotEmpty) ...{
@@ -83,7 +82,6 @@ class ProductQueryRemoteDatasource {
           'in_stock_only': includeInStockOnly,
         },
       );
-      // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stackTrace) {
       log('Error fetching products: $e', stackTrace: stackTrace);
@@ -98,56 +96,19 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final res = await _dio.get(
-        '${ApiEndpoints.service.productsRoot}product-bookings/$productId/',
+        _endpoint.productBookings(productId),
         queryParameters: {
           'page': page,
           if (status != null)
             'status': status, // 'all', 'upcoming', 'completed',
         },
       );
-      // log("Product bookings: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
       log('get product bookings error: $e', stackTrace: stack);
       rethrow;
     }
   }
-
-  /// Checks the availability of a list of products for a given event date and return date.
-  ///
-  /// Returns a [CheckAvailabilityModel] which contains the status of the availability check
-  /// and a list of unavailable products.
-  ///
-  /// Throws a string error message if the request fails.
-  // Future<CheckAvailabilityModel> checkAvailability({
-  //   required String eventDate,
-  //   required String returnDate,
-  //   required List<int> productIds,
-  // }) async {
-  //   try {
-  //     final res = await _dio.post(
-  //       "/api/check_product_availability",
-  //       data: {
-  //         "event_date": eventDate,
-  //         "return_date": returnDate,
-  //         "sub_service_ids": productIds
-  //       },
-  //     );
-
-  //     log("Product availability: ${res}");
-  //     if (res.statusCode != 200) {
-  //       throw 'Failed to check availability';
-  //     }
-
-  //     return CheckAvailabilityModel.fromMap(res.data);
-  //   } on DioException catch (e, stack) {
-  //     log("Dio error: $e", stackTrace: stack);
-  //     throw e.response?.data['message'] ?? "Failed to check availability";
-  //   } catch (e, stack) {
-  //     log("Unexpected error: $e", stackTrace: stack);
-  //     throw "Error checking availability: $e";
-  //   }
-  // }
 
   Future<CustomResponseModel> fetchProductsPaginated({
     int? serviceId,
@@ -156,7 +117,7 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.service.productsRoot,
+        _endpoint.productsRoot,
         queryParameters: {
           'page': page,
           // Don't send shop_service_id for "All Services" (-1 or null)
@@ -165,7 +126,6 @@ class ProductQueryRemoteDatasource {
           'in_stock_only': includeInStockOnly,
         },
       );
-      // log('Fetch products paginated response: ${response.realUri.toString()}, data: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stackTrace) {
       log('Error fetching products: $e', stackTrace: stackTrace);
@@ -190,7 +150,7 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        nextPageUrl ?? ApiEndpoints.bookings.availableProducts,
+        nextPageUrl ?? _endpoint.availableProducts,
         queryParameters: nextPageUrl != null
             ? null
             : {
@@ -230,7 +190,6 @@ class ProductQueryRemoteDatasource {
                   ), // Send as JSON array string
               },
       );
-      // log('Fetch available products response: ${response.realUri.toString()} ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stackTrace) {
       log('Error fetching products: $e', stackTrace: stackTrace);
@@ -240,10 +199,7 @@ class ProductQueryRemoteDatasource {
 
   Future<CustomResponseModel> fetchProductGrowthData(int productId) async {
     try {
-      final res = await _dio.get(
-        ApiEndpoints.service.monthlySummary('$productId'),
-      );
-      // log("Product growth data: ${res.realUri.toString()}, data: ${res.data}");
+      final res = await _dio.get(_endpoint.monthlySummary(productId));
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
       log('fetch product growth data error: $e', stackTrace: stack);
@@ -263,7 +219,7 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.bookings.availableProducts,
+        _endpoint.availableProducts,
         queryParameters: {
           'page': 1,
           'event_date': pickupDate.parseToDateTime().format(reverse: true),
@@ -303,11 +259,10 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final res = await _dio.post(
-        ApiEndpoints.service.matchProduct,
+        _endpoint.matchProduct,
         queryParameters: {'page': page},
         data: {'from_variant_id': fromVariantId, 'to_shop_id': toShopId},
       );
-      // log("Matching products response: ${res.realUri.toString()}, data: ${res.data}");
       return CustomResponseModel.fromJson(res.data);
     } catch (e, stack) {
       log('Matching products error while fetching: $e', stackTrace: stack);
@@ -321,10 +276,9 @@ class ProductQueryRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.service.transferHistory,
+        _endpoint.transferHistory,
         queryParameters: {'page': page, 'shop_id': shopId},
       );
-      // log("Transfer product history response: ${response.realUri.toString()}, data: ${response.data}");
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error fetching transfer product history: $e', stackTrace: stack);

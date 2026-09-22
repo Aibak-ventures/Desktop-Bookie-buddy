@@ -12,6 +12,7 @@ abstract class BookingDetailsState with _$BookingDetailsState {
     @Default(false) bool didPop,
     @Default(true) bool needRefresh,
   }) = _Success;
+
   /// [error] carries the raw API payload when the failure has structured
   /// detail worth rendering (an insufficient-stock conflict), and [products]
   /// the booked items it should be resolved against.

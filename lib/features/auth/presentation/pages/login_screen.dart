@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/auth_bloc/auth_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -229,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context.read<DashboardBloc>().add(
           const DashboardEvent.loadDashboardData(),
         );
-        context.pushAndRemoveUntil(const BottomBarScreen());
+        context.pushAndRemoveUntil(const AppShellScreen());
       },
       error: (e) => context.showSnackBar(e, isError: true),
       orElse: () {},

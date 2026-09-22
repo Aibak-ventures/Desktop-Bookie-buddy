@@ -1,7 +1,11 @@
+import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/pwa/pwa_update_service.dart';
 import 'package:bookie_buddy_web/core/pwa/update_available_dialog.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
+import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_theme.dart';
@@ -21,6 +25,8 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/product_bloc/product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/sales_details/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +34,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Lets any screen navigate the shell programmatically, e.g.
+/// `appShellKey.currentState?.navigateTo(ShellTabId.newOrder)`.
+final GlobalKey<AppShellScreenState> appShellKey =
+    GlobalKey<AppShellScreenState>();
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -72,6 +83,7 @@ class _MyAppState extends State<MyApp> {
             loadDesktopBookings: getIt.get(),
           ),
         ),
+        BlocProvider(create: (context) => DetailsDrawerCubit()),
         BlocProvider(
           create: (context) => BookingDetailsBloc(
             getBooking: getIt.get(),
@@ -87,6 +99,10 @@ class _MyAppState extends State<MyApp> {
             deleteSecurityRefundedPayment: getIt(),
             updatePartialReturn: getIt(),
           ),
+        ),
+        BlocProvider(
+          create: (context) =>
+              GlobalSearchBloc(getGlobalSearchUseCase: getIt()),
         ),
         BlocProvider(
           create: (context) => SelectProductBloc(
@@ -129,13 +145,32 @@ class _MyAppState extends State<MyApp> {
               ShopListBloc(getShops: getIt.get(), userRepo: getIt.get()),
         ),
         BlocProvider(
-          create: (context) =>
-              ClientCubit(getClients: getIt.get(), getClientDetails: getIt.get()),
+          create: (context) => ClientCubit(
+            getClients: getIt.get(),
+            getClientDetails: getIt.get(),
+          ),
         ),
         BlocProvider(create: (context) => AccountsCubit(getAccounts: getIt())),
         BlocProvider(
           create: (context) =>
               ProductSearchCubit(searchAllProductsUseCase: getIt.get()),
+        ),
+        BlocProvider(
+          create: (context) => AllSalesBloc(getSalesUseCase: getIt.get()),
+        ),
+        BlocProvider(
+          create: (context) => SalesDetailsBloc(
+            getSaleDetailsUseCase: getIt.get(),
+            deleteSaleUseCase: getIt.get(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => StockManagementCubit(
+            getProducts: getIt.get(),
+            deleteProduct: getIt.get(),
+            searchAllProducts: getIt.get(),
+            searchAndFilterProducts: getIt.get(),
+          ),
         ),
       ],
       child: MaterialApp(
@@ -143,7 +178,6 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme(),
-        // darkTheme: AppTheme.darkTheme, // Dark theme is not complete
         themeMode: ThemeMode.light,
         locale: const Locale('en', 'US'), // 12-hour format
         localizationsDelegates: [

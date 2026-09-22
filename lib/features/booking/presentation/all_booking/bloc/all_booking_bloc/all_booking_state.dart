@@ -11,7 +11,7 @@ abstract class AllBookingState with _$AllBookingState {
     String? startDate,
     String? endDate,
     String? searchQuery,
-    String? status,
+    BookingListFilter? status,
     PurchaseMode? purchaseMode,
     StatusCountsEntity? statusCounts,
     String? actionError,

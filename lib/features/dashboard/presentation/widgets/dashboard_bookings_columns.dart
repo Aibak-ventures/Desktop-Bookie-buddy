@@ -1,5 +1,5 @@
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_card.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/core/common/widgets/no_result_found_animation_widget.dart';
@@ -441,9 +441,7 @@ class _DateSection extends StatelessWidget {
               booking: booking,
               useReturnDate: useReturnDate,
               onTap: () {
-                context.read<BookingDetailsDrawerCubit>().openDrawer(
-                  booking.id!,
-                );
+                context.read<DetailsDrawerCubit>().openBooking(booking.id!);
               },
             ),
           ),

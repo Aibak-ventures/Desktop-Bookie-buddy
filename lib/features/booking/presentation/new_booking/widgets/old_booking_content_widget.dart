@@ -145,9 +145,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                           widget.clientPhone2Controller,
                           phoneNumber: client.phone2 == null
                               ? null
-                              : extractPhoneFromE164(
-                                  client.phone2,
-                                ).nullIfEmpty,
+                              : extractPhoneFromE164(client.phone2).nullIfEmpty,
                           e164: client.phone2,
                         );
                         widget.onClientIdChanged(client.id);

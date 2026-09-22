@@ -1,3 +1,16 @@
+// IMPLEMENTATION STEPS:
+// 1. Copy the JSON object below (without these comments) into a new file
+//    named .vscode/auto_login.json — it must live directly in .vscode/
+//    (not a subfolder) and be plain JSON, since comments aren't valid
+//    JSON and --dart-define-from-file will fail to parse them.
+// 2. Replace "login-phone-number" and "login-password" with your actual
+//    auto-login credentials. auto_login.json is gitignored, so it never
+//    gets committed.
+// 3. Point any launch config's toolArgs at it with:
+//      --dart-define-from-file=.vscode/auto_login.json
+//    ("Flutter: Run Dev" already does this) — or pass the same flag when
+//    running from the terminal:
+//      flutter run --dart-define-from-file=.vscode/auto_login.json
 {
     "AUTO_PHONE": "login-phone-number",
     "AUTO_PASSWORD": "login-password"

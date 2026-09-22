@@ -87,12 +87,28 @@ abstract interface class IProductRepository {
     int page,
   });
 
-  Future<List<int>> checkVariantAvailability({
+  /// Checks live availability for [variantIds] over the given date range.
+  ///
+  /// Returns the unavailable variant ids alongside the real
+  /// `remaining_stock` the backend reported for every queried variant (not
+  /// just the unavailable ones), so callers can also refresh stale stock
+  /// snapshots for variants that ARE available.
+  Future<VariantAvailabilityResult> checkVariantAvailability({
     required String pickupDate,
     required String returnDate,
     required List<int> variantIds,
     int? bookingId,
     TimeOfDay? pickupTime,
     TimeOfDay? returnTime,
+  });
+}
+
+class VariantAvailabilityResult {
+  final List<int> unavailableVariantIds;
+  final Map<int, int> remainingStockByVariantId;
+
+  const VariantAvailabilityResult({
+    required this.unavailableVariantIds,
+    required this.remainingStockByVariantId,
   });
 }
