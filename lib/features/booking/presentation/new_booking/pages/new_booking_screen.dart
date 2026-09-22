@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
@@ -21,6 +22,7 @@ import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/accou
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -359,6 +361,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   late AddBookingCubit _addBookingCubit;
 
+  // Tracks the shop this screen's state (selected products, staff, client,
+  // etc.) belongs to, so a shop switch elsewhere in the app (the shop
+  // switcher lives in the persistent sidebar and doesn't navigate away from
+  // this screen) can be detected and the form cleared before anything
+  // shop-A-scoped gets submitted under shop B.
+  int? _currentShopId;
+  StreamSubscription<UserEntity?>? _userCubitSubscription;
+
   void rebuild([VoidCallback? fn]) => setState(fn ?? () {});
 
   // Summary expansion state
@@ -377,6 +387,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     _addBookingCubit = getIt<AddBookingCubit>();
+
+    // Track the active shop and react if it changes while this screen is
+    // open — the shop switcher is reachable from the persistent sidebar
+    // without navigating away, so nothing else guards against a stale,
+    // other-shop selection being submitted under the new shop.
+    final userCubit = context.read<UserCubit>();
+    _currentShopId = userCubit.state?.shopDetails.id;
+    _userCubitSubscription = userCubit.stream.listen(_onUserStateChanged);
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -431,6 +449,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   @override
   void dispose() {
+    _userCubitSubscription?.cancel();
     if (kIsWeb) web_helper.removeBeforeUnloadListener();
     _removeSearchOverlay();
     clientNameController.removeListener(_onClientNameChanged);
@@ -600,6 +619,36 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     serviceSearchController.clear();
     context.read<StaffSearchCubit>().clearSelectedStaff();
     context.read<ClientCubit>().clearSelected();
+  }
+
+  /// Reacts to the active shop changing while this screen is mounted (the
+  /// shop switcher in the sidebar doesn't navigate away from here). Clears
+  /// the form — selected products, staff, client, everything — since all of
+  /// it is scoped to the shop that was active when it was picked, and
+  /// reloads shop-scoped lists (services, staff, products) for the new shop.
+  void _onUserStateChanged(UserEntity? user) {
+    if (!mounted) return;
+    final newShopId = user?.shopDetails.id;
+    if (newShopId == null || newShopId == _currentShopId) return;
+
+    final hadUnsavedChanges = hasUnsavedChanges();
+    _currentShopId = newShopId;
+
+    setState(() {
+      _resetForm();
+      selectedServiceId = -1;
+    });
+
+    context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+    context.read<StaffSearchCubit>().getAllStaffs();
+    _initializeCoolingPeriod();
+    _loadProductsForService(selectedServiceId);
+
+    if (hadUnsavedChanges) {
+      context.showSnackBar(
+        'Shop switched — the booking form was cleared to avoid mixing products between shops.',
+      );
+    }
   }
 
   /// Listener for client name changes to detect manual editing
