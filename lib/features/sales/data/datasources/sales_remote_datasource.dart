@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/sales_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sales_request_model/sales_request_model.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
@@ -12,6 +13,8 @@ class SalesRemoteDatasource {
   final Dio _dio;
 
   SalesRemoteDatasource({required Dio dio}) : _dio = dio;
+
+  SalesEndpoints get _endpoint => ApiEndpoints.sales;
 
   Future<CustomResponseModel> getSalesPagination({
     int page = 1,
@@ -25,7 +28,7 @@ class SalesRemoteDatasource {
       );
 
       final response = await _dio.get(
-        ApiEndpoints.sales.sales,
+        _endpoint.sales,
         queryParameters: {
           'page': page,
           if (search != null && search.isNotEmpty) 'search': search,
@@ -47,7 +50,7 @@ class SalesRemoteDatasource {
 
   Future<CustomResponseModel> getSaleDetails(int saleId) async {
     try {
-      final response = await _dio.get(ApiEndpoints.sales.salesDetail(saleId));
+      final response = await _dio.get(_endpoint.salesDetail(saleId));
       log('Sales get response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -64,7 +67,7 @@ class SalesRemoteDatasource {
         data['phone_1_e164'] = phone1E164;
       }
 
-      final response = await _dio.post(ApiEndpoints.sales.sales, data: data);
+      final response = await _dio.post(_endpoint.sales, data: data);
       log('Sales create response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -82,7 +85,7 @@ class SalesRemoteDatasource {
       }
 
       final response = await _dio.patch(
-        ApiEndpoints.sales.updateSale(salesRequest.id!),
+        _endpoint.updateSale(salesRequest.id!),
         data: data,
       );
       log('Sales update response: ${response.data}');
@@ -93,30 +96,9 @@ class SalesRemoteDatasource {
     }
   }
 
-  // Future<CustomResponseModel> updateSaleVariants({
-  //   required int saleId,
-  //   required List<ProductSelectedModel> products,
-  // }) async {
-  //   try {
-  //     final response = await _dio.patch(
-  //       '${ApiPaths.salesUpdateVariant}/$saleId/',
-  //       data: {
-  //         'variants': products
-  //             .map((e) => e.toCustomJson(includeMeasurement: false))
-  //             .toList(),
-  //       },
-  //     );
-  //     log('Sales update variants response: ${response.data}');
-  //     return CustomResponseModel.fromJson(response.data);
-  //   } catch (e, stack) {
-  //     log('Error updating sale: $e', stackTrace: stack);
-  //     rethrow;
-  //   }
-  // }
-
   Future<CustomResponseModel> deleteSale(int saleId) async {
     try {
-      final response = await _dio.delete(ApiEndpoints.sales.deleteSale(saleId));
+      final response = await _dio.delete(_endpoint.deleteSale(saleId));
       log('Sales delete response: ${response.data}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -128,7 +110,7 @@ class SalesRemoteDatasource {
   /// Get invoice PDF bytes for viewing/downloading
   Future<Uint8List> getInvoicePdfBytes(int saleId) async {
     try {
-      final url = ApiEndpoints.sales.downloadInvoice(saleId);
+      final url = _endpoint.downloadInvoice(saleId);
       log('Fetching sale invoice PDF from: $url');
 
       final response = await _dio.get(
@@ -177,7 +159,7 @@ class SalesRemoteDatasource {
     required bool sendWhatsApp,
   }) async {
     try {
-      final url = ApiEndpoints.sales.downloadInvoice(saleId);
+      final url = _endpoint.downloadInvoice(saleId);
       final response = await _dio.get(
         url,
         queryParameters: {'send_whatsapp': sendWhatsApp},

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
 import 'package:bookie_buddy_web/utils/error/error_handler.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/auth_exceptions.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/booking_exceptions.dart';
@@ -14,6 +15,8 @@ class DashboardRemoteDatasource {
   final Dio _dio;
 
   DashboardRemoteDatasource({required Dio dio}) : _dio = dio;
+
+  BookingsEndpoints get _endpoint => ApiEndpoints.bookings;
 
   /// Fetches dashboard data from the new desktop-dashboard v4 API endpoint
   Future<DesktopDashboardResponse> fetchDesktopDashboardData({
@@ -68,7 +71,7 @@ class DashboardRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.bookings.dashboard,
+        _endpoint.dashboard,
         queryParameters: {'page': page, if (isOngoing) 'type': 'ongoing'},
       );
 

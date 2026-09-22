@@ -1,6 +1,5 @@
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_bloc/sales_details_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,10 +21,7 @@ class AllBookingsSalesTableRow extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            context.read<SalesDetailsDrawerCubit>().openDrawer(sale.id);
-            context.read<SalesDetailsBloc>().add(
-              SalesDetailsEvent.fetchSaleDetails(sale.id),
-            );
+            context.read<DetailsDrawerCubit>().openSales(sale.id);
           },
           hoverColor: const Color(0xFF8A63FE).withValues(alpha: 0.08),
           splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.12),

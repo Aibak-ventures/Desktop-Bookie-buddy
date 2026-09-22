@@ -350,6 +350,11 @@ extension ProductSearchBuilders on NewBookingScreenState {
             onTap: () {
               if (serviceSearchController.text.trim().isEmpty) {
                 _searchAllProductsForOverlay();
+              } else if (_searchOverlayEntry == null) {
+                // Re-focusing with an already-typed query and no overlay
+                // showing (e.g. after tapping away closed it) — re-run the
+                // search so results reappear instead of staying hidden.
+                _onSearchChanged();
               }
             },
             onChanged: (value) {
@@ -470,7 +475,8 @@ extension ProductSearchBuilders on NewBookingScreenState {
         products: _overlayProducts,
         scrollController: _searchResultsScrollController,
         onDismiss: () {
-          serviceSearchController.clear();
+          // Just close the dropdown — keep the typed query so re-focusing
+          // the field doesn't come back empty.
           _removeSearchOverlay();
         },
         itemBuilder: (product, index, itemCount) => _buildOverlaySearchItem(

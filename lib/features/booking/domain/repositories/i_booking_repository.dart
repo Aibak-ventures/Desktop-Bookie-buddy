@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_payment_history_entity/booking_payment_history_entity.dart';
@@ -75,7 +76,7 @@ abstract interface class IBookingRepository {
     })
   >
   loadDesktopBookingsPagination({
-    required String status,
+    required BookingListFilter status,
     String? startDate,
     String? endDate,
     String? searchQuery,

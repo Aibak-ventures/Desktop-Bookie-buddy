@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/client_endpoints.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
 import 'package:dio/dio.dart';
 
@@ -10,7 +11,8 @@ class ClientRemoteDatasource {
 
   ClientRemoteDatasource({required Dio dio}) : _dio = dio;
 
-  final String clientUrl = ApiEndpoints.bookings.clients;
+  ClientEndpoints get _endpoint => ApiEndpoints.client;
+
   Future<CustomResponseModel> getClients({
     int page = 1,
     String? searchName,
@@ -18,7 +20,7 @@ class ClientRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        clientUrl,
+        _endpoint.clients,
         queryParameters: {
           'page': page,
           if (searchName != null) 'name': searchName,
@@ -36,7 +38,10 @@ class ClientRemoteDatasource {
 
   Future<CustomResponseModel> addClient(ClientRequestModel client) async {
     try {
-      final response = await _dio.post(clientUrl, data: client.toJson());
+      final response = await _dio.post(
+        _endpoint.clients,
+        data: client.toJson(),
+      );
 
       log(
         'add client response: ${response.realUri.toString()}, data: ${response.data}',
@@ -53,7 +58,7 @@ class ClientRemoteDatasource {
       // Use toUpdateJson() to include correct API field names (name, phone_1, phone_2)
       // alongside E.164-formatted phone fields (phone_1_e164, phone_2_e164).
       final response = await _dio.patch(
-        '$clientUrl${client.id}/',
+        _endpoint.clientById(client.id!),
         data: client.toUpdateJson(),
       );
       log(
@@ -69,7 +74,7 @@ class ClientRemoteDatasource {
   Future<CustomResponseModel> getClientById(int clientId) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.bookings.clientById(clientId),
+        _endpoint.clientById(clientId),
       );
       log('get client by id response: ${response.realUri}');
       return CustomResponseModel.fromJson(response.data);
@@ -81,7 +86,7 @@ class ClientRemoteDatasource {
 
   Future<CustomResponseModel> deleteClient(int clientId) async {
     try {
-      final response = await _dio.delete('$clientUrl$clientId/');
+      final response = await _dio.delete(_endpoint.clientById(clientId));
 
       log(
         'delete client response: ${response.realUri.toString()}, data: ${response.data}',

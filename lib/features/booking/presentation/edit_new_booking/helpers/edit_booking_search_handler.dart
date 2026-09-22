@@ -19,7 +19,8 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
         isLoading: _overlayIsLoading,
         products: _overlayProducts,
         onDismiss: () {
-          serviceSearchController.clear();
+          // Just close the dropdown — keep the typed query so re-focusing
+          // the field doesn't come back empty.
           _removeSearchOverlay();
         },
         itemBuilder: (product, index, itemCount) => _buildOverlaySearchItem(
@@ -104,6 +105,15 @@ extension EditBookingSearchHandler on EditNewBookingScreenState {
             overlayProducts: _overlayProducts,
             getOverlayItemFocusNode: _getOverlayItemFocusNode,
             clientNameFocusNode: _clientNameFocusNode,
+            onTap: () {
+              // Re-focusing with an already-typed query and no overlay
+              // showing (e.g. after tapping away closed it) — re-run the
+              // search so results reappear instead of staying hidden.
+              if (serviceSearchController.text.trim().isNotEmpty &&
+                  _searchOverlayEntry == null) {
+                _onSearchChanged();
+              }
+            },
             onChanged: (value) {
               _onSearchChanged();
               if (value.isEmpty) _removeSearchOverlay();

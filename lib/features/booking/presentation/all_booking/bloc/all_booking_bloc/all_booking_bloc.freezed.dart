@@ -134,7 +134,7 @@ return markAsCompleted(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)?  loadBookings,TResult Function()?  loadNextPageBookings,TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( BookingListFilter? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)?  loadBookings,TResult Function()?  loadNextPageBookings,TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoadBookings() when loadBookings != null:
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery,_that.purchaseMode);case _LoadNextPageBookings() when loadNextPageBookings != null:
@@ -160,7 +160,7 @@ return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)  loadBookings,required TResult Function()  loadNextPageBookings,required TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)  updateBooking,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  DeliveryStatus? currentStatus)  markAsCompleted,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( BookingListFilter? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)  loadBookings,required TResult Function()  loadNextPageBookings,required TResult Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)  updateBooking,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  DeliveryStatus? currentStatus)  markAsCompleted,}) {final _that = this;
 switch (_that) {
 case _LoadBookings():
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery,_that.purchaseMode);case _LoadNextPageBookings():
@@ -185,7 +185,7 @@ return markAsCompleted(_that.bookingId,_that.currentStatus);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)?  loadBookings,TResult? Function()?  loadNextPageBookings,TResult? Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( BookingListFilter? status,  String? startDate,  String? endDate,  String? searchQuery,  PurchaseMode? purchaseMode)?  loadBookings,TResult? Function()?  loadNextPageBookings,TResult? Function( DesktopBookingItemEntity? booking,  bool shouldRefresh,  bool isDeleted)?  updateBooking,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  DeliveryStatus? currentStatus)?  markAsCompleted,}) {final _that = this;
 switch (_that) {
 case _LoadBookings() when loadBookings != null:
 return loadBookings(_that.status,_that.startDate,_that.endDate,_that.searchQuery,_that.purchaseMode);case _LoadNextPageBookings() when loadNextPageBookings != null:
@@ -208,7 +208,7 @@ class _LoadBookings implements AllBookingEvent {
   const _LoadBookings({this.status, this.startDate, this.endDate, this.searchQuery, this.purchaseMode});
   
 
- final  String? status;
+ final  BookingListFilter? status;
  final  String? startDate;
  final  String? endDate;
  final  String? searchQuery;
@@ -244,7 +244,7 @@ abstract mixin class _$LoadBookingsCopyWith<$Res> implements $AllBookingEventCop
   factory _$LoadBookingsCopyWith(_LoadBookings value, $Res Function(_LoadBookings) _then) = __$LoadBookingsCopyWithImpl;
 @useResult
 $Res call({
- String? status, String? startDate, String? endDate, String? searchQuery, PurchaseMode? purchaseMode
+ BookingListFilter? status, String? startDate, String? endDate, String? searchQuery, PurchaseMode? purchaseMode
 });
 
 
@@ -264,7 +264,7 @@ class __$LoadBookingsCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? status = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? searchQuery = freezed,Object? purchaseMode = freezed,}) {
   return _then(_LoadBookings(
 status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as BookingListFilter?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,purchaseMode: freezed == purchaseMode ? _self.purchaseMode : purchaseMode // ignore: cast_nullable_to_non_nullable
@@ -708,7 +708,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  BookingListFilter? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -732,7 +732,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)  loaded,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  BookingListFilter? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)  loaded,required TResult Function( String error)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
@@ -755,7 +755,7 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  String? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DesktopBookingItemEntity> bookings,  String? nextPageUrl,  bool isPaginating,  String? startDate,  String? endDate,  String? searchQuery,  BookingListFilter? status,  PurchaseMode? purchaseMode,  StatusCountsEntity? statusCounts,  String? actionError)?  loaded,TResult? Function( String error)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
@@ -852,7 +852,7 @@ class _Loaded implements AllBookingState {
  final  String? startDate;
  final  String? endDate;
  final  String? searchQuery;
- final  String? status;
+ final  BookingListFilter? status;
  final  PurchaseMode? purchaseMode;
  final  StatusCountsEntity? statusCounts;
  final  String? actionError;
@@ -887,7 +887,7 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $AllBookingStateCopyWith<
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- List<DesktopBookingItemEntity> bookings, String? nextPageUrl, bool isPaginating, String? startDate, String? endDate, String? searchQuery, String? status, PurchaseMode? purchaseMode, StatusCountsEntity? statusCounts, String? actionError
+ List<DesktopBookingItemEntity> bookings, String? nextPageUrl, bool isPaginating, String? startDate, String? endDate, String? searchQuery, BookingListFilter? status, PurchaseMode? purchaseMode, StatusCountsEntity? statusCounts, String? actionError
 });
 
 
@@ -913,7 +913,7 @@ as bool,startDate: freezed == startDate ? _self.startDate : startDate // ignore:
 as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as String?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as String?,purchaseMode: freezed == purchaseMode ? _self.purchaseMode : purchaseMode // ignore: cast_nullable_to_non_nullable
+as BookingListFilter?,purchaseMode: freezed == purchaseMode ? _self.purchaseMode : purchaseMode // ignore: cast_nullable_to_non_nullable
 as PurchaseMode?,statusCounts: freezed == statusCounts ? _self.statusCounts : statusCounts // ignore: cast_nullable_to_non_nullable
 as StatusCountsEntity?,actionError: freezed == actionError ? _self.actionError : actionError // ignore: cast_nullable_to_non_nullable
 as String?,

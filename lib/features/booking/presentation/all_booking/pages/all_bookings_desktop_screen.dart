@@ -1,23 +1,22 @@
 import 'dart:async';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/booking_details_drawer_cubit/booking_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/widgets/sales_details_drawer.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/bloc/sales_details_drawer_cubit/sales_details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
@@ -25,8 +24,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mo
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
-  final String?
-  initialStatusTab; // Optional: 'upcoming', 'completed', 'not_returned'
+  final BookingListFilter? initialStatusTab;
 
   const AllBookingsDesktopScreen({super.key, this.initialStatusTab});
 
@@ -37,7 +35,7 @@ class AllBookingsDesktopScreen extends StatefulWidget {
 
 class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
-  String _activeStatusTab = 'upcoming'; // API status value
+  BookingListFilter _activeStatusTab = BookingListFilter.upcoming;
   final TextEditingController _searchController = TextEditingController();
   final ValueNotifier<DateFilter> _dateFilterNotifier = ValueNotifier(
     const DateFilter(),
@@ -50,24 +48,6 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   bool _hasSalesFeature(UserEntity? userState) =>
       userState?.subscription?.features.contains(AppPremiumFeatures.sales) ??
       false;
-
-  // Map display labels to API status values
-  final Map<String, String> _statusApiMap = {
-    'Upcoming': 'upcoming',
-    'Returns': 'returns',
-    'Pending': 'pending',
-    'Not Returned': 'not_returned',
-    'Completed': 'completed',
-    'Cancelled': 'cancelled',
-  };
-
-  /// Public method to change the active status tab from outside (via GlobalKey)
-  void changeStatusTab(String statusTab) {
-    if (mounted) {
-      setState(() => _activeStatusTab = statusTab);
-      _loadData();
-    }
-  }
 
   @override
   void initState() {
@@ -142,15 +122,11 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
     }
   }
 
-  void _onStatusTabChanged(String displayLabel) {
-    final apiStatus = _statusApiMap[displayLabel];
-    if (apiStatus != null) {
-      setState(() => _activeStatusTab = apiStatus);
-      _loadData();
-      // Close the booking details drawer when switching status tabs
-      context.read<BookingDetailsDrawerCubit>().closeDrawer();
-      context.read<SalesDetailsDrawerCubit>().closeDrawer();
-    }
+  void _onStatusTabChanged(BookingListFilter filter) {
+    setState(() => _activeStatusTab = filter);
+    _loadData();
+    // Close the booking details drawer when switching status tabs
+    context.read<DetailsDrawerCubit>().closeDrawer();
   }
 
   @override
@@ -166,8 +142,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
         if (userState != null) {
           _loadData();
           // Close drawers when shop changes
-          context.read<BookingDetailsDrawerCubit>().closeDrawer();
-          context.read<SalesDetailsDrawerCubit>().closeDrawer();
+          context.read<DetailsDrawerCubit>().closeDrawer();
         }
       },
       child: Scaffold(
@@ -181,6 +156,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                     if (s.actionError != null) {
                       // Show SnackBar
                       context.showSnackBar(s.actionError!, isError: true);
+                    }
+                    // Keeps the status-tab highlight in sync when the active
+                    // status is changed externally (e.g. a deep link from
+                    // Dashboard dispatching loadBookings directly), not just
+                    // via this screen's own tab taps.
+                    if (s.status != null && s.status != _activeStatusTab) {
+                      setState(() => _activeStatusTab = s.status!);
                     }
                   },
                 );
@@ -200,29 +182,18 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               },
             ),
           ],
-          child: Stack(
-            children: [
-              // Main content
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTopHeader(),
-                    const SizedBox(height: 24),
-                    _buildFilterRow(),
-                    const SizedBox(height: 16),
-                    Expanded(child: _buildMainContent()),
-                  ],
-                ),
-              ),
-              // Drawer overlay - drawers stay open unless:
-              // 1. User explicitly closes via X button
-              // 2. Tab is switched (handled in _onStatusTabChanged and action tabs)
-              // 3. Shop is switched (handled in UserCubit listener)
-              const BookingDetailsDrawer(),
-              const SalesDetailsDrawer(),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildTopHeader(),
+                const SizedBox(height: 24),
+                _buildFilterRow(),
+                const SizedBox(height: 16),
+                Expanded(child: _buildMainContent()),
+              ],
+            ),
           ),
         ),
       ),
@@ -280,8 +251,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
             setState(() => _activeActionTab = index);
             _loadData();
             // Close the booking details drawer when switching tabs
-            context.read<BookingDetailsDrawerCubit>().closeDrawer();
-            context.read<SalesDetailsDrawerCubit>().closeDrawer();
+            context.read<DetailsDrawerCubit>().closeDrawer();
           },
           tabs: [
             const ModeToggleTab(
@@ -321,33 +291,13 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: _statusApiMap.keys.map((displayLabel) {
-                    final apiStatus = _statusApiMap[displayLabel]!;
-                    final isActive = _activeStatusTab == apiStatus;
+                  children: BookingListFilter.values.map((filter) {
+                    final isActive = _activeStatusTab == filter;
 
                     // Get count from API response
                     int count = 0;
                     if (statusCounts != null) {
-                      switch (apiStatus) {
-                        case 'upcoming':
-                          count = statusCounts.upcoming;
-                          break;
-                        case 'returns':
-                          count = statusCounts.returns;
-                          break;
-                        case 'pending':
-                          count = statusCounts.pending;
-                          break;
-                        case 'not_returned':
-                          count = statusCounts.notReturned;
-                          break;
-                        case 'completed':
-                          count = statusCounts.completed;
-                          break;
-                        case 'cancelled':
-                          count = statusCounts.cancelled;
-                          break;
-                      }
+                      count = statusCounts.fromFilter(filter);
                     }
 
                     return Padding(
@@ -359,7 +309,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                             : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
-                          onTap: () => _onStatusTabChanged(displayLabel),
+                          onTap: () => _onStatusTabChanged(filter),
                           borderRadius: BorderRadius.circular(8),
                           hoverColor: const Color(
                             0xFFE7E4FF,
@@ -390,7 +340,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  displayLabel,
+                                  filter.label,
                                   style: TextStyle(
                                     color: isActive
                                         ? const Color(0xFF8A63FE)
@@ -462,7 +412,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
               decoration: InputDecoration(
                 hintText: _activeActionTab == 1
                     ? 'Search sales...'
-                    : 'Search in ${_activeStatusTab.replaceAll('_', ' ')}...',
+                    : 'Search in ${_activeStatusTab.label}...',
                 hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                 border: InputBorder.none,
                 isDense: true,

@@ -5,7 +5,7 @@ class CheckVariantAvailabilityUseCase {
   final IProductRepository _repository;
   CheckVariantAvailabilityUseCase(this._repository);
 
-  Future<List<int>> call({
+  Future<VariantAvailabilityResult> call({
     required String pickupDate,
     required String returnDate,
     required List<int> variantIds,

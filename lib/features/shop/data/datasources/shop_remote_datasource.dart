@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/service_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/shop_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/shop/data/models/update_shop_settings_request_model/update_shop_settings_request_model.dart';
 import 'package:dio/dio.dart';
@@ -10,9 +12,12 @@ class ShopRemoteDatasource {
 
   ShopRemoteDatasource({required Dio dio}) : _dio = dio;
 
+  ShopEndpoints get _shopEndpoint => ApiEndpoints.shop;
+  ServiceEndpoints get _serviceEndpoint => ApiEndpoints.service;
+
   Future<CustomResponseModel> fetchShops() async {
     try {
-      final response = await _dio.get(ApiEndpoints.shop.availableShops);
+      final response = await _dio.get(_shopEndpoint.availableShops);
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Fetch Shops Error: $e', stackTrace: stack);
@@ -27,7 +32,7 @@ class ShopRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.shop.allShopSummary(
+        _shopEndpoint.allShopSummary(
           year: year,
           month: month,
           shopId: shopId,
@@ -52,7 +57,7 @@ class ShopRemoteDatasource {
   ) async {
     try {
       final response = await _dio.patch(
-        ApiEndpoints.shop.updateSettings,
+        _shopEndpoint.updateSettings,
         data: shopSettings.toJson(),
       );
       return CustomResponseModel.fromJson(response.data);
@@ -65,7 +70,7 @@ class ShopRemoteDatasource {
   Future<CustomResponseModel> fetchServices() async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.service.selected,
+        _serviceEndpoint.selected,
         options: Options(
           receiveTimeout: const Duration(seconds: 30),
           sendTimeout: const Duration(seconds: 15),

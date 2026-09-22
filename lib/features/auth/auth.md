@@ -17,7 +17,7 @@ Handles user authentication, session lifecycle, and password management for the 
 
 ## Directory Structure
 
-```
+```text
 auth/
 ├── data/
 │   ├── datasources/
@@ -56,7 +56,8 @@ auth/
 ## Key Flows
 
 ### Login
-```
+
+```text
 LoginScreen
   → AuthBloc.loginRequested(phone, password, fcmToken?)
     → LoginUseCase → IAuthRepository.login()
@@ -68,7 +69,8 @@ LoginScreen
 ```
 
 ### Logout
-```
+
+```text
 UserCubit.logOut(fcmToken?)
   → LogoutUseCase → IUserRepository.logout()
     → POST /api/v3/notifications/device-tokens/remove/
@@ -79,7 +81,8 @@ UserCubit.logOut(fcmToken?)
 ```
 
 ### Shop Switch
-```
+
+```text
 UserCubit.switchShop(shopId, fcmToken?)
   → SwitchShopUseCase
     → POST /api/v3/notifications/device-tokens/update-shop/   # if fcmToken provided
@@ -90,7 +93,8 @@ UserCubit.switchShop(shopId, fcmToken?)
 ```
 
 ### Token Refresh
-```
+
+```text
 AuthInterceptor (DioClient) — triggered automatically on 401
   → IAuthRepository.refreshToken()
     → POST /api/v1/token/refresh/
@@ -104,13 +108,13 @@ AuthInterceptor (DioClient) — triggered automatically on 401
 ### `AuthBloc`
 
 | Event | Description | Resulting State |
-|---|---|---|
+| --- | --- | --- |
 | `loginRequested` | Login button tapped | `loading` → `authenticated` or `error` |
 
 ### `ResetPasswordBloc`
 
 | Event | Description | Resulting State |
-|---|---|---|
+| --- | --- | --- |
 | `resetPassword` | Submit on ResetPasswordScreen | `submitted` → `success` or `error` |
 
 > Validates `oldPassword != newPassword` before calling the use case.
@@ -118,7 +122,7 @@ AuthInterceptor (DioClient) — triggered automatically on 401
 ### `SecretPasswordBloc`
 
 | Event | Description | Resulting State |
-|---|---|---|
+| --- | --- | --- |
 | `submitPasswordChange` | Submit on ChangeSecretPasswordScreen | `loading` → `success` or `failure` |
 
 ### `UserCubit` — State: `UserEntity?`
@@ -126,7 +130,7 @@ AuthInterceptor (DioClient) — triggered automatically on 401
 Provided globally via `BlocProvider` in `MyApp`. Null when logged out.
 
 | Method | Description |
-|---|---|
+| --- | --- |
 | `loadUserData()` | Fetches profile, stores shopId, emits `UserEntity` |
 | `loadUserIfNot()` | Lazy load — skips if state already set |
 | `logOut({fcmToken?})` | Full logout, emits null |
@@ -139,7 +143,7 @@ Provided globally via `BlocProvider` in `MyApp`. Null when logged out.
 ## Entities
 
 | Entity | Location | Description |
-|---|---|---|
+| --- | --- | --- |
 | `UserEntity` | `core/common/entities/` | Shared across features — holds user info, shop list, settings, premium features |
 | `UserShopEntity` | `core/common/entities/` | Represents a single shop the user has access to |
 | `ShopSettingsEntity` | `core/common/entities/` | Shop-level settings (cooling period, service types, etc.) |
@@ -151,13 +155,13 @@ Provided globally via `BlocProvider` in `MyApp`. Null when logged out.
 ## API Endpoints
 
 | Method | Endpoint | Datasource method |
-|---|---|---|
+| --- | --- | --- |
 | POST | `/api/v3/auth/login/` | `userLogin()` |
 | POST | `/api/v3/auth/wallet-login/` | `secretLogin()` |
 | POST | `/api/v3/auth/change-password/` | `changeAccountPassword()` |
 | POST | `/api/v3/auth/update-secondary-password/` | `changeSecretPassword()` |
 | POST | `/api/v1/token/refresh/` | `refreshToken()` |
-| GET  | `/api/v4/auth/profile/` | `fetchUserData()` |
+| GET | `/api/v4/auth/profile/` | `fetchUserData()` |
 | POST | `/api/v3/notifications/device-tokens/register/` | `registerFCMToken()` |
 | POST | `/api/v3/notifications/device-tokens/remove/` | `removeFCMToken()` |
 | POST | `/api/v3/notifications/device-tokens/update-shop/` | `updateFCMTokenWhenShopSwitching()` |
@@ -167,7 +171,7 @@ Provided globally via `BlocProvider` in `MyApp`. Null when logged out.
 ## Dependencies
 
 | Dependency | Source |
-|---|---|
+| --- | --- |
 | `DioClient.dio` | `lib/utils/network/dio_client/` |
 | `SessionStorage` | `lib/core/session/` |
 | `TokenRefreshManager` | `lib/core/session/` |

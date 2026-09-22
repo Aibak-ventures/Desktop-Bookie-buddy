@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
@@ -21,6 +22,7 @@ import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/accou
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
@@ -283,6 +285,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   // changes stop auto-deriving it once they have taken over.
   bool _isBookedDateManuallySet = false;
   int _manualExtraRentalDays = 0; // Optional extra days added by user
+  // Set once the booking/sale save succeeds, so confirmLeave() doesn't treat
+  // the still-populated form fields as unsaved changes when onClose fires.
+  bool _bookingSavedSuccessfully = false;
 
   /// Booked date as it should be sent to the API: mirrors mobile's rule —
   /// a booked date that isn't actually in the past (i.e. today or later)
@@ -356,6 +361,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   late AddBookingCubit _addBookingCubit;
 
+  // Tracks the shop this screen's state (selected products, staff, client,
+  // etc.) belongs to, so a shop switch elsewhere in the app (the shop
+  // switcher lives in the persistent sidebar and doesn't navigate away from
+  // this screen) can be detected and the form cleared before anything
+  // shop-A-scoped gets submitted under shop B.
+  int? _currentShopId;
+  StreamSubscription<UserEntity?>? _userCubitSubscription;
+
   void rebuild([VoidCallback? fn]) => setState(fn ?? () {});
 
   // Summary expansion state
@@ -374,6 +387,14 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
 
     _addBookingCubit = getIt<AddBookingCubit>();
+
+    // Track the active shop and react if it changes while this screen is
+    // open — the shop switcher is reachable from the persistent sidebar
+    // without navigating away, so nothing else guards against a stale,
+    // other-shop selection being submitted under the new shop.
+    final userCubit = context.read<UserCubit>();
+    _currentShopId = userCubit.state?.shopDetails.id;
+    _userCubitSubscription = userCubit.stream.listen(_onUserStateChanged);
 
     // Initialize SelectProductBloc
     _selectProductBloc = SelectProductBloc(
@@ -428,6 +449,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   @override
   void dispose() {
+    _userCubitSubscription?.cancel();
     if (kIsWeb) web_helper.removeBeforeUnloadListener();
     _removeSearchOverlay();
     clientNameController.removeListener(_onClientNameChanged);
@@ -527,6 +549,19 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _closeScreen() =>
       widget.onClose != null ? widget.onClose!() : Navigator.of(context).pop();
 
+  /// Called by an ancestor (the shell) before navigating away from this
+  /// screen. Owns the unsaved-changes check and discard dialog itself,
+  /// rather than exposing [hasUnsavedChanges] for the ancestor to act on.
+  Future<bool> confirmLeave() async {
+    // A successful save still leaves the form fields populated, so skip the
+    // unsaved-changes check when `onClose` is firing because the booking
+    // was just saved rather than because the user is navigating away.
+    if (_bookingSavedSuccessfully) return true;
+    if (!hasUnsavedChanges()) return true;
+    final shouldDiscard = await showDiscardDialog(context);
+    return shouldDiscard ?? false;
+  }
+
   Future<void> _handleBackNavigation() async {
     _removeSearchOverlay();
     if (hasUnsavedChanges()) {
@@ -584,6 +619,36 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     serviceSearchController.clear();
     context.read<StaffSearchCubit>().clearSelectedStaff();
     context.read<ClientCubit>().clearSelected();
+  }
+
+  /// Reacts to the active shop changing while this screen is mounted (the
+  /// shop switcher in the sidebar doesn't navigate away from here). Clears
+  /// the form — selected products, staff, client, everything — since all of
+  /// it is scoped to the shop that was active when it was picked, and
+  /// reloads shop-scoped lists (services, staff, products) for the new shop.
+  void _onUserStateChanged(UserEntity? user) {
+    if (!mounted) return;
+    final newShopId = user?.shopDetails.id;
+    if (newShopId == null || newShopId == _currentShopId) return;
+
+    final hadUnsavedChanges = hasUnsavedChanges();
+    _currentShopId = newShopId;
+
+    setState(() {
+      _resetForm();
+      selectedServiceId = -1;
+    });
+
+    context.read<ServiceBloc>().add(const ServiceEvent.loadServices());
+    context.read<StaffSearchCubit>().getAllStaffs();
+    _initializeCoolingPeriod();
+    _loadProductsForService(selectedServiceId);
+
+    if (hadUnsavedChanges) {
+      context.showSnackBar(
+        'Shop switched — the booking form was cleared to avoid mixing products between shops.',
+      );
+    }
   }
 
   /// Listener for client name changes to detect manual editing
@@ -788,7 +853,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       returnTime: returnTime,
       coolingPeriodDays: coolingPeriodDays,
       coolingPeriodMode: coolingPeriodMode,
-      selectedProducts: selectedProductsNotifier.value,
+      context: context,
+      selectedProductsNotifier: selectedProductsNotifier,
     );
   }
 
@@ -1135,6 +1201,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
   void _showBookingResult(int id, BookingType type) {
     if (!mounted) return;
+    _bookingSavedSuccessfully = true;
     if (id != 0) {
       showBookingSuccessDialog(
         context: context,

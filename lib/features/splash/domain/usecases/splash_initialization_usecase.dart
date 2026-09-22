@@ -9,7 +9,7 @@ import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_screen.dart';
-import 'package:bookie_buddy_web/core/app/bottom_bar_screen.dart';
+import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
 
 class SplashInitializationUseCase {
   SplashInitializationUseCase({
@@ -30,7 +30,7 @@ class SplashInitializationUseCase {
           ? const OnboardingScreen()
           : _sessionStorage.refreshToken != null &&
                 _sessionStorage.accessToken != null
-          ? const BottomBarScreen()
+          ? const AppShellScreen()
           : const LoginScreen();
     }, Duration(milliseconds: 2500));
     navigatorKey.currentContext!.pushReplacement(initialScreen);

@@ -298,8 +298,8 @@ class _CustomDateFilterWidgetState extends State<CustomDateFilterWidget> {
       ),
       const Spacer(),
       if (_startDate != null ||
-            _endDate != null ||
-            _checkboxOptions.any((option) => option.isSelected))
+          _endDate != null ||
+          _checkboxOptions.any((option) => option.isSelected))
         TextButton(
           onPressed: _clearFilter,
           child: Text(

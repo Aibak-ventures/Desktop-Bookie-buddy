@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/account_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/features/accounts/data/models/account_request_model/account_request_model.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +11,8 @@ class AccountRemoteDatasource {
 
   const AccountRemoteDatasource(this._dio);
 
+  AccountEndpoints get _endpoint => ApiEndpoints.accounts;
+
   /// Fetch all accounts
   Future<CustomResponseModel> getAccounts({
     required int page,
@@ -17,7 +20,7 @@ class AccountRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.accounts.accounts,
+        _endpoint.accounts,
         queryParameters: {'is_active': isActiveOnly, 'page': page},
       );
       return CustomResponseModel.fromJson(response.data);
@@ -30,7 +33,7 @@ class AccountRemoteDatasource {
   /// Fetch accounts summary (total balance + per-account balances)
   Future<CustomResponseModel> getAccountsSummary() async {
     try {
-      final response = await _dio.get(ApiEndpoints.accounts.summary);
+      final response = await _dio.get(_endpoint.summary);
 
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
@@ -45,7 +48,7 @@ class AccountRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.accounts.accounts,
+        _endpoint.accounts,
         data: account.toJson(),
       );
       return CustomResponseModel.fromJson(response.data);
@@ -62,7 +65,7 @@ class AccountRemoteDatasource {
   }) async {
     try {
       final response = await _dio.patch(
-        ApiEndpoints.accounts.accountById(accountId),
+        _endpoint.accountById(accountId),
         data: account.toJson(),
       );
       return CustomResponseModel.fromJson(response.data);
@@ -75,9 +78,7 @@ class AccountRemoteDatasource {
   /// Delete an account
   Future<CustomResponseModel> deleteAccount({required int accountId}) async {
     try {
-      final response = await _dio.delete(
-        ApiEndpoints.accounts.accountById(accountId),
-      );
+      final response = await _dio.delete(_endpoint.accountById(accountId));
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {
       log('Error deleting account: $e', stackTrace: stack);

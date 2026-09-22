@@ -71,8 +71,9 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     try {
       final printers = await findPrintersUseCase();
       final lastPrinter = await getLastPrinterUseCase();
-      final preselected =
-          printers.any((p) => p.name == lastPrinter) ? lastPrinter : null;
+      final preselected = printers.any((p) => p.name == lastPrinter)
+          ? lastPrinter
+          : null;
       log(
         'Found ${printers.length} printer(s), preselected=$preselected',
         name: _logName,
@@ -118,7 +119,12 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
       // Status is a best-effort enhancement — the plain printer list from
       // [initialize] already rendered, so a failed refresh just leaves
       // every printer's status as unknown rather than surfacing an error.
-      log('_refreshStatuses() failed: $e', name: _logName, error: e, stackTrace: stack);
+      log(
+        '_refreshStatuses() failed: $e',
+        name: _logName,
+        error: e,
+        stackTrace: stack,
+      );
     }
   }
 
@@ -132,7 +138,8 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
     emit(state.copyWith(refreshingPrinters: true));
     try {
       final printers = await findPrintersUseCase();
-      final selected = state.selectedPrinterName != null &&
+      final selected =
+          state.selectedPrinterName != null &&
               printers.any((p) => p.name == state.selectedPrinterName)
           ? state.selectedPrinterName
           : null;
@@ -214,8 +221,10 @@ class QzPrinterCubit extends Cubit<QzPrinterState> {
   Future<bool> saveSelectedPrinter() async {
     final printerName = state.selectedPrinterName;
     if (printerName == null) {
-      log('saveSelectedPrinter() aborted — no printer selected',
-          name: _logName);
+      log(
+        'saveSelectedPrinter() aborted — no printer selected',
+        name: _logName,
+      );
       return false;
     }
 

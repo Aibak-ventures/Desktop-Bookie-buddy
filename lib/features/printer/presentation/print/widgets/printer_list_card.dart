@@ -133,8 +133,6 @@ class PrinterListCard extends StatelessWidget {
   }
 }
 
-
-
 /// Small dot + label reflecting [PrinterOnlineStatus] — never blocks
 /// selection/connect, just informs (see [_PrinterPickerView.build] doc for
 /// why: some printers/drivers don't report status at all, so a hard

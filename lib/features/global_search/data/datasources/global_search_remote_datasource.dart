@@ -2,12 +2,15 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
 import 'package:dio/dio.dart';
 
 class GlobalSearchRemoteDatasource {
   const GlobalSearchRemoteDatasource(this._dio);
 
   final Dio _dio;
+
+  BookingsEndpoints get _endpoint => ApiEndpoints.bookings;
 
   Future<CustomResponseModel> fetchGlobalSearch({
     required int page,
@@ -17,7 +20,7 @@ class GlobalSearchRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        ApiEndpoints.bookings.desktopList,
+        _endpoint.desktopList,
         queryParameters: {
           'page': page,
           if (searchQuery != null && searchQuery.isNotEmpty)

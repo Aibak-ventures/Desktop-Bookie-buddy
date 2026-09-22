@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
+import 'package:bookie_buddy_web/core/constants/endpoints/auth_endpoints.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
@@ -13,6 +14,8 @@ class AuthRemoteDatasource {
   final SharedPreferenceHelper _prefs;
   final TokenRefreshManager _tokenRefreshManager;
   final SessionStorage _sessionStorage;
+
+  AuthEndpoints get _endpoint => ApiEndpoints.auth;
 
   AuthRemoteDatasource({
     required Dio dio,
@@ -37,7 +40,7 @@ class AuthRemoteDatasource {
         ..interceptors.clear()
         ..options.validateStatus = (status) => true;
       final response = await dio.post(
-        ApiEndpoints.auth.login,
+        _endpoint.login,
         data: {
           'phone': phone,
           'password': password,
@@ -70,7 +73,7 @@ class AuthRemoteDatasource {
   Future<CustomResponseModel> secretLogin(String password) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.auth.walletLogin,
+        _endpoint.walletLogin,
         data: {'password': password},
       );
 
@@ -88,7 +91,7 @@ class AuthRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.auth.changePassword,
+        _endpoint.changePassword,
         data: {
           'old_password': oldPassword,
           'new_password': newPassword,
@@ -108,7 +111,7 @@ class AuthRemoteDatasource {
   }) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.auth.changeSecondaryPassword,
+        _endpoint.changeSecondaryPassword,
         data: {
           'old_secondary_password': oldPassword,
           'new_secondary_password': newPassword,
@@ -139,7 +142,7 @@ class AuthRemoteDatasource {
   Future<String?> refreshToken({required String? refreshToken}) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.auth.refresh,
+        _endpoint.refresh,
         data: {'refresh': refreshToken},
       );
       // IMPORTANT: Do NOT mutate response.data when masking; it caused the real
