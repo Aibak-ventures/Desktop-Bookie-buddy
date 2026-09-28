@@ -194,7 +194,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                               refundableAmount: refundableAmount,
                               minPaymentDate: booking.bookedDate
                                   .parseToDateTime(),
-                              securityBalanceAmount: booking.isSecurityPaid
+                              securityBalanceAmount:
+                                  booking.shouldShowSecurityRefundSection
                                   ? booking.remainingSecurityBalance
                                   : null,
                               onSubmit:
@@ -236,7 +237,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (securityAmount > 0 && booking.showSecurityInPayments) ...[
+              if (securityAmount > 0 &&
+                  !booking.shouldShowSecurityRefundSection) ...[
                 if (booking.securityPayment?.accountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),

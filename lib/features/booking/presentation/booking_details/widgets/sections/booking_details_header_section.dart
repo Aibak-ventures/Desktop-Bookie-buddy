@@ -117,7 +117,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          status.getServiceSpecificName(mainServiceType),
+                          status.getServiceSpecificLabel(mainServiceType),
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
@@ -173,7 +173,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                       builder: (context) => AlertDialog(
                         title: const Text('Change Delivery Status'),
                         content: Text(
-                          'Are you sure you want to change delivery status to "${newStatus.getServiceSpecificName(mainServiceType)}"?',
+                          'Are you sure you want to change delivery status to "${newStatus.getServiceSpecificLabel(mainServiceType)}"?',
                         ),
                         actions: [
                           TextButton(
@@ -221,7 +221,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                s.getServiceSpecificName(mainServiceType),
+                                s.getServiceSpecificLabel(mainServiceType),
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: s.color,
@@ -246,7 +246,7 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            status.name,
+                            status.label,
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,

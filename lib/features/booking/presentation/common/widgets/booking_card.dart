@@ -151,7 +151,7 @@ class BookingCard extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              deliveryStatus.name,
+                              deliveryStatus.label,
                               style: TextStyle(
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w600,

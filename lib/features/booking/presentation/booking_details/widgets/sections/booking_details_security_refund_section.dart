@@ -6,7 +6,6 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_acti
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_security_adjustment_dialog.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_security_refund_history_tile.dart';
@@ -28,10 +27,12 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final securityDeposit = (booking.securityPayment?.amount ?? 0);
-    if (securityDeposit <= 0 || !booking.showSecurityRefundSection) {
+    if (!booking.shouldShowSecurityRefundSection) {
       return const SizedBox.shrink();
     }
+
+    final securityDeposit =
+        booking.securityTransactionSummary.totalSecurityAmount;
 
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
