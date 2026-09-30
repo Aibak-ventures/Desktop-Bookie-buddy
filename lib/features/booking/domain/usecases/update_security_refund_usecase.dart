@@ -10,11 +10,13 @@ class UpdateSecurityRefundUseCase {
     int? deductionAmount,
     required int accountId,
     String? note,
+    String? paymentDate,
   }) => _repository.updateSecurityRefund(
     bookingId: bookingId,
     refundAmount: refundAmount,
     deductionAmount: deductionAmount,
     accountId: accountId,
     note: note,
+    paymentDate: paymentDate,
   );
 }

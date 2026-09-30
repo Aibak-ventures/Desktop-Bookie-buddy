@@ -3,12 +3,14 @@
 import 'dart:math' as math;
 
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
+import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
@@ -49,8 +51,11 @@ void showAddPaymentDialog({
   num? refundableAmount,
   DateTime? minPaymentDate,
   num? securityBalanceAmount,
+  List<PaymentHistoryDateAmount>? paymentHistory,
   required PaymentDialogSubmitCallback onSubmit,
 }) {
+  // TODO: convert this showAddPaymentDialog to a stateful widget and dispose the controllers and notifiers properly
+
   final TextEditingController textController = TextEditingController();
   final TextEditingController reasonController = TextEditingController();
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
@@ -128,34 +133,39 @@ void showAddPaymentDialog({
                       const SizedBox(width: 4),
                       InkWell(
                         focusColor: AppColors.purple,
-                        onTap: isRefund
-                            ? null
-                            : () async {
-                                final now = DateTime.now();
-                                final firstDate =
-                                    minPaymentDate != null &&
-                                        !minPaymentDate.isAfter(now)
-                                    ? minPaymentDate
-                                    : DateTime(now.year - 5);
-                                final initialDate =
-                                    paymentDate.isBefore(firstDate)
-                                    ? firstDate
-                                    : (paymentDate.isAfter(now)
-                                          ? now
-                                          : paymentDate);
-                                final picked = await showKeyboardDatePicker(
-                                  context: context,
-                                  initialDate: initialDate,
-                                  firstDate: firstDate,
-                                  lastDate: now,
-                                );
-                                if (picked != null) {
-                                  paymentDateNotifier.value = picked;
-                                }
-                              },
+                        onTap: () async {
+                          final now = DateTime.now();
+                          // For a refund, the earliest sensible date is when
+                          // the first payment was actually made — not
+                          // minPaymentDate (the booking date) — since you
+                          // can't refund something not yet paid.
+                          final earliestPaymentDate =
+                              isRefund && (paymentHistory?.isNotEmpty ?? false)
+                              ? paymentHistory!
+                                    .map((e) => e.date)
+                                    .reduce((a, b) => a.isBefore(b) ? a : b)
+                              : minPaymentDate;
+                          final firstDate =
+                              earliestPaymentDate != null &&
+                                  !earliestPaymentDate.isAfter(now)
+                              ? earliestPaymentDate
+                              : DateTime(now.year - 5);
+                          final initialDate = paymentDate.isBefore(firstDate)
+                              ? firstDate
+                              : (paymentDate.isAfter(now) ? now : paymentDate);
+                          final picked = await showKeyboardDatePicker(
+                            context: context,
+                            initialDate: initialDate,
+                            firstDate: firstDate,
+                            lastDate: now,
+                          );
+                          if (picked != null) {
+                            paymentDateNotifier.value = picked;
+                          }
+                        },
                         child: Text.rich(
                           TextSpan(
-                            text: 'Paid on ',
+                            text: isRefund ? 'Refund on ' : 'Paid on ',
                             children: [
                               TextSpan(
                                 text: paymentDate.format(),
@@ -347,6 +357,42 @@ void showAddPaymentDialog({
                           return;
                         }
 
+                        final selectedDate = paymentDateNotifier.value;
+
+                        // Runs before the account-selection check on
+                        // purpose, so a refund/date mismatch always gets
+                        // this specific, clear message rather than a
+                        // generic one.
+                        if (isRefund && paymentHistory != null) {
+                          final availableForDate =
+                              RefundAvailabilityCalculator.totalPaidUpToDate(
+                                history: paymentHistory,
+                                date: selectedDate,
+                              );
+                          if (amount > availableForDate) {
+                            final reason =
+                                RefundAvailabilityCalculator.classifyUnavailability(
+                                  history: paymentHistory,
+                                  date: selectedDate,
+                                );
+                            final refundMessage =
+                                RefundUnavailableMessage(
+                                  reason: reason,
+                                  date: selectedDate,
+                                  availableForDate: availableForDate,
+                                  requestedAmount: amount,
+                                  formatDate: (date) => date.format(),
+                                  formatAmount: (amount) => amount.toCurrency(),
+                                );
+                            context.showSnackBar(
+                              refundMessage.message,
+                              isError: refundMessage.isError,
+                              title: refundMessage.title,
+                            );
+                            return;
+                          }
+                        }
+
                         if (selectedAccountNotifier.value == null) {
                           context.showSnackBar(
                             isRefund
@@ -360,6 +406,34 @@ void showAddPaymentDialog({
                         isLoading.value = true;
 
                         try {
+                          // The date field only lets the user pick a day,
+                          // not a time — so the backend fills in whatever
+                          // time the API request happens to land at. For a
+                          // *past* refund date, that's a problem when it's
+                          // the same calendar day as a payment made *later*
+                          // that day: "now" at submit time can be earlier
+                          // than that payment's own timestamp, and the
+                          // backend rejects the refund as not yet paid.
+                          // Guard against that by explicitly sending a time
+                          // just after the latest payment recorded on the
+                          // selected day.
+                          final sameDayPaymentBuffer =
+                              isRefund && paymentHistory != null
+                              ? RefundAvailabilityCalculator.safeRefundTimestampForDate(
+                                  history: paymentHistory,
+                                  date: selectedDate,
+                                )
+                              : null;
+                          final refundDateString = selectedDate
+                              .format()
+                              .appendTimeToDate(
+                                time: sameDayPaymentBuffer != null
+                                    ? TimeOfDay.fromDateTime(
+                                        sameDayPaymentBuffer,
+                                      )
+                                    : null,
+                              );
+
                           final error = await onSubmit(
                             amount: amount,
                             account: selectedAccountNotifier.value!,
@@ -368,8 +442,8 @@ void showAddPaymentDialog({
                                 ? null
                                 : reasonController.text,
                             paymentDate: isRefund
-                                ? null
-                                : paymentDateNotifier.value.format(),
+                                ? refundDateString
+                                : selectedDate.format(),
                             useSecurityRefund:
                                 !isRefund && useSecurityRefundNotifier.value,
                           );

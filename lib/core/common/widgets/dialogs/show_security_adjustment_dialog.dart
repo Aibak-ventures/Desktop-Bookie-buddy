@@ -1,13 +1,17 @@
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
+import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:flutter/material.dart';
 
 /// Called when the user submits the security adjustment dialog. Return
@@ -18,6 +22,7 @@ typedef SecurityAdjustmentSubmitCallback =
       required SecurityTransactionAction action,
       AccountEntity? account,
       String? note,
+      String? paymentDate,
     });
 
 /// Dialog for refunding or deducting a booking's security deposit.
@@ -28,8 +33,12 @@ typedef SecurityAdjustmentSubmitCallback =
 void showSecurityAdjustmentDialog({
   required BuildContext context,
   required num balanceAmount,
+  DateTime? minPaymentDate,
+  List<PaymentHistoryDateAmount>? paymentHistory,
   required SecurityAdjustmentSubmitCallback onSubmit,
 }) {
+  // TODO: convert this showSecurityAdjustmentDialog to a stateful widget and dispose the controllers and notifiers properly
+
   final TextEditingController textController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
@@ -38,6 +47,9 @@ void showSecurityAdjustmentDialog({
   );
   final ValueNotifier<AccountEntity?> selectedAccountNotifier = ValueNotifier(
     null,
+  );
+  final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
+    DateTime.now(),
   );
 
   showDialog(
@@ -76,6 +88,80 @@ void showSecurityAdjustmentDialog({
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              if (!isDeduction)
+                ValueListenableBuilder<DateTime>(
+                  valueListenable: paymentDateNotifier,
+                  builder: (context, paymentDate, _) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.calendar_month,
+                          size: 14,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          focusColor: AppColors.purple,
+                          onTap: () async {
+                            final now = DateTime.now();
+                            // The earliest sensible refund date is when the
+                            // security payment was actually made, not
+                            // minPaymentDate — same rule as showAddPaymentDialog.
+                            final earliestPaymentDate =
+                                (paymentHistory?.isNotEmpty ?? false)
+                                ? paymentHistory!
+                                      .map((e) => e.date)
+                                      .reduce((a, b) => a.isBefore(b) ? a : b)
+                                : minPaymentDate;
+                            final firstDate =
+                                earliestPaymentDate != null &&
+                                    !earliestPaymentDate.isAfter(now)
+                                ? earliestPaymentDate
+                                : DateTime(now.year - 5);
+                            final initialDate = paymentDate.isBefore(firstDate)
+                                ? firstDate
+                                : (paymentDate.isAfter(now)
+                                      ? now
+                                      : paymentDate);
+                            final picked = await showKeyboardDatePicker(
+                              context: context,
+                              initialDate: initialDate,
+                              firstDate: firstDate,
+                              lastDate: now,
+                            );
+                            if (picked != null) {
+                              paymentDateNotifier.value = picked;
+                            }
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Refund on ',
+                              children: [
+                                TextSpan(
+                                  text: paymentDate.format(),
+                                  style: TextStyle(
+                                    color: AppColors.purple,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.grey.shade400,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(Icons.edit, size: 14, color: AppColors.purple),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -212,6 +298,38 @@ void showSecurityAdjustmentDialog({
                           return;
                         }
 
+                        final selectedDate = paymentDateNotifier.value;
+
+                        if (!isDeduction && paymentHistory != null) {
+                          final availableForDate =
+                              RefundAvailabilityCalculator.totalPaidUpToDate(
+                                history: paymentHistory,
+                                date: selectedDate,
+                              );
+                          if (amount > availableForDate) {
+                            final reason =
+                                RefundAvailabilityCalculator.classifyUnavailability(
+                                  history: paymentHistory,
+                                  date: selectedDate,
+                                );
+                            final refundMessage =
+                                RefundUnavailableMessage(
+                                  reason: reason,
+                                  date: selectedDate,
+                                  availableForDate: availableForDate,
+                                  requestedAmount: amount,
+                                  formatDate: (date) => date.format(),
+                                  formatAmount: (amount) => amount.toCurrency(),
+                                );
+                            context.showSnackBar(
+                              refundMessage.message,
+                              isError: refundMessage.isError,
+                              title: refundMessage.title,
+                            );
+                            return;
+                          }
+                        }
+
                         if (!isDeduction &&
                             selectedAccountNotifier.value == null) {
                           context.showSnackBar(
@@ -224,6 +342,23 @@ void showSecurityAdjustmentDialog({
                         isLoading.value = true;
 
                         try {
+                          final sameDayPaymentBuffer =
+                              !isDeduction && paymentHistory != null
+                              ? RefundAvailabilityCalculator.safeRefundTimestampForDate(
+                                  history: paymentHistory,
+                                  date: selectedDate,
+                                )
+                              : null;
+                          final refundDateString = selectedDate
+                              .format()
+                              .appendTimeToDate(
+                                time: sameDayPaymentBuffer != null
+                                    ? TimeOfDay.fromDateTime(
+                                        sameDayPaymentBuffer,
+                                      )
+                                    : null,
+                              );
+
                           final error = await onSubmit(
                             amount: amount,
                             action: action,
@@ -231,6 +366,7 @@ void showSecurityAdjustmentDialog({
                             note: noteController.text.isEmpty
                                 ? null
                                 : noteController.text,
+                            paymentDate: isDeduction ? null : refundDateString,
                           );
 
                           if (error == null) {

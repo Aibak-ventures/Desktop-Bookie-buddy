@@ -8,9 +8,11 @@ class CancelBookingUseCase {
     required int bookingId,
     int? refundAmount,
     int? accountId,
+    String? paymentDate,
   }) => _repository.cancelBooking(
     bookingId: bookingId,
     refundAmount: refundAmount,
     accountId: accountId,
+    paymentDate: paymentDate,
   );
 }

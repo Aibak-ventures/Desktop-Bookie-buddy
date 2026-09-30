@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
@@ -12,6 +13,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -229,6 +231,20 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
   static void _noop(dynamic _) {}
 
   void _onAddRefundPressed(BuildContext context, int pendingAmount) {
+    final securityPayment = booking.securityPayment;
+    final securityPaidDate = securityPayment == null
+        ? null
+        : (securityPayment.paidAt ?? securityPayment.createdAt)
+              ?.parseToDateTime();
+    final securityPaymentHistory = securityPayment == null
+        ? const <PaymentHistoryDateAmount>[]
+        : [
+            PaymentHistoryDateAmount(
+              date: securityPaidDate ?? DateTime.now(),
+              amount: securityPayment.amount,
+            ),
+          ];
+
     performSecureActionDialog(
       context,
       SecretPasswordLocations.bookingPayment,
@@ -236,13 +252,22 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
         showSecurityAdjustmentDialog(
           context: context,
           balanceAmount: pendingAmount,
-          onSubmit: ({required amount, required action, account, note}) =>
-              _submitAdjustment(
+          minPaymentDate: securityPaidDate,
+          paymentHistory: securityPaymentHistory,
+          onSubmit:
+              ({
+                required amount,
+                required action,
+                account,
+                note,
+                paymentDate,
+              }) => _submitAdjustment(
                 context: context,
                 amount: amount,
                 action: action,
                 account: account,
                 note: note,
+                paymentDate: paymentDate,
               ),
         );
       },
@@ -255,6 +280,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
     required SecurityTransactionAction action,
     AccountEntity? account,
     String? note,
+    String? paymentDate,
   }) async {
     final accountId = action.isDeduction
         ? (booking.securityPayment?.accountId ?? account?.id)
@@ -273,6 +299,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
         deductionAmount: action.isDeduction ? amount : null,
         accountId: accountId,
         note: note,
+        paymentDate: action.isDeduction ? null : paymentDate,
       ),
     );
 

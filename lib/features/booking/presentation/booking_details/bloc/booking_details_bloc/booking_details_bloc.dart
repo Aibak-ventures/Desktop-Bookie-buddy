@@ -160,6 +160,7 @@ class BookingDetailsBloc
           bookingId: event.bookingId,
           refundAmount: event.amount,
           accountId: event.accountId,
+          paymentDate: event.paymentDate,
         );
       }
       await _updatePayment(
@@ -214,6 +215,7 @@ class BookingDetailsBloc
         bookingId: event.bookingId,
         refundAmount: event.refundAmount,
         accountId: event.accountId,
+        paymentDate: event.paymentDate,
       );
       emit(const _Success('Booking cancelled successfully', needRefresh: true));
     } catch (e, stack) {
@@ -254,6 +256,7 @@ class BookingDetailsBloc
         amount: event.amount,
         accountId: event.accountId,
         refundReason: event.refundReason,
+        paymentDate: event.paymentDate,
       );
 
       log('✅ Refund added, refetching booking details...');
@@ -306,6 +309,7 @@ class BookingDetailsBloc
         deductionAmount: event.deductionAmount,
         accountId: event.accountId,
         note: event.note,
+        paymentDate: event.paymentDate,
       );
 
       final booking = await _getBooking(event.bookingId);

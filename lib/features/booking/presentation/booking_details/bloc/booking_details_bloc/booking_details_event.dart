@@ -32,6 +32,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int bookingId,
     int? refundAmount,
     int? accountId,
+    String? paymentDate,
   }) = _CancelBooking;
 
   const factory BookingDetailsEvent.deleteBooking(int bookingId) =
@@ -42,6 +43,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int amount,
     required int accountId,
     String? refundReason,
+    String? paymentDate,
   }) = _AddRefund;
 
   const factory BookingDetailsEvent.deleteRefund({
@@ -55,6 +57,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     int? deductionAmount,
     required int accountId,
     String? note,
+    String? paymentDate,
   }) = _UpdateSecurityRefund;
 
   const factory BookingDetailsEvent.deleteSecurityRefundedPayment({

@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_add_payment_dialog.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_refund_check_mapper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
@@ -51,6 +52,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     final isRefundable = refundableAmount > 0;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
+    final paymentHistoryForRefundCheck = booking.toRefundAvailabilityHistory();
 
     return Column(
       children: [
@@ -129,6 +131,9 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                     balanceAmount: balance,
                                     defaultType: PaymentTransactionType.refund,
                                     refundableAmount: refundableAmount,
+                                    minPaymentDate: booking.bookedDate
+                                        .parseToDateTime(),
+                                    paymentHistory: paymentHistoryForRefundCheck,
                                     onSubmit:
                                         ({
                                           required amount,
@@ -143,6 +148,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                           account: account,
                                           transactionType: transactionType,
                                           reason: reason,
+                                          paymentDate: paymentDate,
                                           useSecurityRefund: useSecurityRefund,
                                         ),
                                   );
@@ -198,6 +204,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                   booking.shouldShowSecurityRefundSection
                                   ? booking.remainingSecurityBalance
                                   : null,
+                              paymentHistory: paymentHistoryForRefundCheck,
                               onSubmit:
                                   ({
                                     required amount,
@@ -494,6 +501,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               amount: amount,
               accountId: account.id,
               refundReason: reason,
+              paymentDate: paymentDate,
             )
           : BookingDetailsEvent.updatePayment(
               bookingId: booking.id,

@@ -289,6 +289,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     required int bookingId,
     int? refundAmount,
     int? accountId,
+    String? paymentDate,
   }) async {
     try {
       // First, update delivery status to cancelled
@@ -308,6 +309,7 @@ class BookingRepositoryImpl implements IBookingRepository {
             amount: refundAmount,
             accountId: accountId,
             refundReason: 'Booking cancelled',
+            paymentDate: paymentDate,
           ),
         );
         if (!refundResponse.status.isSuccess) {
@@ -608,6 +610,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     required int amount,
     required int accountId,
     String? refundReason,
+    String? paymentDate,
   }) async {
     try {
       final response = await safeApiCall(
@@ -616,6 +619,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           amount: amount,
           accountId: accountId,
           refundReason: refundReason,
+          paymentDate: paymentDate,
         ),
       );
       if (response.status.isSuccess) {
@@ -657,6 +661,7 @@ class BookingRepositoryImpl implements IBookingRepository {
     int? deductionAmount,
     required int accountId,
     String? note,
+    String? paymentDate,
   }) async {
     try {
       final response = await safeApiCall(
@@ -666,6 +671,7 @@ class BookingRepositoryImpl implements IBookingRepository {
           deductionAmount: deductionAmount,
           accountId: accountId,
           note: note,
+          paymentDate: paymentDate,
         ),
       );
       if (response.status.isSuccess) {
