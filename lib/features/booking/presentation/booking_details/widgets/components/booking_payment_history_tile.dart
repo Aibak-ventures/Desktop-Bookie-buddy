@@ -21,6 +21,7 @@ class TransactionEntry {
   final String dateTime;
   final bool isRefund;
   final BookingPaymentHistoryPaymentType paymentType;
+  final String? note;
 
   TransactionEntry({
     required this.id,
@@ -30,11 +31,12 @@ class TransactionEntry {
     required this.dateTime,
     required this.isRefund,
     this.paymentType = BookingPaymentHistoryPaymentType.payment,
+    this.note,
   });
 
   @override
   String toString() {
-    return 'TransactionEntry(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, dateTime: $dateTime, isRefund: $isRefund, paymentType: $paymentType)';
+    return 'TransactionEntry(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, dateTime: $dateTime, isRefund: $isRefund, paymentType: $paymentType, note: $note)';
   }
 }
 
@@ -87,6 +89,7 @@ class BookingPaymentHistoryTile extends StatelessWidget {
           accountId: refund.accountId,
           dateTime: refund.createdAt,
           isRefund: true,
+          note: refund.refundReason,
         ),
       );
     }
@@ -155,6 +158,8 @@ class BookingPaymentHistoryTile extends StatelessWidget {
                     accountName: transaction.accountName ?? 'Payment',
                     amount: transaction.amount,
                     isNegative: transaction.isRefund,
+                    rowColor: transaction.isRefund ? Colors.red.shade700 : null,
+                    note: transaction.note,
                     canDelete: canDeleteThisPayment || canDeleteThisRefund,
                     deleteLabel: canDeleteThisRefund
                         ? 'Delete refund'
