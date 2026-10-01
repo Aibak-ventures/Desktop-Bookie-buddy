@@ -133,7 +133,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                                     refundableAmount: refundableAmount,
                                     minPaymentDate: booking.bookedDate
                                         .parseToDateTime(),
-                                    paymentHistory: paymentHistoryForRefundCheck,
+                                    paymentHistory:
+                                        paymentHistoryForRefundCheck,
                                     onSubmit:
                                         ({
                                           required amount,
@@ -244,9 +245,9 @@ class BookingDetailsPaymentSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              if (securityAmount > 0 &&
-                  !booking.shouldShowSecurityRefundSection) ...[
-                if (booking.securityPayment?.accountName != null)
+              if (securityAmount > 0) ...[
+                if (!booking.shouldShowSecurityRefundSection &&
+                    booking.securityPayment?.accountName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
