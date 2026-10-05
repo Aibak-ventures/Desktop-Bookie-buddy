@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
+import 'package:bookie_buddy_shared/core/core/constants/payment_notes.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
@@ -311,6 +312,28 @@ class _AddPaymentDialogState extends State<_AddPaymentDialog> {
                   validator: AppInputValidators.amount,
                   keyboardType: TextInputType.number,
                 ),
+                if (isRefund) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 13,
+                        color: Colors.grey.shade700,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          PaymentNotes.refundExcludesSecurityInfo,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
 
                 if (showSecurityCheckbox && !isRefund) ...[
                   const SizedBox(height: 10),
@@ -499,9 +522,10 @@ class _AddPaymentDialogState extends State<_AddPaymentDialog> {
                             amount: amount,
                             account: selectedAccountNotifier.value!,
                             transactionType: transactionType,
-                            reason: reasonController.text.isEmpty
-                                ? null
-                                : reasonController.text,
+                            reason: PaymentNotes.forTransaction(
+                              note: reasonController.text,
+                              isRefund: isRefund,
+                            ),
                             paymentDate: isRefund
                                 ? refundDateString
                                 : selectedDate.format(),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/payment_notes.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
@@ -308,7 +309,7 @@ class BookingRepositoryImpl implements IBookingRepository {
             bookingId: bookingId,
             amount: refundAmount,
             accountId: accountId,
-            refundReason: 'Booking cancelled',
+            refundReason: PaymentNotes.bookingCancelled,
             paymentDate: paymentDate,
           ),
         );
