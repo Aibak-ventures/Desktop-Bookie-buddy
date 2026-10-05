@@ -37,25 +37,69 @@ void showSecurityAdjustmentDialog({
   List<PaymentHistoryDateAmount>? paymentHistory,
   required SecurityAdjustmentSubmitCallback onSubmit,
 }) {
-  // TODO: convert this showSecurityAdjustmentDialog to a stateful widget and dispose the controllers and notifiers properly
-
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController noteController = TextEditingController();
-  final ValueNotifier<bool> isLoading = ValueNotifier(false);
-  final ValueNotifier<SecurityTransactionAction> actionNotifier = ValueNotifier(
-    SecurityTransactionAction.refund,
-  );
-  final ValueNotifier<AccountEntity?> selectedAccountNotifier = ValueNotifier(
-    null,
-  );
-  final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
-    DateTime.now(),
-  );
-
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (dialogCtx) => ValueListenableBuilder<SecurityTransactionAction>(
+    builder: (dialogCtx) => _SecurityAdjustmentDialog(
+      balanceAmount: balanceAmount,
+      minPaymentDate: minPaymentDate,
+      paymentHistory: paymentHistory,
+      onSubmit: onSubmit,
+    ),
+  );
+}
+
+class _SecurityAdjustmentDialog extends StatefulWidget {
+  const _SecurityAdjustmentDialog({
+    required this.balanceAmount,
+    required this.minPaymentDate,
+    required this.paymentHistory,
+    required this.onSubmit,
+  });
+
+  final num balanceAmount;
+  final DateTime? minPaymentDate;
+  final List<PaymentHistoryDateAmount>? paymentHistory;
+  final SecurityAdjustmentSubmitCallback onSubmit;
+
+  @override
+  State<_SecurityAdjustmentDialog> createState() =>
+      _SecurityAdjustmentDialogState();
+}
+
+class _SecurityAdjustmentDialogState extends State<_SecurityAdjustmentDialog> {
+  late final TextEditingController textController = TextEditingController();
+  late final TextEditingController noteController = TextEditingController();
+  late final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  late final ValueNotifier<SecurityTransactionAction> actionNotifier =
+      ValueNotifier(SecurityTransactionAction.refund);
+  late final ValueNotifier<AccountEntity?> selectedAccountNotifier =
+      ValueNotifier(null);
+  late final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
+    DateTime.now(),
+  );
+
+  @override
+  void dispose() {
+    textController.dispose();
+    noteController.dispose();
+    isLoading.dispose();
+    actionNotifier.dispose();
+    selectedAccountNotifier.dispose();
+    paymentDateNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final num balanceAmount = widget.balanceAmount;
+    final DateTime? minPaymentDate = widget.minPaymentDate;
+    final List<PaymentHistoryDateAmount>? paymentHistory =
+        widget.paymentHistory;
+    final SecurityAdjustmentSubmitCallback onSubmit = widget.onSubmit;
+    final dialogCtx = context;
+
+    return ValueListenableBuilder<SecurityTransactionAction>(
       valueListenable: actionNotifier,
       builder: (context, action, _) {
         final isDeduction = action.isDeduction;
@@ -380,14 +424,14 @@ void showSecurityAdjustmentDialog({
                             }
                           } else {
                             CustomSnackBar(title: 'Error', message: error);
-                            isLoading.value = false;
+                            if (mounted) isLoading.value = false;
                           }
                         } catch (e) {
                           if (dialogCtx.mounted) {
                             CustomSnackBar(
                               message: 'Failed to submit. Please try again.',
                             );
-                            isLoading.value = false;
+                            if (mounted) isLoading.value = false;
                           }
                         }
                       },
@@ -426,6 +470,6 @@ void showSecurityAdjustmentDialog({
           ],
         );
       },
-    ),
-  );
+    );
+  }
 }

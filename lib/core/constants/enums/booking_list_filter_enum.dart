@@ -5,6 +5,7 @@ enum BookingListFilter implements BackendKeyedEnum {
   returns('returns', 'Returns'),
   pending('pending', 'Pending'),
   notReturned('not_returned', 'Not Returned'),
+  expired('expired', 'Expired'),
   completed('completed', 'Completed'),
   cancelled('cancelled', 'Cancelled');
 

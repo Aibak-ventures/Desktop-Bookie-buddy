@@ -15,6 +15,7 @@ abstract class StatusCountsModel with _$StatusCountsModel {
     @Default(0) int pending,
     @JsonKey(name: 'not_returned') @Default(0) int notReturned,
     @Default(0) int cancelled,
+    @Default(0) int expired,
   }) = _StatusCountsModel;
 
   factory StatusCountsModel.fromJson(Map<String, dynamic> json) =>
@@ -29,5 +30,6 @@ extension StatusCountsModelMapper on StatusCountsModel {
     pending: pending,
     notReturned: notReturned,
     cancelled: cancelled,
+    expired: expired,
   );
 }

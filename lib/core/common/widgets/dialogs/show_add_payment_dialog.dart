@@ -54,27 +54,88 @@ void showAddPaymentDialog({
   List<PaymentHistoryDateAmount>? paymentHistory,
   required PaymentDialogSubmitCallback onSubmit,
 }) {
-  // TODO: convert this showAddPaymentDialog to a stateful widget and dispose the controllers and notifiers properly
-
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController reasonController = TextEditingController();
-  final ValueNotifier<bool> isLoading = ValueNotifier(false);
-  final ValueNotifier<PaymentTransactionType> transactionTypeNotifier =
-      ValueNotifier(defaultType);
-  final ValueNotifier<AccountEntity?> selectedAccountNotifier = ValueNotifier(
-    null,
-  );
-  final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
-    DateTime.now(),
-  );
-  final ValueNotifier<bool> useSecurityRefundNotifier = ValueNotifier(false);
-  final bool showSecurityCheckbox =
-      securityBalanceAmount != null && securityBalanceAmount > 0;
-
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (dialogCtx) => ListenableBuilder(
+    builder: (dialogCtx) => _AddPaymentDialog(
+      balanceAmount: balanceAmount,
+      showTypeSelector: showTypeSelector,
+      defaultType: defaultType,
+      refundableAmount: refundableAmount,
+      minPaymentDate: minPaymentDate,
+      securityBalanceAmount: securityBalanceAmount,
+      paymentHistory: paymentHistory,
+      onSubmit: onSubmit,
+    ),
+  );
+}
+
+class _AddPaymentDialog extends StatefulWidget {
+  const _AddPaymentDialog({
+    required this.balanceAmount,
+    required this.showTypeSelector,
+    required this.defaultType,
+    required this.refundableAmount,
+    required this.minPaymentDate,
+    required this.securityBalanceAmount,
+    required this.paymentHistory,
+    required this.onSubmit,
+  });
+
+  final num balanceAmount;
+  final bool showTypeSelector;
+  final PaymentTransactionType defaultType;
+  final num? refundableAmount;
+  final DateTime? minPaymentDate;
+  final num? securityBalanceAmount;
+  final List<PaymentHistoryDateAmount>? paymentHistory;
+  final PaymentDialogSubmitCallback onSubmit;
+
+  @override
+  State<_AddPaymentDialog> createState() => _AddPaymentDialogState();
+}
+
+class _AddPaymentDialogState extends State<_AddPaymentDialog> {
+  late final TextEditingController textController = TextEditingController();
+  late final TextEditingController reasonController = TextEditingController();
+  late final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  late final ValueNotifier<PaymentTransactionType> transactionTypeNotifier =
+      ValueNotifier(widget.defaultType);
+  late final ValueNotifier<AccountEntity?> selectedAccountNotifier =
+      ValueNotifier(null);
+  late final ValueNotifier<DateTime> paymentDateNotifier = ValueNotifier(
+    DateTime.now(),
+  );
+  late final ValueNotifier<bool> useSecurityRefundNotifier = ValueNotifier(
+    false,
+  );
+
+  @override
+  void dispose() {
+    textController.dispose();
+    reasonController.dispose();
+    isLoading.dispose();
+    transactionTypeNotifier.dispose();
+    selectedAccountNotifier.dispose();
+    paymentDateNotifier.dispose();
+    useSecurityRefundNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final num balanceAmount = widget.balanceAmount;
+    final num? refundableAmount = widget.refundableAmount;
+    final DateTime? minPaymentDate = widget.minPaymentDate;
+    final num? securityBalanceAmount = widget.securityBalanceAmount;
+    final List<PaymentHistoryDateAmount>? paymentHistory =
+        widget.paymentHistory;
+    final PaymentDialogSubmitCallback onSubmit = widget.onSubmit;
+    final bool showSecurityCheckbox =
+        securityBalanceAmount != null && securityBalanceAmount > 0;
+    final dialogCtx = context;
+
+    return ListenableBuilder(
       listenable: Listenable.merge([
         transactionTypeNotifier,
         useSecurityRefundNotifier,
@@ -199,7 +260,7 @@ void showAddPaymentDialog({
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (showTypeSelector) ...[
+                if (widget.showTypeSelector) ...[
                   RadioGroup<PaymentTransactionType>(
                     groupValue: transactionType,
                     onChanged: (value) =>
@@ -459,7 +520,7 @@ void showAddPaymentDialog({
                             }
                           } else {
                             CustomSnackBar(title: 'Error', message: error);
-                            isLoading.value = false;
+                            if (mounted) isLoading.value = false;
                           }
                         } catch (e) {
                           if (dialogCtx.mounted) {
@@ -468,7 +529,7 @@ void showAddPaymentDialog({
                                   ? 'Failed to add refund. Please try again.'
                                   : 'Failed to update payment. Please try again.',
                             );
-                            isLoading.value = false;
+                            if (mounted) isLoading.value = false;
                           }
                         }
                       },
@@ -507,6 +568,6 @@ void showAddPaymentDialog({
           ],
         );
       },
-    ),
-  );
+    );
+  }
 }

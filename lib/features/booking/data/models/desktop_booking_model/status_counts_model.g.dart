@@ -14,6 +14,7 @@ _StatusCountsModel _$StatusCountsModelFromJson(Map<String, dynamic> json) =>
       pending: (json['pending'] as num?)?.toInt() ?? 0,
       notReturned: (json['not_returned'] as num?)?.toInt() ?? 0,
       cancelled: (json['cancelled'] as num?)?.toInt() ?? 0,
+      expired: (json['expired'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$StatusCountsModelToJson(_StatusCountsModel instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$StatusCountsModelToJson(_StatusCountsModel instance) =>
       'pending': instance.pending,
       'not_returned': instance.notReturned,
       'cancelled': instance.cancelled,
+      'expired': instance.expired,
     };
