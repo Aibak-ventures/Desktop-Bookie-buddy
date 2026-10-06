@@ -126,8 +126,7 @@ class AccountRepositoryImpl implements IAccountRepository {
     required int accountId,
     required String startDate,
     required String endDate,
-    required CancellationToken funCancelToken,
-    CancelToken? dioCancelToken,
+    required CancellationToken cancelToken,
     ProgressCallback? onReceiveProgress,
   }) {
     // Not built for web yet — no account-statement-download flow exists
