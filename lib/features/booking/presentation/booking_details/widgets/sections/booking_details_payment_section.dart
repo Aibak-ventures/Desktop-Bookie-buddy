@@ -510,6 +510,7 @@ class BookingDetailsPaymentSection extends StatelessWidget {
               accountId: account.id,
               paymentDate: paymentDate,
               useSecurityRefund: useSecurityRefund,
+              note: reason,
             ),
     );
 

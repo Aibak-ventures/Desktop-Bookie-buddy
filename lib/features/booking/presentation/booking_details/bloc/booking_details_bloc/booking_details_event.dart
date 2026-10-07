@@ -21,6 +21,7 @@ abstract class BookingDetailsEvent with _$BookingDetailsEvent {
     required int accountId,
     String? paymentDate,
     @Default(false) bool useSecurityRefund,
+    String? note,
   }) = _UpdatePayment;
 
   const factory BookingDetailsEvent.deletePayment({

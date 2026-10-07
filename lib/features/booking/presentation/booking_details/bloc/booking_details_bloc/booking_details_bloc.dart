@@ -160,6 +160,7 @@ class BookingDetailsBloc
           bookingId: event.bookingId,
           refundAmount: event.amount,
           accountId: event.accountId,
+          note: event.note,
           paymentDate: event.paymentDate,
         );
       }
