@@ -10,7 +10,7 @@ _AccountSnapshotModel _$AccountSnapshotModelFromJson(
   Map<String, dynamic> json,
 ) => _AccountSnapshotModel(
   name: json['name'] as String? ?? '',
-  amount: StringX.toDoubleFromString(json['amount']),
+  amount: StringNumberX.toDoubleFromString(json['amount']),
 );
 
 Map<String, dynamic> _$AccountSnapshotModelToJson(

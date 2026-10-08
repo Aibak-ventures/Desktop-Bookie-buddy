@@ -12,6 +12,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
     as all_booking;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 
 class DashboardScreen extends StatefulWidget {
   final void Function(BookingListFilter statusTab)? onNavigateToBookings;
@@ -23,21 +24,34 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  StreamSubscription<all_booking.AllBookingState>? _allBookingSubscription;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<all_booking.AllBookingBloc>().stream.listen((state) {
-        state.maybeMap(
-          loaded: (_) {
-            context.read<DashboardBloc>().add(
-              const DashboardEvent.loadDashboardData(useOldState: true),
+      if (!mounted) return;
+      _allBookingSubscription = context
+          .read<all_booking.AllBookingBloc>()
+          .stream
+          .listen((state) {
+            if (!mounted) return;
+            state.maybeMap(
+              loaded: (_) {
+                context.read<DashboardBloc>().add(
+                  const DashboardEvent.loadDashboardData(useOldState: true),
+                );
+              },
+              orElse: () {},
             );
-          },
-          orElse: () {},
-        );
-      });
+          });
     });
+  }
+
+  @override
+  void dispose() {
+    _allBookingSubscription?.cancel();
+    super.dispose();
   }
 
   @override

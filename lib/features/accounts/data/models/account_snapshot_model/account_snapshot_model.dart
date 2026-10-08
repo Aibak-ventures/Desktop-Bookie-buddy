@@ -9,7 +9,7 @@ part 'account_snapshot_model.g.dart';
 abstract class AccountSnapshotModel with _$AccountSnapshotModel {
   const factory AccountSnapshotModel({
     @JsonKey(name: 'name', defaultValue: '') required String name,
-    @JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString)
+    @JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString)
     required double amount,
   }) = _AccountSnapshotModel;
 

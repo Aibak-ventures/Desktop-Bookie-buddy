@@ -183,19 +183,19 @@ return updatePartialReturn(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult Function( int bookingId,  int paymentId)?  deletePayment,TResult Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult Function( int bookingId,  int refundId)?  deleteRefund,TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( int bookingId)?  fetchBookingDetails,TResult Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund,  String? note)?  updatePayment,TResult Function( int bookingId,  int paymentId)?  deletePayment,TResult Function( int bookingId,  int? refundAmount,  int? accountId,  String? paymentDate)?  cancelBooking,TResult Function( int bookingId)?  deleteBooking,TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason,  String? paymentDate)?  addRefund,TResult Function( int bookingId,  int refundId)?  deleteRefund,TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note,  String? paymentDate)?  updateSecurityRefund,TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund);case _DeletePayment() when deletePayment != null:
+return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund,_that.note);case _DeletePayment() when deletePayment != null:
 return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking() when cancelBooking != null:
-return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId);case _DeleteBooking() when deleteBooking != null:
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId,_that.paymentDate);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that.bookingId);case _AddRefund() when addRefund != null:
-return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund() when deleteRefund != null:
+return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason,_that.paymentDate);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund() when updateSecurityRefund != null:
-return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
+return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note,_that.paymentDate);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
 return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn() when updatePartialReturn != null:
 return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   return orElse();
@@ -215,19 +215,19 @@ return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notRet
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)  updatePayment,required TResult Function( int bookingId,  int paymentId)  deletePayment,required TResult Function( int bookingId,  int? refundAmount,  int? accountId)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason)  addRefund,required TResult Function( int bookingId,  int refundId)  deleteRefund,required TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)  updateSecurityRefund,required TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)  deleteSecurityRefundedPayment,required TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)  updatePartialReturn,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( int bookingId)  fetchBookingDetails,required TResult Function( int bookingId,  DeliveryStatus deliveryStatus)  updateDeliveryStatus,required TResult Function( int bookingId,  BookingStatus bookingStatus)  updateBookingStatus,required TResult Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund,  String? note)  updatePayment,required TResult Function( int bookingId,  int paymentId)  deletePayment,required TResult Function( int bookingId,  int? refundAmount,  int? accountId,  String? paymentDate)  cancelBooking,required TResult Function( int bookingId)  deleteBooking,required TResult Function( int bookingId,  int amount,  int accountId,  String? refundReason,  String? paymentDate)  addRefund,required TResult Function( int bookingId,  int refundId)  deleteRefund,required TResult Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note,  String? paymentDate)  updateSecurityRefund,required TResult Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)  deleteSecurityRefundedPayment,required TResult Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)  updatePartialReturn,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails():
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus():
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus():
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment():
-return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund);case _DeletePayment():
+return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund,_that.note);case _DeletePayment():
 return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking():
-return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId);case _DeleteBooking():
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId,_that.paymentDate);case _DeleteBooking():
 return deleteBooking(_that.bookingId);case _AddRefund():
-return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund():
+return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason,_that.paymentDate);case _DeleteRefund():
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund():
-return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment():
+return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note,_that.paymentDate);case _DeleteSecurityRefundedPayment():
 return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn():
 return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   throw StateError('Unexpected subclass');
@@ -246,19 +246,19 @@ return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notRet
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund)?  updatePayment,TResult? Function( int bookingId,  int paymentId)?  deletePayment,TResult? Function( int bookingId,  int? refundAmount,  int? accountId)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  int amount,  int accountId,  String? refundReason)?  addRefund,TResult? Function( int bookingId,  int refundId)?  deleteRefund,TResult? Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note)?  updateSecurityRefund,TResult? Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult? Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( int bookingId)?  fetchBookingDetails,TResult? Function( int bookingId,  DeliveryStatus deliveryStatus)?  updateDeliveryStatus,TResult? Function( int bookingId,  BookingStatus bookingStatus)?  updateBookingStatus,TResult? Function( int bookingId,  int amount,  int accountId,  String? paymentDate,  bool useSecurityRefund,  String? note)?  updatePayment,TResult? Function( int bookingId,  int paymentId)?  deletePayment,TResult? Function( int bookingId,  int? refundAmount,  int? accountId,  String? paymentDate)?  cancelBooking,TResult? Function( int bookingId)?  deleteBooking,TResult? Function( int bookingId,  int amount,  int accountId,  String? refundReason,  String? paymentDate)?  addRefund,TResult? Function( int bookingId,  int refundId)?  deleteRefund,TResult? Function( int bookingId,  int? refundAmount,  int? deductionAmount,  int accountId,  String? note,  String? paymentDate)?  updateSecurityRefund,TResult? Function( int bookingId,  int paymentId,  SecurityPaymentHistoryType securityPaymentType)?  deleteSecurityRefundedPayment,TResult? Function( int bookingId,  List<int> returnedProductIds,  List<int> notReturnedProductIds,  String? newReturnDate)?  updatePartialReturn,}) {final _that = this;
 switch (_that) {
 case _FetchBookingDetails() when fetchBookingDetails != null:
 return fetchBookingDetails(_that.bookingId);case _UpdateDeliveryStatus() when updateDeliveryStatus != null:
 return updateDeliveryStatus(_that.bookingId,_that.deliveryStatus);case _UpdateBookingStatus() when updateBookingStatus != null:
 return updateBookingStatus(_that.bookingId,_that.bookingStatus);case _UpdatePayment() when updatePayment != null:
-return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund);case _DeletePayment() when deletePayment != null:
+return updatePayment(_that.bookingId,_that.amount,_that.accountId,_that.paymentDate,_that.useSecurityRefund,_that.note);case _DeletePayment() when deletePayment != null:
 return deletePayment(_that.bookingId,_that.paymentId);case _CancelBooking() when cancelBooking != null:
-return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId);case _DeleteBooking() when deleteBooking != null:
+return cancelBooking(_that.bookingId,_that.refundAmount,_that.accountId,_that.paymentDate);case _DeleteBooking() when deleteBooking != null:
 return deleteBooking(_that.bookingId);case _AddRefund() when addRefund != null:
-return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason);case _DeleteRefund() when deleteRefund != null:
+return addRefund(_that.bookingId,_that.amount,_that.accountId,_that.refundReason,_that.paymentDate);case _DeleteRefund() when deleteRefund != null:
 return deleteRefund(_that.bookingId,_that.refundId);case _UpdateSecurityRefund() when updateSecurityRefund != null:
-return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
+return updateSecurityRefund(_that.bookingId,_that.refundAmount,_that.deductionAmount,_that.accountId,_that.note,_that.paymentDate);case _DeleteSecurityRefundedPayment() when deleteSecurityRefundedPayment != null:
 return deleteSecurityRefundedPayment(_that.bookingId,_that.paymentId,_that.securityPaymentType);case _UpdatePartialReturn() when updatePartialReturn != null:
 return updatePartialReturn(_that.bookingId,_that.returnedProductIds,_that.notReturnedProductIds,_that.newReturnDate);case _:
   return null;
@@ -474,7 +474,7 @@ as BookingStatus,
 
 
 class _UpdatePayment implements BookingDetailsEvent {
-  const _UpdatePayment({required this.bookingId, required this.amount, required this.accountId, this.paymentDate, this.useSecurityRefund = false});
+  const _UpdatePayment({required this.bookingId, required this.amount, required this.accountId, this.paymentDate, this.useSecurityRefund = false, this.note});
   
 
 @override final  int bookingId;
@@ -482,6 +482,7 @@ class _UpdatePayment implements BookingDetailsEvent {
  final  int accountId;
  final  String? paymentDate;
 @JsonKey() final  bool useSecurityRefund;
+ final  String? note;
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -493,16 +494,16 @@ _$UpdatePaymentCopyWith<_UpdatePayment> get copyWith => __$UpdatePaymentCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.useSecurityRefund, useSecurityRefund) || other.useSecurityRefund == useSecurityRefund));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.useSecurityRefund, useSecurityRefund) || other.useSecurityRefund == useSecurityRefund)&&(identical(other.note, note) || other.note == note));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,paymentDate,useSecurityRefund);
+int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,paymentDate,useSecurityRefund,note);
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, accountId: $accountId, paymentDate: $paymentDate, useSecurityRefund: $useSecurityRefund)';
+  return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, accountId: $accountId, paymentDate: $paymentDate, useSecurityRefund: $useSecurityRefund, note: $note)';
 }
 
 
@@ -513,7 +514,7 @@ abstract mixin class _$UpdatePaymentCopyWith<$Res> implements $BookingDetailsEve
   factory _$UpdatePaymentCopyWith(_UpdatePayment value, $Res Function(_UpdatePayment) _then) = __$UpdatePaymentCopyWithImpl;
 @override @useResult
 $Res call({
- int bookingId, int amount, int accountId, String? paymentDate, bool useSecurityRefund
+ int bookingId, int amount, int accountId, String? paymentDate, bool useSecurityRefund, String? note
 });
 
 
@@ -530,14 +531,15 @@ class __$UpdatePaymentCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? amount = null,Object? accountId = null,Object? paymentDate = freezed,Object? useSecurityRefund = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? amount = null,Object? accountId = null,Object? paymentDate = freezed,Object? useSecurityRefund = null,Object? note = freezed,}) {
   return _then(_UpdatePayment(
 bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
 as String?,useSecurityRefund: null == useSecurityRefund ? _self.useSecurityRefund : useSecurityRefund // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -616,12 +618,13 @@ as int,
 
 
 class _CancelBooking implements BookingDetailsEvent {
-  const _CancelBooking({required this.bookingId, this.refundAmount, this.accountId});
+  const _CancelBooking({required this.bookingId, this.refundAmount, this.accountId, this.paymentDate});
   
 
 @override final  int bookingId;
  final  int? refundAmount;
  final  int? accountId;
+ final  String? paymentDate;
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -633,16 +636,16 @@ _$CancelBookingCopyWith<_CancelBooking> get copyWith => __$CancelBookingCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,accountId);
+int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,accountId,paymentDate);
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, accountId: $accountId)';
+  return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, accountId: $accountId, paymentDate: $paymentDate)';
 }
 
 
@@ -653,7 +656,7 @@ abstract mixin class _$CancelBookingCopyWith<$Res> implements $BookingDetailsEve
   factory _$CancelBookingCopyWith(_CancelBooking value, $Res Function(_CancelBooking) _then) = __$CancelBookingCopyWithImpl;
 @override @useResult
 $Res call({
- int bookingId, int? refundAmount, int? accountId
+ int bookingId, int? refundAmount, int? accountId, String? paymentDate
 });
 
 
@@ -670,12 +673,13 @@ class __$CancelBookingCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? refundAmount = freezed,Object? accountId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? refundAmount = freezed,Object? accountId = freezed,Object? paymentDate = freezed,}) {
   return _then(_CancelBooking(
 bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as int,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAmount // ignore: cast_nullable_to_non_nullable
 as int?,accountId: freezed == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -752,13 +756,14 @@ as int,
 
 
 class _AddRefund implements BookingDetailsEvent {
-  const _AddRefund({required this.bookingId, required this.amount, required this.accountId, this.refundReason});
+  const _AddRefund({required this.bookingId, required this.amount, required this.accountId, this.refundReason, this.paymentDate});
   
 
 @override final  int bookingId;
  final  int amount;
  final  int accountId;
  final  String? refundReason;
+ final  String? paymentDate;
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -770,16 +775,16 @@ _$AddRefundCopyWith<_AddRefund> get copyWith => __$AddRefundCopyWithImpl<_AddRef
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.refundReason, refundReason) || other.refundReason == refundReason));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.refundReason, refundReason) || other.refundReason == refundReason)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,refundReason);
+int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,refundReason,paymentDate);
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.addRefund(bookingId: $bookingId, amount: $amount, accountId: $accountId, refundReason: $refundReason)';
+  return 'BookingDetailsEvent.addRefund(bookingId: $bookingId, amount: $amount, accountId: $accountId, refundReason: $refundReason, paymentDate: $paymentDate)';
 }
 
 
@@ -790,7 +795,7 @@ abstract mixin class _$AddRefundCopyWith<$Res> implements $BookingDetailsEventCo
   factory _$AddRefundCopyWith(_AddRefund value, $Res Function(_AddRefund) _then) = __$AddRefundCopyWithImpl;
 @override @useResult
 $Res call({
- int bookingId, int amount, int accountId, String? refundReason
+ int bookingId, int amount, int accountId, String? refundReason, String? paymentDate
 });
 
 
@@ -807,12 +812,13 @@ class __$AddRefundCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? amount = null,Object? accountId = null,Object? refundReason = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? amount = null,Object? accountId = null,Object? refundReason = freezed,Object? paymentDate = freezed,}) {
   return _then(_AddRefund(
 bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,refundReason: freezed == refundReason ? _self.refundReason : refundReason // ignore: cast_nullable_to_non_nullable
+as String?,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -892,7 +898,7 @@ as int,
 
 
 class _UpdateSecurityRefund implements BookingDetailsEvent {
-  const _UpdateSecurityRefund({required this.bookingId, this.refundAmount, this.deductionAmount, required this.accountId, this.note});
+  const _UpdateSecurityRefund({required this.bookingId, this.refundAmount, this.deductionAmount, required this.accountId, this.note, this.paymentDate});
   
 
 @override final  int bookingId;
@@ -900,6 +906,7 @@ class _UpdateSecurityRefund implements BookingDetailsEvent {
  final  int? deductionAmount;
  final  int accountId;
  final  String? note;
+ final  String? paymentDate;
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -911,16 +918,16 @@ _$UpdateSecurityRefundCopyWith<_UpdateSecurityRefund> get copyWith => __$UpdateS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateSecurityRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.deductionAmount, deductionAmount) || other.deductionAmount == deductionAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateSecurityRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.deductionAmount, deductionAmount) || other.deductionAmount == deductionAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,deductionAmount,accountId,note);
+int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,deductionAmount,accountId,note,paymentDate);
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updateSecurityRefund(bookingId: $bookingId, refundAmount: $refundAmount, deductionAmount: $deductionAmount, accountId: $accountId, note: $note)';
+  return 'BookingDetailsEvent.updateSecurityRefund(bookingId: $bookingId, refundAmount: $refundAmount, deductionAmount: $deductionAmount, accountId: $accountId, note: $note, paymentDate: $paymentDate)';
 }
 
 
@@ -931,7 +938,7 @@ abstract mixin class _$UpdateSecurityRefundCopyWith<$Res> implements $BookingDet
   factory _$UpdateSecurityRefundCopyWith(_UpdateSecurityRefund value, $Res Function(_UpdateSecurityRefund) _then) = __$UpdateSecurityRefundCopyWithImpl;
 @override @useResult
 $Res call({
- int bookingId, int? refundAmount, int? deductionAmount, int accountId, String? note
+ int bookingId, int? refundAmount, int? deductionAmount, int accountId, String? note, String? paymentDate
 });
 
 
@@ -948,13 +955,14 @@ class __$UpdateSecurityRefundCopyWithImpl<$Res>
 
 /// Create a copy of BookingDetailsEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? refundAmount = freezed,Object? deductionAmount = freezed,Object? accountId = null,Object? note = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bookingId = null,Object? refundAmount = freezed,Object? deductionAmount = freezed,Object? accountId = null,Object? note = freezed,Object? paymentDate = freezed,}) {
   return _then(_UpdateSecurityRefund(
 bookingId: null == bookingId ? _self.bookingId : bookingId // ignore: cast_nullable_to_non_nullable
 as int,refundAmount: freezed == refundAmount ? _self.refundAmount : refundAmount // ignore: cast_nullable_to_non_nullable
 as int?,deductionAmount: freezed == deductionAmount ? _self.deductionAmount : deductionAmount // ignore: cast_nullable_to_non_nullable
 as int?,accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
+as String?,paymentDate: freezed == paymentDate ? _self.paymentDate : paymentDate // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -408,6 +408,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
 
     // Add listener to client name controller to detect manual changes
     clientNameController.addListener(_onClientNameChanged);
+    staffNameController.addListener(() {
+      if (_staffNameError != null) setState(() => _staffNameError = null);
+    });
     clientPhone1Controller.addListener(_onClientPhoneChanged);
     clientPhone2Controller.addListener(_onClientPhoneChanged);
     _searchResultsScrollController.addListener(_handleSearchOverlayScroll);
@@ -538,6 +541,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       taxAmountController,
       descriptionController,
       runningKilometersController,
+      staffNameController,
     ].any((c) => c.text.trim().isNotEmpty);
     return _manualExtraRentalDays > 0 ||
         anyText ||
@@ -940,6 +944,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return OldBookingContentWidget(
         dateSection: _buildDateSelectionSection(),
         serviceSection: _buildServiceSelectionSection(),
+        staffNameController: staffNameController,
+        staffNameError: _staffNameError,
         clientNameController: clientNameController,
         phone1FieldController: _clientPhone1FieldController,
         phone2FieldController: _clientPhone2FieldController,
@@ -987,6 +993,16 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       return;
     }
 
+    // Typed-but-unpicked staff text is invalid; an empty field is fine.
+    final staffText = staffNameController.text.trim();
+    final selectedStaff = context.read<StaffSearchCubit>().state.selectedStaff;
+    if (staffText.isNotEmpty &&
+        (selectedStaff == null || selectedStaff.name != staffText)) {
+      setState(() => _staffNameError = 'Select a staff from the list');
+      return;
+    }
+    if (_staffNameError != null) setState(() => _staffNameError = null);
+
     _addBookingCubit.submitOldBooking(_buildOldBookingRequest());
   }
 
@@ -1007,6 +1023,9 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       advanceAccountId: selectedAdvanceAccount?.id,
       discountAmount: discountAmountController.text.trim().toIntOrNull(),
       taxAmount: taxAmountController.text.trim().toIntOrNull(),
+      staffId: staffNameController.text.trim().isEmpty
+          ? null
+          : context.read<StaffSearchCubit>().state.selectedStaff?.id,
     );
   }
 
@@ -1202,6 +1221,11 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   void _showBookingResult(int id, BookingType type) {
     if (!mounted) return;
     _bookingSavedSuccessfully = true;
+    if (type == BookingType.oldBooking) {
+      staffNameController.clear();
+      selectedStaffId = null;
+      context.read<StaffSearchCubit>().clearSelectedStaff();
+    }
     if (id != 0) {
       showBookingSuccessDialog(
         context: context,

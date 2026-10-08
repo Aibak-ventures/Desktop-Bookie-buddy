@@ -65,7 +65,7 @@ class _AllBookingsDeliveryStatusDropdownState
               ),
               const SizedBox(width: 8),
               Text(
-                s.name,
+                s.label,
                 style: TextStyle(
                   fontSize: 13,
                   color: s.color,
@@ -91,7 +91,7 @@ class _AllBookingsDeliveryStatusDropdownState
           children: [
             Flexible(
               child: Text(
-                effectiveStatus.name,
+                effectiveStatus.label,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 10,

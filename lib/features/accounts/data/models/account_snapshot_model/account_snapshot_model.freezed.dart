@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AccountSnapshotModel {
 
-@JsonKey(name: 'name', defaultValue: '') String get name;@JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString) double get amount;
+@JsonKey(name: 'name', defaultValue: '') String get name;@JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString) double get amount;
 /// Create a copy of AccountSnapshotModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $AccountSnapshotModelCopyWith<$Res>  {
   factory $AccountSnapshotModelCopyWith(AccountSnapshotModel value, $Res Function(AccountSnapshotModel) _then) = _$AccountSnapshotModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString) double amount
+@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString) double amount
 });
 
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString)  double amount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString)  double amount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountSnapshotModel() when $default != null:
 return $default(_that.name,_that.amount);case _:
@@ -175,7 +175,7 @@ return $default(_that.name,_that.amount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString)  double amount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString)  double amount)  $default,) {final _that = this;
 switch (_that) {
 case _AccountSnapshotModel():
 return $default(_that.name,_that.amount);case _:
@@ -195,7 +195,7 @@ return $default(_that.name,_that.amount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString)  double amount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'name', defaultValue: '')  String name, @JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString)  double amount)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountSnapshotModel() when $default != null:
 return $default(_that.name,_that.amount);case _:
@@ -210,11 +210,11 @@ return $default(_that.name,_that.amount);case _:
 @JsonSerializable()
 
 class _AccountSnapshotModel implements AccountSnapshotModel {
-  const _AccountSnapshotModel({@JsonKey(name: 'name', defaultValue: '') required this.name, @JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString) required this.amount});
+  const _AccountSnapshotModel({@JsonKey(name: 'name', defaultValue: '') required this.name, @JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString) required this.amount});
   factory _AccountSnapshotModel.fromJson(Map<String, dynamic> json) => _$AccountSnapshotModelFromJson(json);
 
 @override@JsonKey(name: 'name', defaultValue: '') final  String name;
-@override@JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString) final  double amount;
+@override@JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString) final  double amount;
 
 /// Create a copy of AccountSnapshotModel
 /// with the given fields replaced by the non-null parameter values.
@@ -249,7 +249,7 @@ abstract mixin class _$AccountSnapshotModelCopyWith<$Res> implements $AccountSna
   factory _$AccountSnapshotModelCopyWith(_AccountSnapshotModel value, $Res Function(_AccountSnapshotModel) _then) = __$AccountSnapshotModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'amount', fromJson: StringX.toDoubleFromString) double amount
+@JsonKey(name: 'name', defaultValue: '') String name,@JsonKey(name: 'amount', fromJson: StringNumberX.toDoubleFromString) double amount
 });
 
 

@@ -5,6 +5,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -16,6 +18,8 @@ import 'package:phone_form_field/phone_form_field.dart';
 class OldBookingContentWidget extends StatefulWidget {
   final Widget dateSection;
   final Widget serviceSection;
+  final TextEditingController staffNameController;
+  final String? staffNameError;
   final TextEditingController clientNameController;
   final PhoneController phone1FieldController;
   final PhoneController phone2FieldController;
@@ -41,6 +45,8 @@ class OldBookingContentWidget extends StatefulWidget {
     super.key,
     required this.dateSection,
     required this.serviceSection,
+    required this.staffNameController,
+    required this.staffNameError,
     required this.clientNameController,
     required this.phone1FieldController,
     required this.phone2FieldController,
@@ -68,6 +74,7 @@ class OldBookingContentWidget extends StatefulWidget {
 class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
   // Focus chain so Enter/Next moves through the client fields in order:
   // name → phone 1 → phone 2 → address → notes.
+  final _staffFocusNode = FocusNode();
   final _nameFocusNode = FocusNode();
   final _phone1FocusNode = FocusNode();
   final _phone2FocusNode = FocusNode();
@@ -75,7 +82,20 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
   final _notesFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final staffCubit = context.read<StaffSearchCubit>();
+      staffCubit.clearSelectedStaff();
+      widget.staffNameController.clear();
+      staffCubit.getAllStaffs();
+    });
+  }
+
+  @override
   void dispose() {
+    _staffFocusNode.dispose();
     _nameFocusNode.dispose();
     _phone1FocusNode.dispose();
     _phone2FocusNode.dispose();
@@ -118,6 +138,23 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Staff (Optional)',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  StaffSearchNameField(
+                    nameController: widget.staffNameController,
+                    errorText: widget.staffNameError,
+                    focusNode: _staffFocusNode,
+                    nextFocusNode: _nameFocusNode,
+                    isRequired: false,
+                  ),
+                  const SizedBox(height: fieldSpacing * 2),
                   const Text(
                     'Client',
                     style: TextStyle(

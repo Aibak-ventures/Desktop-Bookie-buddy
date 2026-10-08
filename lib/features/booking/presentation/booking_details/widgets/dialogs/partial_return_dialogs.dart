@@ -24,7 +24,7 @@ void showReturnConfirmationDialog(
 }) {
   bool isConfirmed = false;
   final productNameLabel = mainServiceType.productNameLabel;
-  final returnSpecificName = DeliveryStatus.returned.getServiceSpecificName(
+  final returnSpecificName = DeliveryStatus.returned.getServiceSpecificLabel(
     mainServiceType,
   );
 
@@ -112,7 +112,7 @@ void showPartialReturnProductSelector(
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setState) => AlertDialog(
         title: Text(
-          'Select ${DeliveryStatus.returned.getServiceSpecificName(mainServiceType)} ${productNameLabel}s',
+          'Select ${DeliveryStatus.returned.getServiceSpecificLabel(mainServiceType)} ${productNameLabel}s',
         ),
         content: SizedBox(
           width: 480,

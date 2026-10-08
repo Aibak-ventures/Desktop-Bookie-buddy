@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/security_payment_enums.dart';
@@ -6,13 +7,13 @@ import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_acti
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_security_adjustment_dialog.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/booking_security_refund_history_tile.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,10 +29,12 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final securityDeposit = (booking.securityPayment?.amount ?? 0);
-    if (securityDeposit <= 0 || !booking.showSecurityRefundSection) {
+    if (!booking.shouldShowSecurityRefundSection) {
       return const SizedBox.shrink();
     }
+
+    final securityDeposit =
+        booking.securityTransactionSummary.totalSecurityAmount;
 
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
@@ -228,6 +231,20 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
   static void _noop(dynamic _) {}
 
   void _onAddRefundPressed(BuildContext context, int pendingAmount) {
+    final securityPayment = booking.securityPayment;
+    final securityPaidDate = securityPayment == null
+        ? null
+        : (securityPayment.paidAt ?? securityPayment.createdAt)
+              ?.parseToDateTime();
+    final securityPaymentHistory = securityPayment == null
+        ? const <PaymentHistoryDateAmount>[]
+        : [
+            PaymentHistoryDateAmount(
+              date: securityPaidDate ?? DateTime.now(),
+              amount: securityPayment.amount,
+            ),
+          ];
+
     performSecureActionDialog(
       context,
       SecretPasswordLocations.bookingPayment,
@@ -235,13 +252,22 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
         showSecurityAdjustmentDialog(
           context: context,
           balanceAmount: pendingAmount,
-          onSubmit: ({required amount, required action, account, note}) =>
-              _submitAdjustment(
+          minPaymentDate: securityPaidDate,
+          paymentHistory: securityPaymentHistory,
+          onSubmit:
+              ({
+                required amount,
+                required action,
+                account,
+                note,
+                paymentDate,
+              }) => _submitAdjustment(
                 context: context,
                 amount: amount,
                 action: action,
                 account: account,
                 note: note,
+                paymentDate: paymentDate,
               ),
         );
       },
@@ -254,6 +280,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
     required SecurityTransactionAction action,
     AccountEntity? account,
     String? note,
+    String? paymentDate,
   }) async {
     final accountId = action.isDeduction
         ? (booking.securityPayment?.accountId ?? account?.id)
@@ -272,6 +299,7 @@ class BookingDetailsSecurityRefundSection extends StatelessWidget {
         deductionAmount: action.isDeduction ? amount : null,
         accountId: accountId,
         note: note,
+        paymentDate: action.isDeduction ? null : paymentDate,
       ),
     );
 

@@ -25,6 +25,16 @@
             "deviceId": "chrome"
         },
         {
+            "name": "Flutter: Run Dev (Without Auto Login)",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--dart-define=PROD=false",
+                "--dart-define=SKIP_ONBOARDING=true",
+            ],
+            "deviceId": "chrome"
+        },
+        {
             "name": "Flutter: Run Dev (MOCK_PRINTER)",
             "request": "launch",
             "type": "dart",

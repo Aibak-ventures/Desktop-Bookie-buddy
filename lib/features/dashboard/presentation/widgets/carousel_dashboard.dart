@@ -57,10 +57,8 @@ class CarouselDashboard extends StatelessWidget {
                 value: data.expiredCount.toString(),
                 gradient: const [Color(0xFFFF4757), Color(0xFFFF6B7A)],
                 icon: Icons.event_busy,
-                onTap: () => _openAllBookingsWithTab(
-                  context,
-                  BookingListFilter.notReturned,
-                ),
+                onTap: () =>
+                    _openAllBookingsWithTab(context, BookingListFilter.expired),
               ),
             ),
           ],

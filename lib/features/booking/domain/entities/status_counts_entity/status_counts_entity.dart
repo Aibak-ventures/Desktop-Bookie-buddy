@@ -12,12 +12,19 @@ abstract class StatusCountsEntity with _$StatusCountsEntity {
     @Default(0) int pending,
     @Default(0) int notReturned,
     @Default(0) int cancelled,
+    @Default(0) int expired,
   }) = _StatusCountsEntity;
 }
 
 extension StatusCountsEntityX on StatusCountsEntity {
   int get total =>
-      completed + upcoming + returns + pending + notReturned + cancelled;
+      completed +
+      upcoming +
+      returns +
+      pending +
+      notReturned +
+      cancelled +
+      expired;
 
   int fromFilter(BookingListFilter filter) {
     switch (filter) {
@@ -33,6 +40,8 @@ extension StatusCountsEntityX on StatusCountsEntity {
         return completed;
       case BookingListFilter.cancelled:
         return cancelled;
+      case BookingListFilter.expired:
+        return expired;
     }
   }
 }

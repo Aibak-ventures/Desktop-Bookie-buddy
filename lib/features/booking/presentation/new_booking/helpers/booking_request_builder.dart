@@ -268,6 +268,7 @@ class BookingRequestBuilder {
     required DateTime returnDate,
     required String? description,
     required int? advanceAccountId,
+    int? staffId,
     int? discountAmount,
     int? taxAmount,
   }) {
@@ -291,7 +292,7 @@ class BookingRequestBuilder {
 
     return BookingRequestEntity(
       clientId: selectedClientId,
-      staffId: null,
+      staffId: staffId,
       client: selectedClientId == null
           ? ClientRequestEntity(
               id: null,

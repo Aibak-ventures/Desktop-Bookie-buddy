@@ -16,11 +16,13 @@ class StaffSearchNameField extends StatefulWidget {
     this.errorText,
     this.focusNode,
     this.nextFocusNode,
+    this.isRequired = true,
   });
   final TextEditingController nameController;
   final String? errorText;
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
+  final bool isRequired;
 
   @override
   State<StaffSearchNameField> createState() => _StaffSearchNameFieldState();
@@ -177,7 +179,9 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
               ),
               decoration: InputDecoration(
                 errorText: widget.errorText,
-                hintText: 'Search or select staff',
+                hintText: widget.isRequired
+                    ? 'Search or select staff'
+                    : 'Search or select staff (Optional)',
                 hintStyle: const TextStyle(
                   fontSize: 13,
                   color: Color(0xFF8C8C8C),
@@ -225,7 +229,17 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
                   ),
                 ),
               ),
-              validator: AppInputValidators.name,
+              validator: widget.isRequired
+                  ? AppInputValidators.name
+                  : (value) =>
+                        (value ?? '').trim().isNotEmpty &&
+                            context
+                                    .read<StaffSearchCubit>()
+                                    .state
+                                    .selectedStaff ==
+                                null
+                        ? 'Select a staff from the list'
+                        : null,
             ),
             itemBuilder: (context, staff) {
               final index = _currentSuggestions.indexOf(staff);
