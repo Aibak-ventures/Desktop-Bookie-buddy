@@ -9,10 +9,10 @@ import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_draw
 import 'package:bookie_buddy_web/core/app/widgets/global_details_drawer.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +31,13 @@ class AppShellScreenState extends State<AppShellScreen> {
   late final List<ShellNavItem> navItems;
 
   final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
+  final GlobalKey<AllBookingsDesktopScreenState> _allBookingsKey = GlobalKey();
+
+  /// Set by [_navigateToBookingsTab] just before the Orders screen's very
+  /// first mount, so its `initState` can pick up the real target status
+  /// directly instead of loading the default 'upcoming' filter only to
+  /// immediately reload with the correct one.
+  BookingListFilter? _pendingOrdersFilter;
 
   @override
   void initState() {
@@ -38,6 +45,12 @@ class AppShellScreenState extends State<AppShellScreen> {
       onNewOrderClosed: () => navigateTo(ShellTabId.dashboard),
       onNavigateToBookings: _navigateToBookingsTab,
       newBookingKey: _newBookingKey,
+      allBookingsKey: _allBookingsKey,
+      pendingOrdersFilter: () {
+        final pending = _pendingOrdersFilter;
+        _pendingOrdersFilter = null;
+        return pending;
+      },
     );
     pageController = PageController(
       initialPage: navItems.indexWhere((item) => item.id == activeTab),
@@ -74,9 +87,25 @@ class AppShellScreenState extends State<AppShellScreen> {
 
   void _navigateToBookingsTab(BookingListFilter statusTab) {
     navigateTo(ShellTabId.orders);
-    context.read<AllBookingBloc>().add(
-      AllBookingEvent.loadBookings(status: statusTab),
-    );
+
+    final mountedState = _allBookingsKey.currentState;
+    if (mountedState != null) {
+      // Screen already exists from a previous visit (kept alive via
+      // AutomaticKeepAliveClientMixin) — apply directly. Dispatching this
+      // to AllBookingBloc instead used to race against this screen's own
+      // default "upcoming" load with no guaranteed ordering between the
+      // two; calling straight into the live state sidesteps that entirely.
+      mountedState.applyStatusFilter(statusTab, resetFilters: true);
+      return;
+    }
+
+    // First-ever visit: the Orders page doesn't exist yet — the plain
+    // [PageView] only builds it lazily once `navigateTo`'s `jumpToPage`
+    // actually scrolls it into view, which can take a frame or more. Rather
+    // than polling for that, hand the target status to the screen itself so
+    // its own `initState` loads it directly — avoids firing the default
+    // 'upcoming' load only to immediately redo it.
+    _pendingOrdersFilter = statusTab;
   }
 
   Future<bool> _checkNavigationFromNewBooking() async {

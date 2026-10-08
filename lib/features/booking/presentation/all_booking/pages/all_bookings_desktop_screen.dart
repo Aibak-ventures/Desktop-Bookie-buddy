@@ -26,14 +26,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AllBookingsDesktopScreen extends StatefulWidget {
   final BookingListFilter? initialStatusTab;
 
-  const AllBookingsDesktopScreen({super.key, this.initialStatusTab});
+  /// Consulted once, in `initState`, in place of [initialStatusTab]. Lets a
+  /// caller that only decides the target filter *after* this widget is
+  /// constructed (e.g. the app shell reacting to a dashboard tap, where
+  /// this screen is built once up front and the filter request comes later)
+  /// still avoid firing the default "upcoming" load on first mount just to
+  /// immediately replace it.
+  final BookingListFilter? Function()? pendingStatusTab;
+
+  const AllBookingsDesktopScreen({
+    super.key,
+    this.initialStatusTab,
+    this.pendingStatusTab,
+  });
 
   @override
   State<AllBookingsDesktopScreen> createState() =>
       AllBookingsDesktopScreenState();
 }
 
-class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
+class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
+    with AutomaticKeepAliveClientMixin<AllBookingsDesktopScreen> {
+  // Kept alive across tab switches in the shell's PageView — without this,
+  // Flutter disposes/remounts this screen when it scrolls out of view,
+  // re-running initState's default "upcoming" load every time the Orders
+  // tab is revisited, clobbering a filter just applied via
+  // [applyStatusFilter] (e.g. from a dashboard summary card tap).
+  @override
+  bool get wantKeepAlive => true;
+
   int _activeActionTab = 0; // 0: Booking, 1: Sales, 2: Custom work
   BookingListFilter _activeStatusTab = BookingListFilter.upcoming;
   final TextEditingController _searchController = TextEditingController();
@@ -52,8 +73,15 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   @override
   void initState() {
     super.initState();
-    // Use initialStatusTab if provided, otherwise default to 'upcoming'
-    if (widget.initialStatusTab != null) {
+    // A caller-provided pending filter (e.g. a dashboard summary-card tap
+    // that landed before this screen finished mounting) takes priority over
+    // the static initialStatusTab — both exist to pick the first load's
+    // status up front, instead of loading 'upcoming' only to immediately
+    // reload with the real target status.
+    final pending = widget.pendingStatusTab?.call();
+    if (pending != null) {
+      _activeStatusTab = pending;
+    } else if (widget.initialStatusTab != null) {
       _activeStatusTab = widget.initialStatusTab!;
     }
     _loadData();
@@ -123,7 +151,35 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
   }
 
   void _onStatusTabChanged(BookingListFilter filter) {
-    setState(() => _activeStatusTab = filter);
+    // A tab click within this screen is a refinement of whatever the user
+    // is already looking at, so search/date/purchase-mode filters persist.
+    applyStatusFilter(filter);
+  }
+
+  /// Switches to [filter] and reloads, same as tapping a status tab on this
+  /// screen. Exposed so external callers (e.g. the app shell, via a
+  /// `GlobalKey<AllBookingsDesktopScreenState>`) can request a specific
+  /// filter directly on the live screen state instead of dispatching a
+  /// `loadBookings` event that would race this screen's own default load.
+  ///
+  /// [resetFilters] clears search/date-range/purchase-mode before loading —
+  /// used for an external navigation (e.g. a dashboard summary card), which
+  /// is a fresh entry into this screen and shouldn't inherit whatever
+  /// search/date filters happened to be left over from a previous visit.
+  void applyStatusFilter(BookingListFilter filter, {bool resetFilters = false}) {
+    if (resetFilters) {
+      _searchController.clear();
+      _dateFilterNotifier.value = const DateFilter();
+      _purchaseModeFilterNotifier.value = null;
+      // _searchController.clear() above fires _onSearchChanged, which would
+      // otherwise schedule a redundant debounced _loadData() on top of the
+      // immediate one below.
+      _debounce?.cancel();
+    }
+    setState(() {
+      _activeActionTab = 0;
+      _activeStatusTab = filter;
+    });
     _loadData();
     // Close the booking details drawer when switching status tabs
     context.read<DetailsDrawerCubit>().closeDrawer();
@@ -131,6 +187,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // required by AutomaticKeepAliveClientMixin
     return BlocListener<UserCubit, UserEntity?>(
       listenWhen: (previous, current) {
         // Only trigger when shop actually changes

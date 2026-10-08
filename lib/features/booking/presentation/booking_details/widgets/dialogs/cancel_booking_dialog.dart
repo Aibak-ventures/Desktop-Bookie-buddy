@@ -1,17 +1,27 @@
+import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CancelBookingDialog extends StatefulWidget {
   final int maxRefundAmount;
+  final DateTime? minPaymentDate;
+  final List<PaymentHistoryDateAmount>? paymentHistory;
   final VoidCallback onCancel;
-  final Function(int refundAmount, int? accountId) onConfirm;
+  final Function(int refundAmount, int? accountId, String? paymentDate)
+  onConfirm;
 
   const CancelBookingDialog({
     required this.maxRefundAmount,
+    this.minPaymentDate,
+    this.paymentHistory,
     required this.onCancel,
     required this.onConfirm,
     super.key,
@@ -26,6 +36,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
   final _refundAmountController = TextEditingController();
   AccountEntity? _selectedAccount;
   bool _noRefund = false;
+  DateTime _paymentDate = DateTime.now();
 
   @override
   void initState() {
@@ -46,16 +57,61 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
 
   void _handleConfirm() {
     if (_formKey.currentState!.validate()) {
+      final refundAmount = _noRefund
+          ? 0
+          : (int.tryParse(_refundAmountController.text) ?? 0);
+
+      if (!_noRefund && refundAmount > 0 && widget.paymentHistory != null) {
+        final availableForDate =
+            RefundAvailabilityCalculator.totalPaidUpToDate(
+              history: widget.paymentHistory!,
+              date: _paymentDate,
+            );
+        if (refundAmount > availableForDate) {
+          final reason = RefundAvailabilityCalculator.classifyUnavailability(
+            history: widget.paymentHistory!,
+            date: _paymentDate,
+          );
+          final refundMessage = RefundUnavailableMessage(
+            reason: reason,
+            date: _paymentDate,
+            availableForDate: availableForDate,
+            requestedAmount: refundAmount,
+            formatDate: (date) => date.format(),
+            formatAmount: (amount) => amount.toCurrency(),
+          );
+          context.showSnackBar(
+            refundMessage.message,
+            isError: refundMessage.isError,
+            title: refundMessage.title,
+          );
+          return;
+        }
+      }
+
       if (!_noRefund && _selectedAccount == null) {
         context.showSnackBar('Please select refund account', isError: true);
         return;
       }
 
-      final refundAmount = _noRefund
-          ? 0
-          : (int.tryParse(_refundAmountController.text) ?? 0);
+      final sameDayPaymentBuffer =
+          !_noRefund && refundAmount > 0 && widget.paymentHistory != null
+          ? RefundAvailabilityCalculator.safeRefundTimestampForDate(
+              history: widget.paymentHistory!,
+              date: _paymentDate,
+            )
+          : null;
+      final refundDateString = _paymentDate.format().appendTimeToDate(
+        time: sameDayPaymentBuffer != null
+            ? TimeOfDay.fromDateTime(sameDayPaymentBuffer)
+            : null,
+      );
 
-      widget.onConfirm(refundAmount, _selectedAccount?.id);
+      widget.onConfirm(
+        refundAmount,
+        _selectedAccount?.id,
+        _noRefund ? null : refundDateString,
+      );
     }
   }
 
@@ -186,6 +242,77 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                   ),
 
                   const SizedBox(height: 20),
+
+                  if (!_noRefund) ...[
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month,
+                          size: 14,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(width: 4),
+                        InkWell(
+                          focusColor: AppColors.purple,
+                          onTap: () async {
+                            final now = DateTime.now();
+                            // The earliest sensible refund date is when the
+                            // first payment was actually made, not
+                            // minPaymentDate — same rule as showAddPaymentDialog.
+                            final earliestPaymentDate =
+                                (widget.paymentHistory?.isNotEmpty ?? false)
+                                ? widget.paymentHistory!
+                                      .map((e) => e.date)
+                                      .reduce((a, b) => a.isBefore(b) ? a : b)
+                                : widget.minPaymentDate;
+                            final firstDate =
+                                earliestPaymentDate != null &&
+                                    !earliestPaymentDate.isAfter(now)
+                                ? earliestPaymentDate
+                                : DateTime(now.year - 5);
+                            final initialDate =
+                                _paymentDate.isBefore(firstDate)
+                                ? firstDate
+                                : (_paymentDate.isAfter(now)
+                                      ? now
+                                      : _paymentDate);
+                            final picked = await showKeyboardDatePicker(
+                              context: context,
+                              initialDate: initialDate,
+                              firstDate: firstDate,
+                              lastDate: now,
+                            );
+                            if (picked != null) {
+                              setState(() => _paymentDate = picked);
+                            }
+                          },
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Refund on ',
+                              children: [
+                                TextSpan(
+                                  text: _paymentDate.format(),
+                                  style: TextStyle(
+                                    color: AppColors.purple,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Colors.grey.shade400,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(Icons.edit, size: 14, color: AppColors.purple),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
 
                   // Refund account selector
                   if (!_noRefund) ...[

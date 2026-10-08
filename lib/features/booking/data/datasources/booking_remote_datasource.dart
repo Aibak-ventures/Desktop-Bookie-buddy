@@ -657,6 +657,7 @@ class BookingRemoteDatasource {
     required int amount,
     required int accountId,
     String? refundReason,
+    String? paymentDate,
   }) async {
     try {
       final response = await _dio.post(
@@ -665,6 +666,7 @@ class BookingRemoteDatasource {
           'amount': amount,
           'account_id': accountId,
           'refund_reason': ?refundReason,
+          'date': ?paymentDate,
         },
       );
 
@@ -705,6 +707,7 @@ class BookingRemoteDatasource {
     int? deductionAmount,
     required int accountId,
     String? note,
+    String? paymentDate,
   }) async {
     try {
       final response = await _dio.post(
@@ -715,6 +718,7 @@ class BookingRemoteDatasource {
           'account_id': accountId,
           if (refundAmount != null && note != null) 'refund_reason': note,
           if (deductionAmount != null && note != null) 'deduction_reason': note,
+          if (refundAmount != null) 'date': ?paymentDate,
         },
       );
 

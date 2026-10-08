@@ -52,6 +52,7 @@ abstract interface class IBookingRepository {
     required int bookingId,
     int? refundAmount,
     int? accountId,
+    String? paymentDate,
   });
 
   Future<void> updateBookingStatus(int bookingId, BookingStatus bookingStatus);
@@ -102,6 +103,7 @@ abstract interface class IBookingRepository {
     required int amount,
     required int accountId,
     String? refundReason,
+    String? paymentDate,
   });
 
   //
@@ -113,6 +115,7 @@ abstract interface class IBookingRepository {
     int? deductionAmount,
     required int accountId,
     String? note,
+    String? paymentDate,
   });
 
   Future<void> deleteSecurityRefundedPayment({required int refundId});

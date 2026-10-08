@@ -72,7 +72,7 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      status.name,
+                      status.label,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 10,

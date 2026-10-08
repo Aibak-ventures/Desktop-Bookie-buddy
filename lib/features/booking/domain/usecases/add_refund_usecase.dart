@@ -9,10 +9,12 @@ class AddRefundUseCase {
     required int amount,
     required int accountId,
     String? refundReason,
+    String? paymentDate,
   }) => _repository.addRefund(
     bookingId: bookingId,
     amount: amount,
     accountId: accountId,
     refundReason: refundReason,
+    paymentDate: paymentDate,
   );
 }

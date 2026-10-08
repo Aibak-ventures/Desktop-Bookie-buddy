@@ -32,23 +32,4 @@ extension BookingDetailsEntityWebX on BookingDetailsEntity {
   int get netBalance {
     return totalAmount - actualPaidAmount - (discountAmount ?? 0);
   }
-
-  /// Whether the security deposit should be surfaced inside the normal
-  /// payment details section instead of the dedicated security refund
-  /// section — true only while the booking is still active, i.e. items
-  /// haven't been returned or cancelled yet. Once items are returned (or
-  /// the booking is cancelled), the deposit needs to be refunded/deducted,
-  /// so it always moves to the dedicated security refund section — even if
-  /// nothing has been refunded/deducted yet.
-  bool get showSecurityInPayments {
-    if (securityTransactionSummary.totalSecurityAmount <= 0) return false;
-
-    // Only show the security deposit if the booking is still active
-    return deliveryStatus != DeliveryStatus.cancelled &&
-        deliveryStatus != DeliveryStatus.returned;
-  }
-
-  /// Whether the dedicated security refund/deduction section should render.
-  bool get showSecurityRefundSection =>
-      !showSecurityInPayments && isSecurityPaid;
 }

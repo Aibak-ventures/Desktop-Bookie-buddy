@@ -31,6 +31,8 @@ List<ShellNavItem> buildShellNavItems({
   required VoidCallback onNewOrderClosed,
   required void Function(BookingListFilter statusTab) onNavigateToBookings,
   required GlobalKey<NewBookingScreenState> newBookingKey,
+  required GlobalKey<AllBookingsDesktopScreenState> allBookingsKey,
+  required BookingListFilter? Function() pendingOrdersFilter,
 }) => [
   ShellNavItem(
     id: ShellTabId.newOrder,
@@ -56,7 +58,10 @@ List<ShellNavItem> buildShellNavItems({
     id: ShellTabId.orders,
     icon: Icons.list_alt,
     label: 'Orders',
-    screenBuilder: (_) => const AllBookingsDesktopScreen(),
+    screenBuilder: (_) => AllBookingsDesktopScreen(
+      key: allBookingsKey,
+      pendingStatusTab: pendingOrdersFilter,
+    ),
   ),
   ShellNavItem(
     id: ShellTabId.stock,

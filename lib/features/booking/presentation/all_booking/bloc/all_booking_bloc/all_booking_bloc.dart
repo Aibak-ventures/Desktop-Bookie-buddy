@@ -12,6 +12,7 @@ import 'package:bookie_buddy_web/features/booking/domain/usecases/delete_booking
 import 'package:bookie_buddy_web/features/booking/domain/usecases/update_booking_status_usecase.dart';
 import 'package:bookie_buddy_web/features/booking/domain/usecases/load_desktop_bookings_pagination_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -35,7 +36,7 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
        _updateBookingStatus = updateBookingStatus,
        _loadDesktopBookings = loadDesktopBookings,
        super(const AllBookingState.loading()) {
-    on<_LoadBookings>(_onFetchBookings);
+    on<_LoadBookings>(_onFetchBookings, transformer: restartable());
     on<_LoadNextPageBookings>(
       _onFetchNextPage,
       transformer: throttleDroppable(),
