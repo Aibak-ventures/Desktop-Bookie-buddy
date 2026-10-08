@@ -46,9 +46,8 @@ class BookingDetailsPaymentSection extends StatelessWidget {
     final isPaymentCompleted = balance <= 0;
     final appliedTaxes = booking.appliedTaxes.appliedOnly;
     final totalTaxAmount = appliedTaxes.totalTaxAmount;
-    final refundableAmount = paid - securityAmount <= 0
-        ? 0
-        : paid - securityAmount;
+    // paidAmount excludes security, so an unpaid deposit can't shrink it
+    final refundableAmount = booking.paidAmount;
     final isRefundable = refundableAmount > 0;
     final isCancelled = booking.deliveryStatus == DeliveryStatus.cancelled;
     final isCompleted = booking.bookingStatus == BookingStatus.completed;
