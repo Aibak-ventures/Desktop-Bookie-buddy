@@ -329,7 +329,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             model: product.model,
             mainServiceType: product.mainServiceType,
             variantAttribute: attribute,
-            measurements: [],
+            peopleMeasurements: [],
             quantity: 1,
             stock: variant.stock,
             remainingStock: variant.remainingStock,

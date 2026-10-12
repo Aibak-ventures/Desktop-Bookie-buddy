@@ -431,7 +431,7 @@ class BookingSummarySection extends StatelessWidget {
                   (p) =>
                       ((p.variant.mainServiceType?.isDress ?? false) ||
                           (p.variant.mainServiceType?.isCostume ?? false)) &&
-                      p.measurements.isNotEmpty,
+                      p.peopleMeasurements.isNotEmpty,
                 );
 
                 return Column(

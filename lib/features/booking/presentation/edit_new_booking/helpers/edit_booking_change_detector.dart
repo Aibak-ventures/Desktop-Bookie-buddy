@@ -159,7 +159,18 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     final originalIds = (_originalBooking?.bookedItems ?? [])
         .map((b) => '${b.variantId}:${b.quantity}')
         .toSet();
-    return currentIds != originalIds;
+    if (currentIds != originalIds) return true;
+
+    // Same lines: only the people's measurements may have been edited.
+    final originalMeasurements = {
+      for (final b in _originalBooking?.bookedItems ?? [])
+        b.variantId ?? b.id: b.peopleMeasurements.fingerprint,
+    };
+    return selectedProductsNotifier.value.any((p) {
+      final original =
+          originalMeasurements[p.variant.variantId ?? p.variant.id];
+      return original != null && original != p.peopleMeasurements.fingerprint;
+    });
   }
 
   bool _haveDocumentsChanged() {
