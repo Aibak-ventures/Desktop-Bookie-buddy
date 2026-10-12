@@ -133,8 +133,8 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     outer:
     for (final item in booking.bookedItems) {
       if (item.mainServiceType?.isVehicle ?? false) {
-        for (final m in item.measurements) {
-          if (m.key == 'running_kilometers') {
+        for (final m in item.peopleMeasurements.allValues) {
+          if (VehicleMeasurementKeys.isRunningKilometers(m.key)) {
             runningKmValue = m.value;
             break outer;
           }
@@ -160,7 +160,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       rentalDays: entityRentalDays,
     );
     log(
-      '✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.measurements.isNotEmpty).length}',
+      '✅ Loaded ${products.length} products. Products with measurements: ${products.where((p) => p.peopleMeasurements.isNotEmpty).length}',
     );
     selectedProductsNotifier.value = products;
 
@@ -255,7 +255,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
           model: item.model,
           mainServiceType: item.mainServiceType,
           variantAttribute: item.variantAttribute ?? '',
-          measurements: [],
+          peopleMeasurements: [],
           quantity: item.quantity,
           stock: null,
           remainingStock: null,
@@ -329,8 +329,8 @@ extension EditBookingInitializer on EditNewBookingScreenState {
     outer:
     for (final item in booking.bookedItems) {
       if (item.mainServiceType?.isVehicle ?? false) {
-        for (final m in item.measurements) {
-          if (m.key == 'running_kilometers') {
+        for (final m in item.peopleMeasurements.allValues) {
+          if (VehicleMeasurementKeys.isRunningKilometers(m.key)) {
             originalKm = m.value;
             break outer;
           }

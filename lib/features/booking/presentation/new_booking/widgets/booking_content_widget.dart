@@ -17,13 +17,13 @@ extension BookingFlowBuilders on NewBookingScreenState {
             )
             .toList(),
         onBackFromCustomization: () => rebuild(() => showCustomization = false),
-        onSaveCustomization: (product, measurements) {
+        onSaveCustomization: (product, peopleMeasurements) {
           rebuild(() {
             selectedProductsNotifier.value =
                 SelectedProductsManager.updateMeasurements(
                   currentProducts: selectedProductsNotifier.value,
                   updatedProduct: product,
-                  measurements: measurements,
+                  peopleMeasurements: peopleMeasurements,
                 );
           });
         },

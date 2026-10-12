@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -51,8 +52,8 @@ Future<MeasurementValueEntity?> showVehicleCustomizationDialog(
             final km = controller.text.trim().toIntOrNull();
             if (km != null) {
               final result = MeasurementValueEntity(
-                name: 'Running Kilometers',
-                key: 'km',
+                name: VehicleMeasurementKeys.runningKilometersName,
+                key: VehicleMeasurementKeys.runningKilometers,
                 value: '$km Km',
               );
               dialogCtx.pop(result); // Close the dialog

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductSelectedModel {
 
- ProductInfoModel get variant; int get amount; List<MeasurementValueModel> get measurements; int get quantity; String? get runningKilometers;
+ ProductInfoModel get variant; int get amount;@JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) List<PersonMeasurementsModel> get peopleMeasurements; int get quantity; String? get runningKilometers;
 /// Create a copy of ProductSelectedModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProductSelectedModelCopyWith<ProductSelectedModel> get copyWith => _$ProductSel
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.measurements, measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.peopleMeasurements, peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(measurements),quantity,runningKilometers);
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(peopleMeasurements),quantity,runningKilometers);
 
 @override
 String toString() {
-  return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+  return 'ProductSelectedModel(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProductSelectedModelCopyWith<$Res>  {
   factory $ProductSelectedModelCopyWith(ProductSelectedModel value, $Res Function(ProductSelectedModel) _then) = _$ProductSelectedModelCopyWithImpl;
 @useResult
 $Res call({
- ProductInfoModel variant, int amount, List<MeasurementValueModel> measurements, int quantity, String? runningKilometers
+ ProductInfoModel variant, int amount,@JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) List<PersonMeasurementsModel> peopleMeasurements, int quantity, String? runningKilometers
 });
 
 
@@ -65,12 +65,12 @@ class _$ProductSelectedModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductSelectedModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? peopleMeasurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
   return _then(_self.copyWith(
 variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as ProductInfoModel,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self.measurements : measurements // ignore: cast_nullable_to_non_nullable
-as List<MeasurementValueModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,peopleMeasurements: null == peopleMeasurements ? _self.peopleMeasurements : peopleMeasurements // ignore: cast_nullable_to_non_nullable
+as List<PersonMeasurementsModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -166,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson)  List<PersonMeasurementsModel> peopleMeasurements,  int quantity,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductSelectedModel() when $default != null:
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   return orElse();
 
 }
@@ -187,10 +187,10 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProductInfoModel variant,  int amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson)  List<PersonMeasurementsModel> peopleMeasurements,  int quantity,  String? runningKilometers)  $default,) {final _that = this;
 switch (_that) {
 case _ProductSelectedModel():
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +207,10 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProductInfoModel variant,  int amount,  List<MeasurementValueModel> measurements,  int quantity,  String? runningKilometers)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProductInfoModel variant,  int amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson)  List<PersonMeasurementsModel> peopleMeasurements,  int quantity,  String? runningKilometers)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductSelectedModel() when $default != null:
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   return null;
 
 }
@@ -222,16 +222,16 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 @JsonSerializable()
 
 class _ProductSelectedModel implements ProductSelectedModel {
-  const _ProductSelectedModel({required this.variant, required this.amount, final  List<MeasurementValueModel> measurements = const [], required this.quantity, this.runningKilometers}): _measurements = measurements;
+  const _ProductSelectedModel({required this.variant, required this.amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) final  List<PersonMeasurementsModel> peopleMeasurements = const [], required this.quantity, this.runningKilometers}): _peopleMeasurements = peopleMeasurements;
   factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) => _$ProductSelectedModelFromJson(json);
 
 @override final  ProductInfoModel variant;
 @override final  int amount;
- final  List<MeasurementValueModel> _measurements;
-@override@JsonKey() List<MeasurementValueModel> get measurements {
-  if (_measurements is EqualUnmodifiableListView) return _measurements;
+ final  List<PersonMeasurementsModel> _peopleMeasurements;
+@override@JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) List<PersonMeasurementsModel> get peopleMeasurements {
+  if (_peopleMeasurements is EqualUnmodifiableListView) return _peopleMeasurements;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_measurements);
+  return EqualUnmodifiableListView(_peopleMeasurements);
 }
 
 @override final  int quantity;
@@ -250,16 +250,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._measurements, _measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._peopleMeasurements, _peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_measurements),quantity,runningKilometers);
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_peopleMeasurements),quantity,runningKilometers);
 
 @override
 String toString() {
-  return 'ProductSelectedModel(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+  return 'ProductSelectedModel(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
 }
 
 
@@ -270,7 +270,7 @@ abstract mixin class _$ProductSelectedModelCopyWith<$Res> implements $ProductSel
   factory _$ProductSelectedModelCopyWith(_ProductSelectedModel value, $Res Function(_ProductSelectedModel) _then) = __$ProductSelectedModelCopyWithImpl;
 @override @useResult
 $Res call({
- ProductInfoModel variant, int amount, List<MeasurementValueModel> measurements, int quantity, String? runningKilometers
+ ProductInfoModel variant, int amount,@JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) List<PersonMeasurementsModel> peopleMeasurements, int quantity, String? runningKilometers
 });
 
 
@@ -287,12 +287,12 @@ class __$ProductSelectedModelCopyWithImpl<$Res>
 
 /// Create a copy of ProductSelectedModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? variant = null,Object? amount = null,Object? peopleMeasurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
   return _then(_ProductSelectedModel(
 variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as ProductInfoModel,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self._measurements : measurements // ignore: cast_nullable_to_non_nullable
-as List<MeasurementValueModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,peopleMeasurements: null == peopleMeasurements ? _self._peopleMeasurements : peopleMeasurements // ignore: cast_nullable_to_non_nullable
+as List<PersonMeasurementsModel>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

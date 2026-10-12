@@ -16,6 +16,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/summary_amount_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/fit_selected_measurements.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
@@ -1135,7 +1136,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       calculateRentalDays: _getEffectiveRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Advance',
-      onShowCustomization: () => setState(() => showCustomization = true),
+      onShowCustomization: () {
+        SelectedMeasurementsFit.apply(selectedProductsNotifier);
+        setState(() => showCustomization = true);
+      },
       onConfirm: _handleConfirmBooking,
       confirmLabel: selectedBookingType == BookingType.sales
           ? 'Confirm Sales'
@@ -1169,6 +1173,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
 
   void _handleConfirmBooking() {
+    SelectedMeasurementsFit.apply(selectedProductsNotifier);
+
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;

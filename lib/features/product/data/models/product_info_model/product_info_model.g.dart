@@ -29,9 +29,9 @@ _ProductInfoModel _$ProductInfoModelFromJson(Map<String, dynamic> json) =>
           : ProductAttributesModel.fromJson(
               json['attributes'] as Map<String, dynamic>,
             ),
-      measurements: json['measurements'] == null
+      peopleMeasurements: json['measurements'] == null
           ? const []
-          : _parseMeasurements(json['measurements']),
+          : PersonMeasurementsModel.fromCustomJson(json['measurements']),
       stock: (json['stock'] as num?)?.toInt(),
       remainingStock: (json['remaining_stock'] as num?)?.toInt(),
       deliveryStatus: json['return_status'] == null
@@ -57,7 +57,9 @@ Map<String, dynamic> _$ProductInfoModelToJson(_ProductInfoModel instance) =>
       'amount': instance.amount,
       'fabric_length': instance.fabricLength,
       'attributes': instance.attributes,
-      'measurements': instance.measurements,
+      'measurements': PersonMeasurementsModel.toCustomJson(
+        instance.peopleMeasurements,
+      ),
       'stock': instance.stock,
       'remaining_stock': instance.remainingStock,
       'return_status': ProductDeliveryStatus.toJson(instance.deliveryStatus),

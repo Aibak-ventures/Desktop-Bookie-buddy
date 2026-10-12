@@ -1,4 +1,7 @@
-﻿import 'dart:developer';
+﻿import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/data/models/person_measurements_model/person_measurements_model.dart';
+import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
@@ -43,6 +46,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/fit_selected_measurements.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
@@ -483,13 +487,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         showCustomization: showCustomization,
         customizationProducts: selectedProductsNotifier.value,
         onBackFromCustomization: () => rebuild(() => showCustomization = false),
-        onSaveCustomization: (product, measurements) {
+        onSaveCustomization: (product, peopleMeasurements) {
           rebuild(() {
             selectedProductsNotifier.value =
                 SelectedProductsManager.updateMeasurements(
                   currentProducts: selectedProductsNotifier.value,
                   updatedProduct: product,
-                  measurements: measurements,
+                  peopleMeasurements: peopleMeasurements,
                 );
           });
         },
@@ -669,7 +673,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Paid',
       totalRemainingLabel: 'Balance Amount',
-      onShowCustomization: () => setState(() => showCustomization = true),
+      onShowCustomization: () {
+        SelectedMeasurementsFit.apply(selectedProductsNotifier);
+        setState(() => showCustomization = true);
+      },
       bookingStatus: bookingStatus,
       bookingCompletedDate: bookingCompletedDate,
       onConfirm: _handleSaveBooking,

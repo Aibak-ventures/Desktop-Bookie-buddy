@@ -38,7 +38,7 @@ product/
 │   │   ├── product_variant_entity/                 # id, attribute, stock, remainingStock, QR
 │   │   ├── product_info_entity/                    # Variant in booking context
 │   │   ├── product_monthly_data_entity/            # Monthly stats
-│   │   ├── product_selected_entity/                # variant + amount + quantity + measurements
+│   │   ├── product_selected_entity/                # variant + amount + quantity + peopleMeasurements
 │   │   └── product_request_entity/                 # Write data including XFile image
 │   ├── repositories/
 │   │   └── i_product_repository.dart
@@ -141,8 +141,8 @@ Products with `MainServiceType.vehicle` use bracket-notation fields in FormData:
 |---|---|
 | `ProductEntity` | Full product; has computed getters for vehicle attributes (`effectiveRegistrationNumber`, etc.) |
 | `ProductVariantEntity` | id, attribute, stock, remainingStock, price, salePrice, externalQrCode |
-| `ProductInfoEntity` | Variant in booking context — includes variantId, mainServiceType, measurements |
-| `ProductSelectedEntity` | variant (ProductInfoEntity) + amount + quantity + measurements + runningKilometers |
+| `ProductInfoEntity` | Variant in booking context — includes variantId, mainServiceType, peopleMeasurements (one named measurement set per person) |
+| `ProductSelectedEntity` | variant (ProductInfoEntity) + amount + quantity + peopleMeasurements + runningKilometers |
 | `ProductRequestEntity` | Includes XFile image — lives in domain; OK because XFile is a cross-platform abstraction |
 
 ---

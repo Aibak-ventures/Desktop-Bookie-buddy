@@ -30,6 +30,8 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
 
   void _handleSaveBooking() {
+    SelectedMeasurementsFit.apply(selectedProductsNotifier);
+
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -252,17 +254,11 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
           'quantity': p.quantity,
           'amount': lineAmount,
         };
-        final measurementMap = <String, dynamic>{};
-        for (final m in p.measurements) {
-          if (m.key != 'running_kilometers') {
-            measurementMap[m.key] = m.value;
-          }
-        }
-        if (runningKm.isNotEmpty) {
-          measurementMap['running_kilometers'] = runningKm;
-        }
-        if (measurementMap.isNotEmpty) {
-          variantData['measurements'] = measurementMap;
+        final measurements = p.peopleMeasurements.toMeasurementsJson(
+          runningKilometers: runningKm,
+        );
+        if (measurements != null) {
+          variantData[MeasurementConstants.jsonKey] = measurements;
         }
         return variantData;
       }).toList();

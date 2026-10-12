@@ -69,7 +69,7 @@ class BookingProductHelpers {
           product: product,
           variant: variant,
         ),
-        measurements: const [],
+        peopleMeasurements: const [],
         quantity: 1,
         amount: resolveVariantPrice(
           product: product,
@@ -82,7 +82,7 @@ class BookingProductHelpers {
         category: product.category,
         model: product.model,
       ),
-      measurements: const [],
+      peopleMeasurements: const [],
       quantity: 1,
       amount: resolveVariantPrice(
         product: product,
@@ -103,7 +103,7 @@ class BookingProductHelpers {
     final effectiveQty = item.quantity > 0 ? item.quantity : 1;
     return ProductSelectedEntity(
       variant: item.copyWith(),
-      measurements: item.measurements,
+      peopleMeasurements: item.peopleMeasurements,
       quantity: item.quantity,
       amount: item.amount ~/ (effectiveQty * effectiveRentalDays),
     );

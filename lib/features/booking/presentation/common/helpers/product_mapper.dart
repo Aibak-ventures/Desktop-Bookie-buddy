@@ -1,4 +1,4 @@
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
@@ -57,7 +57,7 @@ class ProductMapper {
   static List<ProductSelectedEntity> updateMeasurements({
     required List<ProductSelectedEntity> currentProducts,
     required ProductSelectedEntity updatedProduct,
-    required List<MeasurementValueEntity> measurements,
+    required List<PersonMeasurementsEntity> peopleMeasurements,
   }) {
     final index = currentProducts.indexWhere(
       (product) =>
@@ -69,7 +69,7 @@ class ProductMapper {
 
     final updatedProducts = List<ProductSelectedEntity>.from(currentProducts);
     updatedProducts[index] = updatedProduct.copyWith(
-      measurements: measurements,
+      peopleMeasurements: peopleMeasurements,
     );
     return updatedProducts;
   }
