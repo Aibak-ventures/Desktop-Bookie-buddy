@@ -28,6 +28,7 @@ _ProductModel _$ProductModelFromJson(Map<String, dynamic> json) =>
       fitnessExpiry: json['fitness_expiry'] as String?,
       barcode: json['barcode'] as String?,
       generalServiceName: json['general_service_name'] as String?,
+      createdAt: json['created_at'] as String?,
       attributes: json['attributes'] as Map<String, dynamic>? ?? const {},
       variants: (json['variants'] as List<dynamic>)
           .map((e) => ProductVariantModel.fromJson(e as Map<String, dynamic>))
@@ -54,6 +55,7 @@ Map<String, dynamic> _$ProductModelToJson(_ProductModel instance) =>
       'fitness_expiry': instance.fitnessExpiry,
       'barcode': instance.barcode,
       'general_service_name': instance.generalServiceName,
+      'created_at': instance.createdAt,
       'attributes': instance.attributes,
       'variants': instance.variants,
     };

@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,9 @@ class ProductDetailsLeftPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final createdAt = product.createdAt;
+    final hasCreatedDate =
+        createdAt != null && createdAt.tryParseToDateTime() != null;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -383,6 +387,20 @@ class ProductDetailsLeftPanel extends StatelessWidget {
                 product.description!,
                 style: const TextStyle(
                   color: Color(0xFF787878),
+                  fontSize: 10,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+
+            // Created date (low emphasis, footer)
+            if (hasCreatedDate) ...[
+              const SizedBox(height: 16),
+              Text(
+                'Created on ${createdAt.formatToUiDate()}',
+                style: const TextStyle(
+                  color: Color(0xFFB0B0B0),
                   fontSize: 10,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w400,

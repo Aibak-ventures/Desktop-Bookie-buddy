@@ -41,6 +41,7 @@ abstract class ProductModel with _$ProductModel {
     @JsonKey(name: 'fitness_expiry') String? fitnessExpiry,
     @JsonKey(name: 'barcode') String? barcode,
     @JsonKey(name: 'general_service_name') String? generalServiceName,
+    @JsonKey(name: 'created_at') String? createdAt,
     // Attributes map for nested vehicle data from list API
     @Default({}) Map<String, dynamic> attributes,
     @JsonKey(name: 'variants') required List<ProductVariantModel> variants,
@@ -88,6 +89,7 @@ extension ProductModelMapper on ProductModel {
     fitnessExpiry: fitnessExpiry,
     barcode: barcode,
     generalServiceName: generalServiceName,
+    createdAt: createdAt,
     attributes: attributes,
     variants: variants.map((v) => v.toEntity()).toList(),
   );
