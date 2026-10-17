@@ -87,7 +87,7 @@ BookingFormMixin.onSearchChanged()
 SaveProductCubit.saveProduct(ProductRequestEntity)
   → SaveProductUseCase → IProductRepository.saveProduct()
     → ProductRequestModel.fromEntity(entity)
-    → toFormJson() → FormData (multipart image + all fields)
+    → toFormJson() → FormData (all fields; image goes to S3 via presigned URL, sent as image_url)
     → POST /api/v3/service/products/            # new
     → PATCH /api/v3/service/products/{id}/      # edit
 ```

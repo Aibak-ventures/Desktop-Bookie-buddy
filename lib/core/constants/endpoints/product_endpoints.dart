@@ -9,6 +9,7 @@ class ProductEndpoints {
 
   final productSearch = '${_root}product-search/';
   final productsRoot = '${_root}products/';
+  final generateImageUploadUrl = '${_root}products/generate-upload-url/';
   final availableProducts = '${_bookingsRootV3}desktop-available-products/';
 
   String productById(int id) => '${productsRoot}$id/';

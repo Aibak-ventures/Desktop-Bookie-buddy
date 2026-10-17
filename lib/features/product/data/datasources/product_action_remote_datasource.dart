@@ -4,6 +4,7 @@ import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/product_endpoints.dart';
 import 'package:bookie_buddy_web/utils/error/exceptions/product_exceptions.dart';
 import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
+import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_request_model/product_request_model.dart';
 
@@ -39,9 +40,15 @@ class ProductActionRemoteDatasource {
         throw 'Please add at least one variant';
       }
 
+      // Upload the image straight to S3 via a presigned URL
+      final imageUrl = await _uploadImageToS3(product);
+
       // Prepare FormData
       print('📦 Preparing FormData...');
       final formData = FormData.fromMap(await product.toFormJson(isAdding));
+      if (imageUrl != null && imageUrl.trim().isNotEmpty) {
+        formData.fields.add(MapEntry('image_url', imageUrl));
+      }
 
       /// Log form data
       print('\n📋 Form Fields:');
@@ -120,6 +127,68 @@ class ProductActionRemoteDatasource {
       log('Unexpected error: $e', stackTrace: stack);
       rethrow;
     }
+  }
+
+  /// Uploads [product]'s image to S3 using a presigned URL and returns the
+  /// resulting file URL, or null when there is no image to upload.
+  Future<String?> _uploadImageToS3(ProductRequestModel product) async {
+    final image = product.image;
+    if (image == null) return null;
+
+    if (product.serviceId == null) {
+      throw UnknownAppException('Service id is required');
+    }
+
+    final imageBytes = await image.readAsBytes();
+    final fileName = image.name.trim().isEmpty
+        ? 'product_${DateTime.now().millisecondsSinceEpoch}.jpg'
+        : image.name;
+    final contentType = image.mimeType ?? _imageContentType(fileName);
+
+    final res = await _dio.post(
+      _endpoint.generateImageUploadUrl,
+      data: {
+        'entity_type': 'product',
+        'content_type': contentType,
+        'file_name': fileName,
+        'shop_service_id': product.serviceId,
+      },
+    );
+    final response = CustomResponseModel.fromJson(res.data);
+    if (!response.status.isSuccess) {
+      log('generate image upload url failed: ${response.devMessage}');
+      throw UnknownAppException(response.message ?? 'Failed to upload image');
+    }
+
+    final data = response.data as Map<String, dynamic>;
+    final uploadUrl = data['upload_url'] as String;
+    final fileUrl = data['file_url'] as String;
+    // Send every header the backend signed (x-amz-tagging, Cache-Control, ...)
+    final requiredHeaders = Map<String, dynamic>.from(
+      (data['required_headers'] ?? <String, dynamic>{}) as Map,
+    );
+
+    final uploadRes = await DioClient.newDio().put(
+      uploadUrl,
+      data: imageBytes,
+      options: Options(contentType: contentType, headers: requiredHeaders),
+    );
+    if (uploadRes.statusCode != 200) {
+      log('error uploading image to s3 bucket: ${uploadRes.data}');
+      throw UnknownAppException('Failed to upload image');
+    }
+    return fileUrl;
+  }
+
+  String _imageContentType(String fileName) {
+    final ext = fileName.split('.').last.toLowerCase();
+    return switch (ext) {
+      'jpg' || 'jpeg' => 'image/jpeg',
+      'png' => 'image/png',
+      'webp' => 'image/webp',
+      'gif' => 'image/gif',
+      _ => 'image/$ext',
+    };
   }
 
   Future<CustomResponseModel> addProductVariants({
