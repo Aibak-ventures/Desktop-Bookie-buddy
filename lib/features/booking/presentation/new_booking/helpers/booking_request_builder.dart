@@ -57,6 +57,7 @@ class BookingRequestBuilder {
     required DateTime? bookedDate,
     required int? securityAmount,
     required bool isSecurityPaid,
+    required DateTime? securityPaidDate,
     required int? securityAccountId,
     required AccountEntity? advanceAccount,
     required AdvanceSplitPayment advanceSplit,
@@ -157,6 +158,15 @@ class BookingRequestBuilder {
       securityPaymentAccountId:
           securityAmount != null && securityAmount > 0 && isSecurityPaid
           ? securityAccountId
+          : null,
+      // Only sent for a past booked date; for a booking made today there is
+      // nothing to choose (the paid date can't be before the booked date).
+      securityPaidDate:
+          bookedDate != null &&
+              securityAmount != null &&
+              securityAmount > 0 &&
+              isSecurityPaid
+          ? securityPaidDate?.format()
           : null,
       discountAmount: actualDiscount,
       purchaseMode: purchaseMode.value,

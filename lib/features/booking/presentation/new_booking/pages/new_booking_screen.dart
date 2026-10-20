@@ -301,6 +301,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
         : null;
   }
 
+  /// Date the security deposit was paid. Only asked for when the booked date
+  /// is in the past; it can't be before the booked date or after today.
+  DateTime _securityPaidDate = DateTime.now();
+
+  /// [_securityPaidDate] kept inside [booked date, today] — the booked date
+  /// may have been changed after the paid date was picked.
+  DateTime? get _effectiveSecurityPaidDate {
+    final booked = _bookedDateForSubmit?.dateOnly;
+    if (booked == null) return null;
+    final today = DateTime.now().dateOnly;
+    final paid = _securityPaidDate.dateOnly;
+    if (paid.isBefore(booked)) return booked;
+    return paid.isAfter(today) ? today : paid;
+  }
+
   /// True when a manually-picked booked date has ended up later than the
   /// (subsequently lowered) pickup date — an invalid combination.
   bool get _isBookedDateAfterPickup =>
@@ -611,6 +626,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     advanceAmountController.clear();
     securityAmountController.clear();
     isSecurityPaid = true;
+    _securityPaidDate = DateTime.now();
     isAdvanceSplit = false;
     splitBankAmountController.clear();
     selectedAdvanceCashAccount = null;
@@ -1279,6 +1295,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       bookedDate: _bookedDateForSubmit,
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       isSecurityPaid: isSecurityPaid,
+      securityPaidDate: _effectiveSecurityPaidDate,
       securityAccountId: selectedSecurityAccount?.id,
       advanceAccount: selectedAdvanceAccount,
       advanceSplit: _advanceSplit,

@@ -103,6 +103,7 @@ extension EditBookingInitializer on EditNewBookingScreenState {
       securityAmountController.text = securityAmount.toString();
     }
     isSecurityPaid = booking.isSecurityPaid;
+    securityPaidDate = booking.savedSecurityPaidDate();
     // selectedSecurityAccount is auto-selected via initialAccountId in AccountSelectionField
     if (booking.discountAmount != null && booking.discountAmount! > 0) {
       discountAmountController.text = booking.discountAmount.toString();

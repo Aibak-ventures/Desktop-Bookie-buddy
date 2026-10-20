@@ -677,6 +677,17 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                 label: 'Security Payment Option',
                               ),
                               const SizedBox(height: 15),
+                              // Nothing to choose when the booking is made
+                              // today — the paid date can't be before the
+                              // booked date.
+                              if (_effectiveSecurityPaidDate != null) ...[
+                                BookingDatePickerField(
+                                  label: 'Security paid date',
+                                  value: _effectiveSecurityPaidDate!.format(),
+                                  onTap: _selectSecurityPaidDate,
+                                ),
+                                const SizedBox(height: 15),
+                              ],
                             ],
                             Row(
                               children: [

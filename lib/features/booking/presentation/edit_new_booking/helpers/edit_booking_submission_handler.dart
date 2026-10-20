@@ -90,6 +90,22 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       }
     }
 
+    // Pickup can't be moved before the booked date (an untouched legacy
+    // pickup date is left alone). Bookings only — a sale's date is its own.
+    final bookedDate = selectedBookingType == BookingType.booking
+        ? _originalBooking?.bookedDateOnly
+        : null;
+    if (bookedDate != null &&
+        pickupDate.dateOnly.isBefore(bookedDate) &&
+        pickupDate.dateOnly != _originalPickupDate?.dateOnly) {
+      context.showSnackBar(
+        'Pickup date can\'t be before the booked date',
+        title: 'Invalid Dates',
+        isError: true,
+      );
+      return;
+    }
+
     final isSaleType = selectedBookingType == BookingType.sales;
     final secAmt = securityAmountController.text.trim().toIntOrNull() ?? 0;
     if (!isSaleType &&
@@ -219,6 +235,9 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       updates['security_amount'] = secAmtChanged;
       updates['security_amount_is_paid'] =
           secAmtChanged != null && secAmtChanged > 0 ? isSecurityPaid : null;
+      if (_shouldSendSecurityPaidDate) {
+        updates['security_paid_at'] = securityPaidDate.format();
+      }
       final discountInput =
           discountAmountController.text.trim().toIntOrNull() ?? 0;
       final productBase = _getDiscountProductBase();

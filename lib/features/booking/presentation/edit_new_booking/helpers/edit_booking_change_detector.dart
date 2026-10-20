@@ -36,6 +36,7 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
     if (_hasDeliveryStatusChanged()) return true;
     if (_hasPurchaseModeChanged()) return true;
     if (isSecurityPaid != (_originalIsSecurityPaid ?? true)) return true;
+    if (_isSecurityPaidDateEdited) return true;
     return false;
   }
 
@@ -112,8 +113,41 @@ extension EditBookingChangeDetector on EditNewBookingScreenState {
 
     return currentSecurity != (_originalSecurityAmount ?? 0) ||
         currentDiscount != (_originalDiscountAmount ?? 0) ||
-        isSecurityPaid != (_originalIsSecurityPaid ?? true);
+        isSecurityPaid != (_originalIsSecurityPaid ?? true) ||
+        _isSecurityPaidDateEdited;
   }
+
+  /// Whether the security paid date field applies: booked date and the
+  /// latest allowed date (today or first refund/deduction) differ.
+  bool get _canEditSecurityPaidDate =>
+      _originalBooking?.canEditSecurityPaidDate() ?? false;
+
+  bool get _isSecurityDepositEntered =>
+      (int.tryParse(securityAmountController.text.trim()) ?? 0) > 0;
+
+  /// Whether the security paid date differs from the saved (clamped) one.
+  /// Only meaningful while the field is shown and the deposit is paid.
+  bool get _isSecurityPaidDateEdited {
+    final booking = _originalBooking;
+    if (booking == null ||
+        !_canEditSecurityPaidDate ||
+        !isSecurityPaid ||
+        !_isSecurityDepositEntered) {
+      return false;
+    }
+    return !securityPaidDate.dateOnly.isAtSameMomentAs(
+      booking.savedSecurityPaidDate(),
+    );
+  }
+
+  /// Whether the request should carry the security paid date: the deposit is
+  /// entered and paid, and it either just became paid or its date was edited.
+  bool get _shouldSendSecurityPaidDate =>
+      _canEditSecurityPaidDate &&
+      isSecurityPaid &&
+      _isSecurityDepositEntered &&
+      (isSecurityPaid != (_originalIsSecurityPaid ?? true) ||
+          _isSecurityPaidDateEdited);
 
   bool _hasRunningKmChanged() {
     final currentKm = runningKilometersController.text.trim();

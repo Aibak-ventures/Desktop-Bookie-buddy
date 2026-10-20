@@ -24,6 +24,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     int? advanceAmount,
     int? securityAmount,
     bool? isSecurityPaid,
+    String? securityPaidDate,
     int? discountAmount,
     String? purchaseMode,
     String? description,
@@ -56,6 +57,7 @@ extension BookingRequestEntityX on BookingRequestEntity {
       coolingPeriodDate != null ||
       advanceAmount != null ||
       securityAmount != null ||
+      securityPaidDate != null ||
       discountAmount != null ||
       purchaseMode != null ||
       description != null ||

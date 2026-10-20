@@ -109,6 +109,20 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     }
   }
 
+  Future<void> _selectSecurityPaidDate() async {
+    final booked = _bookedDateForSubmit?.dateOnly;
+    if (booked == null) return;
+    final today = DateTime.now().dateOnly;
+    final picked = await showKeyboardDatePicker(
+      context: context,
+      initialDate: _effectiveSecurityPaidDate ?? today,
+      firstDate: booked,
+      lastDate: today,
+      selectedColor: const Color(0xFF6132E4),
+    );
+    if (picked != null) rebuild(() => _securityPaidDate = picked);
+  }
+
   Future<void> _selectBookedDate() async {
     final today = DateTime.now().dateOnly;
     // Booked date can never be after the pickup date or after today.

@@ -132,6 +132,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final discountAmountController = TextEditingController();
   AccountEntity? selectedSecurityAccount;
   bool isSecurityPaid = true;
+  DateTime securityPaidDate = DateTime.now();
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isDiscountPercentage = false;
@@ -503,12 +504,20 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Future<void> _selectDate({required bool isPickup}) async {
-    final initialDate = isPickup ? pickupDate : returnDate;
+    var initialDate = isPickup ? pickupDate : returnDate;
     final now = DateTime.now();
+    // Pickup can't be moved before the booked date (bookings only).
+    final bookedDate = selectedBookingType == BookingType.booking
+        ? _originalBooking?.bookedDateOnly
+        : null;
+    final pickupFirstDate = bookedDate ?? DateTime(now.year - 5);
+    if (isPickup && initialDate.isBefore(pickupFirstDate)) {
+      initialDate = pickupFirstDate;
+    }
     final picked = await showKeyboardDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: isPickup ? DateTime(now.year - 5) : pickupDate,
+      firstDate: isPickup ? pickupFirstDate : pickupDate,
       lastDate: now.add(const Duration(days: 365 * 2)),
       selectedColor: const Color(0xFF6132E4),
     );
@@ -526,6 +535,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       });
       _loadAvailableProducts();
     }
+  }
+
+  Future<void> _selectSecurityPaidDate() async {
+    final booking = _originalBooking;
+    if (booking == null) return;
+    final picked = await showKeyboardDatePicker(
+      context: context,
+      initialDate: securityPaidDate,
+      firstDate: booking.bookedDateOnly,
+      lastDate: booking.securityPaidLastDate(),
+      selectedColor: const Color(0xFF6132E4),
+    );
+    if (picked != null) rebuild(() => securityPaidDate = picked);
   }
 
   Future<void> _selectTime({required bool isPickup}) async {
@@ -1297,6 +1319,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       label: 'Security Payment Option',
                     ),
                     const SizedBox(height: 15),
+                    // Hidden when booked date and the latest allowed date
+                    // are the same day — nothing to choose.
+                    if (_canEditSecurityPaidDate) ...[
+                      BookingDatePickerField(
+                        label: 'Security paid date',
+                        value: securityPaidDate.format(),
+                        onTap: _selectSecurityPaidDate,
+                      ),
+                      const SizedBox(height: 15),
+                    ],
                   ],
                   Row(
                     children: [
