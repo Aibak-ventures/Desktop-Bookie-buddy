@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Validation result model that holds validation status and error messages
 class BookingValidationResult {
@@ -214,7 +215,7 @@ class BookingValidationHelper {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             style: TextButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
+              backgroundColor: AppColors.purple,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(

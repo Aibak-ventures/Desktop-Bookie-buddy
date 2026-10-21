@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// A single data row in the bookings table of [AllBookingsDesktopScreen].
 ///
@@ -29,9 +30,9 @@ class AllBookingsBookingTableRow extends StatelessWidget {
           onTap: () {
             context.read<DetailsDrawerCubit>().openBooking(booking.id);
           },
-          hoverColor: const Color(0xFF8A63FE).withValues(alpha: 0.08),
-          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.12),
-          highlightColor: const Color(0xFF8A63FE).withValues(alpha: 0.1),
+          hoverColor: AppColors.purpleAccent.withValues(alpha: 0.08),
+          splashColor: AppColors.purpleAccent.withValues(alpha: 0.12),
+          highlightColor: AppColors.purpleAccent.withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(

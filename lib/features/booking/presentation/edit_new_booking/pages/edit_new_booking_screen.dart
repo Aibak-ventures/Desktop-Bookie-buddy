@@ -1,4 +1,4 @@
-﻿import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
+import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/data/models/person_measurements_model/person_measurements_model.dart';
 import 'dart:developer';
@@ -519,7 +519,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       initialDate: initialDate,
       firstDate: isPickup ? pickupFirstDate : pickupDate,
       lastDate: now.add(const Duration(days: 365 * 2)),
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
     if (picked != null) {
       setState(() {
@@ -545,7 +545,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       initialDate: securityPaidDate,
       firstDate: booking.bookedDateOnly,
       lastDate: booking.securityPaidLastDate(),
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
     if (picked != null) rebuild(() => securityPaidDate = picked);
   }
@@ -557,7 +557,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
     if (picked != null) {
       setState(() {
@@ -1023,7 +1023,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   child: ElevatedButton(
                     onPressed: _validateAndContinue,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -1438,7 +1438,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     size: 18,
                     color: isDiscountPercentage
                         ? Colors.grey
-                        : const Color(0xFF6132E4),
+                        : AppColors.purple,
                   ),
                   const SizedBox(width: 8),
                   const Text('Amount (₹)'),
@@ -1455,7 +1455,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         : Icons.circle_outlined,
                     size: 18,
                     color: isDiscountPercentage
-                        ? const Color(0xFF6132E4)
+                        ? AppColors.purple
                         : Colors.grey,
                   ),
                   const SizedBox(width: 8),
@@ -1486,14 +1486,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                  color: AppColors.purple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Icon(
-                  Icons.add,
-                  size: 16,
-                  color: Color(0xFF6132E4),
-                ),
+                child: const Icon(Icons.add, size: 16, color: AppColors.purple),
               ),
             ),
           ],

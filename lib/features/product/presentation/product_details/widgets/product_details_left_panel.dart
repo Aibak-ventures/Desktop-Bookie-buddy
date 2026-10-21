@@ -110,7 +110,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
                       '₹${NumberFormat('#,###').format(product.price ?? 0)}',
                       textAlign: TextAlign.right,
                       style: const TextStyle(
-                        color: Color(0xFF6132E4),
+                        color: AppColors.purple,
                         fontSize: 20,
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w700,
@@ -432,7 +432,7 @@ class ProductDetailsLeftPanel extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF1F2937),
+          color: AppColors.darkSlate,
         ),
       ),
       const SizedBox(height: 12),

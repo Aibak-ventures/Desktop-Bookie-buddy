@@ -14,6 +14,7 @@ import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class OldBookingContentWidget extends StatefulWidget {
   final Widget dateSection;
@@ -355,7 +356,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF6132E4),
+                        color: AppColors.purple,
                       ),
                     );
                   },
@@ -366,7 +367,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                   child: ElevatedButton(
                     onPressed: widget.onConfirm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(

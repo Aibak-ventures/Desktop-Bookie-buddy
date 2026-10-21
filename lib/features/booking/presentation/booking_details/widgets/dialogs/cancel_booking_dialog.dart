@@ -62,11 +62,10 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
           : (int.tryParse(_refundAmountController.text) ?? 0);
 
       if (!_noRefund && refundAmount > 0 && widget.paymentHistory != null) {
-        final availableForDate =
-            RefundAvailabilityCalculator.totalPaidUpToDate(
-              history: widget.paymentHistory!,
-              date: _paymentDate,
-            );
+        final availableForDate = RefundAvailabilityCalculator.totalPaidUpToDate(
+          history: widget.paymentHistory!,
+          date: _paymentDate,
+        );
         if (refundAmount > availableForDate) {
           final reason = RefundAvailabilityCalculator.classifyUnavailability(
             history: widget.paymentHistory!,
@@ -270,8 +269,7 @@ class _CancelBookingDialogState extends State<CancelBookingDialog> {
                                     !earliestPaymentDate.isAfter(now)
                                 ? earliestPaymentDate
                                 : DateTime(now.year - 5);
-                            final initialDate =
-                                _paymentDate.isBefore(firstDate)
+                            final initialDate = _paymentDate.isBefore(firstDate)
                                 ? firstDate
                                 : (_paymentDate.isAfter(now)
                                       ? now

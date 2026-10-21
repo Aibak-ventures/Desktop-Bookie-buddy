@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/bo
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shared logic for adding and removing additional charges.
 /// Used by both the New Booking and Edit Booking flows.
@@ -67,9 +68,7 @@ class AdditionalChargesManager {
                 AdditionalChargesEntity(name: name, amount: amount!),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple),
             child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],

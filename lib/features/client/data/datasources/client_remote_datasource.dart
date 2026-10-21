@@ -73,9 +73,7 @@ class ClientRemoteDatasource {
 
   Future<CustomResponseModel> getClientById(int clientId) async {
     try {
-      final response = await _dio.get(
-        _endpoint.clientById(clientId),
-      );
+      final response = await _dio.get(_endpoint.clientById(clientId));
       log('get client by id response: ${response.realUri}');
       return CustomResponseModel.fromJson(response.data);
     } catch (e, stack) {

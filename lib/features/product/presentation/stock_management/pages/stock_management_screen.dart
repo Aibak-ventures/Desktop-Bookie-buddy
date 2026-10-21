@@ -393,7 +393,7 @@ class _StockManagementScreenState extends State<StockManagementScreen> {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
         ),
       ],

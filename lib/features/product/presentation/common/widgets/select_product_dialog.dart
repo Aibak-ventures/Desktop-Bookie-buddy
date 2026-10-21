@@ -204,7 +204,7 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                             ),
                             border: Border.all(
                               color: isSelected
-                                  ? const Color(0xFF6132E4)
+                                  ? AppColors.purple
                                   : Colors.grey.shade300,
                               width: isSelected ? 2 : 1,
                             ),
@@ -335,7 +335,7 @@ class _SizeAmountDialogState extends State<SizeAmountDialog> {
                     const SizedBox(width: 12),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF6C5CE7),
+                        backgroundColor: AppColors.purpleSoft,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

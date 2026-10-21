@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class BookingSearchProductFieldWidget extends StatelessWidget {
   final BookingFormControllers form;
@@ -76,7 +77,7 @@ class BookingSearchProductFieldWidget extends StatelessWidget {
                   showProductFilterDialog();
                 },
                 icon: const Icon(Icons.tune, size: 20),
-                color: const Color(0xFF6132E4),
+                color: AppColors.purple,
                 tooltip: 'Filter products',
               ),
             ),

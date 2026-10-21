@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class DashboardScreen extends StatefulWidget {
   final void Function(BookingListFilter statusTab)? onNavigateToBookings;
@@ -123,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2937),
+                            color: AppColors.darkSlate,
                           ),
                         ),
                         const SizedBox(height: 16),

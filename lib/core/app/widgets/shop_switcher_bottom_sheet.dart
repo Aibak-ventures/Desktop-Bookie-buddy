@@ -5,6 +5,7 @@ import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shows shop selector menu and handles shop switching
 Future<void> showShopSelector(BuildContext context, UserEntity user) async {
@@ -179,10 +180,10 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                  color: AppColors.purpleSoft.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
+                    color: AppColors.purpleSoft.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -220,7 +221,7 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                           Text(
                             user.shopDetails.name,
                             style: const TextStyle(
-                              color: Color(0xFF6C5CE7),
+                              color: AppColors.purpleSoft,
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                             ),
@@ -231,9 +232,9 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                           Text(
                             user.shopDetails.place ?? user.shopDetails.address,
                             style: TextStyle(
-                              color: const Color(
-                                0xFF6C5CE7,
-                              ).withValues(alpha: 0.7),
+                              color: AppColors.purpleSoft.withValues(
+                                alpha: 0.7,
+                              ),
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
                             ),
@@ -245,7 +246,7 @@ class ShopSwitcherButtonExpanded extends StatelessWidget {
                     ),
                     Icon(
                       Icons.swap_horiz_rounded,
-                      color: const Color(0xFF6C5CE7),
+                      color: AppColors.purpleSoft,
                       size: 20,
                     ),
                   ],
@@ -282,16 +283,16 @@ class ShopSwitcherButtonCollapsed extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                  color: AppColors.purpleSoft.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF6C5CE7).withValues(alpha: 0.3),
+                    color: AppColors.purpleSoft.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
                 child: Icon(
                   Icons.swap_horiz_rounded,
-                  color: const Color(0xFF6C5CE7),
+                  color: AppColors.purpleSoft,
                   size: 20,
                 ),
               ),

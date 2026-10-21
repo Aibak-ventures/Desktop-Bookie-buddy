@@ -7,6 +7,7 @@ class AppColors {
   static const purpleLight = Color(0xFFE7E4FF);
   static const purpleLightShade = Color(0xFFEDEEFF);
   static const purpleAccent = Color(0xFF8A63FE);
+  static const purpleSoft = Color(0xFF6C5CE7);
 
   // Accent colors
   static const yellow = Color(0xFFF2C849);
@@ -30,6 +31,13 @@ class AppColors {
   static const black54 = Colors.black54;
   static const black87 = Colors.black87;
   static final blackShade = Colors.black.withValues(alpha: 0.8);
+
+  static const charcoal = Color(0xFF2D3436);
+  static const nearBlack = Color(0xFF2D2D2D);
+  static const darkGrey = Color(0xFF3E3E3E);
+  static const darkSlate = Color(0xFF1F2937);
+  static const offWhite = Color(0xFFF8F9FA);
+  static const softGrey = Color(0xFFE9ECEF);
 
   static const grey = Color(0xFF9E9E9E);
   static const greyBorder = Color(0xFFF0F0F0);
@@ -56,7 +64,7 @@ class AppColors {
 
   // Gradients
   static const LinearGradient purpleGradient = LinearGradient(
-    colors: [Color(0xFF5F33E2), Color(0xFF4C28B8)],
+    colors: [purple, purple600],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

@@ -3,6 +3,7 @@ import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class BookingProductRowWidget extends StatelessWidget {
   final ProductSelectedEntity product;
@@ -124,7 +125,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF2D3436),
+                      color: AppColors.charcoal,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -178,7 +179,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                    color: AppColors.purple.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -186,7 +187,7 @@ class BookingProductRowWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
+                      color: AppColors.purple,
                     ),
                   ),
                 ),
@@ -271,9 +272,7 @@ class BookingProductRowWidget extends StatelessWidget {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF6132E4),
-                          ),
+                          borderSide: const BorderSide(color: AppColors.purple),
                         ),
                       ),
                       onSubmitted: onSaveTypedQuantity,
@@ -336,7 +335,7 @@ class BookingProductRowWidget extends StatelessWidget {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(4),
                             borderSide: const BorderSide(
-                              color: Color(0xFF6132E4),
+                              color: AppColors.purple,
                             ),
                           ),
                         ),
@@ -353,7 +352,7 @@ class BookingProductRowWidget extends StatelessWidget {
                           '${product.amount}',
                           style: const TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF2D3436),
+                            color: AppColors.charcoal,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -361,7 +360,7 @@ class BookingProductRowWidget extends StatelessWidget {
                         const Icon(
                           Icons.edit_outlined,
                           size: 16,
-                          color: Color(0xFF6132E4),
+                          color: AppColors.purple,
                         ),
                       ],
                     ),
@@ -376,7 +375,7 @@ class BookingProductRowWidget extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
+                  color: AppColors.charcoal,
                 ),
               ),
             ),
@@ -447,7 +446,7 @@ Widget _buildQuantityBtn({
       child: Icon(
         icon,
         size: compact ? 12 : 14,
-        color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
+        color: isDisabled ? Colors.grey.shade500 : AppColors.purple,
       ),
     ),
   );

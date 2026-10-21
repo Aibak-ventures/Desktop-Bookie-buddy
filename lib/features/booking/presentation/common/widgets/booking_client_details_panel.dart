@@ -13,6 +13,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_searc
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class BookingClientDetailsPanel extends StatefulWidget {
   final BookingFormControllers form;
@@ -319,7 +320,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF6132E4).withValues(alpha: 0.2),
+                      color: AppColors.purple.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -343,7 +344,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                   const Icon(
                                     Icons.receipt_long_rounded,
                                     size: 16,
-                                    color: Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
@@ -353,7 +354,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF3E3E3E),
+                                      color: AppColors.darkGrey,
                                     ),
                                   ),
                                 ],
@@ -365,7 +366,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
-                                      color: Color(0xFF6132E4),
+                                      color: AppColors.purple,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -374,7 +375,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                         ? Icons.keyboard_arrow_up_rounded
                                         : Icons.keyboard_arrow_down_rounded,
                                     size: 20,
-                                    color: const Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                 ],
                               ),
@@ -428,7 +429,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
               child: ElevatedButton(
                 onPressed: widget.onContinue,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
+                  backgroundColor: AppColors.purple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

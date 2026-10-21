@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Top header row for [DashboardScreen]: greeting + refresh button.
 class DashboardHeader extends StatelessWidget {
@@ -34,7 +35,7 @@ class DashboardHeader extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1F2937),
+                    color: AppColors.darkSlate,
                   ),
                 ),
                 const SizedBox(height: 8),

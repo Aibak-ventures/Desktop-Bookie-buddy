@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Signature matching both `UserShopEntityX.calculateTaxSummary` (live shop
 /// config, used when creating) and `AppliedTaxListCalculator.calculateTaxSummary`
@@ -447,11 +448,11 @@ class BookingSummarySection extends StatelessWidget {
                               ? const Color(0xFFF3F0FF)
                               : Colors.transparent,
                           foregroundColor: hasCustomizations
-                              ? const Color(0xFF6132E4)
+                              ? AppColors.purple
                               : Colors.grey.shade600,
                           side: BorderSide(
                             color: hasCustomizations
-                                ? const Color(0xFF6132E4)
+                                ? AppColors.purple
                                 : Colors.grey.shade300,
                             width: 1,
                           ),
@@ -583,7 +584,7 @@ class BookingSummarySection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isFocused
-                            ? const Color(0xFF6132E4)
+                            ? AppColors.purple
                             : Colors.transparent,
                         width: 2,
                       ),
@@ -594,7 +595,7 @@ class BookingSummarySection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: onConfirm,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6132E4),
+                          backgroundColor: AppColors.purple,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),

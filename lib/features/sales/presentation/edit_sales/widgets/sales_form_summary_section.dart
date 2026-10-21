@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Summary panel + Update Sale button for [EditSalesScreen].
 class SalesFormSummarySection extends StatelessWidget {
@@ -87,13 +88,13 @@ class SalesFormSummarySection extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
-                    color: Color(0xFF3E3E3E),
+                    color: AppColors.darkGrey,
                   ),
                   valueStyle: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: Color(0xFF3E3E3E),
+                    color: AppColors.darkGrey,
                   ),
                 ),
               ];
@@ -128,7 +129,7 @@ class SalesFormSummarySection extends StatelessWidget {
                 return ElevatedButton(
                   onPressed: isSaving ? null : onSave,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6132E4),
+                    backgroundColor: AppColors.purple,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

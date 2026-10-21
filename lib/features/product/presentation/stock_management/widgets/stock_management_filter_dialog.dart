@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Result returned by [StockManagementFilterDialog] when the user taps Apply.
 class StockFilterResult {
@@ -115,7 +116,7 @@ class _StockManagementFilterDialogState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: AppColors.offWhite,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         border: Border(
           bottom: BorderSide(color: Colors.grey.shade200, width: 1),
@@ -126,12 +127,12 @@ class _StockManagementFilterDialogState
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+              color: AppColors.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(
               Icons.tune_rounded,
-              color: Color(0xFF6132E4),
+              color: AppColors.purple,
               size: 22,
             ),
           ),
@@ -142,7 +143,7 @@ class _StockManagementFilterDialogState
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF2D2D2D),
+                color: AppColors.nearBlack,
                 fontFamily: 'Inter',
               ),
             ),
@@ -167,7 +168,7 @@ class _StockManagementFilterDialogState
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D2D2D),
+            color: AppColors.nearBlack,
             fontFamily: 'Inter',
           ),
         ),
@@ -189,12 +190,12 @@ class _StockManagementFilterDialogState
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? const Color(0xFF6132E4).withValues(alpha: 0.1)
+                          ? AppColors.purple.withValues(alpha: 0.1)
                           : Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
-                            ? const Color(0xFF6132E4)
+                            ? AppColors.purple
                             : Colors.grey.shade300,
                         width: isSelected ? 2 : 1,
                       ),
@@ -207,7 +208,7 @@ class _StockManagementFilterDialogState
                             ? FontWeight.w600
                             : FontWeight.normal,
                         color: isSelected
-                            ? const Color(0xFF6132E4)
+                            ? AppColors.purple
                             : Colors.grey.shade700,
                         fontFamily: 'Inter',
                       ),
@@ -234,7 +235,7 @@ class _StockManagementFilterDialogState
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF2D2D2D),
+                color: AppColors.nearBlack,
                 fontFamily: 'Inter',
               ),
             ),
@@ -245,10 +246,8 @@ class _StockManagementFilterDialogState
                 child: Switch(
                   value: isEnabled,
                   onChanged: (value) => _tempIsPriceEnabled.value = value,
-                  activeThumbColor: const Color(0xFF6132E4),
-                  activeTrackColor: const Color(
-                    0xFF6132E4,
-                  ).withValues(alpha: 0.3),
+                  activeThumbColor: AppColors.purple,
+                  activeTrackColor: AppColors.purple.withValues(alpha: 0.3),
                   inactiveThumbColor: Colors.grey.shade400,
                   inactiveTrackColor: Colors.grey.shade200,
                 ),
@@ -310,10 +309,10 @@ class _StockManagementFilterDialogState
         valueListenable: widget.maxPriceNotifier,
         builder: (context, currentMaxPrice, child) => SliderTheme(
           data: SliderThemeData(
-            activeTrackColor: const Color(0xFF6132E4),
+            activeTrackColor: AppColors.purple,
             inactiveTrackColor: Colors.grey.shade200,
-            thumbColor: const Color(0xFF6132E4),
-            overlayColor: const Color(0xFF6132E4).withValues(alpha: 0.2),
+            thumbColor: AppColors.purple,
+            overlayColor: AppColors.purple.withValues(alpha: 0.2),
             trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
@@ -341,7 +340,7 @@ class _StockManagementFilterDialogState
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D2D2D),
+            color: AppColors.nearBlack,
             fontFamily: 'Inter',
           ),
         ),
@@ -387,7 +386,7 @@ class _StockManagementFilterDialogState
                   horizontal: 16,
                   vertical: 12,
                 ),
-                backgroundColor: const Color(0xFF6132E4),
+                backgroundColor: AppColors.purple,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -414,7 +413,7 @@ class _StockManagementFilterDialogState
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D2D2D),
+            color: AppColors.nearBlack,
             fontFamily: 'Inter',
           ),
         ),
@@ -446,7 +445,7 @@ class _StockManagementFilterDialogState
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: AppColors.offWhite,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
         border: Border(top: BorderSide(color: Colors.grey.shade200, width: 1)),
       ),
@@ -495,10 +494,10 @@ class _StockManagementFilterDialogState
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
-                backgroundColor: const Color(0xFF6132E4),
+                backgroundColor: AppColors.purple,
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shadowColor: const Color(0xFF6132E4).withValues(alpha: 0.3),
+                shadowColor: AppColors.purple.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -537,21 +536,19 @@ class _PriceLabel extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF6132E4).withValues(alpha: 0.1),
-            const Color(0xFF6132E4).withValues(alpha: 0.05),
+            AppColors.purple.withValues(alpha: 0.1),
+            AppColors.purple.withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: const Color(0xFF6132E4).withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: AppColors.purple.withValues(alpha: 0.3)),
       ),
       child: Text(
         value,
         style: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w700,
-          color: Color(0xFF6132E4),
+          color: AppColors.purple,
           fontFamily: 'Inter',
         ),
       ),
@@ -582,12 +579,10 @@ class _QuickFilterChip extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade50,
+              color: isSelected ? AppColors.purple : Colors.grey.shade50,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade300,
+                color: isSelected ? AppColors.purple : Colors.grey.shade300,
               ),
             ),
             child: Text(

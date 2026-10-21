@@ -52,7 +52,7 @@ class ProductDetailsRightPanel extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1F2937),
+                  color: AppColors.darkSlate,
                 ),
               ),
             ],
@@ -73,7 +73,7 @@ class ProductDetailsRightPanel extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
+              color: AppColors.darkSlate,
             ),
           ),
           const SizedBox(height: 8),

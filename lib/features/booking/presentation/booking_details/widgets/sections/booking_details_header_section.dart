@@ -151,17 +151,18 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                               paymentHistory: booking
                                   .toRefundAvailabilityHistory(),
                               onCancel: () => Navigator.of(dialogContext).pop(),
-                              onConfirm: (refundAmount, accountId, paymentDate) {
-                                Navigator.of(dialogContext).pop();
-                                context.read<BookingDetailsBloc>().add(
-                                  BookingDetailsEvent.cancelBooking(
-                                    bookingId: booking.id,
-                                    refundAmount: refundAmount,
-                                    accountId: accountId,
-                                    paymentDate: paymentDate,
-                                  ),
-                                );
-                              },
+                              onConfirm:
+                                  (refundAmount, accountId, paymentDate) {
+                                    Navigator.of(dialogContext).pop();
+                                    context.read<BookingDetailsBloc>().add(
+                                      BookingDetailsEvent.cancelBooking(
+                                        bookingId: booking.id,
+                                        refundAmount: refundAmount,
+                                        accountId: accountId,
+                                        paymentDate: paymentDate,
+                                      ),
+                                    );
+                                  },
                             ),
                           );
                         },

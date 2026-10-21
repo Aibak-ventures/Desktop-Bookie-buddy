@@ -6,8 +6,7 @@ class StaffEndpoints {
   static const _root = '${ApiConfig.v3}/shop/';
 
   final String staff = '${_root}staff/';
-  final String staffAnalyticsReport =
-      '${_root}staff-earnings/earnings-report/';
+  final String staffAnalyticsReport = '${_root}staff-earnings/earnings-report/';
   final String staffMonthlyBookingsOrSales =
       '${_root}staff-earnings/monthly-transactions/';
 

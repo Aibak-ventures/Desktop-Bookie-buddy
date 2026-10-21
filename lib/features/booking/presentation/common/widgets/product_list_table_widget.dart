@@ -9,6 +9,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class ProductListTableWidget extends StatefulWidget {
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;
@@ -225,7 +226,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -387,7 +388,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.charcoal,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -493,9 +494,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF6132E4),
-                          ),
+                          borderSide: const BorderSide(color: AppColors.purple),
                         ),
                       ),
                       onSubmitted: (value) => _saveTypedQuantity(
@@ -642,7 +641,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
                               borderSide: const BorderSide(
-                                color: Color(0xFF6132E4),
+                                color: AppColors.purple,
                               ),
                             ),
                           ),
@@ -671,7 +670,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                               '${product.amount}',
                               style: const TextStyle(
                                 fontSize: 14,
-                                color: Color(0xFF2D3436),
+                                color: AppColors.charcoal,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -679,7 +678,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             const Icon(
                               Icons.edit_outlined,
                               size: 16,
-                              color: Color(0xFF6132E4),
+                              color: AppColors.purple,
                             ),
                           ],
                         ),
@@ -698,7 +697,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
@@ -796,7 +795,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         child: Icon(
           icon,
           size: compact ? 12 : 14,
-          color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
+          color: isDisabled ? Colors.grey.shade500 : AppColors.purple,
         ),
       ),
     );

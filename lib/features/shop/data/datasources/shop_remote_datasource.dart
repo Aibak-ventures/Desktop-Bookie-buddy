@@ -32,11 +32,7 @@ class ShopRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        _shopEndpoint.allShopSummary(
-          year: year,
-          month: month,
-          shopId: shopId,
-        ),
+        _shopEndpoint.allShopSummary(year: year, month: month, shopId: shopId),
       );
       log(
         'Get All Shop Summary Response: ${response.realUri} ,${response.data}',

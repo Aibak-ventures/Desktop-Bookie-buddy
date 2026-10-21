@@ -193,13 +193,11 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: showFocus
-                  ? const Color(0xFF6132E4).withValues(alpha: 0.08)
+                  ? AppColors.purple.withValues(alpha: 0.08)
                   : Colors.transparent,
               border: Border(
                 left: BorderSide(
-                  color: showFocus
-                      ? const Color(0xFF6132E4)
-                      : Colors.transparent,
+                  color: showFocus ? AppColors.purple : Colors.transparent,
                   width: 3,
                 ),
               ),
@@ -479,7 +477,7 @@ class OverlaySearchItemState extends State<OverlaySearchItem> {
                                       .product
                                       .mainServiceType
                                       .isMultiVariantProductType)
-                              ? const Color(0xFF6132E4)
+                              ? AppColors.purple
                               : Colors.grey.shade400,
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -559,7 +557,7 @@ class SelectableVariantChip extends StatelessWidget {
           borderRadius: isShortText ? null : BorderRadius.circular(8),
           color: isSelected ? AppColors.purpleLight : const Color(0xFFF8F7FF),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6132E4) : Colors.grey.shade300,
+            color: isSelected ? AppColors.purple : Colors.grey.shade300,
             width: isSelected ? 2 : 1,
           ),
         ),

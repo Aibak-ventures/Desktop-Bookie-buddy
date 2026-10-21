@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Reusable overlay popup for product search results.
 /// Used by both new-booking and edit-booking screens.
@@ -143,7 +144,7 @@ class ProductSearchOverlayPopup extends StatelessWidget {
           children: [
             const CircularProgressIndicator(
               strokeWidth: 2,
-              color: Color(0xFF6132E4),
+              color: AppColors.purple,
             ),
             const SizedBox(height: 12),
             Text(

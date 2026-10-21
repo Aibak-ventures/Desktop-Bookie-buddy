@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Payment method toggle ( Cash) for [EditSalesScreen].
 class SalesFormPaymentMethodSection extends StatelessWidget {
@@ -48,14 +49,12 @@ class SalesFormPaymentMethodSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
+              color: isSelected ? AppColors.purple : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
             color: isSelected
-                ? const Color(0xFF6132E4).withValues(alpha: 0.05)
+                ? AppColors.purple.withValues(alpha: 0.05)
                 : Colors.white,
           ),
           child: Row(
@@ -64,9 +63,7 @@ class SalesFormPaymentMethodSection extends StatelessWidget {
               Icon(
                 icon,
                 size: 20,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
+                color: isSelected ? AppColors.purple : Colors.grey.shade700,
               ),
               const SizedBox(width: 8),
               Text(
@@ -74,9 +71,7 @@ class SalesFormPaymentMethodSection extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade700,
+                  color: isSelected ? AppColors.purple : Colors.grey.shade700,
                 ),
               ),
             ],

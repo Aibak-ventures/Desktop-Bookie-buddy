@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/se
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Summary stat cards at the top of the stock management screen.
 class StockManagementSummaryCards extends StatelessWidget {
@@ -115,7 +116,7 @@ class _SummaryCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
+                  color: AppColors.darkSlate,
                 ),
               ),
             ],

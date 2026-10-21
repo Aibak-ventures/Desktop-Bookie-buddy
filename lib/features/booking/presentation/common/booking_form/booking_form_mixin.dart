@@ -26,6 +26,7 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shared methods for booking form screens (new booking and edit booking).
 ///
@@ -772,9 +773,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
                 AdditionalChargesEntity(name: name, amount: amount),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple),
             child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
@@ -805,7 +804,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
     double valueSize = 13;
     FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
     FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
-    Color labelColor = const Color(0xFF3E3E3E);
+    Color labelColor = AppColors.darkGrey;
 
     if (isTotalPayable) {
       labelSize = 15;
@@ -848,7 +847,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
               fontSize: valueSize,
               fontFamily: 'Inter',
               fontWeight: valueWeight,
-              color: valueColor ?? const Color(0xFF3E3E3E),
+              color: valueColor ?? AppColors.darkGrey,
             ),
           ),
         ],
@@ -1150,7 +1149,7 @@ mixin BookingFormMixin<T extends StatefulWidget> on State<T> {
             fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
           overflow: TextOverflow.ellipsis,
         ),

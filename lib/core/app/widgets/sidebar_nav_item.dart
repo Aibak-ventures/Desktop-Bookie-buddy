@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// One sidebar destination: icon-only when collapsed, icon+label when
 /// [expanded], highlighted when [isActive].
@@ -73,12 +74,12 @@ class SidebarNavItem extends StatelessWidget {
       gradient: const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: [Color(0xFF6C5CE7), Color(0xFF8B7CF7)],
+        colors: [AppColors.purpleSoft, Color(0xFF8B7CF7)],
       ),
       borderRadius: BorderRadius.circular(14),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF6C5CE7).withValues(alpha: 0.35),
+          color: AppColors.purpleSoft.withValues(alpha: 0.35),
           blurRadius: 12,
           offset: const Offset(0, 4),
         ),

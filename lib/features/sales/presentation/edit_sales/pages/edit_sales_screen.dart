@@ -35,6 +35,7 @@ import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_searc
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class EditSalesScreen extends StatefulWidget {
   final SaleDetailsEntity saleDetails;
@@ -352,7 +353,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                     _showProductFilterDialog();
                   },
                   icon: const Icon(Icons.tune, size: 20),
-                  color: const Color(0xFF6132E4),
+                  color: AppColors.purple,
                   tooltip: 'Filter products',
                 ),
               ),
@@ -422,7 +423,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text('Add Product'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -956,7 +957,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
                                     children: [
                                       const CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        color: Color(0xFF6132E4),
+                                        color: AppColors.purple,
                                       ),
                                       const SizedBox(height: 12),
                                       Text(
@@ -1259,7 +1260,7 @@ class _EditSalesScreenState extends State<EditSalesScreen> {
       lastDate: DateTime.now(),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: Color(0xFF6132E4)),
+          colorScheme: const ColorScheme.light(primary: AppColors.purple),
         ),
         child: child!,
       ),

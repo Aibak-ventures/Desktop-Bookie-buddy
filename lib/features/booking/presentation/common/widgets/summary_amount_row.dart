@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// A single label/amount row used in booking summary breakdowns.
 ///
@@ -31,7 +32,7 @@ class SummaryAmountRow extends StatelessWidget {
     double valueSize = 13;
     FontWeight labelWeight = isBold ? FontWeight.w600 : FontWeight.w400;
     FontWeight valueWeight = isBold ? FontWeight.w700 : FontWeight.w500;
-    const labelColor = Color(0xFF3E3E3E);
+    const labelColor = AppColors.darkGrey;
     Color? resolvedValueColor = valueColor;
 
     if (isTotalPayable) {

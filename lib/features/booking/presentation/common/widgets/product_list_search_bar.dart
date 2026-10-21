@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Pure-UI search bar for the product list.
 /// All BLoC listening and overlay management stay in the parent screen.
@@ -95,7 +96,7 @@ class ProductListSearchBarWidget extends StatelessWidget {
               child: IconButton(
                 onPressed: onFilterTap,
                 icon: const Icon(Icons.tune, size: 20),
-                color: const Color(0xFF6132E4),
+                color: AppColors.purple,
                 tooltip: 'Filter products',
               ),
             ),
@@ -180,12 +181,10 @@ class ProductListSearchBarWidget extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF6132E4),
+                      color: AppColors.purple,
                     ),
                   ),
-                  backgroundColor: const Color(
-                    0xFF6132E4,
-                  ).withValues(alpha: 0.1),
+                  backgroundColor: AppColors.purple.withValues(alpha: 0.1),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),

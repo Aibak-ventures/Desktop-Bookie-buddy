@@ -1,5 +1,6 @@
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class NewBookingAppBar extends StatefulWidget {
   final BookingTabType selectedTab;
@@ -90,7 +91,7 @@ class _NewBookingAppBarState extends State<NewBookingAppBar> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF6132E4) : Colors.transparent,
+          color: isSelected ? AppColors.purple : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(

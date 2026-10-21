@@ -22,6 +22,7 @@ import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.da
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final BookingListFilter? initialStatusTab;
@@ -166,7 +167,10 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
   /// used for an external navigation (e.g. a dashboard summary card), which
   /// is a fresh entry into this screen and shouldn't inherit whatever
   /// search/date filters happened to be left over from a previous visit.
-  void applyStatusFilter(BookingListFilter filter, {bool resetFilters = false}) {
+  void applyStatusFilter(
+    BookingListFilter filter, {
+    bool resetFilters = false,
+  }) {
     if (resetFilters) {
       _searchController.clear();
       _dateFilterNotifier.value = const DateFilter();
@@ -280,7 +284,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
         ),
         const Spacer(),
@@ -362,7 +366,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                       child: Material(
                         elevation: isActive ? 3 : 1,
                         shadowColor: isActive
-                            ? const Color(0xFF8A63FE).withValues(alpha: 0.3)
+                            ? AppColors.purpleAccent.withValues(alpha: 0.3)
                             : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
@@ -371,9 +375,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                           hoverColor: const Color(
                             0xFFE7E4FF,
                           ).withValues(alpha: 0.5),
-                          splashColor: const Color(
-                            0xFF8A63FE,
-                          ).withValues(alpha: 0.2),
+                          splashColor: AppColors.purpleAccent.withValues(
+                            alpha: 0.2,
+                          ),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
@@ -388,9 +392,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                               border: Border.all(
                                 width: isActive ? 1.5 : 1,
                                 color: isActive
-                                    ? const Color(
-                                        0xFF8A63FE,
-                                      ).withValues(alpha: 0.3)
+                                    ? AppColors.purpleAccent.withValues(
+                                        alpha: 0.3,
+                                      )
                                     : Colors.grey.shade300,
                               ),
                             ),
@@ -400,7 +404,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                                   filter.label,
                                   style: TextStyle(
                                     color: isActive
-                                        ? const Color(0xFF8A63FE)
+                                        ? AppColors.purpleAccent
                                         : Colors.grey.shade600,
                                     fontWeight: isActive
                                         ? FontWeight.w600
@@ -416,7 +420,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                                   ),
                                   decoration: BoxDecoration(
                                     color: isActive
-                                        ? const Color(0xFF8A63FE)
+                                        ? AppColors.purpleAccent
                                         : Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -495,7 +499,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                   hasFilter ? Icons.filter_list_alt : Icons.tune,
                   size: 20,
                   color: hasFilter
-                      ? const Color(0xFF8A63FE)
+                      ? AppColors.purpleAccent
                       : Colors.grey.shade600,
                 ),
               );
@@ -569,7 +573,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
               builder: (context, state) {
                 return state.maybeWhen(
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+                    child: CircularProgressIndicator(
+                      color: AppColors.purpleAccent,
+                    ),
                   ),
                   loaded:
                       (
@@ -601,7 +607,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
       builder: (context, state) {
         return state.maybeWhen(
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+            child: CircularProgressIndicator(color: AppColors.purpleAccent),
           ),
           loaded: (sales, _, __, ___, ____, _____) {
             if (sales.isEmpty) {

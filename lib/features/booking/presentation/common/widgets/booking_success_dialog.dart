@@ -10,6 +10,7 @@ import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_web.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 void showBookingSuccessDialog({
   required BuildContext context,
@@ -184,7 +185,7 @@ void showBookingSuccessDialog({
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

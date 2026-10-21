@@ -56,10 +56,7 @@ class BookingRemoteDatasource {
           options: Options(contentType: 'multipart/form-data'),
         );
       } else {
-        response = await _dio.post(
-          _endpoint.bookingsV5,
-          data: data,
-        );
+        response = await _dio.post(_endpoint.bookingsV5, data: data);
       }
 
       log(
@@ -146,10 +143,7 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> createSale(Map<String, dynamic> saleData) async {
     try {
       log('Creating sale with data: $saleData');
-      final response = await _dio.post(
-        _salesEndpoint.sales,
-        data: saleData,
-      );
+      final response = await _dio.post(_salesEndpoint.sales, data: saleData);
 
       log(
         'create sale response: ${response.realUri.toString()}, data: ${response.data}',
@@ -190,9 +184,7 @@ class BookingRemoteDatasource {
 
   Future<CustomResponseModel> deletePayment(int paymentId) async {
     try {
-      final response = await _dio.delete(
-        _endpoint.deletePayment(paymentId),
-      );
+      final response = await _dio.delete(_endpoint.deletePayment(paymentId));
 
       log(
         'delete payment response: ${response.realUri.toString()}, data: ${response.data}',
@@ -487,10 +479,7 @@ class BookingRemoteDatasource {
     try {
       final data = bookingData.toBookingJson();
       log('request old booking data: $data');
-      final response = await _dio.post(
-        _endpoint.oldBookings,
-        data: data,
-      );
+      final response = await _dio.post(_endpoint.oldBookings, data: data);
 
       log(
         'add old bookings response: ${response.realUri.toString()}, data: ${response.data}',
@@ -686,10 +675,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.delete(
-        _endpoint.deleteRefund(
-          bookingId: bookingId,
-          refundId: refundId,
-        ),
+        _endpoint.deleteRefund(bookingId: bookingId, refundId: refundId),
       );
       log(
         'delete refund response: ${response.realUri.toString()}, data: ${response.data}',

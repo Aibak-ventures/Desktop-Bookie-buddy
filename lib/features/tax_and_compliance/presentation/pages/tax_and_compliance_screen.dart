@@ -7,6 +7,7 @@ import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/widget
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Pops `true` if any tax rule was created/updated/toggled while this screen
 /// was open, `false` otherwise — so the caller (settings screen) knows
@@ -222,7 +223,7 @@ class _Header extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: const Padding(
             padding: EdgeInsets.all(4),
-            child: Icon(Icons.arrow_back, size: 20, color: Color(0xFF2D3436)),
+            child: Icon(Icons.arrow_back, size: 20, color: AppColors.charcoal),
           ),
         ),
         const SizedBox(width: 8),
@@ -231,7 +232,7 @@ class _Header extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
         ),
         const Spacer(),

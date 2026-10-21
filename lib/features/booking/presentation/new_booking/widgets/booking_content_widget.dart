@@ -367,7 +367,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF6132E4).withValues(alpha: 0.2),
+                      color: AppColors.purple.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -393,7 +393,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                   const Icon(
                                     Icons.receipt_long_rounded,
                                     size: 16,
-                                    color: Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
@@ -403,7 +403,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF3E3E3E),
+                                      color: AppColors.darkGrey,
                                     ),
                                   ),
                                 ],
@@ -415,7 +415,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
-                                      color: Color(0xFF6132E4),
+                                      color: AppColors.purple,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -424,7 +424,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                         ? Icons.keyboard_arrow_up_rounded
                                         : Icons.keyboard_arrow_down_rounded,
                                     size: 20,
-                                    color: const Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                 ],
                               ),
@@ -501,7 +501,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isFocused
-                              ? const Color(0xFF6132E4)
+                              ? AppColors.purple
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -509,7 +509,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                       child: ElevatedButton(
                         onPressed: _validateAndContinue,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6132E4),
+                          backgroundColor: AppColors.purple,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -837,7 +837,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                       size: 18,
                                       color: isDiscountPercentage
                                           ? Colors.grey
-                                          : const Color(0xFF6132E4),
+                                          : AppColors.purple,
                                     ),
                                     const SizedBox(width: 8),
                                     const Text('Amount (₹)'),
@@ -854,7 +854,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                           : Icons.circle_outlined,
                                       size: 18,
                                       color: isDiscountPercentage
-                                          ? const Color(0xFF6132E4)
+                                          ? AppColors.purple
                                           : Colors.grey,
                                     ),
                                     const SizedBox(width: 8),
@@ -887,15 +887,13 @@ extension BookingFlowBuilders on NewBookingScreenState {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(
-                              0xFF6132E4,
-                            ).withValues(alpha: 0.1),
+                            color: AppColors.purple.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
                             Icons.add,
                             size: 16,
-                            color: Color(0xFF6132E4),
+                            color: AppColors.purple,
                           ),
                         ),
                       ),
@@ -916,12 +914,10 @@ extension BookingFlowBuilders on NewBookingScreenState {
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF8F9FA),
+                              color: AppColors.offWhite,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: const Color(
-                                  0xFF6132E4,
-                                ).withValues(alpha: 0.2),
+                                color: AppColors.purple.withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                               boxShadow: [
@@ -942,7 +938,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                       fontSize: 13,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D2D2D),
+                                      color: AppColors.nearBlack,
                                     ),
                                   ),
                                 ),
@@ -954,9 +950,9 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF6132E4,
-                                        ).withValues(alpha: 0.1),
+                                        color: AppColors.purple.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -965,7 +961,7 @@ extension BookingFlowBuilders on NewBookingScreenState {
                                           fontSize: 13,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w700,
-                                          color: Color(0xFF6132E4),
+                                          color: AppColors.purple,
                                         ),
                                       ),
                                     ),

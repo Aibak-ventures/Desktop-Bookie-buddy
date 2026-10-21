@@ -459,15 +459,14 @@ class _AddPaymentDialogState extends State<_AddPaymentDialog> {
                                   history: paymentHistory,
                                   date: selectedDate,
                                 );
-                            final refundMessage =
-                                RefundUnavailableMessage(
-                                  reason: reason,
-                                  date: selectedDate,
-                                  availableForDate: availableForDate,
-                                  requestedAmount: amount,
-                                  formatDate: (date) => date.format(),
-                                  formatAmount: (amount) => amount.toCurrency(),
-                                );
+                            final refundMessage = RefundUnavailableMessage(
+                              reason: reason,
+                              date: selectedDate,
+                              availableForDate: availableForDate,
+                              requestedAmount: amount,
+                              formatDate: (date) => date.format(),
+                              formatAmount: (amount) => amount.toCurrency(),
+                            );
                             context.showSnackBar(
                               refundMessage.message,
                               isError: refundMessage.isError,

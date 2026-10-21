@@ -16,6 +16,7 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 enum GlobalSearchTypes { booking }
 
@@ -115,7 +116,7 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                   ),
                 ),
                 const Spacer(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class SummaryField {
   final String label;
@@ -94,7 +95,7 @@ class _ExpandableSummaryTileState extends State<ExpandableSummaryTile> {
           style: const TextStyle(
             fontSize: 12,
             fontFamily: 'Inter',
-            color: Color(0xFF3E3E3E),
+            color: AppColors.darkGrey,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -106,7 +107,7 @@ class _ExpandableSummaryTileState extends State<ExpandableSummaryTile> {
               style: const TextStyle(
                 fontSize: 15,
                 fontFamily: 'Inter',
-                color: Color(0xFF3E3E3E),
+                color: AppColors.darkGrey,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -153,7 +154,7 @@ class _ExpandableSummaryTileState extends State<ExpandableSummaryTile> {
     final defaultStyle = TextStyle(
       fontSize: 13,
       fontFamily: 'Inter',
-      color: field.color ?? const Color(0xFF3E3E3E),
+      color: field.color ?? AppColors.darkGrey,
       fontWeight: FontWeight.w400,
     );
 
