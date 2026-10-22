@@ -4,6 +4,8 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
+import '../../../utils/extensions/number_extensions.dart';
+
 /// Round badge with the first letter of a person's name.
 class PersonAvatar extends StatelessWidget {
   const PersonAvatar({required this.name, this.size = 40, super.key});
@@ -119,8 +121,8 @@ class PersonMeasurementsPreview {
                 child: SingleChildScrollView(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.purpleLightShade,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: 12.radiusBorder,
+                      border: Border.all(color: AppColors.grey400),
                     ),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -143,7 +145,7 @@ class PersonMeasurementsPreview {
                                     e.name,
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: AppColors.grey700,
+                                      color: AppColors.black,
                                     ),
                                   ),
                                 ),
@@ -151,6 +153,7 @@ class PersonMeasurementsPreview {
                                   e.value,
                                   style: const TextStyle(
                                     fontSize: 15,
+                                    color: AppColors.black,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
