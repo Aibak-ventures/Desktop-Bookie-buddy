@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 
 class BookingProductListHeaderWidget extends StatelessWidget {
   final bool isSales;

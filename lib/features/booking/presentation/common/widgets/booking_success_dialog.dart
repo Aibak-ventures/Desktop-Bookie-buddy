@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/repositories/i_booking_repository.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repository.dart';
@@ -10,7 +12,6 @@ import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_web.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 void showBookingSuccessDialog({
   required BuildContext context,

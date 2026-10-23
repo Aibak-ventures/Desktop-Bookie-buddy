@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_web/utils/extensions/main_service_type_web_extensions.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/extensions/main_service_type_web_extensions.dart';
 import 'package:flutter/material.dart';
 
 /// Dynamic form fields for [AddEditProductDialog], tailored to the selected

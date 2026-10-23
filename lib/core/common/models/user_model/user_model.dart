@@ -1,10 +1,10 @@
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/models/shop_settings_model/shop_settings_model.dart';
 import 'package:bookie_buddy_web/core/common/models/user_feature_details_model/user_feature_details_model.dart';
+import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/core/common/models/shop_settings_model/shop_settings_model.dart';
-import 'package:bookie_buddy_web/core/common/models/user_shop_model/user_shop_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/subscription_status_enum.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

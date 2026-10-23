@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Sidebar avatar, with the user's name alongside it when [expanded].
 class SidebarProfileHeader extends StatelessWidget {

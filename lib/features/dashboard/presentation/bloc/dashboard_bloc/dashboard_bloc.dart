@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/usecases/get_dashboard_desktop_data_usecase.dart';
+import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
 
 part 'dashboard_bloc.freezed.dart';
 part 'dashboard_event.dart';

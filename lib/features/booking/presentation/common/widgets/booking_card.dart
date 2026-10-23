@@ -2,15 +2,14 @@ import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/core/constants/enums/date_and_time_enums.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity/booking_entity.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';

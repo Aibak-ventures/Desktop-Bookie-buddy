@@ -2,18 +2,18 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
-import 'package:bookie_buddy_web/utils/app_input_validators.dart';
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/session/secure_action_auth_session_manager.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_auth_repository.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

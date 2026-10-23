@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
-import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/controllers/add_or_edit_sales_form_state_controller.dart';
@@ -9,7 +10,6 @@ import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Summary panel + Update Sale button for [EditSalesScreen].
 class SalesFormSummarySection extends StatelessWidget {

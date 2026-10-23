@@ -1,13 +1,13 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'selected_products_state.dart';
 part 'selected_products_cubit.freezed.dart';
+part 'selected_products_state.dart';
 
 class SelectedProductsCubit extends Cubit<SelectedProductsState> {
   SelectedProductsCubit() : super(const _Selected([]));

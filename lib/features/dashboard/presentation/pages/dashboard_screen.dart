@@ -1,19 +1,20 @@
+import 'dart:async';
+
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart'
+    as all_booking;
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
-import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
+import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carousel_dashboard.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_bookings_columns.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_card.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_header.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart'
-    as all_booking;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:async';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class DashboardScreen extends StatefulWidget {
   final void Function(BookingListFilter statusTab)? onNavigateToBookings;

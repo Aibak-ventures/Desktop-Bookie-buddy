@@ -1,32 +1,33 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+
 import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
-import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/check_variant_availability_usecase.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shared methods for booking form screens (new booking and edit booking).
 ///

@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/core/theme/widgets/app_app_bar_theme.dart';
 import 'package:bookie_buddy_web/core/theme/widgets/app_checkbox_theme.dart';
 import 'package:bookie_buddy_web/core/theme/widgets/app_date_picker_theme.dart';
@@ -9,7 +10,6 @@ import 'package:bookie_buddy_web/core/theme/widgets/app_outlined_button_theme.da
 import 'package:bookie_buddy_web/core/theme/widgets/app_popup_menu_theme.dart';
 import 'package:bookie_buddy_web/core/theme/widgets/app_radio_theme.dart';
 import 'package:bookie_buddy_web/core/theme/widgets/app_text_button_theme.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

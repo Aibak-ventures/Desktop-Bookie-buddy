@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
-import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 
 /// Payment method toggle ( Cash) for [EditSalesScreen].
 class SalesFormPaymentMethodSection extends StatelessWidget {

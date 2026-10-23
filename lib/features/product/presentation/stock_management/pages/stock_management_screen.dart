@@ -1,16 +1,14 @@
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_details/bloc/product_details_cubit/product_details_cubit.dart';
+import 'package:bookie_buddy_web/features/product/presentation/product_details/pages/product_details_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/save_product_cubit/save_product_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/bloc/stock_management_cubit/stock_management_cubit.dart';
-import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
-import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/features/product/presentation/product_details/pages/product_details_screen.dart';
-import 'package:bookie_buddy_web/features/product/presentation/product_details/bloc/product_details_cubit/product_details_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/add_edit_product_dialog.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_category_tabs.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_filter_dialog.dart';
@@ -18,6 +16,8 @@ import 'package:bookie_buddy_web/features/product/presentation/stock_management/
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_search_bar.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_summary_cards.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/widgets/stock_management_table_header.dart';
+import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

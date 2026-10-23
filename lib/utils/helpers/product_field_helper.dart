@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import '../../features/product/domain/entities/product_entity/product_entity.dart';
-import '../extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 
 /// Helper class for product-related field logic and display formatting.
 ///

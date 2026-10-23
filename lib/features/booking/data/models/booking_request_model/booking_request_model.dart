@@ -1,10 +1,10 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_payment_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';

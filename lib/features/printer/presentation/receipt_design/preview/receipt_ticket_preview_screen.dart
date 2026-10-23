@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
 
 import 'package:bookie_buddy_shared/core/features/thermal_printer/domain/entities/print_ticket_entity/print_ticket_entity.dart';
+import 'package:flutter/material.dart';
 
 /// Decodes each [PrintTicketImageCommand]'s raw RGBA bytes straight from
 /// the built [PrintTicketEntity] and renders them stacked on a paper-width canvas.

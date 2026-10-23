@@ -1,13 +1,12 @@
 import 'package:bookie_buddy_web/core/constants/enums/print_output_preference_enum.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../utils/extensions/color_extensions.dart';
-import '../../../../utils/extensions/context_extensions.dart';
-import '../../../../utils/extensions/number_extensions.dart';
-import '../../../theme/app_colors.dart';
 
 /// Single "Print" entry point for any feature that offers both a thermal
 /// receipt and a PDF invoice (booking today, sales/custom-work later).

@@ -1,10 +1,15 @@
 import 'dart:developer';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
+import 'package:bookie_buddy_web/core/common/models/unavailable_products_response_model.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/booking_details_action_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/unavailable_products_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_customer_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_dates_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_documents_section.dart';
@@ -13,12 +18,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_other_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_payment_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_security_refund_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_payment_history_cubit/booking_details_payment_history_cubit.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_security_refund_history_cubit/booking_details_security_refund_history_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/unavailable_products_response_model.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/unavailable_products_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

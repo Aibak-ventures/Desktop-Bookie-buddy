@@ -1,28 +1,29 @@
 import 'dart:async';
+
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_row.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final BookingListFilter? initialStatusTab;

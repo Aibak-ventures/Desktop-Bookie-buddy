@@ -1,8 +1,8 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// A single product row in the selected-products table of [EditSalesScreen].
 ///

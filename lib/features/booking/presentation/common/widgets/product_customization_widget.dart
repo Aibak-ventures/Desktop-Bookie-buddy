@@ -1,10 +1,11 @@
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurement_rules.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurement_rules.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/person_measurements_panel.dart';
@@ -12,7 +13,6 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_select
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class ProductCustomizationWidget extends StatefulWidget {
   const ProductCustomizationWidget({

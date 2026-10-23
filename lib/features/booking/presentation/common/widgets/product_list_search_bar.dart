@@ -1,7 +1,7 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Pure-UI search bar for the product list.
 /// All BLoC listening and overlay management stay in the parent screen.

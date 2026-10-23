@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
-import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_shared/core/features/booking/data/models/person_measurements_model/person_measurements_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

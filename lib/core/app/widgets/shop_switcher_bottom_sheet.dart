@@ -1,11 +1,11 @@
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shows shop selector menu and handles shop switching
 Future<void> showShopSelector(BuildContext context, UserEntity user) async {

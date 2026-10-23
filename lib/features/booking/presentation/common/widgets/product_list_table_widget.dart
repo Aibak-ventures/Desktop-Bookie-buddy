@@ -1,5 +1,6 @@
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
@@ -9,7 +10,6 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class ProductListTableWidget extends StatefulWidget {
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;

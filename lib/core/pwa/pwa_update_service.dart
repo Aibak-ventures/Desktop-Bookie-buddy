@@ -1,4 +1,4 @@
-import 'pwa_update_service_stub.dart'
+import 'package:bookie_buddy_web/core/pwa/pwa_update_service_stub.dart'
     if (dart.library.html) 'pwa_update_service_web.dart';
 
 class PwaUpdateService {

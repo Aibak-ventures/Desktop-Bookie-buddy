@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/get_user_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/register_fcm_token_usecase.dart';
 import 'package:bookie_buddy_web/features/auth/domain/usecases/switch_shop_usecase.dart';
-import 'package:bookie_buddy_web/features/auth/domain/repositories/i_user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserCubit extends Cubit<UserEntity?> {

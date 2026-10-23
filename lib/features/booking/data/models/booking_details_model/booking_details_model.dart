@@ -1,19 +1,19 @@
+import 'dart:developer';
+
 import 'package:bookie_buddy_shared/core/core/common/models/applied_tax_model/applied_tax_model.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_rental_unit_enum.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
-import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/security_summary_model/security_summary_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
-import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_payment_history_model/booking_details_payment_history_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_refund_history_model/booking_details_refund_history_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_details_security_refund_history_model/booking_details_security_refund_history_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_security_payment_model/booking_security_payment_model.dart';
-import 'dart:developer';
-
+import 'package:bookie_buddy_web/features/booking/data/models/security_summary_model/security_summary_model.dart';
+import 'package:bookie_buddy_web/features/client/data/models/client_model/client_model.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_info_model/product_info_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'booking_details_model.freezed.dart';

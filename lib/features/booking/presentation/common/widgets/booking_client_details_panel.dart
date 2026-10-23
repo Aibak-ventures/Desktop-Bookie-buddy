@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
-import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
@@ -11,9 +11,9 @@ import 'package:bookie_buddy_web/features/client/presentation/widgets/client_sea
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 class BookingClientDetailsPanel extends StatefulWidget {
   final BookingFormControllers form;

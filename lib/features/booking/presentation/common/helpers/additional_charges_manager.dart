@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Shared logic for adding and removing additional charges.
 /// Used by both the New Booking and Edit Booking flows.

@@ -1,7 +1,7 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/utils/responsive_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 
 /// Mixin to easily make any screen responsive
 /// Usage: class MyScreen extends StatelessWidget with ResponsiveScreenMixin

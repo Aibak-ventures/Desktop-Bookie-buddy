@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
-import 'package:flutter/material.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 
 /// One sidebar destination: icon-only when collapsed, icon+label when
 /// [expanded], highlighted when [isActive].
