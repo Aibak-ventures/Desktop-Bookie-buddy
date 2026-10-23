@@ -313,15 +313,16 @@ class BookingDetailsActionBar extends StatelessWidget {
               }
 
               // Security deposit must be refunded/deducted before completing
-              // — applies whether the booking is being completed normally or
-              // as cancelled work.
-              final pendingDeposit = booking.remainingSecurityBalance;
-              if (pendingDeposit > 0) {
-                context.showSnackBar(
-                  'Cannot mark as completed. Refund or deduct the pending security deposit of ₹${pendingDeposit.toInt()} first.',
-                  isError: true,
-                );
-                return;
+              // — only when the security is paid, and not for cancelled work.
+              if (!isCancelled && booking.isSecurityPaid) {
+                final pendingDeposit = booking.remainingSecurityBalance;
+                if (pendingDeposit > 0) {
+                  context.showSnackBar(
+                    'Cannot mark as completed. Refund or deduct the pending security deposit of ₹${pendingDeposit.toInt()} first.',
+                    isError: true,
+                  );
+                  return;
+                }
               }
 
               final confirm = await showDialog<bool>(
