@@ -1,26 +1,28 @@
 import 'dart:async';
+
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_booking_table_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_header.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widgets/all_bookings_sales_table_row.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/date_filter.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sales_bloc/all_sales_bloc.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
@@ -166,7 +168,10 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
   /// used for an external navigation (e.g. a dashboard summary card), which
   /// is a fresh entry into this screen and shouldn't inherit whatever
   /// search/date filters happened to be left over from a previous visit.
-  void applyStatusFilter(BookingListFilter filter, {bool resetFilters = false}) {
+  void applyStatusFilter(
+    BookingListFilter filter, {
+    bool resetFilters = false,
+  }) {
     if (resetFilters) {
       _searchController.clear();
       _dateFilterNotifier.value = const DateFilter();
@@ -280,7 +285,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
         ),
         const Spacer(),
@@ -362,7 +367,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                       child: Material(
                         elevation: isActive ? 3 : 1,
                         shadowColor: isActive
-                            ? const Color(0xFF8A63FE).withValues(alpha: 0.3)
+                            ? AppColors.purpleAccent.withValues(alpha: 0.3)
                             : Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                         child: InkWell(
@@ -371,9 +376,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                           hoverColor: const Color(
                             0xFFE7E4FF,
                           ).withValues(alpha: 0.5),
-                          splashColor: const Color(
-                            0xFF8A63FE,
-                          ).withValues(alpha: 0.2),
+                          splashColor: AppColors.purpleAccent.withValues(
+                            alpha: 0.2,
+                          ),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             padding: const EdgeInsets.symmetric(
@@ -388,9 +393,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                               border: Border.all(
                                 width: isActive ? 1.5 : 1,
                                 color: isActive
-                                    ? const Color(
-                                        0xFF8A63FE,
-                                      ).withValues(alpha: 0.3)
+                                    ? AppColors.purpleAccent.withValues(
+                                        alpha: 0.3,
+                                      )
                                     : Colors.grey.shade300,
                               ),
                             ),
@@ -400,7 +405,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                                   filter.label,
                                   style: TextStyle(
                                     color: isActive
-                                        ? const Color(0xFF8A63FE)
+                                        ? AppColors.purpleAccent
                                         : Colors.grey.shade600,
                                     fontWeight: isActive
                                         ? FontWeight.w600
@@ -416,7 +421,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                                   ),
                                   decoration: BoxDecoration(
                                     color: isActive
-                                        ? const Color(0xFF8A63FE)
+                                        ? AppColors.purpleAccent
                                         : Colors.grey.shade200,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -495,7 +500,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
                   hasFilter ? Icons.filter_list_alt : Icons.tune,
                   size: 20,
                   color: hasFilter
-                      ? const Color(0xFF8A63FE)
+                      ? AppColors.purpleAccent
                       : Colors.grey.shade600,
                 ),
               );
@@ -569,7 +574,9 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
               builder: (context, state) {
                 return state.maybeWhen(
                   loading: () => const Center(
-                    child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+                    child: CircularProgressIndicator(
+                      color: AppColors.purpleAccent,
+                    ),
                   ),
                   loaded:
                       (
@@ -601,7 +608,7 @@ class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
       builder: (context, state) {
         return state.maybeWhen(
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF8A63FE)),
+            child: CircularProgressIndicator(color: AppColors.purpleAccent),
           ),
           loaded: (sales, _, __, ___, ____, _____) {
             if (sales.isEmpty) {

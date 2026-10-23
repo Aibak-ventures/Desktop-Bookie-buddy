@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
-import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -52,7 +52,7 @@ void showSearchTypeBottomSheet({
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
+                color: AppColors.offWhite,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(20),
                 ),
@@ -65,12 +65,12 @@ void showSearchTypeBottomSheet({
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                      color: AppColors.purple.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
                       Icons.tune_rounded,
-                      color: Color(0xFF6132E4),
+                      color: AppColors.purple,
                       size: 22,
                     ),
                   ),
@@ -112,7 +112,7 @@ void showSearchTypeBottomSheet({
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D2D2D),
+                        color: AppColors.nearBlack,
                         fontFamily: 'Inter',
                       ),
                     ),
@@ -138,21 +138,21 @@ void showSearchTypeBottomSheet({
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? const Color(0xFF6132E4)
+                                      ? AppColors.purple
                                       : Colors.grey.shade50,
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
                                     color: isSelected
-                                        ? const Color(0xFF6132E4)
+                                        ? AppColors.purple
                                         : Colors.grey.shade300,
                                     width: 1.5,
                                   ),
                                   boxShadow: isSelected
                                       ? [
                                           BoxShadow(
-                                            color: const Color(
-                                              0xFF6132E4,
-                                            ).withValues(alpha: 0.3),
+                                            color: AppColors.purple.withValues(
+                                              alpha: 0.3,
+                                            ),
                                             blurRadius: 8,
                                             offset: const Offset(0, 4),
                                           ),
@@ -206,7 +206,7 @@ void showSearchTypeBottomSheet({
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF2D2D2D),
+                            color: AppColors.nearBlack,
                             fontFamily: 'Inter',
                           ),
                         ),
@@ -221,10 +221,10 @@ void showSearchTypeBottomSheet({
                                     isPriceFilterEnabledWidgetNotifier.value =
                                         value;
                                   },
-                                  activeThumbColor: const Color(0xFF6132E4),
-                                  activeTrackColor: const Color(
-                                    0xFF6132E4,
-                                  ).withValues(alpha: 0.3),
+                                  activeThumbColor: AppColors.purple,
+                                  activeTrackColor: AppColors.purple.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   inactiveThumbColor: Colors.grey.shade400,
                                   inactiveTrackColor: Colors.grey.shade200,
                                 ),
@@ -274,9 +274,7 @@ void showSearchTypeBottomSheet({
                                                       vertical: 10,
                                                     ),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(
-                                                    0xFFF8F9FA,
-                                                  ),
+                                                  color: AppColors.offWhite,
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   border: Border.all(
@@ -314,9 +312,8 @@ void showSearchTypeBottomSheet({
                                                         prefixStyle: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w600,
-                                                          color: Color(
-                                                            0xFF6132E4,
-                                                          ),
+                                                          color:
+                                                              AppColors.purple,
                                                         ),
                                                       ),
                                                   onChanged: (value) {
@@ -383,21 +380,20 @@ void showSearchTypeBottomSheet({
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                const Color(
-                                                  0xFF6132E4,
-                                                ).withValues(alpha: 0.1),
-                                                const Color(
-                                                  0xFF6132E4,
-                                                ).withValues(alpha: 0.05),
+                                                AppColors.purple.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                                AppColors.purple.withValues(
+                                                  alpha: 0.05,
+                                                ),
                                               ],
                                             ),
                                             borderRadius: BorderRadius.circular(
                                               10,
                                             ),
                                             border: Border.all(
-                                              color: const Color(
-                                                0xFF6132E4,
-                                              ).withValues(alpha: 0.3),
+                                              color: AppColors.purple
+                                                  .withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -405,7 +401,7 @@ void showSearchTypeBottomSheet({
                                             style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w700,
-                                              color: Color(0xFF6132E4),
+                                              color: AppColors.purple,
                                               fontFamily: 'Inter',
                                             ),
                                           ),
@@ -428,21 +424,20 @@ void showSearchTypeBottomSheet({
                                           decoration: BoxDecoration(
                                             gradient: LinearGradient(
                                               colors: [
-                                                const Color(
-                                                  0xFF6132E4,
-                                                ).withValues(alpha: 0.1),
-                                                const Color(
-                                                  0xFF6132E4,
-                                                ).withValues(alpha: 0.05),
+                                                AppColors.purple.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                                AppColors.purple.withValues(
+                                                  alpha: 0.05,
+                                                ),
                                               ],
                                             ),
                                             borderRadius: BorderRadius.circular(
                                               10,
                                             ),
                                             border: Border.all(
-                                              color: const Color(
-                                                0xFF6132E4,
-                                              ).withValues(alpha: 0.3),
+                                              color: AppColors.purple
+                                                  .withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
@@ -450,7 +445,7 @@ void showSearchTypeBottomSheet({
                                             style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.w700,
-                                              color: Color(0xFF6132E4),
+                                              color: AppColors.purple,
                                               fontFamily: 'Inter',
                                             ),
                                           ),
@@ -474,17 +469,13 @@ void showSearchTypeBottomSheet({
                                                 child,
                                               ) => SliderTheme(
                                                 data: SliderThemeData(
-                                                  activeTrackColor: const Color(
-                                                    0xFF6132E4,
-                                                  ),
+                                                  activeTrackColor:
+                                                      AppColors.purple,
                                                   inactiveTrackColor:
                                                       Colors.grey.shade200,
-                                                  thumbColor: const Color(
-                                                    0xFF6132E4,
-                                                  ),
-                                                  overlayColor: const Color(
-                                                    0xFF6132E4,
-                                                  ).withValues(alpha: 0.2),
+                                                  thumbColor: AppColors.purple,
+                                                  overlayColor: AppColors.purple
+                                                      .withValues(alpha: 0.2),
                                                   trackHeight: 4,
                                                   thumbShape:
                                                       const RoundSliderThumbShape(
@@ -560,7 +551,7 @@ void showSearchTypeBottomSheet({
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D2D2D),
+                                      color: AppColors.nearBlack,
                                       fontFamily: 'Inter',
                                     ),
                                   ),
@@ -604,7 +595,7 @@ void showSearchTypeBottomSheet({
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
+                color: AppColors.offWhite,
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(20),
                 ),
@@ -662,12 +653,10 @@ void showSearchTypeBottomSheet({
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        backgroundColor: const Color(0xFF6132E4),
+                        backgroundColor: AppColors.purple,
                         foregroundColor: Colors.white,
                         elevation: 0,
-                        shadowColor: const Color(
-                          0xFF6132E4,
-                        ).withValues(alpha: 0.3),
+                        shadowColor: AppColors.purple.withValues(alpha: 0.3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

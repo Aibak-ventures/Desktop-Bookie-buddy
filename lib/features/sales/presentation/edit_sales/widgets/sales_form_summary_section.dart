@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
-import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/save_sales_cubit/save_sales_cubit.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/controllers/add_or_edit_sales_form_state_controller.dart';
@@ -87,13 +88,13 @@ class SalesFormSummarySection extends StatelessWidget {
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
-                    color: Color(0xFF3E3E3E),
+                    color: AppColors.darkGrey,
                   ),
                   valueStyle: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: Color(0xFF3E3E3E),
+                    color: AppColors.darkGrey,
                   ),
                 ),
               ];
@@ -128,7 +129,7 @@ class SalesFormSummarySection extends StatelessWidget {
                 return ElevatedButton(
                   onPressed: isSaving ? null : onSave,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6132E4),
+                    backgroundColor: AppColors.purple,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

@@ -1,13 +1,14 @@
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
-import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
-import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
+import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
@@ -355,7 +356,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF6132E4),
+                        color: AppColors.purple,
                       ),
                     );
                   },
@@ -366,7 +367,7 @@ class _OldBookingContentWidgetState extends State<OldBookingContentWidget> {
                   child: ElevatedButton(
                     onPressed: widget.onConfirm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(

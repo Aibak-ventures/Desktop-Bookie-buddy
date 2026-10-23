@@ -1,15 +1,15 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_refund_check_mapper.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/cancel_booking_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/dialogs/partial_return_dialogs.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
@@ -151,17 +151,18 @@ class BookingDetailsHeaderSection extends StatelessWidget {
                               paymentHistory: booking
                                   .toRefundAvailabilityHistory(),
                               onCancel: () => Navigator.of(dialogContext).pop(),
-                              onConfirm: (refundAmount, accountId, paymentDate) {
-                                Navigator.of(dialogContext).pop();
-                                context.read<BookingDetailsBloc>().add(
-                                  BookingDetailsEvent.cancelBooking(
-                                    bookingId: booking.id,
-                                    refundAmount: refundAmount,
-                                    accountId: accountId,
-                                    paymentDate: paymentDate,
-                                  ),
-                                );
-                              },
+                              onConfirm:
+                                  (refundAmount, accountId, paymentDate) {
+                                    Navigator.of(dialogContext).pop();
+                                    context.read<BookingDetailsBloc>().add(
+                                      BookingDetailsEvent.cancelBooking(
+                                        bookingId: booking.id,
+                                        refundAmount: refundAmount,
+                                        accountId: accountId,
+                                        paymentDate: paymentDate,
+                                      ),
+                                    );
+                                  },
                             ),
                           );
                         },

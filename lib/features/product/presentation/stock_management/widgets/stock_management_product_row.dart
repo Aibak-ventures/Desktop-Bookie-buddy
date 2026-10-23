@@ -77,7 +77,7 @@ class StockManagementProductRow extends StatelessWidget {
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: Color(0xFF1F2937),
+                                  color: AppColors.darkSlate,
                                   height: 1.3,
                                 ),
                                 maxLines: 1,
@@ -175,7 +175,7 @@ class StockManagementProductRow extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2937),
+                            color: AppColors.darkSlate,
                           ),
                           overflow: TextOverflow.ellipsis,
                         );
@@ -193,7 +193,7 @@ class StockManagementProductRow extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1F2937),
+                        color: AppColors.darkSlate,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),

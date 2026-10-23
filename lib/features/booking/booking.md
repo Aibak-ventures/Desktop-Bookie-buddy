@@ -18,7 +18,7 @@ The largest feature in the app. Manages the full lifecycle of bookings and sales
 
 ## Directory Structure
 
-```
+```text
 booking/
 ├── data/
 │   ├── datasources/
@@ -31,7 +31,6 @@ booking/
 │   │   ├── booking_details_payment_history_model/
 │   │   ├── additional_charges_model/
 │   │   ├── booking_other_details_model/         # Vehicle fields (location, etc.)
-│   │   ├── measurement_value_model/
 │   │   ├── security_summary_model/
 │   │   └── document_file_model.dart
 │   └── repositories/
@@ -90,7 +89,8 @@ booking/
 ## Key Flows
 
 ### Create Booking
-```
+
+```text
 NewBookingScreen (BookingFormMixin)
   → AddBookingUseCase.call(BookingRequestEntity)
     → BookingRequestModel.fromEntity(entity)
@@ -99,21 +99,24 @@ NewBookingScreen (BookingFormMixin)
 ```
 
 ### Create Sale (from New Booking tab)
-```
+
+```text
 NewBookingScreen
   → CreateSaleBookingUseCase.call(saleData)
     → POST /api/v4/sales/sales/
 ```
 
 ### Edit Booking
-```
+
+```text
 EditNewBookingScreen (BookingFormMixin)
   → UpdateBookingPartialUseCase.call(bookingId, entity, newDocs?, removedUrls?)
     → PATCH /api/v5/bookings/update-details/{id}/     # with FormData for file uploads
 ```
 
 ### Payment / Status Update
-```
+
+```text
 BookingDetailsBloc
   → UpdatePaymentUseCase     → POST /api/v5/bookings/bookings/add-payment/{id}/
   → UpdateDeliveryStatusUseCase → PATCH /api/v5/bookings/update-delivery-status/{id}/
@@ -123,7 +126,8 @@ BookingDetailsBloc
 ```
 
 ### Product Search in Booking Form
-```
+
+```text
 BookingFormMixin.onSearchChanged()
   → SelectProductBloc.searchProducts(query, type, dates)
     → GET /api/v3/bookings/bookings/desktop-available-products/  # for booking type
@@ -141,7 +145,7 @@ BookingFormMixin.onSearchChanged()
 ### `AllBookingBloc`
 
 | Event | Description | Resulting State |
-|---|---|---|
+| --- | --- | --- |
 | `LoadBookings` | Initial/filtered list load | `loading` → `loaded` or `error` |
 | `LoadNextPageBookings` | Scroll to paginate (throttled) | `loaded` with `isPaginating: true` → merged `loaded` |
 | `UpdateBooking` | Sync list item after edit | `loaded` (optimistic update) |
@@ -152,7 +156,7 @@ BookingFormMixin.onSearchChanged()
 ### `BookingDetailsBloc`
 
 | Event | Description | Resulting State |
-|---|---|---|
+| --- | --- | --- |
 | `FetchBookingDetails` | Load single booking | `loading` → `loaded` or `error` |
 | `UpdateDeliveryStatus` | Change delivery status | `loaded` (updated entity) → `success` |
 | `UpdateBookingStatus` | Change payment status | `loaded` (updated entity) → `success` |
@@ -169,7 +173,7 @@ Handles: product search, date selection, product add/remove/quantity, price edit
 ## Entities
 
 | Entity | Key computed getters |
-|---|---|
+| --- | --- |
 | `BookingDetailsEntity` | Now from `bookie_buddy_shared` (core/) (shared with mobile — see `docs/shared-packages-plan.md` in the mobile repo). `actualPaidAmount`, `remainingSecurityBalance`, `netBalance`, `hasPartialSecurityRefund` live in `booking_details_entity_web_extensions.dart` (web-local, no mobile equivalent) |
 | `BookingRequestEntity` | `hasChanges` — compares to original for partial update detection |
 | `StatusCountsEntity` | pending, upcoming, returns, not_returned, completed counts |
@@ -179,7 +183,7 @@ Handles: product search, date selection, product add/remove/quantity, price edit
 ## API Endpoints
 
 | Method | Endpoint | Operation |
-|---|---|---|
+| --- | --- | --- |
 | GET | `/api/v5/bookings/bookings/` | Paginated booking list |
 | POST | `/api/v5/bookings/bookings/` | Create booking |
 | GET | `/api/v5/bookings/bookings/{id}/` | Get single booking |
@@ -200,7 +204,7 @@ Handles: product search, date selection, product add/remove/quantity, price edit
 ## Dependencies
 
 | Dependency | Source |
-|---|---|
+| --- | --- |
 | `SelectProductBloc` | `product` feature — product search in booking form |
 | `ServiceBloc` | `shop` feature — service category filter |
 | `StaffSearchCubit` | `staff` feature — staff assignment |

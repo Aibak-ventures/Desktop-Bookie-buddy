@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// Titled white card container used in [DashboardScreen].
@@ -31,7 +32,7 @@ class DashboardCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
+              color: AppColors.darkSlate,
             ),
           ),
           const SizedBox(height: 16),

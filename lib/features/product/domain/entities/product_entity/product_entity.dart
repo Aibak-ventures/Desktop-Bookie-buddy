@@ -27,6 +27,7 @@ abstract class ProductEntity with _$ProductEntity {
     String? fitnessExpiry,
     String? barcode,
     String? generalServiceName,
+    String? createdAt,
     @Default({}) Map<String, dynamic> attributes,
     required List<ProductVariantEntity> variants,
   }) = _ProductEntity;

@@ -1,20 +1,20 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_model/booking_model.dart';
-import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/sales/data/models/sale_model/sale_model.dart';
+import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
+import 'package:bookie_buddy_web/features/staff/data/models/staff_analytics_model/staff_analytics_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_details_model/staff_details_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_model/staff_model.dart';
 import 'package:bookie_buddy_web/features/staff/data/models/staff_request_model/staff_request_model.dart';
-import 'package:bookie_buddy_web/features/staff/data/datasources/staff_remote_datasource.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_analytics_entity/staff_analytics_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_details_entity/staff_details_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_request_entity/staff_request_entity.dart';
 import 'package:bookie_buddy_web/features/staff/domain/repositories/i_staff_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:bookie_buddy_web/features/staff/data/models/staff_analytics_model/staff_analytics_model.dart';
 
 class StaffRepositoryImpl implements IStaffRepository {
   final StaffRemoteDatasource _service;

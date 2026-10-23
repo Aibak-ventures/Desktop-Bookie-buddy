@@ -11,13 +11,9 @@ _ProductSelectedModel _$ProductSelectedModelFromJson(
 ) => _ProductSelectedModel(
   variant: ProductInfoModel.fromJson(json['variant'] as Map<String, dynamic>),
   amount: (json['amount'] as num).toInt(),
-  measurements:
-      (json['measurements'] as List<dynamic>?)
-          ?.map(
-            (e) => MeasurementValueModel.fromJson(e as Map<String, dynamic>),
-          )
-          .toList() ??
-      const [],
+  peopleMeasurements: json['measurements'] == null
+      ? const []
+      : PersonMeasurementsModel.fromCustomJson(json['measurements']),
   quantity: (json['quantity'] as num).toInt(),
   runningKilometers: json['runningKilometers'] as String?,
 );
@@ -27,7 +23,9 @@ Map<String, dynamic> _$ProductSelectedModelToJson(
 ) => <String, dynamic>{
   'variant': instance.variant,
   'amount': instance.amount,
-  'measurements': instance.measurements,
+  'measurements': PersonMeasurementsModel.toCustomJson(
+    instance.peopleMeasurements,
+  ),
   'quantity': instance.quantity,
   'runningKilometers': instance.runningKilometers,
 };

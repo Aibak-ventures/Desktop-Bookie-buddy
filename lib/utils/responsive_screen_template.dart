@@ -22,7 +22,7 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       backgroundColor: ResponsiveHelper.isDesktop(context)
-//           ? const Color(0xFFF8F9FA)
+//           ? AppColors.offWhite
 //           : null,
 //       appBar: ResponsiveHelper.isMobile(context)
 //           ? AppBar(
@@ -51,8 +51,8 @@
 //           begin: Alignment.topCenter,
 //           end: Alignment.bottomCenter,
 //           colors: [
-//             Color(0xFFF8F9FA),
-//             Color(0xFFE9ECEF),
+//             AppColors.offWhite,
+//             AppColors.softGrey,
 //           ],
 //         ),
 //       ),
@@ -154,8 +154,8 @@
 //           begin: Alignment.topCenter,
 //           end: Alignment.bottomCenter,
 //           colors: [
-//             Color(0xFFF8F9FA),
-//             Color(0xFFE9ECEF),
+//             AppColors.offWhite,
+//             AppColors.softGrey,
 //           ],
 //         ),
 //       ),

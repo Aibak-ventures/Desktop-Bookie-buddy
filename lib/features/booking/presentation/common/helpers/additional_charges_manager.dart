@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
@@ -67,9 +68,7 @@ class AdditionalChargesManager {
                 AdditionalChargesEntity(name: name, amount: amount!),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6132E4),
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.purple),
             child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],

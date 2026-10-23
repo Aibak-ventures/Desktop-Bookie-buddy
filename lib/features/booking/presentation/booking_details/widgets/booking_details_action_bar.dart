@@ -1,13 +1,13 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
-import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/booking_invoice_actions.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/pages/edit_new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/selected_products_cubit/selected_products_cubit.dart';
@@ -313,15 +313,16 @@ class BookingDetailsActionBar extends StatelessWidget {
               }
 
               // Security deposit must be refunded/deducted before completing
-              // — applies whether the booking is being completed normally or
-              // as cancelled work.
-              final pendingDeposit = booking.remainingSecurityBalance;
-              if (pendingDeposit > 0) {
-                context.showSnackBar(
-                  'Cannot mark as completed. Refund or deduct the pending security deposit of ₹${pendingDeposit.toInt()} first.',
-                  isError: true,
-                );
-                return;
+              // — only when the security is paid, and not for cancelled work.
+              if (!isCancelled && booking.isSecurityPaid) {
+                final pendingDeposit = booking.remainingSecurityBalance;
+                if (pendingDeposit > 0) {
+                  context.showSnackBar(
+                    'Cannot mark as completed. Refund or deduct the pending security deposit of ₹${pendingDeposit.toInt()} first.',
+                    isError: true,
+                  );
+                  return;
+                }
               }
 
               final confirm = await showDialog<bool>(

@@ -1,7 +1,7 @@
-import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
-import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
@@ -11,6 +11,7 @@ import 'package:bookie_buddy_web/features/client/presentation/widgets/client_sea
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -319,7 +320,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                     color: const Color.fromARGB(255, 245, 242, 254),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF6132E4).withValues(alpha: 0.2),
+                      color: AppColors.purple.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Column(
@@ -343,7 +344,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                   const Icon(
                                     Icons.receipt_long_rounded,
                                     size: 16,
-                                    color: Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
@@ -353,7 +354,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF3E3E3E),
+                                      color: AppColors.darkGrey,
                                     ),
                                   ),
                                 ],
@@ -365,7 +366,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w700,
-                                      color: Color(0xFF6132E4),
+                                      color: AppColors.purple,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -374,7 +375,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
                                         ? Icons.keyboard_arrow_up_rounded
                                         : Icons.keyboard_arrow_down_rounded,
                                     size: 20,
-                                    color: const Color(0xFF6132E4),
+                                    color: AppColors.purple,
                                   ),
                                 ],
                               ),
@@ -428,7 +429,7 @@ class _BookingClientDetailsPanelState extends State<BookingClientDetailsPanel>
               child: ElevatedButton(
                 onPressed: widget.onContinue,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6132E4),
+                  backgroundColor: AppColors.purple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

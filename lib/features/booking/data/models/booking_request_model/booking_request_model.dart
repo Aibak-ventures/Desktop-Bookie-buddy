@@ -1,10 +1,10 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_payment_request_model.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/booking_other_details_model/booking_other_details_model.dart';
 import 'package:bookie_buddy_web/features/client/data/models/client_request_model/client_request_model.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/additional_charges_model/additional_charges_model.dart';
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -41,6 +41,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
     @JsonKey(name: 'advance_amount') int? advanceAmount,
     @JsonKey(name: 'security_amount') int? securityAmount,
     @JsonKey(name: 'security_amount_is_paid') bool? isSecurityPaid,
+    @JsonKey(name: 'security_paid_at') String? securityPaidDate,
     @JsonKey(name: 'discount_amount') int? discountAmount,
     @JsonKey(name: 'purchase_mode') String? purchaseMode,
     @JsonKey(name: 'description') String? description,
@@ -98,6 +99,7 @@ abstract class BookingRequestModel with _$BookingRequestModel {
         advanceAmount: entity.advanceAmount,
         securityAmount: entity.securityAmount,
         isSecurityPaid: entity.isSecurityPaid,
+        securityPaidDate: entity.securityPaidDate,
         discountAmount: entity.discountAmount,
         purchaseMode: entity.purchaseMode,
         description: entity.description,

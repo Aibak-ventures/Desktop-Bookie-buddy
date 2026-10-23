@@ -2,20 +2,20 @@
 
 import 'dart:math' as math;
 
-import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_shared/core/core/common/utils/refund_availability_calculator.dart';
 import 'package:bookie_buddy_shared/core/core/constants/payment_notes.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
+import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:flutter/material.dart';
 
 /// The kind of transaction being added through [showAddPaymentDialog].
@@ -459,15 +459,14 @@ class _AddPaymentDialogState extends State<_AddPaymentDialog> {
                                   history: paymentHistory,
                                   date: selectedDate,
                                 );
-                            final refundMessage =
-                                RefundUnavailableMessage(
-                                  reason: reason,
-                                  date: selectedDate,
-                                  availableForDate: availableForDate,
-                                  requestedAmount: amount,
-                                  formatDate: (date) => date.format(),
-                                  formatAmount: (amount) => amount.toCurrency(),
-                                );
+                            final refundMessage = RefundUnavailableMessage(
+                              reason: reason,
+                              date: selectedDate,
+                              availableForDate: availableForDate,
+                              requestedAmount: amount,
+                              formatDate: (date) => date.format(),
+                              formatAmount: (amount) => amount.toCurrency(),
+                            );
                             context.showSnackBar(
                               refundMessage.message,
                               isError: refundMessage.isError,

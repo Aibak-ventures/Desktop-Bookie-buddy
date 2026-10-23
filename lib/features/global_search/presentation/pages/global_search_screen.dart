@@ -1,16 +1,17 @@
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_shared/core/core/common/helpers/shop_field_helper.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_web/core/common/models/date_filter_model.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_active_filter_indicator.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_search_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/date_filter_button.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_active_filter_indicator.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/custom_date_filter_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/widgets/global_search_invoice_search_results.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/mode_toggle_widget.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -115,7 +116,7 @@ class _GlobalSearchScreenState extends State<GlobalSearchScreen> {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                   ),
                 ),
                 const Spacer(),

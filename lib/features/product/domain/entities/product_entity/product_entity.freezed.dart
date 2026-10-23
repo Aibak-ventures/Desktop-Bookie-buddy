@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductEntity {
 
- int get id; String get name; String? get description; MainServiceType? get mainServiceType; String? get color; String? get model; String? get image; String? get thumbnailImage; String? get category; int? get purchaseAmount; int? get price; String? get salePrice; String? get registrationNumber; String? get pollutionExpiry; String? get insuranceExpiry; String? get fitnessExpiry; String? get barcode; String? get generalServiceName; Map<String, dynamic> get attributes; List<ProductVariantEntity> get variants;
+ int get id; String get name; String? get description; MainServiceType? get mainServiceType; String? get color; String? get model; String? get image; String? get thumbnailImage; String? get category; int? get purchaseAmount; int? get price; String? get salePrice; String? get registrationNumber; String? get pollutionExpiry; String? get insuranceExpiry; String? get fitnessExpiry; String? get barcode; String? get generalServiceName; String? get createdAt; Map<String, dynamic> get attributes; List<ProductVariantEntity> get variants;
 /// Create a copy of ProductEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ProductEntityCopyWith<ProductEntity> get copyWith => _$ProductEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.variants, variants));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.variants, variants));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(variants)]);
+int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,createdAt,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(variants)]);
 
 @override
 String toString() {
-  return 'ProductEntity(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, attributes: $attributes, variants: $variants)';
+  return 'ProductEntity(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, createdAt: $createdAt, attributes: $attributes, variants: $variants)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ProductEntityCopyWith<$Res>  {
   factory $ProductEntityCopyWith(ProductEntity value, $Res Function(ProductEntity) _then) = _$ProductEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String? description, MainServiceType? mainServiceType, String? color, String? model, String? image, String? thumbnailImage, String? category, int? purchaseAmount, int? price, String? salePrice, String? registrationNumber, String? pollutionExpiry, String? insuranceExpiry, String? fitnessExpiry, String? barcode, String? generalServiceName, Map<String, dynamic> attributes, List<ProductVariantEntity> variants
+ int id, String name, String? description, MainServiceType? mainServiceType, String? color, String? model, String? image, String? thumbnailImage, String? category, int? purchaseAmount, int? price, String? salePrice, String? registrationNumber, String? pollutionExpiry, String? insuranceExpiry, String? fitnessExpiry, String? barcode, String? generalServiceName, String? createdAt, Map<String, dynamic> attributes, List<ProductVariantEntity> variants
 });
 
 
@@ -62,7 +62,7 @@ class _$ProductEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProductEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mainServiceType = freezed,Object? color = freezed,Object? model = freezed,Object? image = freezed,Object? thumbnailImage = freezed,Object? category = freezed,Object? purchaseAmount = freezed,Object? price = freezed,Object? salePrice = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? generalServiceName = freezed,Object? attributes = null,Object? variants = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mainServiceType = freezed,Object? color = freezed,Object? model = freezed,Object? image = freezed,Object? thumbnailImage = freezed,Object? category = freezed,Object? purchaseAmount = freezed,Object? price = freezed,Object? salePrice = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? generalServiceName = freezed,Object? createdAt = freezed,Object? attributes = null,Object? variants = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -82,6 +82,7 @@ as String?,insuranceExpiry: freezed == insuranceExpiry ? _self.insuranceExpiry :
 as String?,fitnessExpiry: freezed == fitnessExpiry ? _self.fitnessExpiry : fitnessExpiry // ignore: cast_nullable_to_non_nullable
 as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,generalServiceName: freezed == generalServiceName ? _self.generalServiceName : generalServiceName // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String?,attributes: null == attributes ? _self.attributes : attributes // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,variants: null == variants ? _self.variants : variants // ignore: cast_nullable_to_non_nullable
 as List<ProductVariantEntity>,
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  String? createdAt,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductEntity() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.attributes,_that.variants);case _:
+return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.createdAt,_that.attributes,_that.variants);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  String? createdAt,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)  $default,) {final _that = this;
 switch (_that) {
 case _ProductEntity():
-return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.attributes,_that.variants);case _:
+return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.createdAt,_that.attributes,_that.variants);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String? description,  MainServiceType? mainServiceType,  String? color,  String? model,  String? image,  String? thumbnailImage,  String? category,  int? purchaseAmount,  int? price,  String? salePrice,  String? registrationNumber,  String? pollutionExpiry,  String? insuranceExpiry,  String? fitnessExpiry,  String? barcode,  String? generalServiceName,  String? createdAt,  Map<String, dynamic> attributes,  List<ProductVariantEntity> variants)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductEntity() when $default != null:
-return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.attributes,_that.variants);case _:
+return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_that.color,_that.model,_that.image,_that.thumbnailImage,_that.category,_that.purchaseAmount,_that.price,_that.salePrice,_that.registrationNumber,_that.pollutionExpiry,_that.insuranceExpiry,_that.fitnessExpiry,_that.barcode,_that.generalServiceName,_that.createdAt,_that.attributes,_that.variants);case _:
   return null;
 
 }
@@ -225,7 +226,7 @@ return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_tha
 
 
 class _ProductEntity extends ProductEntity {
-  const _ProductEntity({required this.id, required this.name, required this.description, this.mainServiceType, this.color, this.model, this.image, this.thumbnailImage, this.category, this.purchaseAmount, this.price, this.salePrice, this.registrationNumber, this.pollutionExpiry, this.insuranceExpiry, this.fitnessExpiry, this.barcode, this.generalServiceName, final  Map<String, dynamic> attributes = const {}, required final  List<ProductVariantEntity> variants}): _attributes = attributes,_variants = variants,super._();
+  const _ProductEntity({required this.id, required this.name, required this.description, this.mainServiceType, this.color, this.model, this.image, this.thumbnailImage, this.category, this.purchaseAmount, this.price, this.salePrice, this.registrationNumber, this.pollutionExpiry, this.insuranceExpiry, this.fitnessExpiry, this.barcode, this.generalServiceName, this.createdAt, final  Map<String, dynamic> attributes = const {}, required final  List<ProductVariantEntity> variants}): _attributes = attributes,_variants = variants,super._();
   
 
 @override final  int id;
@@ -246,6 +247,7 @@ class _ProductEntity extends ProductEntity {
 @override final  String? fitnessExpiry;
 @override final  String? barcode;
 @override final  String? generalServiceName;
+@override final  String? createdAt;
  final  Map<String, dynamic> _attributes;
 @override@JsonKey() Map<String, dynamic> get attributes {
   if (_attributes is EqualUnmodifiableMapView) return _attributes;
@@ -271,16 +273,16 @@ _$ProductEntityCopyWith<_ProductEntity> get copyWith => __$ProductEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&const DeepCollectionEquality().equals(other._attributes, _attributes)&&const DeepCollectionEquality().equals(other._variants, _variants));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._attributes, _attributes)&&const DeepCollectionEquality().equals(other._variants, _variants));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_variants)]);
+int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,createdAt,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_variants)]);
 
 @override
 String toString() {
-  return 'ProductEntity(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, attributes: $attributes, variants: $variants)';
+  return 'ProductEntity(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, createdAt: $createdAt, attributes: $attributes, variants: $variants)';
 }
 
 
@@ -291,7 +293,7 @@ abstract mixin class _$ProductEntityCopyWith<$Res> implements $ProductEntityCopy
   factory _$ProductEntityCopyWith(_ProductEntity value, $Res Function(_ProductEntity) _then) = __$ProductEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String? description, MainServiceType? mainServiceType, String? color, String? model, String? image, String? thumbnailImage, String? category, int? purchaseAmount, int? price, String? salePrice, String? registrationNumber, String? pollutionExpiry, String? insuranceExpiry, String? fitnessExpiry, String? barcode, String? generalServiceName, Map<String, dynamic> attributes, List<ProductVariantEntity> variants
+ int id, String name, String? description, MainServiceType? mainServiceType, String? color, String? model, String? image, String? thumbnailImage, String? category, int? purchaseAmount, int? price, String? salePrice, String? registrationNumber, String? pollutionExpiry, String? insuranceExpiry, String? fitnessExpiry, String? barcode, String? generalServiceName, String? createdAt, Map<String, dynamic> attributes, List<ProductVariantEntity> variants
 });
 
 
@@ -308,7 +310,7 @@ class __$ProductEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProductEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mainServiceType = freezed,Object? color = freezed,Object? model = freezed,Object? image = freezed,Object? thumbnailImage = freezed,Object? category = freezed,Object? purchaseAmount = freezed,Object? price = freezed,Object? salePrice = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? generalServiceName = freezed,Object? attributes = null,Object? variants = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mainServiceType = freezed,Object? color = freezed,Object? model = freezed,Object? image = freezed,Object? thumbnailImage = freezed,Object? category = freezed,Object? purchaseAmount = freezed,Object? price = freezed,Object? salePrice = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? generalServiceName = freezed,Object? createdAt = freezed,Object? attributes = null,Object? variants = null,}) {
   return _then(_ProductEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -328,6 +330,7 @@ as String?,insuranceExpiry: freezed == insuranceExpiry ? _self.insuranceExpiry :
 as String?,fitnessExpiry: freezed == fitnessExpiry ? _self.fitnessExpiry : fitnessExpiry // ignore: cast_nullable_to_non_nullable
 as String?,barcode: freezed == barcode ? _self.barcode : barcode // ignore: cast_nullable_to_non_nullable
 as String?,generalServiceName: freezed == generalServiceName ? _self.generalServiceName : generalServiceName // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String?,attributes: null == attributes ? _self._attributes : attributes // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,variants: null == variants ? _self._variants : variants // ignore: cast_nullable_to_non_nullable
 as List<ProductVariantEntity>,

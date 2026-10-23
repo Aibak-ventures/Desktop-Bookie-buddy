@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
@@ -29,9 +30,9 @@ class AllBookingsBookingTableRow extends StatelessWidget {
           onTap: () {
             context.read<DetailsDrawerCubit>().openBooking(booking.id);
           },
-          hoverColor: const Color(0xFF8A63FE).withValues(alpha: 0.08),
-          splashColor: const Color(0xFF8A63FE).withValues(alpha: 0.12),
-          highlightColor: const Color(0xFF8A63FE).withValues(alpha: 0.1),
+          hoverColor: AppColors.purpleAccent.withValues(alpha: 0.08),
+          splashColor: AppColors.purpleAccent.withValues(alpha: 0.12),
+          highlightColor: AppColors.purpleAccent.withValues(alpha: 0.1),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(

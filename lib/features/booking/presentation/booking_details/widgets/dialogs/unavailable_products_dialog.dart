@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/unavailable_products_entity/unavailable_products_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/unavailable_products_entity/unavailable_products_entity.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_network_image.dart';

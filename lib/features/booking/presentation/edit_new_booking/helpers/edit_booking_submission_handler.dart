@@ -30,6 +30,8 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
   // ---------------------------------------------------------------------------
 
   void _handleSaveBooking() {
+    SelectedMeasurementsFit.apply(selectedProductsNotifier);
+
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -86,6 +88,22 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
         );
         return;
       }
+    }
+
+    // Pickup can't be moved before the booked date (an untouched legacy
+    // pickup date is left alone). Bookings only — a sale's date is its own.
+    final bookedDate = selectedBookingType == BookingType.booking
+        ? _originalBooking?.bookedDateOnly
+        : null;
+    if (bookedDate != null &&
+        pickupDate.dateOnly.isBefore(bookedDate) &&
+        pickupDate.dateOnly != _originalPickupDate?.dateOnly) {
+      context.showSnackBar(
+        'Pickup date can\'t be before the booked date',
+        title: 'Invalid Dates',
+        isError: true,
+      );
+      return;
     }
 
     final isSaleType = selectedBookingType == BookingType.sales;
@@ -217,6 +235,9 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
       updates['security_amount'] = secAmtChanged;
       updates['security_amount_is_paid'] =
           secAmtChanged != null && secAmtChanged > 0 ? isSecurityPaid : null;
+      if (_shouldSendSecurityPaidDate) {
+        updates['security_paid_at'] = securityPaidDate.format();
+      }
       final discountInput =
           discountAmountController.text.trim().toIntOrNull() ?? 0;
       final productBase = _getDiscountProductBase();
@@ -252,17 +273,11 @@ extension EditBookingSubmissionHandler on EditNewBookingScreenState {
           'quantity': p.quantity,
           'amount': lineAmount,
         };
-        final measurementMap = <String, dynamic>{};
-        for (final m in p.measurements) {
-          if (m.key != 'running_kilometers') {
-            measurementMap[m.key] = m.value;
-          }
-        }
-        if (runningKm.isNotEmpty) {
-          measurementMap['running_kilometers'] = runningKm;
-        }
-        if (measurementMap.isNotEmpty) {
-          variantData['measurements'] = measurementMap;
+        final measurements = p.peopleMeasurements.toMeasurementsJson(
+          runningKilometers: runningKm,
+        );
+        if (measurements != null) {
+          variantData[MeasurementConstants.jsonKey] = measurements;
         }
         return variantData;
       }).toList();

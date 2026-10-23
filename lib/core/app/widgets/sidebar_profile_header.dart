@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +34,7 @@ class SidebarProfileHeader extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                     letterSpacing: 0.3,
                   ),
                   maxLines: 1,
@@ -57,7 +58,7 @@ class SidebarProfileHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF6C5CE7), Color(0xFF00B4DB)],
+          colors: [AppColors.purpleSoft, Color(0xFF00B4DB)],
         ),
       ),
       child: Container(
@@ -72,7 +73,7 @@ class SidebarProfileHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: size * 0.4,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF6C5CE7),
+              color: AppColors.purpleSoft,
             ),
           ),
         ),

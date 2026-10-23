@@ -1,15 +1,15 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_shared/core/utils/async/run_for_at_least.dart';
+import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
+import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_web/core/config/dev_config.dart';
 import 'package:bookie_buddy_web/core/constants/app_constants.dart';
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/core/app/my_app.dart';
-import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/onboarding_screen.dart';
-import 'package:bookie_buddy_web/core/app/app_shell_screen.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
+import 'package:bookie_buddy_web/utils/shared_preference_helper.dart';
 
 class SplashInitializationUseCase {
   SplashInitializationUseCase({

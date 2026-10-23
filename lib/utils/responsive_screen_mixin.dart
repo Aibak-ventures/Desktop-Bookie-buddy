@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/utils/responsive_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ mixin ResponsiveScreenMixin on Widget {
   bool get showBackButton => true;
 
   /// Override this method to provide custom background color for desktop
-  Color? get desktopBackgroundColor => const Color(0xFFF8F9FA);
+  Color? get desktopBackgroundColor => AppColors.offWhite;
 
   Widget buildResponsiveScreen(BuildContext context) {
     return Scaffold(
@@ -50,7 +51,7 @@ mixin ResponsiveScreenMixin on Widget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFF8F9FA), Color(0xFFE9ECEF)],
+          colors: [AppColors.offWhite, AppColors.softGrey],
         ),
       ),
       child: Column(
@@ -152,7 +153,7 @@ mixin ResponsiveScreenMixin on Widget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFF8F9FA), Color(0xFFE9ECEF)],
+          colors: [AppColors.offWhite, AppColors.softGrey],
         ),
       ),
       child: Column(

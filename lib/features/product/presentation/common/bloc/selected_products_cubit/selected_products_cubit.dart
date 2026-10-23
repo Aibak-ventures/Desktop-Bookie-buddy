@@ -1,13 +1,13 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'selected_products_state.dart';
 part 'selected_products_cubit.freezed.dart';
+part 'selected_products_state.dart';
 
 class SelectedProductsCubit extends Cubit<SelectedProductsState> {
   SelectedProductsCubit() : super(const _Selected([]));
@@ -30,12 +30,23 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
       'SelectedProductsCubit: Adding product - ${product.name}, amount: $amount, quantity: $quantity',
     );
 
+    final currentState = state as _Selected;
+
+    // Re-selecting a variant (e.g. to change its quantity) must not wipe the
+    // measurements already entered for it. They are kept as they are, even
+    // when the quantity drops below the number of people, so raising it again
+    // brings everyone back. They are only trimmed once the user moves on (see
+    // `fitMeasurementsToQuantity`).
+    final previous = currentState.selectedProductsWithAmount
+        .where((model) => model.variant.variantId == product.variantId)
+        .firstOrNull;
+
     final selected = ProductSelectedEntity(
       variant: product,
       amount: amount ?? 0,
       quantity: quantity,
+      peopleMeasurements: previous?.peopleMeasurements ?? const [],
     );
-    final currentState = state as _Selected;
 
     final newList = currentState.selectedProductsWithAmount
         .where((model) => model.variant.variantId != selected.variant.variantId)
@@ -64,7 +75,7 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
 
   void updateProductMeasurements(
     int productId,
-    List<MeasurementValueEntity> measurements,
+    List<PersonMeasurementsEntity> peopleMeasurements,
   ) {
     log(
       'SelectedProductsCubit: Updating measurements for product ID: $productId',
@@ -73,7 +84,7 @@ class SelectedProductsCubit extends Cubit<SelectedProductsState> {
     final s = state as _Selected;
     final newList = s.selectedProductsWithAmount.map((model) {
       if (model.variant.variantId == productId) {
-        return model.copyWith(measurements: measurements);
+        return model.copyWith(peopleMeasurements: peopleMeasurements);
       }
       return model;
     }).toList();

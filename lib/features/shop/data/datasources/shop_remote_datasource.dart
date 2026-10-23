@@ -1,9 +1,9 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/service_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/shop_endpoints.dart';
-import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/features/shop/data/models/update_shop_settings_request_model/update_shop_settings_request_model.dart';
 import 'package:dio/dio.dart';
 
@@ -32,11 +32,7 @@ class ShopRemoteDatasource {
   }) async {
     try {
       final response = await _dio.get(
-        _shopEndpoint.allShopSummary(
-          year: year,
-          month: month,
-          shopId: shopId,
-        ),
+        _shopEndpoint.allShopSummary(year: year, month: month, shopId: shopId),
       );
       log(
         'Get All Shop Summary Response: ${response.realUri} ,${response.data}',

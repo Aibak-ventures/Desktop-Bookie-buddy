@@ -1,7 +1,8 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 /// Helper class for building common text field widgets in new booking screen
@@ -205,7 +206,7 @@ class BookingTextFieldBuilder {
               borderSide: BorderSide(
                 color: errorText != null
                     ? Colors.red.shade400
-                    : const Color(0xFF6132E4),
+                    : AppColors.purple,
               ),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -344,10 +345,7 @@ class BookingTextFieldBuilder {
                 borderRadius: BorderRadius.circular(8),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  color: Color(0xFF6132E4),
-                  width: 1,
-                ),
+                borderSide: const BorderSide(color: AppColors.purple, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBorder: OutlineInputBorder(

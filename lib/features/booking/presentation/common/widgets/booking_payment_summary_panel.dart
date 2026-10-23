@@ -1,7 +1,8 @@
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_controllers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_form_mixin.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
@@ -233,7 +234,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                                       size: 18,
                                       color: isPercent
                                           ? Colors.grey
-                                          : const Color(0xFF6132E4),
+                                          : AppColors.purple,
                                     ),
                                     const SizedBox(width: 8),
                                     const Text('Amount (₹)'),
@@ -250,7 +251,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                                           : Icons.circle_outlined,
                                       size: 18,
                                       color: isPercent
-                                          ? const Color(0xFF6132E4)
+                                          ? AppColors.purple
                                           : Colors.grey,
                                     ),
                                     const SizedBox(width: 8),
@@ -302,15 +303,13 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(
-                              0xFF6132E4,
-                            ).withValues(alpha: 0.1),
+                            color: AppColors.purple.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Icon(
                             Icons.add,
                             size: 16,
-                            color: Color(0xFF6132E4),
+                            color: AppColors.purple,
                           ),
                         ),
                       ),
@@ -331,12 +330,10 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF8F9FA),
+                              color: AppColors.offWhite,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: const Color(
-                                  0xFF6132E4,
-                                ).withValues(alpha: 0.2),
+                                color: AppColors.purple.withValues(alpha: 0.2),
                                 width: 1.5,
                               ),
                               boxShadow: [
@@ -357,7 +354,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                                       fontSize: 13,
                                       fontFamily: 'Inter',
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D2D2D),
+                                      color: AppColors.nearBlack,
                                     ),
                                   ),
                                 ),
@@ -369,9 +366,9 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                                         vertical: 4,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF6132E4,
-                                        ).withValues(alpha: 0.1),
+                                        color: AppColors.purple.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
@@ -380,7 +377,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                                           fontSize: 13,
                                           fontFamily: 'Inter',
                                           fontWeight: FontWeight.w700,
-                                          color: Color(0xFF6132E4),
+                                          color: AppColors.purple,
                                         ),
                                       ),
                                     ),
@@ -511,14 +508,12 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
+              color: isSelected ? AppColors.purple : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
             color: isSelected
-                ? const Color(0xFF6132E4).withValues(alpha: 0.05)
+                ? AppColors.purple.withValues(alpha: 0.05)
                 : Colors.white,
           ),
           child: Row(
@@ -527,9 +522,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
               Icon(
                 icon,
                 size: 20,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
+                color: isSelected ? AppColors.purple : Colors.grey.shade700,
               ),
               const SizedBox(width: 8),
               Text(
@@ -537,9 +530,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade700,
+                  color: isSelected ? AppColors.purple : Colors.grey.shade700,
                 ),
               ),
               if (isSelected) ...[
@@ -547,7 +538,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                 const Icon(
                   Icons.check_circle,
                   size: 18,
-                  color: Color(0xFF6132E4),
+                  color: AppColors.purple,
                 ),
               ],
             ],
@@ -571,14 +562,12 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected
-                  ? const Color(0xFF6132E4)
-                  : Colors.grey.shade300,
+              color: isSelected ? AppColors.purple : Colors.grey.shade300,
               width: isSelected ? 1.5 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
             color: isSelected
-                ? const Color(0xFF6132E4).withValues(alpha: 0.05)
+                ? AppColors.purple.withValues(alpha: 0.05)
                 : Colors.white,
           ),
           child: Row(
@@ -587,9 +576,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
               Icon(
                 icon,
                 size: 18,
-                color: isSelected
-                    ? const Color(0xFF6132E4)
-                    : Colors.grey.shade700,
+                color: isSelected ? AppColors.purple : Colors.grey.shade700,
               ),
               const SizedBox(width: 6),
               Text(
@@ -597,9 +584,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? const Color(0xFF6132E4)
-                      : Colors.grey.shade700,
+                  color: isSelected ? AppColors.purple : Colors.grey.shade700,
                 ),
               ),
               if (isSelected) ...[
@@ -607,7 +592,7 @@ class _BookingPaymentSummaryPanelState extends State<BookingPaymentSummaryPanel>
                 const Icon(
                   Icons.check_circle,
                   size: 14,
-                  color: Color(0xFF6132E4),
+                  color: AppColors.purple,
                 ),
               ],
             ],

@@ -1,59 +1,73 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/user_shop_entity/user_shop_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
-import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/summary_amount_row.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/booking_request_entity/booking_request_entity.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
-import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_request_builder.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/fit_selected_measurements.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_success_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
-import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/summary_amount_row.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/bloc/add_booking_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_request_builder.dart';
+// Conditional import for web-specific code
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/web_helper_stub.dart'
+    if (dart.library.html) '../helpers/web_helper_web.dart'
+    as web_helper;
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/old_booking_content_widget.dart';
+import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
+import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/widgets/staff_search_name_field.dart';
@@ -61,29 +75,16 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_success_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/split_advance_payment_fields.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
-import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-// Conditional import for web-specific code
-import '../helpers/web_helper_stub.dart'
-    if (dart.library.html) '../helpers/web_helper_web.dart'
-    as web_helper;
-import '../widgets/old_booking_content_widget.dart';
 part '../widgets/booking_content_widget.dart';
-part '../widgets/sales_content_widget.dart';
-part '../widgets/product_search_helper.dart';
 part '../widgets/booking_date_section_widget.dart';
+part '../widgets/product_search_helper.dart';
+part '../widgets/sales_content_widget.dart';
 
 class NewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -298,6 +299,21 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     return bookedDate.dateOnly.isBefore(DateTime.now().dateOnly)
         ? bookedDate
         : null;
+  }
+
+  /// Date the security deposit was paid. Only asked for when the booked date
+  /// is in the past; it can't be before the booked date or after today.
+  DateTime _securityPaidDate = DateTime.now();
+
+  /// [_securityPaidDate] kept inside [booked date, today] — the booked date
+  /// may have been changed after the paid date was picked.
+  DateTime? get _effectiveSecurityPaidDate {
+    final booked = _bookedDateForSubmit?.dateOnly;
+    if (booked == null) return null;
+    final today = DateTime.now().dateOnly;
+    final paid = _securityPaidDate.dateOnly;
+    if (paid.isBefore(booked)) return booked;
+    return paid.isAfter(today) ? today : paid;
   }
 
   /// True when a manually-picked booked date has ended up later than the
@@ -610,6 +626,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     advanceAmountController.clear();
     securityAmountController.clear();
     isSecurityPaid = true;
+    _securityPaidDate = DateTime.now();
     isAdvanceSplit = false;
     splitBankAmountController.clear();
     selectedAdvanceCashAccount = null;
@@ -1135,7 +1152,10 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       calculateRentalDays: _getEffectiveRentalDays,
       calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Advance',
-      onShowCustomization: () => setState(() => showCustomization = true),
+      onShowCustomization: () {
+        SelectedMeasurementsFit.apply(selectedProductsNotifier);
+        setState(() => showCustomization = true);
+      },
       onConfirm: _handleConfirmBooking,
       confirmLabel: selectedBookingType == BookingType.sales
           ? 'Confirm Sales'
@@ -1169,6 +1189,8 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       AdditionalChargesManager.removeCharge(charge, additionalChargesNotifier);
 
   void _handleConfirmBooking() {
+    SelectedMeasurementsFit.apply(selectedProductsNotifier);
+
     if (!_formKey.currentState!.validate()) {
       context.showSnackBar('Please fill all required fields', isError: true);
       return;
@@ -1273,6 +1295,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       bookedDate: _bookedDateForSubmit,
       securityAmount: securityAmountController.text.trim().toIntOrNull(),
       isSecurityPaid: isSecurityPaid,
+      securityPaidDate: _effectiveSecurityPaidDate,
       securityAccountId: selectedSecurityAccount?.id,
       advanceAccount: selectedAdvanceAccount,
       advanceSplit: _advanceSplit,

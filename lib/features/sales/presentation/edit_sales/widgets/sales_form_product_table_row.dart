@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/widgets/sales_product_table_flex.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,7 @@ class SalesFormProductTableRow extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF2D3436),
+                      color: AppColors.charcoal,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -196,7 +197,7 @@ class SalesFormProductTableRow extends StatelessWidget {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
                               borderSide: const BorderSide(
-                                color: Color(0xFF6132E4),
+                                color: AppColors.purple,
                               ),
                             ),
                           ),
@@ -215,7 +216,7 @@ class SalesFormProductTableRow extends StatelessWidget {
                               '${product.amount}',
                               style: const TextStyle(
                                 fontSize: 14,
-                                color: Color(0xFF2D3436),
+                                color: AppColors.charcoal,
                                 fontWeight: FontWeight.w500,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -225,7 +226,7 @@ class SalesFormProductTableRow extends StatelessWidget {
                           const Icon(
                             Icons.edit_outlined,
                             size: 16,
-                            color: Color(0xFF6132E4),
+                            color: AppColors.purple,
                           ),
                         ],
                       ),
@@ -243,7 +244,7 @@ class SalesFormProductTableRow extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
+                  color: AppColors.charcoal,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -275,7 +276,7 @@ class SalesFormProductTableRow extends StatelessWidget {
           color: const Color(0xFFF3F0FF),
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(icon, size: 14, color: const Color(0xFF6132E4)),
+        child: Icon(icon, size: 14, color: AppColors.purple),
       ),
     );
   }

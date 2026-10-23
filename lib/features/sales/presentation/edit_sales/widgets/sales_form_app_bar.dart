@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// App bar header for [EditSalesScreen].
@@ -62,10 +63,10 @@ class SalesFormAppBar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+              color: AppColors.purple.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: const Color(0xFF6132E4).withValues(alpha: 0.3),
+                color: AppColors.purple.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
@@ -73,7 +74,7 @@ class SalesFormAppBar extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.receipt_long,
-                  color: Color(0xFF6132E4),
+                  color: AppColors.purple,
                   size: 14,
                 ),
                 const SizedBox(width: 6),
@@ -82,7 +83,7 @@ class SalesFormAppBar extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF6132E4),
+                    color: AppColors.purple,
                   ),
                 ),
               ],

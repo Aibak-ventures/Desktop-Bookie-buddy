@@ -1,65 +1,69 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/applied_tax_entity/applied_tax_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
+import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/data/models/person_measurements_model/person_measurements_model.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
+import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_date_picker.dart';
 import 'package:bookie_buddy_web/core/common/widgets/keyboard_navigable_time_picker.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
+import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
+import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
+import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/additional_charges_manager.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_phone_populator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_loader.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_search_rules.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
-import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
-import 'package:bookie_buddy_web/core/constants/enums/app_premium_features_enum.dart';
-import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
-import 'package:bookie_buddy_web/features/accounts/presentation/common/widgets/account_selection_field.dart';
-import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
-import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/booking/domain/usecases/send_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
-import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
-import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
-import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_date_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_text_field_builder.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/fit_selected_measurements.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/product_mapper.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/selected_products_manager.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_form_validator.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_date_picker_field.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_document_upload_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_left_panel.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_notes_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_summary_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_time_picker_field.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_two_panel_layout.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_filter_dialog.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_list_search_bar.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/product_search_overlay_popup.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/search_overlay_result_widget.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/service_selection_section.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/bloc/edit_booking_cubit.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/edit_new_booking/widgets/edit_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/features/client/presentation/widgets/client_search_name_field.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
-import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
+import 'package:bookie_buddy_web/features/sales/domain/usecases/send_sale_invoice_usecase.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/service_bloc/service_bloc.dart';
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
@@ -73,10 +77,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-part '../helpers/edit_booking_initializer.dart';
 part '../helpers/edit_booking_change_detector.dart';
-part '../helpers/edit_booking_submission_handler.dart';
+part '../helpers/edit_booking_initializer.dart';
 part '../helpers/edit_booking_search_handler.dart';
+part '../helpers/edit_booking_submission_handler.dart';
 
 class EditNewBookingScreen extends StatefulWidget {
   final VoidCallback? onClose;
@@ -128,6 +132,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   final discountAmountController = TextEditingController();
   AccountEntity? selectedSecurityAccount;
   bool isSecurityPaid = true;
+  DateTime securityPaidDate = DateTime.now();
   DeliveryStatus deliveryStatus = DeliveryStatus.booked;
   PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isDiscountPercentage = false;
@@ -483,13 +488,13 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
         showCustomization: showCustomization,
         customizationProducts: selectedProductsNotifier.value,
         onBackFromCustomization: () => rebuild(() => showCustomization = false),
-        onSaveCustomization: (product, measurements) {
+        onSaveCustomization: (product, peopleMeasurements) {
           rebuild(() {
             selectedProductsNotifier.value =
                 SelectedProductsManager.updateMeasurements(
                   currentProducts: selectedProductsNotifier.value,
                   updatedProduct: product,
-                  measurements: measurements,
+                  peopleMeasurements: peopleMeasurements,
                 );
           });
         },
@@ -499,14 +504,22 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
   }
 
   Future<void> _selectDate({required bool isPickup}) async {
-    final initialDate = isPickup ? pickupDate : returnDate;
+    var initialDate = isPickup ? pickupDate : returnDate;
     final now = DateTime.now();
+    // Pickup can't be moved before the booked date (bookings only).
+    final bookedDate = selectedBookingType == BookingType.booking
+        ? _originalBooking?.bookedDateOnly
+        : null;
+    final pickupFirstDate = bookedDate ?? DateTime(now.year - 5);
+    if (isPickup && initialDate.isBefore(pickupFirstDate)) {
+      initialDate = pickupFirstDate;
+    }
     final picked = await showKeyboardDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: isPickup ? DateTime(now.year - 5) : pickupDate,
+      firstDate: isPickup ? pickupFirstDate : pickupDate,
       lastDate: now.add(const Duration(days: 365 * 2)),
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
     if (picked != null) {
       setState(() {
@@ -524,6 +537,19 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     }
   }
 
+  Future<void> _selectSecurityPaidDate() async {
+    final booking = _originalBooking;
+    if (booking == null) return;
+    final picked = await showKeyboardDatePicker(
+      context: context,
+      initialDate: securityPaidDate,
+      firstDate: booking.bookedDateOnly,
+      lastDate: booking.securityPaidLastDate(),
+      selectedColor: AppColors.purple,
+    );
+    if (picked != null) rebuild(() => securityPaidDate = picked);
+  }
+
   Future<void> _selectTime({required bool isPickup}) async {
     final initialTime = isPickup
         ? (pickupTime ?? TimeOfDay.now())
@@ -531,7 +557,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
     final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
     if (picked != null) {
       setState(() {
@@ -669,7 +695,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
       calculateTaxSummary: _calculateTaxSummary,
       advanceLabel: 'Paid',
       totalRemainingLabel: 'Balance Amount',
-      onShowCustomization: () => setState(() => showCustomization = true),
+      onShowCustomization: () {
+        SelectedMeasurementsFit.apply(selectedProductsNotifier);
+        setState(() => showCustomization = true);
+      },
       bookingStatus: bookingStatus,
       bookingCompletedDate: bookingCompletedDate,
       onConfirm: _handleSaveBooking,
@@ -994,7 +1023,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                   child: ElevatedButton(
                     onPressed: _validateAndContinue,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6132E4),
+                      backgroundColor: AppColors.purple,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -1290,6 +1319,16 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                       label: 'Security Payment Option',
                     ),
                     const SizedBox(height: 15),
+                    // Hidden when booked date and the latest allowed date
+                    // are the same day — nothing to choose.
+                    if (_canEditSecurityPaidDate) ...[
+                      BookingDatePickerField(
+                        label: 'Security paid date',
+                        value: securityPaidDate.format(),
+                        onTap: _selectSecurityPaidDate,
+                      ),
+                      const SizedBox(height: 15),
+                    ],
                   ],
                   Row(
                     children: [
@@ -1399,7 +1438,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                     size: 18,
                     color: isDiscountPercentage
                         ? Colors.grey
-                        : const Color(0xFF6132E4),
+                        : AppColors.purple,
                   ),
                   const SizedBox(width: 8),
                   const Text('Amount (₹)'),
@@ -1416,7 +1455,7 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
                         : Icons.circle_outlined,
                     size: 18,
                     color: isDiscountPercentage
-                        ? const Color(0xFF6132E4)
+                        ? AppColors.purple
                         : Colors.grey,
                   ),
                   const SizedBox(width: 8),
@@ -1447,14 +1486,10 @@ class EditNewBookingScreenState extends State<EditNewBookingScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                  color: AppColors.purple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Icon(
-                  Icons.add,
-                  size: 16,
-                  color: Color(0xFF6132E4),
-                ),
+                child: const Icon(Icons.add, size: 16, color: AppColors.purple),
               ),
             ),
           ],

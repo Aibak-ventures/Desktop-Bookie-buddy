@@ -140,4 +140,13 @@ class ClientRepositoryImpl implements IClientRepository {
   }) {
     throw UnimplementedError('downloadClientPdfReport is not implemented');
   }
+
+  @override
+  Future<String> downloadClientExcelReport({
+    DateTime? startDate,
+    DateTime? endDate,
+    required CancellationToken cancelToken,
+  }) {
+    throw UnimplementedError('downloadClientExcelReport is not implemented');
+  }
 }

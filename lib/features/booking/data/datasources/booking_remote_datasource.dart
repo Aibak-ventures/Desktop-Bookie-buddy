@@ -4,15 +4,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
+import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/api_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/bookings_endpoints.dart';
 import 'package:bookie_buddy_web/core/constants/endpoints/sales_endpoints.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/core/common/models/custom_response_model/custom_response_model.dart';
-import 'package:bookie_buddy_web/utils/download_file.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/features/booking/data/models/booking_request_model/booking_request_model.dart';
+import 'package:bookie_buddy_web/features/booking/data/models/document_file_model.dart';
+import 'package:bookie_buddy_web/utils/download_file.dart';
+import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http_parser/http_parser.dart';
@@ -56,10 +56,7 @@ class BookingRemoteDatasource {
           options: Options(contentType: 'multipart/form-data'),
         );
       } else {
-        response = await _dio.post(
-          _endpoint.bookingsV5,
-          data: data,
-        );
+        response = await _dio.post(_endpoint.bookingsV5, data: data);
       }
 
       log(
@@ -146,10 +143,7 @@ class BookingRemoteDatasource {
   Future<CustomResponseModel> createSale(Map<String, dynamic> saleData) async {
     try {
       log('Creating sale with data: $saleData');
-      final response = await _dio.post(
-        _salesEndpoint.sales,
-        data: saleData,
-      );
+      final response = await _dio.post(_salesEndpoint.sales, data: saleData);
 
       log(
         'create sale response: ${response.realUri.toString()}, data: ${response.data}',
@@ -190,9 +184,7 @@ class BookingRemoteDatasource {
 
   Future<CustomResponseModel> deletePayment(int paymentId) async {
     try {
-      final response = await _dio.delete(
-        _endpoint.deletePayment(paymentId),
-      );
+      final response = await _dio.delete(_endpoint.deletePayment(paymentId));
 
       log(
         'delete payment response: ${response.realUri.toString()}, data: ${response.data}',
@@ -487,10 +479,7 @@ class BookingRemoteDatasource {
     try {
       final data = bookingData.toBookingJson();
       log('request old booking data: $data');
-      final response = await _dio.post(
-        _endpoint.oldBookings,
-        data: data,
-      );
+      final response = await _dio.post(_endpoint.oldBookings, data: data);
 
       log(
         'add old bookings response: ${response.realUri.toString()}, data: ${response.data}',
@@ -686,10 +675,7 @@ class BookingRemoteDatasource {
   }) async {
     try {
       final response = await _dio.delete(
-        _endpoint.deleteRefund(
-          bookingId: bookingId,
-          refundId: refundId,
-        ),
+        _endpoint.deleteRefund(bookingId: bookingId, refundId: refundId),
       );
       log(
         'delete refund response: ${response.realUri.toString()}, data: ${response.data}',

@@ -1,5 +1,6 @@
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
+import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
@@ -225,7 +226,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
             fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
           overflow: TextOverflow.ellipsis,
         ),
@@ -387,7 +388,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.charcoal,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -493,9 +494,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(4),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF6132E4),
-                          ),
+                          borderSide: const BorderSide(color: AppColors.purple),
                         ),
                       ),
                       onSubmitted: (value) => _saveTypedQuantity(
@@ -642,7 +641,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(4),
                               borderSide: const BorderSide(
-                                color: Color(0xFF6132E4),
+                                color: AppColors.purple,
                               ),
                             ),
                           ),
@@ -671,7 +670,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                               '${product.amount}',
                               style: const TextStyle(
                                 fontSize: 14,
-                                color: Color(0xFF2D3436),
+                                color: AppColors.charcoal,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -679,7 +678,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                             const Icon(
                               Icons.edit_outlined,
                               size: 16,
-                              color: Color(0xFF6132E4),
+                              color: AppColors.purple,
                             ),
                           ],
                         ),
@@ -698,7 +697,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                   ),
                 ),
               ),
@@ -796,7 +795,7 @@ class _ProductListTableWidgetState extends State<ProductListTableWidget> {
         child: Icon(
           icon,
           size: compact ? 12 : 14,
-          color: isDisabled ? Colors.grey.shade500 : const Color(0xFF6132E4),
+          color: isDisabled ? Colors.grey.shade500 : AppColors.purple,
         ),
       ),
     );

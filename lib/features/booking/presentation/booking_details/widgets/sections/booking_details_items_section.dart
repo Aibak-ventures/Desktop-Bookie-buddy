@@ -1,8 +1,9 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_shared/ui/theme/status_ui_extensions.dart';
-import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
+import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_shared/ui/theme/status_ui_extensions.dart';
+import 'package:bookie_buddy_web/core/common/widgets/product_details_card.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -42,227 +43,19 @@ class BookingDetailsItemsSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          ...booking.bookedItems.map((item) {
-            final specsLabel = item.mainServiceType.variantAttributeLabel;
-
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child:
-                            item.productImage != null &&
-                                item.productImage!.isNotEmpty
-                            ? Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => ZoomableImageDialog.show(
-                                    context,
-                                    imageUrl: item.productImage!,
-                                    title: item.name,
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      item.productImage!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) => Icon(
-                                            Icons.image,
-                                            color: Colors.grey.shade400,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Icon(Icons.image, color: Colors.grey.shade400),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.name,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            if (item.mainServiceType.isMultiVariantProductType)
-                              Text(
-                                '$specsLabel : ${item.variantAttribute}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                            if (item.color != null)
-                              Text(
-                                'Colour : ${item.color}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                            if (item.category != null &&
-                                item.category!.isNotEmpty)
-                              Text(
-                                '${item.mainServiceType.categoryFieldLabel} : ${item.category}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          if (showProductDeliveryStatus) ...[
-                            _ProductDeliveryStatusBadge(
-                              status: item.deliveryStatus,
-                            ),
-                            const SizedBox(height: 6),
-                          ],
-                          Text(
-                            'Qty : ${item.quantity}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            item.amount.toCurrency(),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  if (item.measurements.isNotEmpty) ...[
-                    const SizedBox(height: 12),
-                    const Divider(height: 1),
-                    const SizedBox(height: 8),
-                    // Separate running_kilometers from other measurements
-                    Builder(
-                      builder: (context) {
-                        final runningKm = item.measurements
-                            .where((m) => m.key == 'running_kilometers')
-                            .firstOrNull;
-                        final otherMeasurements = item.measurements
-                            .where((m) => m.key != 'running_kilometers')
-                            .toList();
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Kilometer section (if running_kilometers exists)
-                            if (runningKm != null) ...[
-                              Text(
-                                'Kilometer',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                ),
-                                child: Text(
-                                  runningKm.value,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ),
-                              if (otherMeasurements.isNotEmpty)
-                                const SizedBox(height: 8),
-                            ],
-                            // Other measurements section
-                            if (otherMeasurements.isNotEmpty) ...[
-                              Text(
-                                'Customization Measurements:',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 8,
-                                runSpacing: 4,
-                                children: otherMeasurements.map((measurement) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '${measurement.name.replaceAll('_', ' ')}: ${measurement.value}',
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ],
-              ),
-            );
-          }),
+          ...booking.bookedItems.map(
+            (item) => ProductDetailsCard(
+              name: item.name,
+              imageUrl: item.productImage,
+              specs: _specsOf(item),
+              amount: item.amount.toCurrency(),
+              quantity: item.quantity,
+              peopleMeasurements: item.peopleMeasurements,
+              badge: showProductDeliveryStatus
+                  ? _ProductDeliveryStatusBadge(status: item.deliveryStatus)
+                  : null,
+            ),
+          ),
           // Location details — shown once if any item is a vehicle
           if (booking.bookedItems.any(
                 (item) => item.mainServiceType.isVehicle,
@@ -424,6 +217,16 @@ class BookingDetailsItemsSection extends StatelessWidget {
     );
   }
 }
+
+/// Short facts about a booked item's variant, for [ProductDetailsCard].
+List<String> _specsOf(ProductInfoEntity item) => [
+  if (item.mainServiceType.isMultiVariantProductType &&
+      item.variantAttribute != null)
+    '${item.mainServiceType.variantAttributeLabel}: ${item.variantAttribute}',
+  if (item.color != null) 'Colour: ${item.color}',
+  if (item.category != null && item.category!.isNotEmpty)
+    '${item.mainServiceType.categoryFieldLabel}: ${item.category}',
+];
 
 /// Small "Returned" / "Not Returned" pill shown against an individual booked
 /// item during a partial return.

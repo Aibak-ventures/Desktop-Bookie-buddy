@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_web/core/common/widgets/custom_error_text_widget.dart';
 import 'package:bookie_buddy_web/core/common/widgets/empty_data_widget.dart';
 import 'package:bookie_buddy_web/core/common/widgets/global_loading_overlay.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/cubit/tax_and_compliance_cubit.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/widgets/tax_configuration_card.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/widgets/tax_configuration_dialog.dart';
@@ -222,7 +223,7 @@ class _Header extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: const Padding(
             padding: EdgeInsets.all(4),
-            child: Icon(Icons.arrow_back, size: 20, color: Color(0xFF2D3436)),
+            child: Icon(Icons.arrow_back, size: 20, color: AppColors.charcoal),
           ),
         ),
         const SizedBox(width: 8),
@@ -231,7 +232,7 @@ class _Header extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
         ),
         const Spacer(),

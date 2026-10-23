@@ -1,4 +1,5 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/standard_measurement_fields.dart';
 import 'package:flutter/material.dart';
 
 class MeasurementFieldFormState {
@@ -17,6 +18,18 @@ class MeasurementFieldFormState {
     this.isOptional = false,
     TextEditingController? controller,
   }) : controller = controller ?? TextEditingController();
+
+  /// A fresh form field, with its own controller, for every standard
+  /// measurement (see [StandardMeasurementFields]).
+  static List<MeasurementFieldFormState> standardFields() => [
+    for (final d in StandardMeasurementFields.all)
+      MeasurementFieldFormState(
+        name: d.name,
+        key: d.key,
+        description: d.description,
+        gender: d.gender,
+      ),
+  ];
 
   MeasurementFieldFormState copyWith({
     String? name,

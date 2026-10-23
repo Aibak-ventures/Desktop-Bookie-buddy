@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class BookingProductListHeaderWidget extends StatelessWidget {
@@ -60,7 +61,7 @@ class BookingProductListHeaderWidget extends StatelessWidget {
             fontSize: 13,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3436),
+            color: AppColors.charcoal,
           ),
           overflow: TextOverflow.ellipsis,
         ),

@@ -1,8 +1,9 @@
+import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
 import 'package:bookie_buddy_shared/core/core/common/entities/tax_summary_entity/tax_summary_entity.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
-import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_shared/core/core/common/entities/additional_charges_entity/additional_charges_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/expandable_summary_tile.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/payment_calculator.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
@@ -431,7 +432,7 @@ class BookingSummarySection extends StatelessWidget {
                   (p) =>
                       ((p.variant.mainServiceType?.isDress ?? false) ||
                           (p.variant.mainServiceType?.isCostume ?? false)) &&
-                      p.measurements.isNotEmpty,
+                      p.peopleMeasurements.isNotEmpty,
                 );
 
                 return Column(
@@ -447,11 +448,11 @@ class BookingSummarySection extends StatelessWidget {
                               ? const Color(0xFFF3F0FF)
                               : Colors.transparent,
                           foregroundColor: hasCustomizations
-                              ? const Color(0xFF6132E4)
+                              ? AppColors.purple
                               : Colors.grey.shade600,
                           side: BorderSide(
                             color: hasCustomizations
-                                ? const Color(0xFF6132E4)
+                                ? AppColors.purple
                                 : Colors.grey.shade300,
                             width: 1,
                           ),
@@ -583,7 +584,7 @@ class BookingSummarySection extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isFocused
-                            ? const Color(0xFF6132E4)
+                            ? AppColors.purple
                             : Colors.transparent,
                         width: 2,
                       ),
@@ -594,7 +595,7 @@ class BookingSummarySection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: onConfirm,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6132E4),
+                          backgroundColor: AppColors.purple,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6),

@@ -1,8 +1,8 @@
 import 'dart:developer';
 
+import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/create_sale_usecase.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/update_sale_usecase.dart';
-import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_entity/sales_request_entity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

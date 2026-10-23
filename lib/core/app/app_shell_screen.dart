@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
-import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
-import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
-import 'package:bookie_buddy_web/core/app/widgets/logout_confirmation_dialog.dart';
 import 'package:bookie_buddy_web/core/app/bloc/details_drawer_cubit/details_drawer_cubit.dart';
+import 'package:bookie_buddy_web/core/app/shell_nav_items.dart';
+import 'package:bookie_buddy_web/core/app/widgets/glass_sidebar.dart';
 import 'package:bookie_buddy_web/core/app/widgets/global_details_drawer.dart';
+import 'package:bookie_buddy_web/core/app/widgets/logout_confirmation_dialog.dart';
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
-import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
+import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
-import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
-import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
+import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
+import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

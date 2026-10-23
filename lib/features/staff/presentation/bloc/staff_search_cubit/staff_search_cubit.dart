@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/staff_entity.dart';
-import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/features/staff/domain/usecases/get_staffs_usecase.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'staff_search_state.dart';
 part 'staff_search_cubit.freezed.dart';
+part 'staff_search_state.dart';
 
 class StaffSearchCubit extends Cubit<StaffSearchState> {
   final GetStaffsUseCase _getStaffs;

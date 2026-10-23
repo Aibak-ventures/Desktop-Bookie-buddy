@@ -1,5 +1,5 @@
-import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sales_payment_request_entity/sales_payment_request_entity.dart';
+import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'sales_request_entity.freezed.dart';

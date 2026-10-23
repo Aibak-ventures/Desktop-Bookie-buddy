@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
+const _defaultDiscardMessage =
+    'Are you sure you want to discard your changes? All unsaved data including selected products, client details, and payment information will be lost.';
+
+Future<bool?> showDiscardDialog(
+  BuildContext context, {
+  String message = _defaultDiscardMessage,
+}) => showDialog<bool>(
   context: context,
   barrierDismissible: false,
   barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -83,9 +89,9 @@ Future<bool?> showDiscardDialog(BuildContext context) => showDialog<bool>(
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
-                const Text(
-                  'Are you sure you want to discard your changes? All unsaved data including selected products, client details, and payment information will be lost.',
-                  style: TextStyle(
+                Text(
+                  message,
+                  style: const TextStyle(
                     fontSize: 14,
                     height: 1.6,
                     color: Color(0xFF4A4A4A),

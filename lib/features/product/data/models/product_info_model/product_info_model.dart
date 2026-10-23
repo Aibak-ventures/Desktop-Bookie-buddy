@@ -1,9 +1,9 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:bookie_buddy_web/features/booking/data/models/measurement_value_model/measurement_value_model.dart';
-import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
+import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
+import 'package:bookie_buddy_shared/core/features/booking/data/models/person_measurements_model/person_measurements_model.dart';
 import 'package:bookie_buddy_shared/core/features/product/domain/entities/product_info_entity/product_info_entity.dart';
+import 'package:bookie_buddy_web/features/product/data/models/product_attributes_model/product_attributes_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'product_info_model.freezed.dart';
@@ -20,21 +20,6 @@ dynamic _readProductThumbnail(Map json, String key) =>
     (json['product_thumbnail'] as String?)?.isNotEmpty == true
     ? json['product_thumbnail']
     : (json['product_image'] as String?);
-
-List<MeasurementValueModel> _parseMeasurements(dynamic json) {
-  if (json is Map<String, dynamic>) {
-    return json.entries
-        .map(
-          (entry) => MeasurementValueModel(
-            name: entry.key.capitalizeFirstLetter(),
-            key: entry.key.toLowerCase().replaceAll(' ', '_'),
-            value: entry.value.toString(),
-          ),
-        )
-        .toList();
-  }
-  return [];
-}
 
 @freezed
 abstract class ProductInfoModel with _$ProductInfoModel {
@@ -63,9 +48,13 @@ abstract class ProductInfoModel with _$ProductInfoModel {
     @JsonKey(name: 'attributes')
     @Default(ProductAttributesModel())
     ProductAttributesModel attributes,
-    @JsonKey(name: 'measurements', fromJson: _parseMeasurements)
+    @JsonKey(
+      name: MeasurementConstants.jsonKey,
+      fromJson: PersonMeasurementsModel.fromCustomJson,
+      toJson: PersonMeasurementsModel.toCustomJson,
+    )
     @Default(const [])
-    List<MeasurementValueModel> measurements,
+    List<PersonMeasurementsModel> peopleMeasurements,
     int? stock,
     @JsonKey(name: 'remaining_stock') int? remainingStock,
     @JsonKey(
@@ -99,7 +88,9 @@ abstract class ProductInfoModel with _$ProductInfoModel {
         amount: entity.amount,
         fabricLength: entity.fabricLength,
         attributes: ProductAttributesModel.fromEntity(entity.attributes),
-        measurements: entity.measurements.map((e) => e.toModel()).toList(),
+        peopleMeasurements: entity.peopleMeasurements
+            .map(PersonMeasurementsModel.fromEntity)
+            .toList(),
         stock: entity.stock,
         remainingStock: entity.remainingStock,
         deliveryStatus: entity.deliveryStatus,
@@ -124,7 +115,7 @@ extension ProductInfoModelMapper on ProductInfoModel {
     amount: amount,
     fabricLength: fabricLength,
     attributes: attributes.toEntity(),
-    measurements: measurements.map((e) => e.toEntity()).toList(),
+    peopleMeasurements: peopleMeasurements.map((e) => e.toEntity()).toList(),
     stock: stock,
     remainingStock: remainingStock,
     deliveryStatus: deliveryStatus,

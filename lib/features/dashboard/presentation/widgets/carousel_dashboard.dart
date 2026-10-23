@@ -1,7 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
-import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
+import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 class CarouselDashboard extends StatelessWidget {
@@ -27,7 +28,7 @@ class CarouselDashboard extends StatelessWidget {
                 context,
                 title: 'Upcoming',
                 value: data.upcomingCount.toString(),
-                gradient: const [Color(0xFF4C0FFF), Color(0xFF8A63FE)],
+                gradient: const [Color(0xFF4C0FFF), AppColors.purpleAccent],
                 icon: Icons.schedule,
                 onTap: () => _openAllBookingsWithTab(
                   context,

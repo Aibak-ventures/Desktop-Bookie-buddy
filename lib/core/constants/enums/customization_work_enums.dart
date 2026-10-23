@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 
 enum CustomizationWorkType {
   toShop('shop'),

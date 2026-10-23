@@ -17,7 +17,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
         lastDate: (isSales || isOldBooking)
             ? DateTime.now()
             : DateTime.now().add(const Duration(days: 365)),
-        selectedColor: const Color(0xFF6132E4),
+        selectedColor: AppColors.purple,
       );
 
       if (picked != null) {
@@ -67,7 +67,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
           initialDate: initialReturnDate,
           firstDate: minReturnDate,
           lastDate: today,
-          selectedColor: const Color(0xFF6132E4),
+          selectedColor: AppColors.purple,
         );
 
         if (picked != null) {
@@ -91,7 +91,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
             : returnDate,
         firstDate: minReturnDate,
         lastDate: DateTime.now().add(const Duration(days: 365)),
-        selectedColor: const Color(0xFF6132E4),
+        selectedColor: AppColors.purple,
       );
 
       if (picked != null) {
@@ -109,6 +109,20 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     }
   }
 
+  Future<void> _selectSecurityPaidDate() async {
+    final booked = _bookedDateForSubmit?.dateOnly;
+    if (booked == null) return;
+    final today = DateTime.now().dateOnly;
+    final picked = await showKeyboardDatePicker(
+      context: context,
+      initialDate: _effectiveSecurityPaidDate ?? today,
+      firstDate: booked,
+      lastDate: today,
+      selectedColor: AppColors.purple,
+    );
+    if (picked != null) rebuild(() => _securityPaidDate = picked);
+  }
+
   Future<void> _selectBookedDate() async {
     final today = DateTime.now().dateOnly;
     // Booked date can never be after the pickup date or after today.
@@ -122,7 +136,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
       initialDate: initialDate.isAfter(lastDate) ? lastDate : initialDate,
       firstDate: DateTime(2015),
       lastDate: lastDate,
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
 
     if (picked != null) {
@@ -140,7 +154,7 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
     final picked = await showKeyboardTimePicker(
       context: context,
       initialTime: initialTime,
-      selectedColor: const Color(0xFF6132E4),
+      selectedColor: AppColors.purple,
     );
 
     if (picked != null) {
@@ -523,9 +537,9 @@ extension BookingDateSectionBuilders on NewBookingScreenState {
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF6132E4),
+              color: AppColors.purple,
               decoration: TextDecoration.underline,
-              decorationColor: Color(0xFF6132E4),
+              decorationColor: AppColors.purple,
             ),
           ),
           const SizedBox(width: 4),

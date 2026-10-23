@@ -1,6 +1,5 @@
 import 'package:bookie_buddy_web/features/product/data/models/product_model/product_variant_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
-import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -116,29 +115,8 @@ extension ProductRequestModelExtension on ProductRequestModel {
     }
     // Note: barcode is NOT added because it's not valid for Car Rentals service
 
-    if (image != null) {
-      try {
-        final bytes = await image!.readAsBytes();
-        print('🔧 toFormJson - Image bytes length: ${bytes.length}');
-        print('🔧 toFormJson - Image filename: ${image!.name}');
-
-        // Ensure we have a valid filename, fallback to timestamp if empty
-        String filename = image!.name;
-        if (filename.isEmpty || filename.trim().isEmpty) {
-          filename = 'product_${DateTime.now().millisecondsSinceEpoch}.jpg';
-          print('⚠️ toFormJson - Empty filename, using: $filename');
-        }
-
-        json['image'] = MultipartFile.fromBytes(bytes, filename: filename);
-        print(
-          '✅ toFormJson - Image added to FormData with filename: $filename',
-        );
-      } catch (e) {
-        print('❌ toFormJson - Error reading image: $e');
-      }
-    } else {
-      print('⚠️ toFormJson - No image provided');
-    }
+    // Image is uploaded to S3 via a presigned URL by the datasource and sent
+    // as `image_url`, so it is not part of the form.
 
     if (!isAdding) {
       json.remove('variants');

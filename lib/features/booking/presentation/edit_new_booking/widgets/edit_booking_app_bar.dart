@@ -1,3 +1,4 @@
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class EditBookingAppBar extends StatelessWidget {
@@ -92,7 +93,7 @@ class EditBookingAppBar extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6132E4).withValues(alpha: 0.1),
+                        color: AppColors.purple.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -100,7 +101,7 @@ class EditBookingAppBar extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF6132E4),
+                          color: AppColors.purple,
                           fontFamily: 'Inter',
                         ),
                       ),

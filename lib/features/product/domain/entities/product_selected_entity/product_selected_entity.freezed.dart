@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductSelectedEntity {
 
- ProductInfoEntity get variant; int get amount; List<MeasurementValueEntity> get measurements; int get quantity; String? get runningKilometers;
+ ProductInfoEntity get variant; int get amount;/// Who the measurements were taken for: one entry per person, up to
+/// [quantity]. A single unnamed entry is the plain, one-set case.
+ List<PersonMeasurementsEntity> get peopleMeasurements; int get quantity; String? get runningKilometers;
 /// Create a copy of ProductSelectedEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $ProductSelectedEntityCopyWith<ProductSelectedEntity> get copyWith => _$ProductS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedEntity&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.measurements, measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedEntity&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.peopleMeasurements, peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(measurements),quantity,runningKilometers);
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(peopleMeasurements),quantity,runningKilometers);
 
 @override
 String toString() {
-  return 'ProductSelectedEntity(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+  return 'ProductSelectedEntity(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
 }
 
 
@@ -45,7 +47,7 @@ abstract mixin class $ProductSelectedEntityCopyWith<$Res>  {
   factory $ProductSelectedEntityCopyWith(ProductSelectedEntity value, $Res Function(ProductSelectedEntity) _then) = _$ProductSelectedEntityCopyWithImpl;
 @useResult
 $Res call({
- ProductInfoEntity variant, int amount, List<MeasurementValueEntity> measurements, int quantity, String? runningKilometers
+ ProductInfoEntity variant, int amount, List<PersonMeasurementsEntity> peopleMeasurements, int quantity, String? runningKilometers
 });
 
 
@@ -62,12 +64,12 @@ class _$ProductSelectedEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProductSelectedEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? peopleMeasurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
   return _then(_self.copyWith(
 variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as ProductInfoEntity,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self.measurements : measurements // ignore: cast_nullable_to_non_nullable
-as List<MeasurementValueEntity>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,peopleMeasurements: null == peopleMeasurements ? _self.peopleMeasurements : peopleMeasurements // ignore: cast_nullable_to_non_nullable
+as List<PersonMeasurementsEntity>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -163,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProductInfoEntity variant,  int amount,  List<MeasurementValueEntity> measurements,  int quantity,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ProductInfoEntity variant,  int amount,  List<PersonMeasurementsEntity> peopleMeasurements,  int quantity,  String? runningKilometers)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductSelectedEntity() when $default != null:
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   return orElse();
 
 }
@@ -184,10 +186,10 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProductInfoEntity variant,  int amount,  List<MeasurementValueEntity> measurements,  int quantity,  String? runningKilometers)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ProductInfoEntity variant,  int amount,  List<PersonMeasurementsEntity> peopleMeasurements,  int quantity,  String? runningKilometers)  $default,) {final _that = this;
 switch (_that) {
 case _ProductSelectedEntity():
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +206,10 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProductInfoEntity variant,  int amount,  List<MeasurementValueEntity> measurements,  int quantity,  String? runningKilometers)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ProductInfoEntity variant,  int amount,  List<PersonMeasurementsEntity> peopleMeasurements,  int quantity,  String? runningKilometers)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductSelectedEntity() when $default != null:
-return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_that.runningKilometers);case _:
+return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quantity,_that.runningKilometers);case _:
   return null;
 
 }
@@ -219,16 +221,20 @@ return $default(_that.variant,_that.amount,_that.measurements,_that.quantity,_th
 
 
 class _ProductSelectedEntity implements ProductSelectedEntity {
-  const _ProductSelectedEntity({required this.variant, required this.amount, final  List<MeasurementValueEntity> measurements = const [], required this.quantity, this.runningKilometers}): _measurements = measurements;
+  const _ProductSelectedEntity({required this.variant, required this.amount, final  List<PersonMeasurementsEntity> peopleMeasurements = const [], required this.quantity, this.runningKilometers}): _peopleMeasurements = peopleMeasurements;
   
 
 @override final  ProductInfoEntity variant;
 @override final  int amount;
- final  List<MeasurementValueEntity> _measurements;
-@override@JsonKey() List<MeasurementValueEntity> get measurements {
-  if (_measurements is EqualUnmodifiableListView) return _measurements;
+/// Who the measurements were taken for: one entry per person, up to
+/// [quantity]. A single unnamed entry is the plain, one-set case.
+ final  List<PersonMeasurementsEntity> _peopleMeasurements;
+/// Who the measurements were taken for: one entry per person, up to
+/// [quantity]. A single unnamed entry is the plain, one-set case.
+@override@JsonKey() List<PersonMeasurementsEntity> get peopleMeasurements {
+  if (_peopleMeasurements is EqualUnmodifiableListView) return _peopleMeasurements;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_measurements);
+  return EqualUnmodifiableListView(_peopleMeasurements);
 }
 
 @override final  int quantity;
@@ -244,16 +250,16 @@ _$ProductSelectedEntityCopyWith<_ProductSelectedEntity> get copyWith => __$Produ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedEntity&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._measurements, _measurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedEntity&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._peopleMeasurements, _peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_measurements),quantity,runningKilometers);
+int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_peopleMeasurements),quantity,runningKilometers);
 
 @override
 String toString() {
-  return 'ProductSelectedEntity(variant: $variant, amount: $amount, measurements: $measurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+  return 'ProductSelectedEntity(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
 }
 
 
@@ -264,7 +270,7 @@ abstract mixin class _$ProductSelectedEntityCopyWith<$Res> implements $ProductSe
   factory _$ProductSelectedEntityCopyWith(_ProductSelectedEntity value, $Res Function(_ProductSelectedEntity) _then) = __$ProductSelectedEntityCopyWithImpl;
 @override @useResult
 $Res call({
- ProductInfoEntity variant, int amount, List<MeasurementValueEntity> measurements, int quantity, String? runningKilometers
+ ProductInfoEntity variant, int amount, List<PersonMeasurementsEntity> peopleMeasurements, int quantity, String? runningKilometers
 });
 
 
@@ -281,12 +287,12 @@ class __$ProductSelectedEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProductSelectedEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? variant = null,Object? amount = null,Object? measurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? variant = null,Object? amount = null,Object? peopleMeasurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
   return _then(_ProductSelectedEntity(
 variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as ProductInfoEntity,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
-as int,measurements: null == measurements ? _self._measurements : measurements // ignore: cast_nullable_to_non_nullable
-as List<MeasurementValueEntity>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,peopleMeasurements: null == peopleMeasurements ? _self._peopleMeasurements : peopleMeasurements // ignore: cast_nullable_to_non_nullable
+as List<PersonMeasurementsEntity>,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,runningKilometers: freezed == runningKilometers ? _self.runningKilometers : runningKilometers // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

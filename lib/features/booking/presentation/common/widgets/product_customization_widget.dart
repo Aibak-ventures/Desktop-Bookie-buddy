@@ -1,7 +1,14 @@
-import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
 import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
+import 'package:bookie_buddy_shared/core/core/constants/measurement_constants.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/measurement_value_entity.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurement_rules.dart';
+import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
+import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
+import 'package:bookie_buddy_web/core/theme/app_colors.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_product_helpers.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/models/measurement_field_form_state.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/person_measurements_panel.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
@@ -18,7 +25,7 @@ class ProductCustomizationWidget extends StatefulWidget {
   final VoidCallback onBack;
   final Function(
     ProductSelectedEntity product,
-    List<MeasurementValueEntity> measurements,
+    List<PersonMeasurementsEntity> peopleMeasurements,
   )
   onSaveForProduct;
   final List<ProductSelectedEntity> selectedProducts;
@@ -40,6 +47,28 @@ class _ProductCustomizationWidgetState
   ProductSelectedEntity? selectedProduct;
   int? selectedProductIndex;
 
+  final nameController = TextEditingController();
+
+  /// The people of [selectedProduct] being edited, saved together.
+  List<PersonMeasurementsEntity> _people = [];
+
+  /// Index in [_people] of the person whose form is open, or `null` while the
+  /// people list is showing.
+  int? _editingIndex;
+
+  /// A line with one unit and at most one person has no people list: the form
+  /// is the whole editor, as before per-person measurements existed.
+  bool _singleMode = true;
+
+  /// What the people list / the form held when it was opened or last saved.
+  String _peopleBaseline = '';
+  String _formBaseline = '';
+
+  bool get _isEditingPerson => _editingIndex != null;
+
+  /// The form shows a name field only when editing one of several people.
+  bool get _showsNameField => _isEditingPerson && !_singleMode;
+
   @override
   void initState() {
     super.initState();
@@ -49,12 +78,12 @@ class _ProductCustomizationWidgetState
 
   void _selectFirstProductWithoutMeasurements() {
     for (int i = 0; i < widget.selectedProducts.length; i++) {
-      if (widget.selectedProducts[i].measurements.isEmpty) {
+      if (widget.selectedProducts[i].peopleMeasurements.isEmpty) {
         setState(() {
           selectedProduct = widget.selectedProducts[i];
           selectedProductIndex = i;
         });
-        _initializeMeasurements();
+        _loadSelectedProduct();
         return;
       }
     }
@@ -64,22 +93,83 @@ class _ProductCustomizationWidgetState
         selectedProduct = widget.selectedProducts.first;
         selectedProductIndex = 0;
       });
-      _initializeMeasurements();
+      _loadSelectedProduct();
     }
   }
 
-  void _initializeMeasurements() {
-    // Dispose old controllers
-    for (var field in measurementsNotifier.value) {
-      field.controller.dispose();
+  @override
+  void didUpdateWidget(covariant ProductCustomizationWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // After a save the parent hands over the updated lines; follow the one
+    // being edited without touching the form.
+    final current = selectedProduct;
+    if (current == null) return;
+    final key = BookingProductHelpers.productKey(current);
+    final updated = widget.selectedProducts
+        .where((p) => BookingProductHelpers.productKey(p) == key)
+        .firstOrNull;
+    if (updated != null && updated != current) {
+      selectedProduct = updated;
     }
+  }
+
+  /// Opens the editor for [selectedProduct]: straight to the form for a plain
+  /// one-person line, otherwise the people list.
+  void _loadSelectedProduct() {
+    final product = selectedProduct;
+    if (product == null) {
+      _people = [];
+      _editingIndex = null;
+      _singleMode = true;
+      _initializeMeasurements(const []);
+      return;
+    }
+    final saved = product.peopleMeasurements;
+    _singleMode = PersonMeasurementRules.usesSinglePersonForm(
+      saved.length,
+      product.quantity,
+    );
+    if (_singleMode) {
+      _people = saved;
+      _openPerson(0, saved.isEmpty ? const [] : saved.first.measurements);
+    } else {
+      _people = saved.isEmpty
+          ? [const PersonMeasurementsEntity(name: '')]
+          : saved;
+      _editingIndex = null;
+      _initializeMeasurements(const []);
+      nameController.clear();
+      _formBaseline = '';
+    }
+    _peopleBaseline = _people.fingerprint;
+  }
+
+  /// Fills the form with person [index]'s [measurements] and shows it.
+  void _openPerson(int index, List<MeasurementValueEntity> measurements) {
+    _editingIndex = index;
+    nameController.text = !_singleMode && index < _people.length
+        ? PersonMeasurementRules.displayName(_people[index].name, index)
+        : '';
+    _initializeMeasurements(measurements);
+    _formBaseline = [_formPerson()].fingerprint;
+  }
+
+  void _initializeMeasurements(
+    List<MeasurementValueEntity> productMeasurements,
+  ) {
+    // Dispose old controllers once the frame that stops using them is done:
+    // a focused field still listens to its controller until it is rebuilt.
+    final oldFields = measurementsNotifier.value;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final field in oldFields) {
+        field.controller.dispose();
+      }
+    });
 
     if (selectedProduct == null) {
       measurementsNotifier.value = [];
       return;
     }
-
-    final productMeasurements = selectedProduct!.measurements;
 
     if (productMeasurements.isNotEmpty) {
       final genders = productMeasurements.map((e) => e.gender).toSet();
@@ -94,7 +184,7 @@ class _ProductCustomizationWidgetState
       }
     }
 
-    final baseMeasurements = _getMeasurements();
+    final baseMeasurements = MeasurementFieldFormState.standardFields();
 
     final updatedMeasurements = baseMeasurements.map((field) {
       final existing = productMeasurements.firstWhere(
@@ -133,6 +223,7 @@ class _ProductCustomizationWidgetState
   @override
   void dispose() {
     genderNotifier.dispose();
+    nameController.dispose();
     measurementsNotifier.value.forEach(
       (element) => element.controller.dispose(),
     );
@@ -140,27 +231,153 @@ class _ProductCustomizationWidgetState
     super.dispose();
   }
 
-  void _saveMeasurements({bool moveToNext = false}) {
-    if (selectedProduct == null) return;
-
-    if (formKey.currentState?.validate() ?? false) {
-      final filteredMeasurements = measurementsNotifier.value
-          .where((field) => field.controller.text.trim().isNotEmpty)
-          .map(
-            (field) => MeasurementValueEntity(
+  /// The form's filled values as a person. The name only matters for one of
+  /// several people; a lone person keeps the name they already had.
+  PersonMeasurementsEntity _formPerson() {
+    final index = _editingIndex ?? 0;
+    final existingName = index < _people.length ? _people[index].name : '';
+    return PersonMeasurementsEntity(
+      name: _showsNameField ? nameController.text.trim() : existingName,
+      measurements: [
+        for (final field in measurementsNotifier.value)
+          if (field.controller.text.trim().isNotEmpty)
+            MeasurementValueEntity(
               name: field.name,
               key: field.key,
               value: field.controller.text.trim(),
               gender: field.gender,
             ),
-          )
-          .toList();
+      ],
+    );
+  }
 
-      widget.onSaveForProduct(selectedProduct!, filteredMeasurements);
+  bool get _isDirty {
+    final formChanged =
+        _isEditingPerson && [_formPerson()].fingerprint != _formBaseline;
+    if (_singleMode) return formChanged;
+    return formChanged || _people.fingerprint != _peopleBaseline;
+  }
 
-      if (moveToNext) {
-        _moveToNextProduct();
+  /// Asks before throwing away something the user entered. `true` when it is
+  /// fine to go on.
+  Future<bool> _confirmDiscard({bool formOnly = false}) async {
+    final dirty = formOnly
+        ? _isEditingPerson && [_formPerson()].fingerprint != _formBaseline
+        : _isDirty;
+    if (!dirty) return true;
+    final discard = await showDiscardDialog(
+      context,
+      message:
+          'Are you sure you want to discard your changes? The measurements '
+          'you entered will be lost.',
+    );
+    return discard ?? false;
+  }
+
+  Future<void> _goBack() async {
+    if (await _confirmDiscard() && mounted) widget.onBack();
+  }
+
+  Future<void> _selectProduct(ProductSelectedEntity product, int index) async {
+    if (!await _confirmDiscard() || !mounted) return;
+    setState(() {
+      selectedProduct = product;
+      selectedProductIndex = index;
+      _loadSelectedProduct();
+    });
+  }
+
+  Set<String> _namesExcept(int index) => {
+    for (final (i, p) in _people.indexed)
+      if (i != index)
+        PersonMeasurementRules.displayName(p.name, i).toLowerCase(),
+  };
+
+  String? _validateName(String? value) {
+    final name = value?.trim() ?? '';
+    if (name.isEmpty) return 'Enter a name';
+    if (_namesExcept(_editingIndex ?? -1).contains(name.toLowerCase())) {
+      return 'This name is already used';
+    }
+    return null;
+  }
+
+  void _editPerson(int index) {
+    setState(() => _openPerson(index, _people[index].measurements));
+  }
+
+  void _addPerson() {
+    final taken = _namesExcept(-1);
+    var n = _people.length;
+    while (taken.contains(MeasurementConstants.personNameAt(n).toLowerCase())) {
+      n++;
+    }
+    setState(() {
+      _people = [
+        ..._people,
+        PersonMeasurementsEntity(name: MeasurementConstants.personNameAt(n)),
+      ];
+      _openPerson(_people.length - 1, const []);
+    });
+  }
+
+  void _deletePerson(int index) {
+    setState(() => _people = [..._people]..removeAt(index));
+  }
+
+  /// Returns from a person's form to the people list, keeping what was
+  /// entered.
+  void _donePerson() {
+    final index = _editingIndex;
+    if (index == null) return;
+    if (!(formKey.currentState?.validate() ?? false)) return;
+    setState(() {
+      _people = [..._people]..[index] = _formPerson();
+      _editingIndex = null;
+    });
+  }
+
+  /// Returns from a person's form to the people list, dropping what was
+  /// entered.
+  Future<void> _backToList() async {
+    if (!await _confirmDiscard(formOnly: true) || !mounted) return;
+    setState(() => _editingIndex = null);
+  }
+
+  void _saveMeasurements({bool moveToNext = false}) {
+    final product = selectedProduct;
+    if (product == null) return;
+
+    final List<PersonMeasurementsEntity> people;
+    if (_isEditingPerson) {
+      if (!(formKey.currentState?.validate() ?? false)) return;
+      // Nothing entered means no person to store, so the line stays "Add".
+      if (_singleMode) {
+        people = [_formPerson()].withoutEmptyPeople();
+      } else {
+        final all = [..._people];
+        all[_editingIndex!] = _formPerson();
+        people = all.withoutEmptyPeople();
       }
+    } else {
+      people = _people.withoutEmptyPeople();
+    }
+
+    widget.onSaveForProduct(product, people);
+
+    setState(() {
+      _peopleBaseline = people.fingerprint;
+      if (_isEditingPerson) _formBaseline = [_formPerson()].fingerprint;
+      if (!_singleMode) {
+        _people = people.isEmpty
+            ? [const PersonMeasurementsEntity(name: '')]
+            : people;
+        _editingIndex = null;
+      }
+    });
+
+    if (moveToNext) {
+      _moveToNextProduct();
     }
   }
 
@@ -173,8 +390,8 @@ class _ProductCustomizationWidgetState
       setState(() {
         selectedProductIndex = nextIndex;
         selectedProduct = widget.selectedProducts[nextIndex];
+        _loadSelectedProduct();
       });
-      _initializeMeasurements();
     } else {
       // All products done
       widget.onBack();
@@ -231,8 +448,11 @@ class _ProductCustomizationWidgetState
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Color(0xFF6C5CE7)),
-                  onPressed: widget.onBack,
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: AppColors.purpleSoft,
+                  ),
+                  onPressed: _goBack,
                   tooltip: 'Back to products',
                 ),
                 const SizedBox(width: 12),
@@ -245,7 +465,7 @@ class _ProductCustomizationWidgetState
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D3436),
+                          color: AppColors.charcoal,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -304,7 +524,7 @@ class _ProductCustomizationWidgetState
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: selectedProduct != null
-                            ? const Color(0xFF6C5CE7)
+                            ? AppColors.purpleSoft
                             : Colors.grey,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
@@ -341,6 +561,16 @@ class _ProductCustomizationWidgetState
   }
 
   Widget _buildMeasurementSection() {
+    final product = selectedProduct;
+    if (product != null && !_singleMode && !_isEditingPerson) {
+      return PersonMeasurementsPanel(
+        people: _people,
+        maxPeople: product.quantity,
+        onEdit: _editPerson,
+        onAdd: _addPerson,
+        onDelete: _deletePerson,
+      );
+    }
     return Form(
       key: formKey,
       child: SingleChildScrollView(
@@ -350,11 +580,11 @@ class _ProductCustomizationWidgetState
           builder: (context, selectedGender, child) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Customisation header - moved from product list
+              // Customization header - moved from product list
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.offWhite,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
@@ -363,22 +593,22 @@ class _ProductCustomizationWidgetState
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C5CE7).withValues(alpha: 0.1),
+                        color: AppColors.purpleSoft.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Icon(
                         Icons.design_services,
-                        color: Color(0xFF6C5CE7),
+                        color: AppColors.purpleSoft,
                         size: 18,
                       ),
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      'Customisation',
+                      'Customization',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.charcoal,
                       ),
                     ),
                   ],
@@ -387,11 +617,17 @@ class _ProductCustomizationWidgetState
 
               const SizedBox(height: 20),
 
+              // Person (only when editing one of several people)
+              if (_showsNameField) ...[
+                _buildPersonNameCard(),
+                const SizedBox(height: 20),
+              ],
+
               // Gender selection
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.offWhite,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
@@ -402,7 +638,7 @@ class _ProductCustomizationWidgetState
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.charcoal,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -454,7 +690,7 @@ class _ProductCustomizationWidgetState
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF2D3436),
+                  color: AppColors.charcoal,
                 ),
               ),
               const SizedBox(height: 12),
@@ -494,7 +730,7 @@ class _ProductCustomizationWidgetState
                                         style: const TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 13,
-                                          color: Color(0xFF2D3436),
+                                          color: AppColors.charcoal,
                                         ),
                                       ),
                                       if (field.description.isNotEmpty)
@@ -545,7 +781,7 @@ class _ProductCustomizationWidgetState
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.offWhite,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
@@ -557,7 +793,7 @@ class _ProductCustomizationWidgetState
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF2D3436),
+                        color: AppColors.charcoal,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -595,7 +831,7 @@ class _ProductCustomizationWidgetState
                             style: TextStyle(color: Colors.white, fontSize: 13),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF6C5CE7),
+                            backgroundColor: AppColors.purpleSoft,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 16,
@@ -615,9 +851,66 @@ class _ProductCustomizationWidgetState
     );
   }
 
+  Widget _buildPersonNameCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.person_outline, color: AppColors.purpleSoft),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text(
+                  'Whose measurements?',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.charcoal,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: _backToList,
+                icon: const Icon(Icons.arrow_back, size: 16),
+                label: const Text('Back to people'),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton.icon(
+                onPressed: _donePerson,
+                icon: const Icon(Icons.check, size: 16, color: Colors.white),
+                label: const Text(
+                  'Done',
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.purpleSoft,
+                  elevation: 0,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          CustomTextField(
+            controller: nameController,
+            hintText: 'Person name',
+            textCapitalization: TextCapitalization.words,
+            validator: _validateName,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildProductsList() {
     return Container(
-      color: const Color(0xFFF8F9FA),
+      color: AppColors.offWhite,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -635,7 +928,7 @@ class _ProductCustomizationWidgetState
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.charcoal,
                   ),
                 ),
                 const Spacer(),
@@ -681,182 +974,209 @@ class _ProductCustomizationWidgetState
                       final product = widget.selectedProducts[index];
                       final isSelected = selectedProduct == product;
 
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? const Color(0xFFE8E4FF)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isSelected
-                                ? const Color(0xFF6C5CE7)
-                                : Colors.grey.shade200,
-                            width: isSelected ? 2 : 1,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            // Product image
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(6),
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: isSelected
+                            ? null
+                            : () => _selectProduct(product, index),
+                        child: MouseRegion(
+                          cursor: isSelected
+                              ? MouseCursor.defer
+                              : SystemMouseCursors.click,
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? const Color(0xFFE8E4FF)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.purpleSoft
+                                    : Colors.grey.shade200,
+                                width: isSelected ? 2 : 1,
                               ),
-                              child:
-                                  (product.variant.thumbnailImage ??
-                                              product.variant.productImage) !=
-                                          null &&
+                            ),
+                            child: Row(
+                              children: [
+                                // Product image
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child:
                                       (product.variant.thumbnailImage ??
-                                              product.variant.productImage)!
-                                          .isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(6),
-                                      child: Image.network(
-                                        product.variant.productImage!,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) => Icon(
+                                                  product
+                                                      .variant
+                                                      .productImage) !=
+                                              null &&
+                                          (product.variant.thumbnailImage ??
+                                                  product.variant.productImage)!
+                                              .isNotEmpty
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                          child: Image.network(
+                                            product.variant.productImage!,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (_, __, ___) => Icon(
+                                              Icons.image,
+                                              color: Colors.grey.shade400,
+                                            ),
+                                          ),
+                                        )
+                                      : Icon(
                                           Icons.image,
                                           color: Colors.grey.shade400,
                                         ),
-                                      ),
-                                    )
-                                  : Icon(
-                                      Icons.image,
-                                      color: Colors.grey.shade400,
-                                    ),
-                            ),
-                            const SizedBox(width: 12),
+                                ),
+                                const SizedBox(width: 12),
 
-                            // Product info
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.variant.name,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF2D3436),
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 6),
-                                  // Variant details in chips
-                                  Wrap(
-                                    spacing: 6,
-                                    runSpacing: 4,
+                                // Product info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      if (product.variant.variantAttribute !=
-                                              null &&
-                                          product
-                                              .variant
-                                              .variantAttribute!
-                                              .isNotEmpty)
-                                        _buildVariantChip(
-                                          product.variant.variantAttribute!,
-                                          Icons.label,
+                                      Text(
+                                        product.variant.name,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.charcoal,
                                         ),
-                                      if (product.variant.color != null &&
-                                          product.variant.color!.isNotEmpty)
-                                        _buildVariantChip(
-                                          product.variant.color!,
-                                          Icons.palette,
-                                        ),
-                                      if (product.variant.model != null &&
-                                          product.variant.model!.isNotEmpty)
-                                        _buildVariantChip(
-                                          product.variant.model!,
-                                          Icons.style,
-                                        ),
-                                      if (product.variant.category != null &&
-                                          product.variant.category!.isNotEmpty)
-                                        _buildVariantChip(
-                                          product.variant.category!,
-                                          Icons.category,
-                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 6),
+                                      // Variant details in chips
+                                      Wrap(
+                                        spacing: 6,
+                                        runSpacing: 4,
+                                        children: [
+                                          if (product
+                                                      .variant
+                                                      .variantAttribute !=
+                                                  null &&
+                                              product
+                                                  .variant
+                                                  .variantAttribute!
+                                                  .isNotEmpty)
+                                            _buildVariantChip(
+                                              product.variant.variantAttribute!,
+                                              Icons.label,
+                                            ),
+                                          if (product.variant.color != null &&
+                                              product.variant.color!.isNotEmpty)
+                                            _buildVariantChip(
+                                              product.variant.color!,
+                                              Icons.palette,
+                                            ),
+                                          if (product.variant.model != null &&
+                                              product.variant.model!.isNotEmpty)
+                                            _buildVariantChip(
+                                              product.variant.model!,
+                                              Icons.style,
+                                            ),
+                                          if (product.variant.category !=
+                                                  null &&
+                                              product
+                                                  .variant
+                                                  .category!
+                                                  .isNotEmpty)
+                                            _buildVariantChip(
+                                              product.variant.category!,
+                                              Icons.category,
+                                            ),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
 
-                            // Status and action
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (product.measurements.isNotEmpty)
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 8),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF27AE60),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
+                                // Status and action
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (product.peopleMeasurements.isNotEmpty)
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
                                         ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${product.measurements.length}',
-                                          style: const TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w600,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF27AE60),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
                                           ),
                                         ),
-                                      ],
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.check_circle,
+                                              size: 14,
+                                              color: Colors.white,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              product
+                                                      .peopleMeasurements
+                                                      .haveMultiple
+                                                  ? '${product.peopleMeasurements.length} people'
+                                                  : '${product.peopleMeasurements.allValues.length}',
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ElevatedButton(
+                                      onPressed: () =>
+                                          _selectProduct(product, index),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: isSelected
+                                            ? AppColors.purpleSoft
+                                            : product
+                                                  .peopleMeasurements
+                                                  .isNotEmpty
+                                            ? AppColors.purpleSoft.withValues(
+                                                alpha: 0.7,
+                                              )
+                                            : const Color(0xFF636E72),
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
+                                        minimumSize: const Size(50, 32),
+                                        elevation: 0,
+                                      ),
+                                      child: Text(
+                                        isSelected
+                                            ? 'Active'
+                                            : product
+                                                  .peopleMeasurements
+                                                  .isNotEmpty
+                                            ? 'Edit'
+                                            : 'Add',
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedProduct = product;
-                                      selectedProductIndex = index;
-                                    });
-                                    _initializeMeasurements();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: isSelected
-                                        ? const Color(0xFF6C5CE7)
-                                        : product.measurements.isNotEmpty
-                                        ? const Color(
-                                            0xFF6C5CE7,
-                                          ).withValues(alpha: 0.7)
-                                        : const Color(0xFF636E72),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                    minimumSize: const Size(50, 32),
-                                    elevation: 0,
-                                  ),
-                                  child: Text(
-                                    isSelected
-                                        ? 'Active'
-                                        : product.measurements.isNotEmpty
-                                        ? 'Edit'
-                                        : 'Add',
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       );
                     },
@@ -866,107 +1186,6 @@ class _ProductCustomizationWidgetState
       ),
     );
   }
-
-  List<MeasurementFieldFormState> _getMeasurements() => [
-    // Female Measurements
-    MeasurementFieldFormState(
-      name: 'Top Round',
-      key: 'top_round',
-      description: 'Round measurement around top',
-      gender: GenderType.female,
-    ),
-    MeasurementFieldFormState(
-      name: 'Top Length',
-      key: 'top_length',
-      description: 'Vertical length of the top',
-      gender: GenderType.female,
-    ),
-    MeasurementFieldFormState(
-      name: 'Chest',
-      key: 'chest',
-      description: 'Fullest part of the chest',
-      gender: GenderType.unisex,
-    ),
-    MeasurementFieldFormState(
-      name: 'Shape',
-      key: 'shape',
-      description: 'Garment shape',
-      gender: GenderType.female,
-    ),
-    MeasurementFieldFormState(
-      name: 'Sleeve Length',
-      key: 'sleeve_length',
-      description: 'Shoulder to desired sleeve end',
-      gender: GenderType.unisex,
-    ),
-    MeasurementFieldFormState(
-      name: 'Sleeve Arm',
-      key: 'sleeve_arm',
-      description: 'Around the upper arm',
-      gender: GenderType.female,
-    ),
-    MeasurementFieldFormState(
-      name: 'Front Neck',
-      key: 'front_neck',
-      description: 'Depth of the front neckline',
-      gender: GenderType.female,
-    ),
-    MeasurementFieldFormState(
-      name: 'Back Neck',
-      key: 'back_neck',
-      description: 'Depth of the back neckline',
-      gender: GenderType.female,
-    ),
-    // Male Measurements
-    MeasurementFieldFormState(
-      name: 'Neck Circumference',
-      key: 'neck_circumference',
-      description: 'Around the base of the neck',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Shirt/Kurta Length',
-      key: 'shirt_length',
-      description: 'Shoulder to desired bottom length',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Armhole',
-      key: 'armhole',
-      description: 'Around the arm socket',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Upper Arm',
-      key: 'upper_arm',
-      description: 'Fullest part of the upper arm',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Wrist',
-      key: 'wrist',
-      description: 'Circumference of the wrist',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Pant Length',
-      key: 'pant_length',
-      description: 'Waist to ankle',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Inseam',
-      key: 'inseam',
-      description: 'Crotch to ankle inside the leg',
-      gender: GenderType.male,
-    ),
-    MeasurementFieldFormState(
-      name: 'Thigh',
-      key: 'thigh',
-      description: 'Fullest part of the thigh',
-      gender: GenderType.male,
-    ),
-  ];
 
   // Helper method to build variant chips
   Widget _buildVariantChip(String label, IconData icon) {

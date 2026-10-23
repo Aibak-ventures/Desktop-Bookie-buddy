@@ -47,7 +47,7 @@ class ProductDetailsHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1F2937),
+                  color: AppColors.darkSlate,
                   letterSpacing: -0.5,
                 ),
               ),
