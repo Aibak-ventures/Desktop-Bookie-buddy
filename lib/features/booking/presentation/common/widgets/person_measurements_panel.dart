@@ -2,7 +2,7 @@ import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person_measurements_entity/person_measurements_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/person_measurement_widgets.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Lists the people a product line has measurements for (one per unit, up to
 /// [maxPeople]) and lets each be edited, added or removed.

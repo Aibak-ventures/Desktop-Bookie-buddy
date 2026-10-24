@@ -20,9 +20,9 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/w
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/sections/booking_details_security_refund_section.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/booking_details_entity_web_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The actual booking-details view: every section (header, dates, items,
 /// customer, payment, security/refund, other, documents) plus the bottom

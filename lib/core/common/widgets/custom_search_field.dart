@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons_500.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CustomSearchField extends StatelessWidget {
   CustomSearchField({
@@ -42,7 +42,7 @@ class CustomSearchField extends StatelessWidget {
         hintText: hintText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         visualDensity: VisualDensity.compact,
-        prefixIcon: Icon(LucideIcons.search500, size: 24.sp),
+        prefixIcon: Icon(LucideIcons500.search, size: 24.sp),
         suffixIcon: ValueListenableBuilder<TextEditingValue>(
           valueListenable: searchController,
           builder: (context, value, _) {

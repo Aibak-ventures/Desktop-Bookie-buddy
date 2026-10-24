@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NewBookingAppBar extends StatefulWidget {
   final BookingTabType selectedTab;

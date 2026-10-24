@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'stock_management_cubit.dart';
@@ -9,6 +9,7 @@ part of 'stock_management_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$StockManagementState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StockManagementState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is StockManagementState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'StockManagementState()';
+    return 'StockManagementState()';
 }
 
 
@@ -203,7 +204,7 @@ class _Initial implements StockManagementState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'StockManagementState.initial()';
+    return 'StockManagementState.initial()';
 }
 
 
@@ -235,7 +236,7 @@ class _Loading implements StockManagementState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -244,7 +245,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'StockManagementState.loading()';
+    return 'StockManagementState.loading()';
 }
 
 
@@ -257,7 +258,7 @@ String toString() {
 
 
 class _Loaded implements StockManagementState {
-  const _Loaded({required final  List<ProductEntity> products, required this.totalProducts, required this.totalCategories, required this.nextPageUrl, required this.isPaginating, this.selectedServiceId, required this.searchQuery, this.selectedProductId}): _products = products;
+  const _Loaded({required  List<ProductEntity> products, required this.totalProducts, required this.totalCategories, required this.nextPageUrl, required this.isPaginating, this.selectedServiceId, required this.searchQuery, this.selectedProductId}): _products = products;
   
 
  final  List<ProductEntity> _products;
@@ -285,16 +286,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.totalProducts, totalProducts) || other.totalProducts == totalProducts)&&(identical(other.totalCategories, totalCategories) || other.totalCategories == totalCategories)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.selectedServiceId, selectedServiceId) || other.selectedServiceId == selectedServiceId)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedProductId, selectedProductId) || other.selectedProductId == selectedProductId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.totalProducts, totalProducts) || other.totalProducts == totalProducts)&&(identical(other.totalCategories, totalCategories) || other.totalCategories == totalCategories)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.selectedServiceId, selectedServiceId) || other.selectedServiceId == selectedServiceId)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.selectedProductId, selectedProductId) || other.selectedProductId == selectedProductId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),totalProducts,totalCategories,nextPageUrl,isPaginating,selectedServiceId,searchQuery,selectedProductId);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),totalProducts,totalCategories,nextPageUrl,isPaginating,selectedServiceId,searchQuery,selectedProductId);
+}
 
 @override
 String toString() {
-  return 'StockManagementState.loaded(products: $products, totalProducts: $totalProducts, totalCategories: $totalCategories, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, selectedServiceId: $selectedServiceId, searchQuery: $searchQuery, selectedProductId: $selectedProductId)';
+    return 'StockManagementState.loaded(products: $products, totalProducts: $totalProducts, totalCategories: $totalCategories, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, selectedServiceId: $selectedServiceId, searchQuery: $searchQuery, selectedProductId: $selectedProductId)';
 }
 
 
@@ -358,16 +361,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'StockManagementState.error(message: $message)';
+    return 'StockManagementState.error(message: $message)';
 }
 
 

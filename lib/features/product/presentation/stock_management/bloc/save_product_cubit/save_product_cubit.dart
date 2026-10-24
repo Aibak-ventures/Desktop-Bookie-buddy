@@ -24,9 +24,12 @@ class SaveProductCubit extends Cubit<SaveProductState> {
 
       await _saveProduct(product: product);
 
+      // The dialog (and this cubit) can be gone before the upload finishes.
+      if (isClosed) return;
       emit(const _Success());
     } catch (e, stackTrace) {
       log('SaveProductCubit: Error - $e', stackTrace: stackTrace);
+      if (isClosed) return;
       emit(_Error(e.toString()));
     }
   }

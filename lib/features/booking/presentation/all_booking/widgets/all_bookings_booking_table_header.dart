@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Column header row for the bookings table in [AllBookingsDesktopScreen].
 class AllBookingsBookingTableHeader extends StatelessWidget {

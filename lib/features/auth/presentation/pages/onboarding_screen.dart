@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
+import 'package:material_ui/material_ui.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

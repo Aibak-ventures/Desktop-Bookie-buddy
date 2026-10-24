@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
 import 'package:bookie_buddy_web/utils/responsive_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Mixin to easily make any screen responsive
 /// Usage: class MyScreen extends StatelessWidget with ResponsiveScreenMixin
@@ -77,9 +77,8 @@ mixin ResponsiveScreenMixin on Widget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).primaryColor.withValues(alpha: 0.1),
+                      color: Theme.of(context).primaryColor
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -179,9 +178,8 @@ mixin ResponsiveScreenMixin on Widget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).primaryColor.withValues(alpha: 0.1),
+                    color: Theme.of(context).primaryColor
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(

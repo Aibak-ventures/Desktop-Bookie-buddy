@@ -8,7 +8,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_select
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
 import 'package:bookie_buddy_web/utils/debouncer.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Centralizes the product-list loading sequence shared by both the
 /// new-booking and edit-booking flows.

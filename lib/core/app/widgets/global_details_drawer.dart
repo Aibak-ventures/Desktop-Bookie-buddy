@@ -3,8 +3,8 @@ import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.da
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/booking_details_drawer.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widgets/sales_details_drawer.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Single mount point for every feature's details drawer. Lives once in
 /// [AppShellScreen]'s root `Stack` so any screen can open a drawer via

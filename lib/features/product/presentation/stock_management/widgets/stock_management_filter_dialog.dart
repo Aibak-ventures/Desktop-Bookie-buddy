@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Result returned by [StockManagementFilterDialog] when the user taps Apply.
 class StockFilterResult {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _defaultDiscardMessage =
     'Are you sure you want to discard your changes? All unsaved data including selected products, client details, and payment information will be lost.';
@@ -137,9 +137,8 @@ Future<bool?> showDiscardDialog(
                           backgroundColor: const Color(0xFFFF5252),
                           foregroundColor: Colors.white,
                           elevation: 0,
-                          shadowColor: const Color(
-                            0xFFFF5252,
-                          ).withValues(alpha: 0.3),
+                          shadowColor: const Color(0xFFFF5252)
+                              .withValues(alpha: 0.3),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

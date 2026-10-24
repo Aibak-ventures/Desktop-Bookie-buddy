@@ -10,9 +10,9 @@ import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widge
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widgets/sales_details_payment_section.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widgets/sales_details_staff_section.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The actual sale-details view: every section (header, dates, items,
 /// customer, notes, staff, payment) plus the bottom action bar, driven by

@@ -2,9 +2,8 @@ import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 // Stateful widget for overlay search item with variant selection
 class OverlaySearchItem extends StatefulWidget {

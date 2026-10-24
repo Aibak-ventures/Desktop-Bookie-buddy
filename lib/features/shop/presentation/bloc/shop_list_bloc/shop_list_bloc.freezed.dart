@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shop_list_bloc.dart';
@@ -9,6 +9,7 @@ part of 'shop_list_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$ShopListEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopListEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopListEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ShopListEvent()';
+    return 'ShopListEvent()';
 }
 
 
@@ -191,7 +192,7 @@ class _LoadShops implements ShopListEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadShops);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadShops);
 }
 
 
@@ -200,7 +201,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ShopListEvent.loadShops()';
+    return 'ShopListEvent.loadShops()';
 }
 
 
@@ -228,16 +229,18 @@ _$ChangeAccountCopyWith<_ChangeAccount> get copyWith => __$ChangeAccountCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeAccount&&(identical(other.newShop, newShop) || other.newShop == newShop));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeAccount&&(identical(other.newShop, newShop) || other.newShop == newShop));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,newShop);
+int get hashCode {
+    return Object.hash(runtimeType,newShop);
+}
 
 @override
 String toString() {
-  return 'ShopListEvent.changeAccount(newShop: $newShop)';
+    return 'ShopListEvent.changeAccount(newShop: $newShop)';
 }
 
 
@@ -293,7 +296,7 @@ mixin _$ShopListState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopListState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopListState);
 }
 
 
@@ -302,7 +305,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ShopListState()';
+    return 'ShopListState()';
 }
 
 
@@ -476,7 +479,7 @@ class _Loading implements ShopListState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -485,7 +488,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ShopListState.loading()';
+    return 'ShopListState.loading()';
 }
 
 
@@ -498,7 +501,7 @@ String toString() {
 
 
 class _Loaded implements ShopListState {
-  const _Loaded({required final  List<ShopEntity> shops, required this.currentShopId}): _shops = shops;
+  const _Loaded({required  List<ShopEntity> shops, required this.currentShopId}): _shops = shops;
   
 
  final  List<ShopEntity> _shops;
@@ -520,16 +523,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._shops, _shops)&&(identical(other.currentShopId, currentShopId) || other.currentShopId == currentShopId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.shops, _shops)&&(identical(other.currentShopId, currentShopId) || other.currentShopId == currentShopId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_shops),currentShopId);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_shops),currentShopId);
+}
 
 @override
 String toString() {
-  return 'ShopListState.loaded(shops: $shops, currentShopId: $currentShopId)';
+    return 'ShopListState.loaded(shops: $shops, currentShopId: $currentShopId)';
 }
 
 
@@ -587,16 +592,18 @@ _$ChangeSuccessCopyWith<_ChangeSuccess> get copyWith => __$ChangeSuccessCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeSuccess&&(identical(other.newShop, newShop) || other.newShop == newShop));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChangeSuccess&&(identical(other.newShop, newShop) || other.newShop == newShop));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,newShop);
+int get hashCode {
+    return Object.hash(runtimeType,newShop);
+}
 
 @override
 String toString() {
-  return 'ShopListState.changeSuccess(newShop: $newShop)';
+    return 'ShopListState.changeSuccess(newShop: $newShop)';
 }
 
 
@@ -662,16 +669,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ShopListState.error(error: $error)';
+    return 'ShopListState.error(error: $error)';
 }
 
 

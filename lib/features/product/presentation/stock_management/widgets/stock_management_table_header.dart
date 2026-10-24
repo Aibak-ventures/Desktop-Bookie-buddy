@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Fixed column-header row for the stock management products table.
 class StockManagementTableHeader extends StatelessWidget {

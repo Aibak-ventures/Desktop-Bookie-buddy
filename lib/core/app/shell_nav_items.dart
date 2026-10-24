@@ -5,8 +5,8 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard
 import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
 import 'package:bookie_buddy_web/features/product/presentation/stock_management/pages/stock_management_screen.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/pages/settings_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons_500.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum ShellTabId { newOrder, dashboard, globalSearch, orders, stock, settings }
 
@@ -50,7 +50,7 @@ List<ShellNavItem> buildShellNavItems({
   ),
   ShellNavItem(
     id: ShellTabId.globalSearch,
-    icon: LucideIcons.search500,
+    icon: LucideIcons500.search,
     label: 'Global Search',
     screenBuilder: (_) => const GlobalSearchScreen(),
   ),

@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/utils/image_crop.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<File?> pickAndCompressImage({

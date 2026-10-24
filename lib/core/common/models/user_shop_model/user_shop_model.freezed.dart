@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_shop_model.dart';
@@ -9,6 +9,7 @@ part of 'user_shop_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserShopModelCopyWith<UserShopModel> get copyWith => _$UserShopModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other.termsAndConditions, termsAndConditions)&&const DeepCollectionEquality().equals(other.taxConfigurations, taxConfigurations));
+  final _this = this as UserShopModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserShopModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.phone2, _this.phone2) || other.phone2 == _this.phone2)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.gstNumber, _this.gstNumber) || other.gstNumber == _this.gstNumber)&&(identical(other.image, _this.image) || other.image == _this.image)&&(identical(other.place, _this.place) || other.place == _this.place)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.city, _this.city) || other.city == _this.city)&&(identical(other.state, _this.state) || other.state == _this.state)&&(identical(other.pincode, _this.pincode) || other.pincode == _this.pincode)&&(identical(other.shopRole, _this.shopRole) || other.shopRole == _this.shopRole)&&const DeepCollectionEquality().equals(other.termsAndConditions, _this.termsAndConditions)&&const DeepCollectionEquality().equals(other.taxConfigurations, _this.taxConfigurations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(termsAndConditions),const DeepCollectionEquality().hash(taxConfigurations));
+int get hashCode {
+  final _this = this as UserShopModel;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.phone,_this.phone2,_this.address,_this.gstNumber,_this.image,_this.place,_this.email,_this.city,_this.state,_this.pincode,_this.shopRole,const DeepCollectionEquality().hash(_this.termsAndConditions),const DeepCollectionEquality().hash(_this.taxConfigurations));
+}
 
 @override
 String toString() {
-  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
+  final _this = this as UserShopModel;
+  return 'UserShopModel(id: ${_this.id}, name: ${_this.name}, phone: ${_this.phone}, phone2: ${_this.phone2}, address: ${_this.address}, gstNumber: ${_this.gstNumber}, image: ${_this.image}, place: ${_this.place}, email: ${_this.email}, city: ${_this.city}, state: ${_this.state}, pincode: ${_this.pincode}, shopRole: ${_this.shopRole}, termsAndConditions: ${_this.termsAndConditions}, taxConfigurations: ${_this.taxConfigurations})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserShopModelCopyWithImpl<$Res>
 /// Create a copy of UserShopModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phone = null,Object? phone2 = freezed,Object? address = null,Object? gstNumber = freezed,Object? image = freezed,Object? place = freezed,Object? email = freezed,Object? city = freezed,Object? state = freezed,Object? pincode = freezed,Object? shopRole = freezed,Object? termsAndConditions = null,Object? taxConfigurations = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UserShopModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
@@ -223,7 +229,7 @@ return $default(_that.id,_that.name,_that.phone,_that.phone2,_that.address,_that
 @JsonSerializable()
 
 class _UserShopModel implements UserShopModel {
-  const _UserShopModel({required this.id, required this.name, required this.phone, this.phone2, required this.address, @JsonKey(name: 'gst_number') this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) this.shopRole, @JsonKey(name: 'terms_and_conditions') final  List<String> termsAndConditions = const ['No refund will be given after Booking cancellation.', 'Any damages must be paid by the customer', 'Confirm your Pickup and return dates properly.', 'Make sure all your needs are clear before booking.', 'Security deposit (if applicable) will be refunded after return.', 'Products should be returned on the exact return date, without any damages.'], @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson) final  List<TaxConfigurationModel>? taxConfigurations}): _termsAndConditions = termsAndConditions,_taxConfigurations = taxConfigurations;
+  const _UserShopModel({required this.id, required this.name, required this.phone, this.phone2, required this.address, @JsonKey(name: 'gst_number') this.gstNumber, this.image, this.place, this.email, this.city, this.state, this.pincode, @JsonKey(name: 'shop_role', fromJson: ShopRole.fromJson, toJson: ShopRole.toJson) this.shopRole, @JsonKey(name: 'terms_and_conditions')  List<String> termsAndConditions = const ['No refund will be given after Booking cancellation.', 'Any damages must be paid by the customer', 'Confirm your Pickup and return dates properly.', 'Make sure all your needs are clear before booking.', 'Security deposit (if applicable) will be refunded after return.', 'Products should be returned on the exact return date, without any damages.'], @JsonKey(name: 'tax_configuration', fromJson: TaxConfigurationModel.listFromJson)  List<TaxConfigurationModel>? taxConfigurations}): _termsAndConditions = termsAndConditions,_taxConfigurations = taxConfigurations;
   factory _UserShopModel.fromJson(Map<String, dynamic> json) => _$UserShopModelFromJson(json);
 
 @override final  int id;
@@ -269,16 +275,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other._termsAndConditions, _termsAndConditions)&&const DeepCollectionEquality().equals(other._taxConfigurations, _taxConfigurations));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.address, address) || other.address == address)&&(identical(other.gstNumber, gstNumber) || other.gstNumber == gstNumber)&&(identical(other.image, image) || other.image == image)&&(identical(other.place, place) || other.place == place)&&(identical(other.email, email) || other.email == email)&&(identical(other.city, city) || other.city == city)&&(identical(other.state, state) || other.state == state)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.shopRole, shopRole) || other.shopRole == shopRole)&&const DeepCollectionEquality().equals(other.termsAndConditions, _termsAndConditions)&&const DeepCollectionEquality().equals(other.taxConfigurations, _taxConfigurations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(_termsAndConditions),const DeepCollectionEquality().hash(_taxConfigurations));
+int get hashCode {
+    return Object.hash(runtimeType,id,name,phone,phone2,address,gstNumber,image,place,email,city,state,pincode,shopRole,const DeepCollectionEquality().hash(_termsAndConditions),const DeepCollectionEquality().hash(_taxConfigurations));
+}
 
 @override
 String toString() {
-  return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
+    return 'UserShopModel(id: $id, name: $name, phone: $phone, phone2: $phone2, address: $address, gstNumber: $gstNumber, image: $image, place: $place, email: $email, city: $city, state: $state, pincode: $pincode, shopRole: $shopRole, termsAndConditions: $termsAndConditions, taxConfigurations: $taxConfigurations)';
 }
 
 

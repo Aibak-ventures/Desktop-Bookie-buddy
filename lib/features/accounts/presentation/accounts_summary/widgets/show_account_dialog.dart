@@ -2,8 +2,8 @@ import 'package:bookie_buddy_shared/core/core/constants/enums/account_type_enum.
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_request_entity/account_request_entity.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_textfield.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum AccountDialogMode { add, edit }
 

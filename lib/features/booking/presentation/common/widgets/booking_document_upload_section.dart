@@ -4,8 +4,8 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_entity/document_file_entity.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:material_ui/material_ui.dart';
 
 class BookingDocumentUploadSection extends StatelessWidget {
   final ValueNotifier<List<DocumentFileEntity>> documentsNotifier;
@@ -232,22 +232,21 @@ class BookingDocumentUploadSection extends StatelessWidget {
         return;
       }
 
-      final result = await FilePicker.platform.pickFiles(
+      final pickedFiles = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
-        allowMultiple: true,
-        withData: true,
       );
 
-      if (result != null && result.files.isNotEmpty) {
+      if (pickedFiles.isNotEmpty) {
         final newDocs = <DocumentFileEntity>[];
 
-        for (final file in result.files) {
+        for (final file in pickedFiles) {
+          final fileBytes = await file.readAsBytes();
           // On web `file.path` throws — only use it on native platforms.
           final filePath = kIsWeb ? '' : (file.path ?? '');
 
           // Validate file size (max 10MB)
-          if (file.bytes != null && file.bytes!.length > 10 * 1024 * 1024) {
+          if (fileBytes.length > 10 * 1024 * 1024) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -262,11 +261,11 @@ class BookingDocumentUploadSection extends StatelessWidget {
           // Check if file is an image
           final isImage = _isImageFile(file.name);
 
-          if (isImage && file.bytes != null) {
+          if (isImage) {
             // Compress the image (skip on web to avoid UnimplementedError)
             try {
               final compressedBytes = await _compressImage(
-                file.bytes!,
+                fileBytes,
                 file.name,
               );
               newDocs.add(
@@ -283,7 +282,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
                 DocumentFileEntity(
                   name: file.name,
                   path: filePath,
-                  bytes: file.bytes,
+                  bytes: fileBytes,
                 ),
               );
             }
@@ -293,7 +292,7 @@ class BookingDocumentUploadSection extends StatelessWidget {
               DocumentFileEntity(
                 name: file.name,
                 path: filePath,
-                bytes: file.bytes,
+                bytes: fileBytes,
               ),
             );
           }

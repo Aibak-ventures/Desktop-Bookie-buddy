@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Anchors [overlayBuilder]'s content to [builder]'s trigger widget, showing
 /// it in an [Overlay] on tap and dismissing it on an outside tap.

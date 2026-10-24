@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'accounts_summary_model.dart';
@@ -9,6 +9,7 @@ part of 'accounts_summary_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AccountsSummaryModelCopyWith<AccountsSummaryModel> get copyWith => _$AccountsSu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountsSummaryModel&&(identical(other.totalBalance, totalBalance) || other.totalBalance == totalBalance)&&const DeepCollectionEquality().equals(other.accounts, accounts));
+  final _this = this as AccountsSummaryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountsSummaryModel&&(identical(other.totalBalance, _this.totalBalance) || other.totalBalance == _this.totalBalance)&&const DeepCollectionEquality().equals(other.accounts, _this.accounts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalBalance,const DeepCollectionEquality().hash(accounts));
+int get hashCode {
+  final _this = this as AccountsSummaryModel;
+  return Object.hash(runtimeType,_this.totalBalance,const DeepCollectionEquality().hash(_this.accounts));
+}
 
 @override
 String toString() {
-  return 'AccountsSummaryModel(totalBalance: $totalBalance, accounts: $accounts)';
+  final _this = this as AccountsSummaryModel;
+  return 'AccountsSummaryModel(totalBalance: ${_this.totalBalance}, accounts: ${_this.accounts})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AccountsSummaryModelCopyWithImpl<$Res>
 /// Create a copy of AccountsSummaryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? totalBalance = null,Object? accounts = null,}) {
-  return _then(_self.copyWith(
+  return _then(AccountsSummaryModel(
 totalBalance: null == totalBalance ? _self.totalBalance : totalBalance // ignore: cast_nullable_to_non_nullable
 as double,accounts: null == accounts ? _self.accounts : accounts // ignore: cast_nullable_to_non_nullable
 as List<AccountModel>,
@@ -210,7 +216,7 @@ return $default(_that.totalBalance,_that.accounts);case _:
 @JsonSerializable()
 
 class _AccountsSummaryModel implements AccountsSummaryModel {
-  const _AccountsSummaryModel({@JsonKey(name: 'total_balance') required this.totalBalance, @JsonKey(name: 'accounts') required final  List<AccountModel> accounts}): _accounts = accounts;
+  const _AccountsSummaryModel({@JsonKey(name: 'total_balance') required this.totalBalance, @JsonKey(name: 'accounts') required  List<AccountModel> accounts}): _accounts = accounts;
   factory _AccountsSummaryModel.fromJson(Map<String, dynamic> json) => _$AccountsSummaryModelFromJson(json);
 
 @override@JsonKey(name: 'total_balance') final  double totalBalance;
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountsSummaryModel&&(identical(other.totalBalance, totalBalance) || other.totalBalance == totalBalance)&&const DeepCollectionEquality().equals(other._accounts, _accounts));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountsSummaryModel&&(identical(other.totalBalance, totalBalance) || other.totalBalance == totalBalance)&&const DeepCollectionEquality().equals(other.accounts, _accounts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalBalance,const DeepCollectionEquality().hash(_accounts));
+int get hashCode {
+    return Object.hash(runtimeType,totalBalance,const DeepCollectionEquality().hash(_accounts));
+}
 
 @override
 String toString() {
-  return 'AccountsSummaryModel(totalBalance: $totalBalance, accounts: $accounts)';
+    return 'AccountsSummaryModel(totalBalance: $totalBalance, accounts: $accounts)';
 }
 
 

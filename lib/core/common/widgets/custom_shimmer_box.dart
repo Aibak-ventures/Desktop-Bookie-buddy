@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomShimmerBox extends StatelessWidget {

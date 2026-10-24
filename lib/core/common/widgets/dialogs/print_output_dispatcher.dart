@@ -4,9 +4,9 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/utils/extensions/color_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Single "Print" entry point for any feature that offers both a thermal
 /// receipt and a PDF invoice (booking today, sales/custom-work later).
@@ -111,9 +111,8 @@ class _PrintOutputOption extends StatelessWidget {
             12.width,
             Text(
               label,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
         ),

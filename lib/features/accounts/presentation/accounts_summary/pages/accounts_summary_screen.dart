@@ -12,9 +12,9 @@ import 'package:bookie_buddy_web/features/accounts/presentation/accounts_summary
 import 'package:bookie_buddy_web/features/accounts/presentation/common/bloc/accounts_cubit/accounts_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AccountsSummaryScreen extends StatelessWidget {
   const AccountsSummaryScreen({super.key, required this.canManageAccounts});

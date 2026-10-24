@@ -6,8 +6,8 @@ import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/cubit/
 import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/widgets/tax_configuration_card.dart';
 import 'package:bookie_buddy_web/features/tax_and_compliance/presentation/widgets/tax_configuration_dialog.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Pops `true` if any tax rule was created/updated/toggled while this screen
 /// was open, `false` otherwise — so the caller (settings screen) knows

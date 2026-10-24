@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'global_search_model.dart';
@@ -9,6 +9,7 @@ part of 'global_search_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $GlobalSearchModelCopyWith<GlobalSearchModel> get copyWith => _$GlobalSearchMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchModel&&(identical(other.booking, booking) || other.booking == booking));
+  final _this = this as GlobalSearchModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchModel&&(identical(other.booking, _this.booking) || other.booking == _this.booking));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,booking);
+int get hashCode {
+  final _this = this as GlobalSearchModel;
+  return Object.hash(runtimeType,_this.booking);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchModel(booking: $booking)';
+  final _this = this as GlobalSearchModel;
+  return 'GlobalSearchModel(booking: ${_this.booking})';
 }
 
 
@@ -63,7 +69,7 @@ class _$GlobalSearchModelCopyWithImpl<$Res>
 /// Create a copy of GlobalSearchModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? booking = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(GlobalSearchModel(
 booking: freezed == booking ? _self.booking : booking // ignore: cast_nullable_to_non_nullable
 as DesktopBookingItemModel?,
   ));
@@ -233,16 +239,18 @@ _$GlobalSearchModelCopyWith<_GlobalSearchModel> get copyWith => __$GlobalSearchM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GlobalSearchModel&&(identical(other.booking, booking) || other.booking == booking));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _GlobalSearchModel&&(identical(other.booking, booking) || other.booking == booking));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,booking);
+int get hashCode {
+    return Object.hash(runtimeType,booking);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchModel(booking: $booking)';
+    return 'GlobalSearchModel(booking: $booking)';
 }
 
 

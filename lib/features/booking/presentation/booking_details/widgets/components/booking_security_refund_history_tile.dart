@@ -2,7 +2,7 @@ import 'package:bookie_buddy_shared/core/features/booking/domain/entities/bookin
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/perform_secure_action_dialog.dart';
 import 'package:bookie_buddy_web/core/constants/enums/secret_password_locations_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class BookingSecurityRefundHistoryTile extends StatelessWidget {

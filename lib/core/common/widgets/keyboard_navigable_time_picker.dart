@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A keyboard-navigable time picker.
 ///
@@ -143,9 +143,8 @@ class _KeyboardNavigableTimePickerState
             const SizedBox(height: 8),
             Text(
               'Use ← → to move, ↑ ↓ to change, Enter to confirm',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: Theme.of(context).hintColor),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),

@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/common/widgets/custom_snack_bar.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/image_preview_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Extensions on [BuildContext] that provide convenience methods for
 /// getting [MediaQuery] information.
@@ -226,9 +226,9 @@ extension NavigatorX<T> on BuildContext {
   ///
   /// Returns a [Future] that completes to the [T] type once the push
   /// operation is complete.
-  Future<T?> pushAndRemoveUntil<T>(Widget screen) async => Navigator.of(
-    this,
-  ).pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
+  Future<T?> pushAndRemoveUntil<T>(Widget screen) async =>
+      Navigator.of(this)
+          .pushAndRemoveUntil<T>(_createRoute<T>(screen), (_) => false);
 
   /// Creates a route for navigation based on the specified [transitionType].
   ///

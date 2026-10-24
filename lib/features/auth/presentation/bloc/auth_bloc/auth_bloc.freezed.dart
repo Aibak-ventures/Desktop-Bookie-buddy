@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'auth_bloc.dart';
@@ -9,6 +9,7 @@ part of 'auth_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$AuthEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthEvent()';
+    return 'AuthEvent()';
 }
 
 
@@ -198,16 +199,18 @@ _$LoginRequestedCopyWith<_LoginRequested> get copyWith => __$LoginRequestedCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequested&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.password, password) || other.password == password)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequested&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.password, password) || other.password == password)&&(identical(other.fcmToken, fcmToken) || other.fcmToken == fcmToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,phone,password,fcmToken);
+int get hashCode {
+    return Object.hash(runtimeType,phone,password,fcmToken);
+}
 
 @override
 String toString() {
-  return 'AuthEvent.loginRequested(phone: $phone, password: $password, fcmToken: $fcmToken)';
+    return 'AuthEvent.loginRequested(phone: $phone, password: $password, fcmToken: $fcmToken)';
 }
 
 
@@ -261,7 +264,7 @@ class _LogoutRequested implements AuthEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LogoutRequested);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LogoutRequested);
 }
 
 
@@ -270,7 +273,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthEvent.logoutRequested()';
+    return 'AuthEvent.logoutRequested()';
 }
 
 
@@ -288,7 +291,7 @@ mixin _$AuthState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthState);
 }
 
 
@@ -297,7 +300,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthState()';
+    return 'AuthState()';
 }
 
 
@@ -471,7 +474,7 @@ class _Initial implements AuthState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -480,7 +483,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthState.initial()';
+    return 'AuthState.initial()';
 }
 
 
@@ -503,7 +506,7 @@ class _Loading implements AuthState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -512,7 +515,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthState.loading()';
+    return 'AuthState.loading()';
 }
 
 
@@ -535,7 +538,7 @@ class _Authenticated implements AuthState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated);
 }
 
 
@@ -544,7 +547,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AuthState.authenticated()';
+    return 'AuthState.authenticated()';
 }
 
 
@@ -572,16 +575,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'AuthState.error(error: $error)';
+    return 'AuthState.error(error: $error)';
 }
 
 

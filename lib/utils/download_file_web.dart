@@ -1,13 +1,18 @@
 // Web-specific file download
-// ignore: deprecated_member_use
-import 'dart:html' as html;
+import 'dart:js_interop';
 import 'dart:typed_data';
 
+import 'package:web/web.dart' as web;
+
 void downloadFileWeb(Uint8List bytes, String fileName) {
-  final blob = html.Blob([bytes], 'application/pdf');
-  final url = html.Url.createObjectUrlFromBlob(blob);
-  html.AnchorElement(href: url)
-    ..setAttribute('download', fileName)
+  final blob = web.Blob(
+    [bytes.toJS].toJS,
+    web.BlobPropertyBag(type: 'application/pdf'),
+  );
+  final url = web.URL.createObjectURL(blob);
+  (web.document.createElement('a') as web.HTMLAnchorElement)
+    ..href = url
+    ..download = fileName
     ..click();
-  html.Url.revokeObjectUrl(url);
+  web.URL.revokeObjectURL(url);
 }

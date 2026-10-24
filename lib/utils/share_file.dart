@@ -1,11 +1,11 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:share_plus/share_plus.dart';
 
 Future<void> shareFile({
-  required final BuildContext context,
-  required final String filePath,
-  final VoidCallback? onBeforeShare,
+  required BuildContext context,
+  required String filePath,
+  VoidCallback? onBeforeShare,
 }) async {
   try {
     final box = context.isMobile

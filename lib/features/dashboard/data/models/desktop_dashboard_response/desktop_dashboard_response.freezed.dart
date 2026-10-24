@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'desktop_dashboard_response.dart';
@@ -9,6 +9,7 @@ part of 'desktop_dashboard_response.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $DesktopDashboardResponseCopyWith<DesktopDashboardResponse> get copyWith => _$De
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardResponse&&const DeepCollectionEquality().equals(other.upcoming, upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, ongoingBookings)&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount)&&(identical(other.pagination, pagination) || other.pagination == pagination));
+  final _this = this as DesktopDashboardResponse;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardResponse&&const DeepCollectionEquality().equals(other.upcoming, _this.upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, _this.ongoingBookings)&&(identical(other.upcomingCount, _this.upcomingCount) || other.upcomingCount == _this.upcomingCount)&&(identical(other.alterationBookingCount, _this.alterationBookingCount) || other.alterationBookingCount == _this.alterationBookingCount)&&(identical(other.completedCount, _this.completedCount) || other.completedCount == _this.completedCount)&&(identical(other.expiredCount, _this.expiredCount) || other.expiredCount == _this.expiredCount)&&(identical(other.pagination, _this.pagination) || other.pagination == _this.pagination));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(upcoming),const DeepCollectionEquality().hash(ongoingBookings),upcomingCount,alterationBookingCount,completedCount,expiredCount,pagination);
+int get hashCode {
+  final _this = this as DesktopDashboardResponse;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.upcoming),const DeepCollectionEquality().hash(_this.ongoingBookings),_this.upcomingCount,_this.alterationBookingCount,_this.completedCount,_this.expiredCount,_this.pagination);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardResponse(upcoming: $upcoming, ongoingBookings: $ongoingBookings, upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount, pagination: $pagination)';
+  final _this = this as DesktopDashboardResponse;
+  return 'DesktopDashboardResponse(upcoming: ${_this.upcoming}, ongoingBookings: ${_this.ongoingBookings}, upcomingCount: ${_this.upcomingCount}, alterationBookingCount: ${_this.alterationBookingCount}, completedCount: ${_this.completedCount}, expiredCount: ${_this.expiredCount}, pagination: ${_this.pagination})';
 }
 
 
@@ -66,7 +72,7 @@ class _$DesktopDashboardResponseCopyWithImpl<$Res>
 /// Create a copy of DesktopDashboardResponse
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcoming = null,Object? ongoingBookings = null,Object? upcomingCount = null,Object? alterationBookingCount = null,Object? completedCount = null,Object? expiredCount = null,Object? pagination = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopDashboardResponse(
 upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
 as List<BookingsModel>,ongoingBookings: null == ongoingBookings ? _self.ongoingBookings : ongoingBookings // ignore: cast_nullable_to_non_nullable
 as List<BookingsModel>,upcomingCount: null == upcomingCount ? _self.upcomingCount : upcomingCount // ignore: cast_nullable_to_non_nullable
@@ -224,7 +230,7 @@ return $default(_that.upcoming,_that.ongoingBookings,_that.upcomingCount,_that.a
 @JsonSerializable()
 
 class _DesktopDashboardResponse implements DesktopDashboardResponse {
-  const _DesktopDashboardResponse({@JsonKey(name: 'upcoming') required final  List<BookingsModel> upcoming, @JsonKey(name: 'ongoing_bookings') required final  List<BookingsModel> ongoingBookings, @JsonKey(name: 'upcoming_count') required this.upcomingCount, @JsonKey(name: 'alteration_booking_count') required this.alterationBookingCount, @JsonKey(name: 'completed_count') required this.completedCount, @JsonKey(name: 'expired_count') required this.expiredCount, @JsonKey(name: 'pagination') required this.pagination}): _upcoming = upcoming,_ongoingBookings = ongoingBookings;
+  const _DesktopDashboardResponse({@JsonKey(name: 'upcoming') required  List<BookingsModel> upcoming, @JsonKey(name: 'ongoing_bookings') required  List<BookingsModel> ongoingBookings, @JsonKey(name: 'upcoming_count') required this.upcomingCount, @JsonKey(name: 'alteration_booking_count') required this.alterationBookingCount, @JsonKey(name: 'completed_count') required this.completedCount, @JsonKey(name: 'expired_count') required this.expiredCount, @JsonKey(name: 'pagination') required this.pagination}): _upcoming = upcoming,_ongoingBookings = ongoingBookings;
   factory _DesktopDashboardResponse.fromJson(Map<String, dynamic> json) => _$DesktopDashboardResponseFromJson(json);
 
  final  List<BookingsModel> _upcoming;
@@ -260,16 +266,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardResponse&&const DeepCollectionEquality().equals(other._upcoming, _upcoming)&&const DeepCollectionEquality().equals(other._ongoingBookings, _ongoingBookings)&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount)&&(identical(other.pagination, pagination) || other.pagination == pagination));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardResponse&&const DeepCollectionEquality().equals(other.upcoming, _upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, _ongoingBookings)&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount)&&(identical(other.pagination, pagination) || other.pagination == pagination));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcoming),const DeepCollectionEquality().hash(_ongoingBookings),upcomingCount,alterationBookingCount,completedCount,expiredCount,pagination);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcoming),const DeepCollectionEquality().hash(_ongoingBookings),upcomingCount,alterationBookingCount,completedCount,expiredCount,pagination);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardResponse(upcoming: $upcoming, ongoingBookings: $ongoingBookings, upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount, pagination: $pagination)';
+    return 'DesktopDashboardResponse(upcoming: $upcoming, ongoingBookings: $ongoingBookings, upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount, pagination: $pagination)';
 }
 
 
@@ -339,16 +347,21 @@ $DesktopDashboardCarouselModelCopyWith<DesktopDashboardCarouselModel> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselModel&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+  final _this = this as DesktopDashboardCarouselModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselModel&&(identical(other.upcomingCount, _this.upcomingCount) || other.upcomingCount == _this.upcomingCount)&&(identical(other.alterationBookingCount, _this.alterationBookingCount) || other.alterationBookingCount == _this.alterationBookingCount)&&(identical(other.completedCount, _this.completedCount) || other.completedCount == _this.completedCount)&&(identical(other.expiredCount, _this.expiredCount) || other.expiredCount == _this.expiredCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+int get hashCode {
+  final _this = this as DesktopDashboardCarouselModel;
+  return Object.hash(runtimeType,_this.upcomingCount,_this.alterationBookingCount,_this.completedCount,_this.expiredCount);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselModel(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+  final _this = this as DesktopDashboardCarouselModel;
+  return 'DesktopDashboardCarouselModel(upcomingCount: ${_this.upcomingCount}, alterationBookingCount: ${_this.alterationBookingCount}, completedCount: ${_this.completedCount}, expiredCount: ${_this.expiredCount})';
 }
 
 
@@ -377,7 +390,7 @@ class _$DesktopDashboardCarouselModelCopyWithImpl<$Res>
 /// Create a copy of DesktopDashboardCarouselModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcomingCount = null,Object? alterationBookingCount = null,Object? completedCount = null,Object? expiredCount = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopDashboardCarouselModel(
 upcomingCount: null == upcomingCount ? _self.upcomingCount : upcomingCount // ignore: cast_nullable_to_non_nullable
 as int,alterationBookingCount: null == alterationBookingCount ? _self.alterationBookingCount : alterationBookingCount // ignore: cast_nullable_to_non_nullable
 as int,completedCount: null == completedCount ? _self.completedCount : completedCount // ignore: cast_nullable_to_non_nullable
@@ -544,16 +557,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselModel&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselModel&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+int get hashCode {
+    return Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselModel(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+    return 'DesktopDashboardCarouselModel(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
 }
 
 
@@ -611,16 +626,21 @@ $DesktopDashboardPaginationCopyWith<DesktopDashboardPagination> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardPagination&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.ongoing, ongoing) || other.ongoing == ongoing));
+  final _this = this as DesktopDashboardPagination;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardPagination&&(identical(other.upcoming, _this.upcoming) || other.upcoming == _this.upcoming)&&(identical(other.ongoing, _this.ongoing) || other.ongoing == _this.ongoing));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,upcoming,ongoing);
+int get hashCode {
+  final _this = this as DesktopDashboardPagination;
+  return Object.hash(runtimeType,_this.upcoming,_this.ongoing);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardPagination(upcoming: $upcoming, ongoing: $ongoing)';
+  final _this = this as DesktopDashboardPagination;
+  return 'DesktopDashboardPagination(upcoming: ${_this.upcoming}, ongoing: ${_this.ongoing})';
 }
 
 
@@ -649,7 +669,7 @@ class _$DesktopDashboardPaginationCopyWithImpl<$Res>
 /// Create a copy of DesktopDashboardPagination
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcoming = null,Object? ongoing = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopDashboardPagination(
 upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
 as PaginationInfo,ongoing: null == ongoing ? _self.ongoing : ongoing // ignore: cast_nullable_to_non_nullable
 as PaginationInfo,
@@ -830,16 +850,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardPagination&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.ongoing, ongoing) || other.ongoing == ongoing));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardPagination&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.ongoing, ongoing) || other.ongoing == ongoing));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,upcoming,ongoing);
+int get hashCode {
+    return Object.hash(runtimeType,upcoming,ongoing);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardPagination(upcoming: $upcoming, ongoing: $ongoing)';
+    return 'DesktopDashboardPagination(upcoming: $upcoming, ongoing: $ongoing)';
 }
 
 
@@ -913,16 +935,21 @@ $PaginationInfoCopyWith<PaginationInfo> get copyWith => _$PaginationInfoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginationInfo&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.startIndex, startIndex) || other.startIndex == startIndex)&&(identical(other.endIndex, endIndex) || other.endIndex == endIndex));
+  final _this = this as PaginationInfo;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginationInfo&&(identical(other.next, _this.next) || other.next == _this.next)&&(identical(other.previous, _this.previous) || other.previous == _this.previous)&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.pageSize, _this.pageSize) || other.pageSize == _this.pageSize)&&(identical(other.currentPage, _this.currentPage) || other.currentPage == _this.currentPage)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages)&&(identical(other.startIndex, _this.startIndex) || other.startIndex == _this.startIndex)&&(identical(other.endIndex, _this.endIndex) || other.endIndex == _this.endIndex));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,next,previous,count,pageSize,currentPage,totalPages,startIndex,endIndex);
+int get hashCode {
+  final _this = this as PaginationInfo;
+  return Object.hash(runtimeType,_this.next,_this.previous,_this.count,_this.pageSize,_this.currentPage,_this.totalPages,_this.startIndex,_this.endIndex);
+}
 
 @override
 String toString() {
-  return 'PaginationInfo(next: $next, previous: $previous, count: $count, pageSize: $pageSize, currentPage: $currentPage, totalPages: $totalPages, startIndex: $startIndex, endIndex: $endIndex)';
+  final _this = this as PaginationInfo;
+  return 'PaginationInfo(next: ${_this.next}, previous: ${_this.previous}, count: ${_this.count}, pageSize: ${_this.pageSize}, currentPage: ${_this.currentPage}, totalPages: ${_this.totalPages}, startIndex: ${_this.startIndex}, endIndex: ${_this.endIndex})';
 }
 
 
@@ -951,7 +978,7 @@ class _$PaginationInfoCopyWithImpl<$Res>
 /// Create a copy of PaginationInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? next = freezed,Object? previous = freezed,Object? count = null,Object? pageSize = null,Object? currentPage = null,Object? totalPages = null,Object? startIndex = null,Object? endIndex = null,}) {
-  return _then(_self.copyWith(
+  return _then(PaginationInfo(
 next: freezed == next ? _self.next : next // ignore: cast_nullable_to_non_nullable
 as String?,previous: freezed == previous ? _self.previous : previous // ignore: cast_nullable_to_non_nullable
 as String?,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
@@ -1126,16 +1153,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginationInfo&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.startIndex, startIndex) || other.startIndex == startIndex)&&(identical(other.endIndex, endIndex) || other.endIndex == endIndex));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginationInfo&&(identical(other.next, next) || other.next == next)&&(identical(other.previous, previous) || other.previous == previous)&&(identical(other.count, count) || other.count == count)&&(identical(other.pageSize, pageSize) || other.pageSize == pageSize)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.startIndex, startIndex) || other.startIndex == startIndex)&&(identical(other.endIndex, endIndex) || other.endIndex == endIndex));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,next,previous,count,pageSize,currentPage,totalPages,startIndex,endIndex);
+int get hashCode {
+    return Object.hash(runtimeType,next,previous,count,pageSize,currentPage,totalPages,startIndex,endIndex);
+}
 
 @override
 String toString() {
-  return 'PaginationInfo(next: $next, previous: $previous, count: $count, pageSize: $pageSize, currentPage: $currentPage, totalPages: $totalPages, startIndex: $startIndex, endIndex: $endIndex)';
+    return 'PaginationInfo(next: $next, previous: $previous, count: $count, pageSize: $pageSize, currentPage: $currentPage, totalPages: $totalPages, startIndex: $startIndex, endIndex: $endIndex)';
 }
 
 

@@ -9,8 +9,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/pa
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Signature matching both `UserShopEntityX.calculateTaxSummary` (live shop
 /// config, used when creating) and `AppliedTaxListCalculator.calculateTaxSummary`

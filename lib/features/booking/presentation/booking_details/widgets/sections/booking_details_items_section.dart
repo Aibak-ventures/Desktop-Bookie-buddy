@@ -5,7 +5,7 @@ import 'package:bookie_buddy_shared/core/features/product/domain/entities/produc
 import 'package:bookie_buddy_shared/ui/theme/status_ui_extensions.dart';
 import 'package:bookie_buddy_web/core/common/widgets/product_details_card.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Item details section for [BookingDetailsDrawer].
 class BookingDetailsItemsSection extends StatelessWidget {

@@ -7,8 +7,8 @@ import 'package:bookie_buddy_web/features/settings/presentation/widgets/settings
 import 'package:bookie_buddy_web/features/settings/presentation/widgets/settings_list_tile.dart';
 import 'package:bookie_buddy_web/features/settings/presentation/widgets/settings_print_output_preference_tile.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Settings hub. Currently hosts Tax & Compliance; more settings sections
 /// (shop details, password, notifications, etc.) can be added as further

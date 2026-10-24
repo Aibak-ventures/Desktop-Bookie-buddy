@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sale_model.dart';
@@ -9,16 +9,14 @@ part of 'sale_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$SaleModel {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'shop_sale_id') String? get shopSaleId;@JsonKey(name: 'client_name') String? get clientName;@JsonKey(name: 'client_phone') dynamic get clientPhone;// Can be String or int
-@JsonKey(name: 'total_amount') int get totalAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'products') String get products;// Changed from List<String> to String
-@JsonKey(name: 'staff_color', unknownEnumValue: null) String? get staffColor;// Note: API sometimes returns "staff_col lor" with space - handled by fromJson
-@JsonKey(name: 'staff_name') String? get staffName;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'shop_sale_id') String? get shopSaleId;@JsonKey(name: 'client_name') String? get clientName;@JsonKey(name: 'client_phone') dynamic get clientPhone;@JsonKey(name: 'total_amount') int get totalAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'products') String get products;@JsonKey(name: 'staff_color', unknownEnumValue: null) String? get staffColor;@JsonKey(name: 'staff_name') String? get staffName;
 /// Create a copy of SaleModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +29,21 @@ $SaleModelCopyWith<SaleModel> get copyWith => _$SaleModelCopyWithImpl<SaleModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopSaleId, shopSaleId) || other.shopSaleId == shopSaleId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+  final _this = this as SaleModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.shopSaleId, _this.shopSaleId) || other.shopSaleId == _this.shopSaleId)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&const DeepCollectionEquality().equals(other.clientPhone, _this.clientPhone)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&(identical(other.discountAmount, _this.discountAmount) || other.discountAmount == _this.discountAmount)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.products, _this.products) || other.products == _this.products)&&(identical(other.staffColor, _this.staffColor) || other.staffColor == _this.staffColor)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,shopSaleId,clientName,const DeepCollectionEquality().hash(clientPhone),totalAmount,paidAmount,discountAmount,saleDate,createdAt,products,staffColor,staffName);
+int get hashCode {
+  final _this = this as SaleModel;
+  return Object.hash(runtimeType,_this.id,_this.shopSaleId,_this.clientName,const DeepCollectionEquality().hash(_this.clientPhone),_this.totalAmount,_this.paidAmount,_this.discountAmount,_this.saleDate,_this.createdAt,_this.products,_this.staffColor,_this.staffName);
+}
 
 @override
 String toString() {
-  return 'SaleModel(id: $id, shopSaleId: $shopSaleId, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor, staffName: $staffName)';
+  final _this = this as SaleModel;
+  return 'SaleModel(id: ${_this.id}, shopSaleId: ${_this.shopSaleId}, clientName: ${_this.clientName}, clientPhone: ${_this.clientPhone}, totalAmount: ${_this.totalAmount}, paidAmount: ${_this.paidAmount}, discountAmount: ${_this.discountAmount}, saleDate: ${_this.saleDate}, createdAt: ${_this.createdAt}, products: ${_this.products}, staffColor: ${_this.staffColor}, staffName: ${_this.staffName})';
 }
 
 
@@ -69,7 +72,7 @@ class _$SaleModelCopyWithImpl<$Res>
 /// Create a copy of SaleModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shopSaleId = freezed,Object? clientName = freezed,Object? clientPhone = freezed,Object? totalAmount = null,Object? paidAmount = null,Object? discountAmount = null,Object? saleDate = null,Object? createdAt = null,Object? products = null,Object? staffColor = freezed,Object? staffName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SaleModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,shopSaleId: freezed == shopSaleId ? _self.shopSaleId : shopSaleId // ignore: cast_nullable_to_non_nullable
 as String?,clientName: freezed == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
@@ -230,16 +233,13 @@ class _SaleModel implements SaleModel {
 @override@JsonKey(name: 'shop_sale_id') final  String? shopSaleId;
 @override@JsonKey(name: 'client_name') final  String? clientName;
 @override@JsonKey(name: 'client_phone') final  dynamic clientPhone;
-// Can be String or int
 @override@JsonKey(name: 'total_amount') final  int totalAmount;
 @override@JsonKey(name: 'paid_amount') final  int paidAmount;
 @override@JsonKey(name: 'discount') final  int discountAmount;
 @override@JsonKey(name: 'sale_date') final  String saleDate;
 @override@JsonKey(name: 'created_at') final  String createdAt;
 @override@JsonKey(name: 'products') final  String products;
-// Changed from List<String> to String
 @override@JsonKey(name: 'staff_color', unknownEnumValue: null) final  String? staffColor;
-// Note: API sometimes returns "staff_col lor" with space - handled by fromJson
 @override@JsonKey(name: 'staff_name') final  String? staffName;
 
 /// Create a copy of SaleModel
@@ -255,16 +255,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopSaleId, shopSaleId) || other.shopSaleId == shopSaleId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.staffName, staffName) || other.staffName == staffName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleModel&&(identical(other.id, id) || other.id == id)&&(identical(other.shopSaleId, shopSaleId) || other.shopSaleId == shopSaleId)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&const DeepCollectionEquality().equals(other.clientPhone, clientPhone)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.staffName, staffName) || other.staffName == staffName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,shopSaleId,clientName,const DeepCollectionEquality().hash(clientPhone),totalAmount,paidAmount,discountAmount,saleDate,createdAt,products,staffColor,staffName);
+int get hashCode {
+    return Object.hash(runtimeType,id,shopSaleId,clientName,const DeepCollectionEquality().hash(clientPhone),totalAmount,paidAmount,discountAmount,saleDate,createdAt,products,staffColor,staffName);
+}
 
 @override
 String toString() {
-  return 'SaleModel(id: $id, shopSaleId: $shopSaleId, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor, staffName: $staffName)';
+    return 'SaleModel(id: $id, shopSaleId: $shopSaleId, clientName: $clientName, clientPhone: $clientPhone, totalAmount: $totalAmount, paidAmount: $paidAmount, discountAmount: $discountAmount, saleDate: $saleDate, createdAt: $createdAt, products: $products, staffColor: $staffColor, staffName: $staffName)';
 }
 
 

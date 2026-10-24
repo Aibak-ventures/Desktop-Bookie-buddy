@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_selected_model.dart';
@@ -9,6 +9,7 @@ part of 'product_selected_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ProductSelectedModelCopyWith<ProductSelectedModel> get copyWith => _$ProductSel
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.peopleMeasurements, peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+  final _this = this as ProductSelectedModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSelectedModel&&(identical(other.variant, _this.variant) || other.variant == _this.variant)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&const DeepCollectionEquality().equals(other.peopleMeasurements, _this.peopleMeasurements)&&(identical(other.quantity, _this.quantity) || other.quantity == _this.quantity)&&(identical(other.runningKilometers, _this.runningKilometers) || other.runningKilometers == _this.runningKilometers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(peopleMeasurements),quantity,runningKilometers);
+int get hashCode {
+  final _this = this as ProductSelectedModel;
+  return Object.hash(runtimeType,_this.variant,_this.amount,const DeepCollectionEquality().hash(_this.peopleMeasurements),_this.quantity,_this.runningKilometers);
+}
 
 @override
 String toString() {
-  return 'ProductSelectedModel(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+  final _this = this as ProductSelectedModel;
+  return 'ProductSelectedModel(variant: ${_this.variant}, amount: ${_this.amount}, peopleMeasurements: ${_this.peopleMeasurements}, quantity: ${_this.quantity}, runningKilometers: ${_this.runningKilometers})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ProductSelectedModelCopyWithImpl<$Res>
 /// Create a copy of ProductSelectedModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? variant = null,Object? amount = null,Object? peopleMeasurements = null,Object? quantity = null,Object? runningKilometers = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ProductSelectedModel(
 variant: null == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as ProductInfoModel,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,peopleMeasurements: null == peopleMeasurements ? _self.peopleMeasurements : peopleMeasurements // ignore: cast_nullable_to_non_nullable
@@ -222,7 +228,7 @@ return $default(_that.variant,_that.amount,_that.peopleMeasurements,_that.quanti
 @JsonSerializable()
 
 class _ProductSelectedModel implements ProductSelectedModel {
-  const _ProductSelectedModel({required this.variant, required this.amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) final  List<PersonMeasurementsModel> peopleMeasurements = const [], required this.quantity, this.runningKilometers}): _peopleMeasurements = peopleMeasurements;
+  const _ProductSelectedModel({required this.variant, required this.amount, @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson)  List<PersonMeasurementsModel> peopleMeasurements = const [], required this.quantity, this.runningKilometers}): _peopleMeasurements = peopleMeasurements;
   factory _ProductSelectedModel.fromJson(Map<String, dynamic> json) => _$ProductSelectedModelFromJson(json);
 
 @override final  ProductInfoModel variant;
@@ -250,16 +256,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other._peopleMeasurements, _peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSelectedModel&&(identical(other.variant, variant) || other.variant == variant)&&(identical(other.amount, amount) || other.amount == amount)&&const DeepCollectionEquality().equals(other.peopleMeasurements, _peopleMeasurements)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.runningKilometers, runningKilometers) || other.runningKilometers == runningKilometers));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_peopleMeasurements),quantity,runningKilometers);
+int get hashCode {
+    return Object.hash(runtimeType,variant,amount,const DeepCollectionEquality().hash(_peopleMeasurements),quantity,runningKilometers);
+}
 
 @override
 String toString() {
-  return 'ProductSelectedModel(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
+    return 'ProductSelectedModel(variant: $variant, amount: $amount, peopleMeasurements: $peopleMeasurements, quantity: $quantity, runningKilometers: $runningKilometers)';
 }
 
 

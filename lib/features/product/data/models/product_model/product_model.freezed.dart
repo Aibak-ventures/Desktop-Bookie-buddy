@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_model.dart';
@@ -9,15 +9,14 @@ part of 'product_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$ProductModel {
 
- int get id; String get name; String? get description;@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? get mainServiceType; String? get color; String? get model; String? get image;@JsonKey(name: 'thumbnail_image') String? get thumbnailImage; String? get category;@JsonKey(name: 'purchase_price') int? get purchaseAmount;@JsonKey(name: 'price') int? get price;@JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) String? get salePrice;// Vehicle-specific fields (for direct API responses or request models)
-@JsonKey(name: 'registration_number') String? get registrationNumber;@JsonKey(name: 'pollution_expiry') String? get pollutionExpiry;@JsonKey(name: 'insurance_expiry') String? get insuranceExpiry;@JsonKey(name: 'fitness_expiry') String? get fitnessExpiry;@JsonKey(name: 'barcode') String? get barcode;@JsonKey(name: 'general_service_name') String? get generalServiceName;@JsonKey(name: 'created_at') String? get createdAt;// Attributes map for nested vehicle data from list API
- Map<String, dynamic> get attributes;@JsonKey(name: 'variants') List<ProductVariantModel> get variants;
+ int get id; String get name; String? get description;@JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) MainServiceType? get mainServiceType; String? get color; String? get model; String? get image;@JsonKey(name: 'thumbnail_image') String? get thumbnailImage; String? get category;@JsonKey(name: 'purchase_price') int? get purchaseAmount;@JsonKey(name: 'price') int? get price;@JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) String? get salePrice;@JsonKey(name: 'registration_number') String? get registrationNumber;@JsonKey(name: 'pollution_expiry') String? get pollutionExpiry;@JsonKey(name: 'insurance_expiry') String? get insuranceExpiry;@JsonKey(name: 'fitness_expiry') String? get fitnessExpiry;@JsonKey(name: 'barcode') String? get barcode;@JsonKey(name: 'general_service_name') String? get generalServiceName;@JsonKey(name: 'created_at') String? get createdAt; Map<String, dynamic> get attributes;@JsonKey(name: 'variants') List<ProductVariantModel> get variants;
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +29,21 @@ $ProductModelCopyWith<ProductModel> get copyWith => _$ProductModelCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.attributes, attributes)&&const DeepCollectionEquality().equals(other.variants, variants));
+  final _this = this as ProductModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mainServiceType, _this.mainServiceType) || other.mainServiceType == _this.mainServiceType)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.model, _this.model) || other.model == _this.model)&&(identical(other.image, _this.image) || other.image == _this.image)&&(identical(other.thumbnailImage, _this.thumbnailImage) || other.thumbnailImage == _this.thumbnailImage)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.purchaseAmount, _this.purchaseAmount) || other.purchaseAmount == _this.purchaseAmount)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.salePrice, _this.salePrice) || other.salePrice == _this.salePrice)&&(identical(other.registrationNumber, _this.registrationNumber) || other.registrationNumber == _this.registrationNumber)&&(identical(other.pollutionExpiry, _this.pollutionExpiry) || other.pollutionExpiry == _this.pollutionExpiry)&&(identical(other.insuranceExpiry, _this.insuranceExpiry) || other.insuranceExpiry == _this.insuranceExpiry)&&(identical(other.fitnessExpiry, _this.fitnessExpiry) || other.fitnessExpiry == _this.fitnessExpiry)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.generalServiceName, _this.generalServiceName) || other.generalServiceName == _this.generalServiceName)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&const DeepCollectionEquality().equals(other.attributes, _this.attributes)&&const DeepCollectionEquality().equals(other.variants, _this.variants));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,createdAt,const DeepCollectionEquality().hash(attributes),const DeepCollectionEquality().hash(variants)]);
+int get hashCode {
+  final _this = this as ProductModel;
+  return Object.hashAll([runtimeType,_this.id,_this.name,_this.description,_this.mainServiceType,_this.color,_this.model,_this.image,_this.thumbnailImage,_this.category,_this.purchaseAmount,_this.price,_this.salePrice,_this.registrationNumber,_this.pollutionExpiry,_this.insuranceExpiry,_this.fitnessExpiry,_this.barcode,_this.generalServiceName,_this.createdAt,const DeepCollectionEquality().hash(_this.attributes),const DeepCollectionEquality().hash(_this.variants)]);
+}
 
 @override
 String toString() {
-  return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, createdAt: $createdAt, attributes: $attributes, variants: $variants)';
+  final _this = this as ProductModel;
+  return 'ProductModel(id: ${_this.id}, name: ${_this.name}, description: ${_this.description}, mainServiceType: ${_this.mainServiceType}, color: ${_this.color}, model: ${_this.model}, image: ${_this.image}, thumbnailImage: ${_this.thumbnailImage}, category: ${_this.category}, purchaseAmount: ${_this.purchaseAmount}, price: ${_this.price}, salePrice: ${_this.salePrice}, registrationNumber: ${_this.registrationNumber}, pollutionExpiry: ${_this.pollutionExpiry}, insuranceExpiry: ${_this.insuranceExpiry}, fitnessExpiry: ${_this.fitnessExpiry}, barcode: ${_this.barcode}, generalServiceName: ${_this.generalServiceName}, createdAt: ${_this.createdAt}, attributes: ${_this.attributes}, variants: ${_this.variants})';
 }
 
 
@@ -68,7 +72,7 @@ class _$ProductModelCopyWithImpl<$Res>
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = freezed,Object? mainServiceType = freezed,Object? color = freezed,Object? model = freezed,Object? image = freezed,Object? thumbnailImage = freezed,Object? category = freezed,Object? purchaseAmount = freezed,Object? price = freezed,Object? salePrice = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? generalServiceName = freezed,Object? createdAt = freezed,Object? attributes = null,Object? variants = null,}) {
-  return _then(_self.copyWith(
+  return _then(ProductModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -231,7 +235,7 @@ return $default(_that.id,_that.name,_that.description,_that.mainServiceType,_tha
 @JsonSerializable()
 
 class _ProductModel extends ProductModel {
-  const _ProductModel({required this.id, required this.name, required this.description, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, this.color, this.model, this.image, @JsonKey(name: 'thumbnail_image') this.thumbnailImage, this.category, @JsonKey(name: 'purchase_price') this.purchaseAmount, @JsonKey(name: 'price') this.price, @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) this.salePrice, @JsonKey(name: 'registration_number') this.registrationNumber, @JsonKey(name: 'pollution_expiry') this.pollutionExpiry, @JsonKey(name: 'insurance_expiry') this.insuranceExpiry, @JsonKey(name: 'fitness_expiry') this.fitnessExpiry, @JsonKey(name: 'barcode') this.barcode, @JsonKey(name: 'general_service_name') this.generalServiceName, @JsonKey(name: 'created_at') this.createdAt, final  Map<String, dynamic> attributes = const {}, @JsonKey(name: 'variants') required final  List<ProductVariantModel> variants}): _attributes = attributes,_variants = variants,super._();
+  const _ProductModel({required this.id, required this.name, required this.description, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, this.color, this.model, this.image, @JsonKey(name: 'thumbnail_image') this.thumbnailImage, this.category, @JsonKey(name: 'purchase_price') this.purchaseAmount, @JsonKey(name: 'price') this.price, @JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) this.salePrice, @JsonKey(name: 'registration_number') this.registrationNumber, @JsonKey(name: 'pollution_expiry') this.pollutionExpiry, @JsonKey(name: 'insurance_expiry') this.insuranceExpiry, @JsonKey(name: 'fitness_expiry') this.fitnessExpiry, @JsonKey(name: 'barcode') this.barcode, @JsonKey(name: 'general_service_name') this.generalServiceName, @JsonKey(name: 'created_at') this.createdAt,  Map<String, dynamic> attributes = const {}, @JsonKey(name: 'variants') required  List<ProductVariantModel> variants}): _attributes = attributes,_variants = variants,super._();
   factory _ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
 @override final  int id;
@@ -246,7 +250,6 @@ class _ProductModel extends ProductModel {
 @override@JsonKey(name: 'purchase_price') final  int? purchaseAmount;
 @override@JsonKey(name: 'price') final  int? price;
 @override@JsonKey(name: 'sale_price', fromJson: _salePriceFromJson) final  String? salePrice;
-// Vehicle-specific fields (for direct API responses or request models)
 @override@JsonKey(name: 'registration_number') final  String? registrationNumber;
 @override@JsonKey(name: 'pollution_expiry') final  String? pollutionExpiry;
 @override@JsonKey(name: 'insurance_expiry') final  String? insuranceExpiry;
@@ -254,9 +257,7 @@ class _ProductModel extends ProductModel {
 @override@JsonKey(name: 'barcode') final  String? barcode;
 @override@JsonKey(name: 'general_service_name') final  String? generalServiceName;
 @override@JsonKey(name: 'created_at') final  String? createdAt;
-// Attributes map for nested vehicle data from list API
  final  Map<String, dynamic> _attributes;
-// Attributes map for nested vehicle data from list API
 @override@JsonKey() Map<String, dynamic> get attributes {
   if (_attributes is EqualUnmodifiableMapView) return _attributes;
   // ignore: implicit_dynamic_type
@@ -284,16 +285,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._attributes, _attributes)&&const DeepCollectionEquality().equals(other._variants, _variants));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.color, color) || other.color == color)&&(identical(other.model, model) || other.model == model)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.category, category) || other.category == category)&&(identical(other.purchaseAmount, purchaseAmount) || other.purchaseAmount == purchaseAmount)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.generalServiceName, generalServiceName) || other.generalServiceName == generalServiceName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.attributes, _attributes)&&const DeepCollectionEquality().equals(other.variants, _variants));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,createdAt,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_variants)]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,name,description,mainServiceType,color,model,image,thumbnailImage,category,purchaseAmount,price,salePrice,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,generalServiceName,createdAt,const DeepCollectionEquality().hash(_attributes),const DeepCollectionEquality().hash(_variants)]);
+}
 
 @override
 String toString() {
-  return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, createdAt: $createdAt, attributes: $attributes, variants: $variants)';
+    return 'ProductModel(id: $id, name: $name, description: $description, mainServiceType: $mainServiceType, color: $color, model: $model, image: $image, thumbnailImage: $thumbnailImage, category: $category, purchaseAmount: $purchaseAmount, price: $price, salePrice: $salePrice, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, generalServiceName: $generalServiceName, createdAt: $createdAt, attributes: $attributes, variants: $variants)';
 }
 
 

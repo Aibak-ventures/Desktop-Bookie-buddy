@@ -6,8 +6,8 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_bookin
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A single data row in the bookings table of [AllBookingsDesktopScreen].
 ///

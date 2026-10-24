@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'request_sales_model.dart';
@@ -9,6 +9,7 @@ part of 'request_sales_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $RequestSalesModelCopyWith<RequestSalesModel> get copyWith => _$RequestSalesMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSalesModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.clientAddress, clientAddress) || other.clientAddress == clientAddress)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.sendInvoice, sendInvoice) || other.sendInvoice == sendInvoice)&&const DeepCollectionEquality().equals(other.variants, variants)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.decreaseStock, decreaseStock) || other.decreaseStock == decreaseStock));
+  final _this = this as RequestSalesModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RequestSalesModel&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.clientAddress, _this.clientAddress) || other.clientAddress == _this.clientAddress)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.sendInvoice, _this.sendInvoice) || other.sendInvoice == _this.sendInvoice)&&const DeepCollectionEquality().equals(other.variants, _this.variants)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.discount, _this.discount) || other.discount == _this.discount)&&(identical(other.decreaseStock, _this.decreaseStock) || other.decreaseStock == _this.decreaseStock));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,staffId,clientPhone,clientAddress,saleDate,description,sendInvoice,const DeepCollectionEquality().hash(variants),paidAmount,accountId,discount,decreaseStock);
+int get hashCode {
+  final _this = this as RequestSalesModel;
+  return Object.hash(runtimeType,_this.staffId,_this.clientPhone,_this.clientAddress,_this.saleDate,_this.description,_this.sendInvoice,const DeepCollectionEquality().hash(_this.variants),_this.paidAmount,_this.accountId,_this.discount,_this.decreaseStock);
+}
 
 @override
 String toString() {
-  return 'RequestSalesModel(staffId: $staffId, clientPhone: $clientPhone, clientAddress: $clientAddress, saleDate: $saleDate, description: $description, sendInvoice: $sendInvoice, variants: $variants, paidAmount: $paidAmount, accountId: $accountId, discount: $discount, decreaseStock: $decreaseStock)';
+  final _this = this as RequestSalesModel;
+  return 'RequestSalesModel(staffId: ${_this.staffId}, clientPhone: ${_this.clientPhone}, clientAddress: ${_this.clientAddress}, saleDate: ${_this.saleDate}, description: ${_this.description}, sendInvoice: ${_this.sendInvoice}, variants: ${_this.variants}, paidAmount: ${_this.paidAmount}, accountId: ${_this.accountId}, discount: ${_this.discount}, decreaseStock: ${_this.decreaseStock})';
 }
 
 
@@ -66,7 +72,7 @@ class _$RequestSalesModelCopyWithImpl<$Res>
 /// Create a copy of RequestSalesModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? staffId = freezed,Object? clientPhone = freezed,Object? clientAddress = freezed,Object? saleDate = freezed,Object? description = freezed,Object? sendInvoice = null,Object? variants = freezed,Object? paidAmount = freezed,Object? accountId = freezed,Object? discount = freezed,Object? decreaseStock = null,}) {
-  return _then(_self.copyWith(
+  return _then(RequestSalesModel(
 staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,clientPhone: freezed == clientPhone ? _self.clientPhone : clientPhone // ignore: cast_nullable_to_non_nullable
 as String?,clientAddress: freezed == clientAddress ? _self.clientAddress : clientAddress // ignore: cast_nullable_to_non_nullable
@@ -219,7 +225,7 @@ return $default(_that.staffId,_that.clientPhone,_that.clientAddress,_that.saleDa
 
 @JsonSerializable(includeIfNull: false)
 class _RequestSalesModel implements RequestSalesModel {
-  const _RequestSalesModel({@JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'client_address') this.clientAddress, @JsonKey(name: 'sale_date') this.saleDate, @JsonKey(name: 'description') this.description, @JsonKey(name: 'send_invoice') this.sendInvoice = false, @JsonKey(name: 'variants') final  List<Map<String, dynamic>>? variants, @JsonKey(name: 'paid_amount') this.paidAmount, @JsonKey(name: 'account_id') this.accountId, @JsonKey(name: 'discount') this.discount, @JsonKey(name: 'decrease_stock') this.decreaseStock = false}): _variants = variants;
+  const _RequestSalesModel({@JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'client_address') this.clientAddress, @JsonKey(name: 'sale_date') this.saleDate, @JsonKey(name: 'description') this.description, @JsonKey(name: 'send_invoice') this.sendInvoice = false, @JsonKey(name: 'variants')  List<Map<String, dynamic>>? variants, @JsonKey(name: 'paid_amount') this.paidAmount, @JsonKey(name: 'account_id') this.accountId, @JsonKey(name: 'discount') this.discount, @JsonKey(name: 'decrease_stock') this.decreaseStock = false}): _variants = variants;
   factory _RequestSalesModel.fromJson(Map<String, dynamic> json) => _$RequestSalesModelFromJson(json);
 
 @override@JsonKey(name: 'staff_id') final  int? staffId;
@@ -255,16 +261,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestSalesModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.clientAddress, clientAddress) || other.clientAddress == clientAddress)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.sendInvoice, sendInvoice) || other.sendInvoice == sendInvoice)&&const DeepCollectionEquality().equals(other._variants, _variants)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.decreaseStock, decreaseStock) || other.decreaseStock == decreaseStock));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RequestSalesModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.clientAddress, clientAddress) || other.clientAddress == clientAddress)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.sendInvoice, sendInvoice) || other.sendInvoice == sendInvoice)&&const DeepCollectionEquality().equals(other.variants, _variants)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.decreaseStock, decreaseStock) || other.decreaseStock == decreaseStock));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,staffId,clientPhone,clientAddress,saleDate,description,sendInvoice,const DeepCollectionEquality().hash(_variants),paidAmount,accountId,discount,decreaseStock);
+int get hashCode {
+    return Object.hash(runtimeType,staffId,clientPhone,clientAddress,saleDate,description,sendInvoice,const DeepCollectionEquality().hash(_variants),paidAmount,accountId,discount,decreaseStock);
+}
 
 @override
 String toString() {
-  return 'RequestSalesModel(staffId: $staffId, clientPhone: $clientPhone, clientAddress: $clientAddress, saleDate: $saleDate, description: $description, sendInvoice: $sendInvoice, variants: $variants, paidAmount: $paidAmount, accountId: $accountId, discount: $discount, decreaseStock: $decreaseStock)';
+    return 'RequestSalesModel(staffId: $staffId, clientPhone: $clientPhone, clientAddress: $clientAddress, saleDate: $saleDate, description: $description, sendInvoice: $sendInvoice, variants: $variants, paidAmount: $paidAmount, accountId: $accountId, discount: $discount, decreaseStock: $decreaseStock)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'all_sales_bloc.dart';
@@ -9,6 +9,7 @@ part of 'all_sales_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$AllSalesEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllSalesEvent()';
+    return 'AllSalesEvent()';
 }
 
 
@@ -199,16 +200,18 @@ _$LoadSalesCopyWith<_LoadSales> get copyWith => __$LoadSalesCopyWithImpl<_LoadSa
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadSales&&(identical(other.page, page) || other.page == page)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadSales&&(identical(other.page, page) || other.page == page)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,page,searchQuery,fromDate,toDate);
+int get hashCode {
+    return Object.hash(runtimeType,page,searchQuery,fromDate,toDate);
+}
 
 @override
 String toString() {
-  return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery, fromDate: $fromDate, toDate: $toDate)';
+    return 'AllSalesEvent.loadSales(page: $page, searchQuery: $searchQuery, fromDate: $fromDate, toDate: $toDate)';
 }
 
 
@@ -263,7 +266,7 @@ class _LoadMoreSales implements AllSalesEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadMoreSales);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadMoreSales);
 }
 
 
@@ -272,7 +275,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllSalesEvent.loadMoreSales()';
+    return 'AllSalesEvent.loadMoreSales()';
 }
 
 
@@ -290,7 +293,7 @@ mixin _$AllSalesState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AllSalesState);
 }
 
 
@@ -299,7 +302,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllSalesState()';
+    return 'AllSalesState()';
 }
 
 
@@ -467,7 +470,7 @@ class _Loading implements AllSalesState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -476,7 +479,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllSalesState.loading()';
+    return 'AllSalesState.loading()';
 }
 
 
@@ -489,7 +492,7 @@ String toString() {
 
 
 class _Loaded implements AllSalesState {
-  const _Loaded({required final  List<SaleEntity> sales, this.nextPageUrl, this.searchQuery, this.isPaginating = false, this.fromDate, this.toDate}): _sales = sales;
+  const _Loaded({required  List<SaleEntity> sales, this.nextPageUrl, this.searchQuery, this.isPaginating = false, this.fromDate, this.toDate}): _sales = sales;
   
 
  final  List<SaleEntity> _sales;
@@ -515,16 +518,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._sales, _sales)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.sales, _sales)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.fromDate, fromDate) || other.fromDate == fromDate)&&(identical(other.toDate, toDate) || other.toDate == toDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_sales),nextPageUrl,searchQuery,isPaginating,fromDate,toDate);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_sales),nextPageUrl,searchQuery,isPaginating,fromDate,toDate);
+}
 
 @override
 String toString() {
-  return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating, fromDate: $fromDate, toDate: $toDate)';
+    return 'AllSalesState.loaded(sales: $sales, nextPageUrl: $nextPageUrl, searchQuery: $searchQuery, isPaginating: $isPaginating, fromDate: $fromDate, toDate: $toDate)';
 }
 
 
@@ -586,16 +591,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'AllSalesState.error(message: $message)';
+    return 'AllSalesState.error(message: $message)';
 }
 
 

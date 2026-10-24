@@ -14,7 +14,7 @@ import 'package:bookie_buddy_web/features/sales/domain/entities/sales_request_en
 import 'package:bookie_buddy_web/features/sales/presentation/common/helpers/sales_split_payment.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds API request payloads for the new-booking / sales / old-booking flows.
 ///

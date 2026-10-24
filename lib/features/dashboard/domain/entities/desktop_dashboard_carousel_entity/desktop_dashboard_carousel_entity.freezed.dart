@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'desktop_dashboard_carousel_entity.dart';
@@ -9,6 +9,7 @@ part of 'desktop_dashboard_carousel_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $DesktopDashboardCarouselEntityCopyWith<DesktopDashboardCarouselEntity> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselEntity&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+  final _this = this as DesktopDashboardCarouselEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardCarouselEntity&&(identical(other.upcomingCount, _this.upcomingCount) || other.upcomingCount == _this.upcomingCount)&&(identical(other.alterationBookingCount, _this.alterationBookingCount) || other.alterationBookingCount == _this.alterationBookingCount)&&(identical(other.completedCount, _this.completedCount) || other.completedCount == _this.completedCount)&&(identical(other.expiredCount, _this.expiredCount) || other.expiredCount == _this.expiredCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+int get hashCode {
+  final _this = this as DesktopDashboardCarouselEntity;
+  return Object.hash(runtimeType,_this.upcomingCount,_this.alterationBookingCount,_this.completedCount,_this.expiredCount);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselEntity(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+  final _this = this as DesktopDashboardCarouselEntity;
+  return 'DesktopDashboardCarouselEntity(upcomingCount: ${_this.upcomingCount}, alterationBookingCount: ${_this.alterationBookingCount}, completedCount: ${_this.completedCount}, expiredCount: ${_this.expiredCount})';
 }
 
 
@@ -63,7 +69,7 @@ class _$DesktopDashboardCarouselEntityCopyWithImpl<$Res>
 /// Create a copy of DesktopDashboardCarouselEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcomingCount = null,Object? alterationBookingCount = null,Object? completedCount = null,Object? expiredCount = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopDashboardCarouselEntity(
 upcomingCount: null == upcomingCount ? _self.upcomingCount : upcomingCount // ignore: cast_nullable_to_non_nullable
 as int,alterationBookingCount: null == alterationBookingCount ? _self.alterationBookingCount : alterationBookingCount // ignore: cast_nullable_to_non_nullable
 as int,completedCount: null == completedCount ? _self.completedCount : completedCount // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$DesktopDashboardCarouselEntityCopyWith<_DesktopDashboardCarouselEntity> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselEntity&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardCarouselEntity&&(identical(other.upcomingCount, upcomingCount) || other.upcomingCount == upcomingCount)&&(identical(other.alterationBookingCount, alterationBookingCount) || other.alterationBookingCount == alterationBookingCount)&&(identical(other.completedCount, completedCount) || other.completedCount == completedCount)&&(identical(other.expiredCount, expiredCount) || other.expiredCount == expiredCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+int get hashCode {
+    return Object.hash(runtimeType,upcomingCount,alterationBookingCount,completedCount,expiredCount);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardCarouselEntity(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
+    return 'DesktopDashboardCarouselEntity(upcomingCount: $upcomingCount, alterationBookingCount: $alterationBookingCount, completedCount: $completedCount, expiredCount: $expiredCount)';
 }
 
 

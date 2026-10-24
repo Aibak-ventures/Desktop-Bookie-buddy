@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'reset_password_bloc.dart';
@@ -9,6 +9,7 @@ part of 'reset_password_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ResetPasswordEventCopyWith<ResetPasswordEvent> get copyWith => _$ResetPasswordE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordEvent&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.logoutFromAllDevices, logoutFromAllDevices) || other.logoutFromAllDevices == logoutFromAllDevices));
+  final _this = this as ResetPasswordEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordEvent&&(identical(other.oldPassword, _this.oldPassword) || other.oldPassword == _this.oldPassword)&&(identical(other.newPassword, _this.newPassword) || other.newPassword == _this.newPassword)&&(identical(other.logoutFromAllDevices, _this.logoutFromAllDevices) || other.logoutFromAllDevices == _this.logoutFromAllDevices));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,oldPassword,newPassword,logoutFromAllDevices);
+int get hashCode {
+  final _this = this as ResetPasswordEvent;
+  return Object.hash(runtimeType,_this.oldPassword,_this.newPassword,_this.logoutFromAllDevices);
+}
 
 @override
 String toString() {
-  return 'ResetPasswordEvent(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
+  final _this = this as ResetPasswordEvent;
+  return 'ResetPasswordEvent(oldPassword: ${_this.oldPassword}, newPassword: ${_this.newPassword}, logoutFromAllDevices: ${_this.logoutFromAllDevices})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ResetPasswordEventCopyWithImpl<$Res>
 /// Create a copy of ResetPasswordEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? oldPassword = null,Object? newPassword = null,Object? logoutFromAllDevices = null,}) {
-  return _then(_self.copyWith(
+  return _then(ResetPasswordEvent.resetPassword(
 oldPassword: null == oldPassword ? _self.oldPassword : oldPassword // ignore: cast_nullable_to_non_nullable
 as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String,logoutFromAllDevices: null == logoutFromAllDevices ? _self.logoutFromAllDevices : logoutFromAllDevices // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$ResetPasswordCopyWith<_ResetPassword> get copyWith => __$ResetPasswordCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPassword&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.logoutFromAllDevices, logoutFromAllDevices) || other.logoutFromAllDevices == logoutFromAllDevices));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPassword&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword)&&(identical(other.logoutFromAllDevices, logoutFromAllDevices) || other.logoutFromAllDevices == logoutFromAllDevices));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,oldPassword,newPassword,logoutFromAllDevices);
+int get hashCode {
+    return Object.hash(runtimeType,oldPassword,newPassword,logoutFromAllDevices);
+}
 
 @override
 String toString() {
-  return 'ResetPasswordEvent.resetPassword(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
+    return 'ResetPasswordEvent.resetPassword(oldPassword: $oldPassword, newPassword: $newPassword, logoutFromAllDevices: $logoutFromAllDevices)';
 }
 
 
@@ -283,7 +291,7 @@ mixin _$ResetPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordState);
 }
 
 
@@ -292,7 +300,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ResetPasswordState()';
+    return 'ResetPasswordState()';
 }
 
 
@@ -466,7 +474,7 @@ class _Initial implements ResetPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -475,7 +483,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ResetPasswordState.initial()';
+    return 'ResetPasswordState.initial()';
 }
 
 
@@ -498,7 +506,7 @@ class _Submitted implements ResetPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Submitted);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Submitted);
 }
 
 
@@ -507,7 +515,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ResetPasswordState.submitted()';
+    return 'ResetPasswordState.submitted()';
 }
 
 
@@ -530,7 +538,7 @@ class _Success implements ResetPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
 }
 
 
@@ -539,7 +547,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ResetPasswordState.success()';
+    return 'ResetPasswordState.success()';
 }
 
 
@@ -567,16 +575,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ResetPasswordState.error(error: $error)';
+    return 'ResetPasswordState.error(error: $error)';
 }
 
 

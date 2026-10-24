@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'qz_printer_cubit.dart';
@@ -9,6 +9,7 @@ part of 'qz_printer_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -31,16 +32,21 @@ $QzPrinterStateCopyWith<QzPrinterState> get copyWith => _$QzPrinterStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.printers, printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.refreshingPrinters, refreshingPrinters) || other.refreshingPrinters == refreshingPrinters)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
+  final _this = this as QzPrinterState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is QzPrinterState&&(identical(other.status, _this.status) || other.status == _this.status)&&const DeepCollectionEquality().equals(other.printers, _this.printers)&&(identical(other.selectedPrinterName, _this.selectedPrinterName) || other.selectedPrinterName == _this.selectedPrinterName)&&(identical(other.errorMessage, _this.errorMessage) || other.errorMessage == _this.errorMessage)&&(identical(other.refreshingPrinters, _this.refreshingPrinters) || other.refreshingPrinters == _this.refreshingPrinters)&&(identical(other.lastUsedPrinterName, _this.lastUsedPrinterName) || other.lastUsedPrinterName == _this.lastUsedPrinterName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(printers),selectedPrinterName,errorMessage,refreshingPrinters,lastUsedPrinterName);
+int get hashCode {
+  final _this = this as QzPrinterState;
+  return Object.hash(runtimeType,_this.status,const DeepCollectionEquality().hash(_this.printers),_this.selectedPrinterName,_this.errorMessage,_this.refreshingPrinters,_this.lastUsedPrinterName);
+}
 
 @override
 String toString() {
-  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, refreshingPrinters: $refreshingPrinters, lastUsedPrinterName: $lastUsedPrinterName)';
+  final _this = this as QzPrinterState;
+  return 'QzPrinterState(status: ${_this.status}, printers: ${_this.printers}, selectedPrinterName: ${_this.selectedPrinterName}, errorMessage: ${_this.errorMessage}, refreshingPrinters: ${_this.refreshingPrinters}, lastUsedPrinterName: ${_this.lastUsedPrinterName})';
 }
 
 
@@ -69,7 +75,7 @@ class _$QzPrinterStateCopyWithImpl<$Res>
 /// Create a copy of QzPrinterState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? printers = null,Object? selectedPrinterName = freezed,Object? errorMessage = freezed,Object? refreshingPrinters = null,Object? lastUsedPrinterName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(QzPrinterState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as PrinterBridgeStatus,printers: null == printers ? _self.printers : printers // ignore: cast_nullable_to_non_nullable
 as List<PrinterDeviceEntity>,selectedPrinterName: freezed == selectedPrinterName ? _self.selectedPrinterName : selectedPrinterName // ignore: cast_nullable_to_non_nullable
@@ -217,7 +223,7 @@ return $default(_that.status,_that.printers,_that.selectedPrinterName,_that.erro
 
 
 class _QzPrinterState implements QzPrinterState {
-  const _QzPrinterState({this.status = PrinterBridgeStatus.unknown, final  List<PrinterDeviceEntity> printers = const [], this.selectedPrinterName, this.errorMessage, this.refreshingPrinters = false, this.lastUsedPrinterName}): _printers = printers;
+  const _QzPrinterState({this.status = PrinterBridgeStatus.unknown,  List<PrinterDeviceEntity> printers = const [], this.selectedPrinterName, this.errorMessage, this.refreshingPrinters = false, this.lastUsedPrinterName}): _printers = printers;
   
 
 @override@JsonKey() final  PrinterBridgeStatus status;
@@ -249,16 +255,18 @@ _$QzPrinterStateCopyWith<_QzPrinterState> get copyWith => __$QzPrinterStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._printers, _printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.refreshingPrinters, refreshingPrinters) || other.refreshingPrinters == refreshingPrinters)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _QzPrinterState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.printers, _printers)&&(identical(other.selectedPrinterName, selectedPrinterName) || other.selectedPrinterName == selectedPrinterName)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.refreshingPrinters, refreshingPrinters) || other.refreshingPrinters == refreshingPrinters)&&(identical(other.lastUsedPrinterName, lastUsedPrinterName) || other.lastUsedPrinterName == lastUsedPrinterName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_printers),selectedPrinterName,errorMessage,refreshingPrinters,lastUsedPrinterName);
+int get hashCode {
+    return Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_printers),selectedPrinterName,errorMessage,refreshingPrinters,lastUsedPrinterName);
+}
 
 @override
 String toString() {
-  return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, refreshingPrinters: $refreshingPrinters, lastUsedPrinterName: $lastUsedPrinterName)';
+    return 'QzPrinterState(status: $status, printers: $printers, selectedPrinterName: $selectedPrinterName, errorMessage: $errorMessage, refreshingPrinters: $refreshingPrinters, lastUsedPrinterName: $lastUsedPrinterName)';
 }
 
 

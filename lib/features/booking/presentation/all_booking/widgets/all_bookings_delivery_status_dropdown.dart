@@ -2,8 +2,8 @@ import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enu
 import 'package:bookie_buddy_web/features/booking/domain/entities/desktop_booking_item_entity/desktop_booking_item_entity.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/all_booking/bloc/all_booking_bloc/all_booking_bloc.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/extensions/delivery_status_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Dropdown for changing the delivery status of a booking with optimistic UI update.
 class AllBookingsDeliveryStatusDropdown extends StatefulWidget {

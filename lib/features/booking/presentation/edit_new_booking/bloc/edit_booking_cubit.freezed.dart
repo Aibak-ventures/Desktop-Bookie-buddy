@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'edit_booking_cubit.dart';
@@ -9,6 +9,7 @@ part of 'edit_booking_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$EditBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditBookingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is EditBookingState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'EditBookingState()';
+    return 'EditBookingState()';
 }
 
 
@@ -203,7 +204,7 @@ class _Initial implements EditBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'EditBookingState.initial()';
+    return 'EditBookingState.initial()';
 }
 
 
@@ -235,7 +236,7 @@ class _Loading implements EditBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -244,7 +245,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'EditBookingState.loading()';
+    return 'EditBookingState.loading()';
 }
 
 
@@ -272,16 +273,18 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.isBooking, isBooking) || other.isBooking == isBooking));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.isBooking, isBooking) || other.isBooking == isBooking));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isBooking);
+int get hashCode {
+    return Object.hash(runtimeType,isBooking);
+}
 
 @override
 String toString() {
-  return 'EditBookingState.success(isBooking: $isBooking)';
+    return 'EditBookingState.success(isBooking: $isBooking)';
 }
 
 
@@ -338,16 +341,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'EditBookingState.error(message: $message)';
+    return 'EditBookingState.error(message: $message)';
 }
 
 

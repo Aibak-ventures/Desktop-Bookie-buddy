@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_info_model.dart';
@@ -9,6 +9,7 @@ part of 'product_info_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ProductInfoModelCopyWith<ProductInfoModel> get copyWith => _$ProductInfoModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other.peopleMeasurements, peopleMeasurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.returnedAt, returnedAt) || other.returnedAt == returnedAt));
+  final _this = this as ProductInfoModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductInfoModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.productId, _this.productId) || other.productId == _this.productId)&&(identical(other.variantId, _this.variantId) || other.variantId == _this.variantId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.image, _this.image) || other.image == _this.image)&&(identical(other.thumbnailImage, _this.thumbnailImage) || other.thumbnailImage == _this.thumbnailImage)&&(identical(other.mainServiceType, _this.mainServiceType) || other.mainServiceType == _this.mainServiceType)&&(identical(other.variantAttribute, _this.variantAttribute) || other.variantAttribute == _this.variantAttribute)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.model, _this.model) || other.model == _this.model)&&(identical(other.quantity, _this.quantity) || other.quantity == _this.quantity)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.fabricLength, _this.fabricLength) || other.fabricLength == _this.fabricLength)&&(identical(other.attributes, _this.attributes) || other.attributes == _this.attributes)&&const DeepCollectionEquality().equals(other.peopleMeasurements, _this.peopleMeasurements)&&(identical(other.stock, _this.stock) || other.stock == _this.stock)&&(identical(other.remainingStock, _this.remainingStock) || other.remainingStock == _this.remainingStock)&&(identical(other.deliveryStatus, _this.deliveryStatus) || other.deliveryStatus == _this.deliveryStatus)&&(identical(other.returnedAt, _this.returnedAt) || other.returnedAt == _this.returnedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,fabricLength,attributes,const DeepCollectionEquality().hash(peopleMeasurements),stock,remainingStock,deliveryStatus,returnedAt]);
+int get hashCode {
+  final _this = this as ProductInfoModel;
+  return Object.hashAll([runtimeType,_this.id,_this.productId,_this.variantId,_this.name,_this.image,_this.thumbnailImage,_this.mainServiceType,_this.variantAttribute,_this.color,_this.category,_this.model,_this.quantity,_this.amount,_this.fabricLength,_this.attributes,const DeepCollectionEquality().hash(_this.peopleMeasurements),_this.stock,_this.remainingStock,_this.deliveryStatus,_this.returnedAt]);
+}
 
 @override
 String toString() {
-  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, fabricLength: $fabricLength, attributes: $attributes, peopleMeasurements: $peopleMeasurements, stock: $stock, remainingStock: $remainingStock, deliveryStatus: $deliveryStatus, returnedAt: $returnedAt)';
+  final _this = this as ProductInfoModel;
+  return 'ProductInfoModel(id: ${_this.id}, productId: ${_this.productId}, variantId: ${_this.variantId}, name: ${_this.name}, image: ${_this.image}, thumbnailImage: ${_this.thumbnailImage}, mainServiceType: ${_this.mainServiceType}, variantAttribute: ${_this.variantAttribute}, color: ${_this.color}, category: ${_this.category}, model: ${_this.model}, quantity: ${_this.quantity}, amount: ${_this.amount}, fabricLength: ${_this.fabricLength}, attributes: ${_this.attributes}, peopleMeasurements: ${_this.peopleMeasurements}, stock: ${_this.stock}, remainingStock: ${_this.remainingStock}, deliveryStatus: ${_this.deliveryStatus}, returnedAt: ${_this.returnedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ProductInfoModelCopyWithImpl<$Res>
 /// Create a copy of ProductInfoModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = freezed,Object? variantId = freezed,Object? name = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? mainServiceType = freezed,Object? variantAttribute = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? quantity = null,Object? amount = null,Object? fabricLength = null,Object? attributes = null,Object? peopleMeasurements = null,Object? stock = freezed,Object? remainingStock = freezed,Object? deliveryStatus = null,Object? returnedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ProductInfoModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,productId: freezed == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as int?,variantId: freezed == variantId ? _self.variantId : variantId // ignore: cast_nullable_to_non_nullable
@@ -237,7 +243,7 @@ return $default(_that.id,_that.productId,_that.variantId,_that.name,_that.image,
 @JsonSerializable()
 
 class _ProductInfoModel implements ProductInfoModel {
-  const _ProductInfoModel({@JsonKey(name: 'id', readValue: _idCustomRead) required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(readValue: _readProductImage) required this.image, @JsonKey(readValue: _readProductThumbnail) this.thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, @JsonKey(name: 'variant_attribute') this.variantAttribute, this.color, this.category, this.model, required this.quantity, @JsonKey(defaultValue: 0) required this.amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0) this.fabricLength = 0.0, @JsonKey(name: 'attributes') this.attributes = const ProductAttributesModel(), @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson) final  List<PersonMeasurementsModel> peopleMeasurements = const [], this.stock, @JsonKey(name: 'remaining_stock') this.remainingStock, @JsonKey(name: 'return_status', fromJson: ProductDeliveryStatus.fromJson, toJson: ProductDeliveryStatus.toJson, defaultValue: ProductDeliveryStatus.notReturned) this.deliveryStatus = ProductDeliveryStatus.notReturned, @JsonKey(name: 'returned_at') this.returnedAt}): _peopleMeasurements = peopleMeasurements;
+  const _ProductInfoModel({@JsonKey(name: 'id', readValue: _idCustomRead) required this.id, @JsonKey(name: 'product_id') required this.productId, @JsonKey(name: 'variant_id') required this.variantId, @JsonKey(name: 'product_name') required this.name, @JsonKey(readValue: _readProductImage) required this.image, @JsonKey(readValue: _readProductThumbnail) this.thumbnailImage, @JsonKey(name: 'main_service_name', fromJson: MainServiceType.fromString, toJson: MainServiceType.toJson) this.mainServiceType, @JsonKey(name: 'variant_attribute') this.variantAttribute, this.color, this.category, this.model, required this.quantity, @JsonKey(defaultValue: 0) required this.amount, @JsonKey(name: 'fabric_length', defaultValue: 0.0) this.fabricLength = 0.0, @JsonKey(name: 'attributes') this.attributes = const ProductAttributesModel(), @JsonKey(name: MeasurementConstants.jsonKey, fromJson: PersonMeasurementsModel.fromCustomJson, toJson: PersonMeasurementsModel.toCustomJson)  List<PersonMeasurementsModel> peopleMeasurements = const [], this.stock, @JsonKey(name: 'remaining_stock') this.remainingStock, @JsonKey(name: 'return_status', fromJson: ProductDeliveryStatus.fromJson, toJson: ProductDeliveryStatus.toJson, defaultValue: ProductDeliveryStatus.notReturned) this.deliveryStatus = ProductDeliveryStatus.notReturned, @JsonKey(name: 'returned_at') this.returnedAt}): _peopleMeasurements = peopleMeasurements;
   factory _ProductInfoModel.fromJson(Map<String, dynamic> json) => _$ProductInfoModelFromJson(json);
 
 @override@JsonKey(name: 'id', readValue: _idCustomRead) final  int id;
@@ -280,16 +286,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other._peopleMeasurements, _peopleMeasurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.returnedAt, returnedAt) || other.returnedAt == returnedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes)&&const DeepCollectionEquality().equals(other.peopleMeasurements, _peopleMeasurements)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.returnedAt, returnedAt) || other.returnedAt == returnedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,fabricLength,attributes,const DeepCollectionEquality().hash(_peopleMeasurements),stock,remainingStock,deliveryStatus,returnedAt]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,productId,variantId,name,image,thumbnailImage,mainServiceType,variantAttribute,color,category,model,quantity,amount,fabricLength,attributes,const DeepCollectionEquality().hash(_peopleMeasurements),stock,remainingStock,deliveryStatus,returnedAt]);
+}
 
 @override
 String toString() {
-  return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, fabricLength: $fabricLength, attributes: $attributes, peopleMeasurements: $peopleMeasurements, stock: $stock, remainingStock: $remainingStock, deliveryStatus: $deliveryStatus, returnedAt: $returnedAt)';
+    return 'ProductInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, image: $image, thumbnailImage: $thumbnailImage, mainServiceType: $mainServiceType, variantAttribute: $variantAttribute, color: $color, category: $category, model: $model, quantity: $quantity, amount: $amount, fabricLength: $fabricLength, attributes: $attributes, peopleMeasurements: $peopleMeasurements, stock: $stock, remainingStock: $remainingStock, deliveryStatus: $deliveryStatus, returnedAt: $returnedAt)';
 }
 
 

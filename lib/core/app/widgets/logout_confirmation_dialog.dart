@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows the shared logout confirmation dialog and resolves to whether the
 /// user confirmed.

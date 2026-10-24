@@ -3,10 +3,9 @@ import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/session/token_refresh_manager.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/dio_config.dart';
 import 'package:feedback/feedback.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -31,7 +30,6 @@ void main() async {
   DioClient.init();
   if (!kIsWeb) {
     getIt<TokenRefreshManager>().startProactiveRefresh();
-    FilePicker.platform;
   }
 
   runApp(

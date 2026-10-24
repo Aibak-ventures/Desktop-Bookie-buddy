@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GetAvailableProductsPaginatedUseCase {
   final IProductRepository _repository;

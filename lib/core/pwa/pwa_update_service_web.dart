@@ -1,10 +1,14 @@
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
+import 'dart:js_interop';
+
+import 'package:web/web.dart' as web;
 
 void listenForPwaUpdates(void Function() onUpdate) {
-  html.window.on['bookiebuddy-update'].listen((_) => onUpdate());
+  web.window.addEventListener(
+    'bookiebuddy-update',
+    ((web.Event _) => onUpdate()).toJS,
+  );
 }
 
 void reloadPage() {
-  html.window.location.reload();
+  web.window.location.reload();
 }

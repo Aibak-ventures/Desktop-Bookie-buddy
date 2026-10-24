@@ -3,7 +3,7 @@ import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Round badge with the first letter of a person's name.
 class PersonAvatar extends StatelessWidget {

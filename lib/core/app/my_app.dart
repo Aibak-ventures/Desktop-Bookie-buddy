@@ -28,9 +28,10 @@ import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/
 import 'package:bookie_buddy_web/features/splash/presentation/pages/splash_screen.dart';
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart'
+    hide GlobalMaterialLocalizations;
+import 'package:material_ui/material_ui.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

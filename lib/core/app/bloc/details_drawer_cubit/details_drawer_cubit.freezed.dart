@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'details_drawer_cubit.dart';
@@ -9,6 +9,7 @@ part of 'details_drawer_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $DetailsDrawerStateCopyWith<DetailsDrawerState> get copyWith => _$DetailsDrawerS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailsDrawerState&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.type, type) || other.type == type)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId));
+  final _this = this as DetailsDrawerState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailsDrawerState&&(identical(other.isOpen, _this.isOpen) || other.isOpen == _this.isOpen)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.selectedId, _this.selectedId) || other.selectedId == _this.selectedId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isOpen,type,selectedId);
+int get hashCode {
+  final _this = this as DetailsDrawerState;
+  return Object.hash(runtimeType,_this.isOpen,_this.type,_this.selectedId);
+}
 
 @override
 String toString() {
-  return 'DetailsDrawerState(isOpen: $isOpen, type: $type, selectedId: $selectedId)';
+  final _this = this as DetailsDrawerState;
+  return 'DetailsDrawerState(isOpen: ${_this.isOpen}, type: ${_this.type}, selectedId: ${_this.selectedId})';
 }
 
 
@@ -63,7 +69,7 @@ class _$DetailsDrawerStateCopyWithImpl<$Res>
 /// Create a copy of DetailsDrawerState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? isOpen = null,Object? type = freezed,Object? selectedId = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(DetailsDrawerState(
 isOpen: null == isOpen ? _self.isOpen : isOpen // ignore: cast_nullable_to_non_nullable
 as bool,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as DetailsDrawerType?,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$DetailsDrawerStateCopyWith<_DetailsDrawerState> get copyWith => __$DetailsDraw
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetailsDrawerState&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.type, type) || other.type == type)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DetailsDrawerState&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.type, type) || other.type == type)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isOpen,type,selectedId);
+int get hashCode {
+    return Object.hash(runtimeType,isOpen,type,selectedId);
+}
 
 @override
 String toString() {
-  return 'DetailsDrawerState(isOpen: $isOpen, type: $type, selectedId: $selectedId)';
+    return 'DetailsDrawerState(isOpen: $isOpen, type: $type, selectedId: $selectedId)';
 }
 
 

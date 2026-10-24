@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
+import 'package:material_ui/material_ui.dart';
 
 /// Full-screen crop dialog for product images (works on all platforms).
 ///

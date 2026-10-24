@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'account_request_model.dart';
@@ -9,17 +9,14 @@ part of 'account_request_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$AccountRequestModel {
 
-@JsonKey(name: 'name', includeIfNull: false) String? get accountName;@JsonKey(name: 'account_number', includeIfNull: false) String? get accountNumber;// optional
-@JsonKey(name: 'account_type', fromJson: AccountType.fromJson, toJson: AccountType.toJson) AccountType get accountType;// default to cash if not provided
-@JsonKey(name: 'description', includeIfNull: false) String? get description;// optional
-@JsonKey(name: 'is_active', includeIfNull: false) bool? get isActive;// only use in patch if needed
-@JsonKey(name: 'is_default', includeIfNull: false) bool? get isDefault;
+@JsonKey(name: 'name', includeIfNull: false) String? get accountName;@JsonKey(name: 'account_number', includeIfNull: false) String? get accountNumber;@JsonKey(name: 'account_type', fromJson: AccountType.fromJson, toJson: AccountType.toJson) AccountType get accountType;@JsonKey(name: 'description', includeIfNull: false) String? get description;@JsonKey(name: 'is_active', includeIfNull: false) bool? get isActive;@JsonKey(name: 'is_default', includeIfNull: false) bool? get isDefault;
 /// Create a copy of AccountRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -32,16 +29,21 @@ $AccountRequestModelCopyWith<AccountRequestModel> get copyWith => _$AccountReque
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRequestModel&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+  final _this = this as AccountRequestModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountRequestModel&&(identical(other.accountName, _this.accountName) || other.accountName == _this.accountName)&&(identical(other.accountNumber, _this.accountNumber) || other.accountNumber == _this.accountNumber)&&(identical(other.accountType, _this.accountType) || other.accountType == _this.accountType)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive)&&(identical(other.isDefault, _this.isDefault) || other.isDefault == _this.isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accountName,accountNumber,accountType,description,isActive,isDefault);
+int get hashCode {
+  final _this = this as AccountRequestModel;
+  return Object.hash(runtimeType,_this.accountName,_this.accountNumber,_this.accountType,_this.description,_this.isActive,_this.isDefault);
+}
 
 @override
 String toString() {
-  return 'AccountRequestModel(accountName: $accountName, accountNumber: $accountNumber, accountType: $accountType, description: $description, isActive: $isActive, isDefault: $isDefault)';
+  final _this = this as AccountRequestModel;
+  return 'AccountRequestModel(accountName: ${_this.accountName}, accountNumber: ${_this.accountNumber}, accountType: ${_this.accountType}, description: ${_this.description}, isActive: ${_this.isActive}, isDefault: ${_this.isDefault})';
 }
 
 
@@ -70,7 +72,7 @@ class _$AccountRequestModelCopyWithImpl<$Res>
 /// Create a copy of AccountRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? accountName = freezed,Object? accountNumber = freezed,Object? accountType = null,Object? description = freezed,Object? isActive = freezed,Object? isDefault = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AccountRequestModel(
 accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
 as String?,accountNumber: freezed == accountNumber ? _self.accountNumber : accountNumber // ignore: cast_nullable_to_non_nullable
 as String?,accountType: null == accountType ? _self.accountType : accountType // ignore: cast_nullable_to_non_nullable
@@ -223,13 +225,9 @@ class _AccountRequestModel implements AccountRequestModel {
 
 @override@JsonKey(name: 'name', includeIfNull: false) final  String? accountName;
 @override@JsonKey(name: 'account_number', includeIfNull: false) final  String? accountNumber;
-// optional
 @override@JsonKey(name: 'account_type', fromJson: AccountType.fromJson, toJson: AccountType.toJson) final  AccountType accountType;
-// default to cash if not provided
 @override@JsonKey(name: 'description', includeIfNull: false) final  String? description;
-// optional
 @override@JsonKey(name: 'is_active', includeIfNull: false) final  bool? isActive;
-// only use in patch if needed
 @override@JsonKey(name: 'is_default', includeIfNull: false) final  bool? isDefault;
 
 /// Create a copy of AccountRequestModel
@@ -245,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRequestModel&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountRequestModel&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accountName,accountNumber,accountType,description,isActive,isDefault);
+int get hashCode {
+    return Object.hash(runtimeType,accountName,accountNumber,accountType,description,isActive,isDefault);
+}
 
 @override
 String toString() {
-  return 'AccountRequestModel(accountName: $accountName, accountNumber: $accountNumber, accountType: $accountType, description: $description, isActive: $isActive, isDefault: $isDefault)';
+    return 'AccountRequestModel(accountName: $accountName, accountNumber: $accountNumber, accountType: $accountType, description: $description, isActive: $isActive, isDefault: $isDefault)';
 }
 
 

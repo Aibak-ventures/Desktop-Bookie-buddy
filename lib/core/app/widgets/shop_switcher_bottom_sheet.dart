@@ -4,8 +4,8 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/shop/domain/entities/shop_entity/shop_entity.dart';
 import 'package:bookie_buddy_web/features/shop/presentation/bloc/shop_list_bloc/shop_list_bloc.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shows shop selector menu and handles shop switching
 Future<void> showShopSelector(BuildContext context, UserEntity user) async {

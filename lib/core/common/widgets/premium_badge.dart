@@ -4,7 +4,7 @@ import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 // import 'package:bookie_buddy_web/core/ui/dialogs/premium_feature_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shimmer/shimmer.dart';
 
 // class PremiumBadge extends StatelessWidget {

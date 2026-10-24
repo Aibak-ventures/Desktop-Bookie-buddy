@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_details_security_refund_history_model.dart';
@@ -9,6 +9,7 @@ part of 'booking_details_security_refund_history_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $BookingDetailsSecurityRefundHistoryModelCopyWith<BookingDetailsSecurityRefundHi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsSecurityRefundHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as BookingDetailsSecurityRefundHistoryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsSecurityRefundHistoryModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.accountName, _this.accountName) || other.accountName == _this.accountName)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.note, _this.note) || other.note == _this.note)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,note,type,createdAt);
+int get hashCode {
+  final _this = this as BookingDetailsSecurityRefundHistoryModel;
+  return Object.hash(runtimeType,_this.id,_this.amount,_this.accountName,_this.accountId,_this.note,_this.type,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsSecurityRefundHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, note: $note, type: $type, createdAt: $createdAt)';
+  final _this = this as BookingDetailsSecurityRefundHistoryModel;
+  return 'BookingDetailsSecurityRefundHistoryModel(id: ${_this.id}, amount: ${_this.amount}, accountName: ${_this.accountName}, accountId: ${_this.accountId}, note: ${_this.note}, type: ${_this.type}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$BookingDetailsSecurityRefundHistoryModelCopyWithImpl<$Res>
 /// Create a copy of BookingDetailsSecurityRefundHistoryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? note = null,Object? type = null,Object? createdAt = null,}) {
-  return _then(_self.copyWith(
+  return _then(BookingDetailsSecurityRefundHistoryModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsSecurityRefundHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsSecurityRefundHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.type, type) || other.type == type)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,note,type,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,amount,accountName,accountId,note,type,createdAt);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsSecurityRefundHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, note: $note, type: $type, createdAt: $createdAt)';
+    return 'BookingDetailsSecurityRefundHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, note: $note, type: $type, createdAt: $createdAt)';
 }
 
 

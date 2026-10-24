@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_details_payment_history_model.dart';
@@ -9,6 +9,7 @@ part of 'booking_details_payment_history_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $BookingDetailsPaymentHistoryModelCopyWith<BookingDetailsPaymentHistoryModel> ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.paymentType, paymentType) || other.paymentType == paymentType));
+  final _this = this as BookingDetailsPaymentHistoryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.accountName, _this.accountName) || other.accountName == _this.accountName)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.paymentType, _this.paymentType) || other.paymentType == _this.paymentType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt,paymentType);
+int get hashCode {
+  final _this = this as BookingDetailsPaymentHistoryModel;
+  return Object.hash(runtimeType,_this.id,_this.amount,_this.accountName,_this.accountId,_this.createdAt,_this.paymentType);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt, paymentType: $paymentType)';
+  final _this = this as BookingDetailsPaymentHistoryModel;
+  return 'BookingDetailsPaymentHistoryModel(id: ${_this.id}, amount: ${_this.amount}, accountName: ${_this.accountName}, accountId: ${_this.accountId}, createdAt: ${_this.createdAt}, paymentType: ${_this.paymentType})';
 }
 
 
@@ -66,7 +72,7 @@ class _$BookingDetailsPaymentHistoryModelCopyWithImpl<$Res>
 /// Create a copy of BookingDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? createdAt = null,Object? paymentType = null,}) {
-  return _then(_self.copyWith(
+  return _then(BookingDetailsPaymentHistoryModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.paymentType, paymentType) || other.paymentType == paymentType));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.paymentType, paymentType) || other.paymentType == paymentType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,createdAt,paymentType);
+int get hashCode {
+    return Object.hash(runtimeType,id,amount,accountName,accountId,createdAt,paymentType);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt, paymentType: $paymentType)';
+    return 'BookingDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, createdAt: $createdAt, paymentType: $paymentType)';
 }
 
 

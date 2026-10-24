@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_bloc.dart';
@@ -9,6 +9,7 @@ part of 'product_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ProductEventCopyWith<ProductEvent> get copyWith => _$ProductEventCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductEvent&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId));
+  final _this = this as ProductEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductEvent&&(identical(other.serviceId, _this.serviceId) || other.serviceId == _this.serviceId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId);
+int get hashCode {
+  final _this = this as ProductEvent;
+  return Object.hash(runtimeType,_this.serviceId);
+}
 
 @override
 String toString() {
-  return 'ProductEvent(serviceId: $serviceId)';
+  final _this = this as ProductEvent;
+  return 'ProductEvent(serviceId: ${_this.serviceId})';
 }
 
 
@@ -233,16 +239,18 @@ _$LoadProductsCopyWith<_LoadProducts> get copyWith => __$LoadProductsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId);
+int get hashCode {
+    return Object.hash(runtimeType,serviceId);
+}
 
 @override
 String toString() {
-  return 'ProductEvent.loadProducts(serviceId: $serviceId)';
+    return 'ProductEvent.loadProducts(serviceId: $serviceId)';
 }
 
 
@@ -299,16 +307,18 @@ _$LoadNextPageProductsCopyWith<_LoadNextPageProducts> get copyWith => __$LoadNex
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId);
+int get hashCode {
+    return Object.hash(runtimeType,serviceId);
+}
 
 @override
 String toString() {
-  return 'ProductEvent.loadNextPageProducts(serviceId: $serviceId)';
+    return 'ProductEvent.loadNextPageProducts(serviceId: $serviceId)';
 }
 
 
@@ -369,16 +379,18 @@ _$SearchProductsCopyWith<_SearchProducts> get copyWith => __$SearchProductsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.query, query) || other.query == query)&&(identical(other.type, type) || other.type == type)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.query, query) || other.query == query)&&(identical(other.type, type) || other.type == type)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId,query,type,startPrice,endPrice);
+int get hashCode {
+    return Object.hash(runtimeType,serviceId,query,type,startPrice,endPrice);
+}
 
 @override
 String toString() {
-  return 'ProductEvent.searchProducts(serviceId: $serviceId, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice)';
+    return 'ProductEvent.searchProducts(serviceId: $serviceId, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice)';
 }
 
 
@@ -429,7 +441,7 @@ mixin _$ProductState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductState);
 }
 
 
@@ -438,7 +450,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductState()';
+    return 'ProductState()';
 }
 
 
@@ -612,7 +624,7 @@ class _Initial implements ProductState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -621,7 +633,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductState.initial()';
+    return 'ProductState.initial()';
 }
 
 
@@ -644,7 +656,7 @@ class _Loading implements ProductState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -653,7 +665,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductState.loading()';
+    return 'ProductState.loading()';
 }
 
 
@@ -666,7 +678,7 @@ String toString() {
 
 
 class _Loaded implements ProductState {
-  const _Loaded({required final  List<ProductEntity> products, required this.nextPageUrl, this.isPaginating = false, this.isSearching = false, this.searchQuery, this.searchType, this.startPrice, this.endPrice}): _products = products;
+  const _Loaded({required  List<ProductEntity> products, required this.nextPageUrl, this.isPaginating = false, this.isSearching = false, this.searchQuery, this.searchType, this.startPrice, this.endPrice}): _products = products;
   
 
  final  List<ProductEntity> _products;
@@ -694,16 +706,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.searchType, searchType) || other.searchType == searchType)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.searchType, searchType) || other.searchType == searchType)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),nextPageUrl,isPaginating,isSearching,searchQuery,searchType,startPrice,endPrice);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),nextPageUrl,isPaginating,isSearching,searchQuery,searchType,startPrice,endPrice);
+}
 
 @override
 String toString() {
-  return 'ProductState.loaded(products: $products, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, isSearching: $isSearching, searchQuery: $searchQuery, searchType: $searchType, startPrice: $startPrice, endPrice: $endPrice)';
+    return 'ProductState.loaded(products: $products, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, isSearching: $isSearching, searchQuery: $searchQuery, searchType: $searchType, startPrice: $startPrice, endPrice: $endPrice)';
 }
 
 
@@ -767,16 +781,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ProductState.error(error: $error)';
+    return 'ProductState.error(error: $error)';
 }
 
 

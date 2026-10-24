@@ -3,10 +3,10 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/client/presentation/bloc/client_cubit/client_cubit.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ClientSearchNameField extends StatefulWidget {
   const ClientSearchNameField({
@@ -133,7 +133,6 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
           scrollController: widget.scrollController,
           debounceDuration: const Duration(milliseconds: 300),
           hideOnEmpty: true,
-          hideWithKeyboard: false,
           hideOnUnfocus: true,
           hideOnSelect: true,
           builder: (context, controller, focusNode) => Container(
@@ -242,6 +241,7 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
+                      color: Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -297,6 +297,24 @@ class _ClientSearchNameFieldState extends State<ClientSearchNameField> {
             context.read<ClientCubit>().selectClient(client);
             widget.onClientSelected?.call(client);
           },
+          // flutter_typeahead's default box uses flutter's own Material, which
+          // doesn't see our material_ui theme — so style it explicitly.
+          decorationBuilder: (context, child) => DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: 8.radiusBorder,
+              border: BoxBorder.all(color: AppColors.grey300),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            // material_ui Material ancestor: gives suggestion Text its default style.
+            child: Material(type: MaterialType.transparency, child: child),
+          ),
           emptyBuilder: (context) => const SizedBox(
             height: 100,
             child: Center(child: Text('No client found')),

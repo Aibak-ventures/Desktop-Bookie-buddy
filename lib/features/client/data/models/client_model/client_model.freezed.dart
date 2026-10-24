@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'client_model.dart';
@@ -9,6 +9,7 @@ part of 'client_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ClientModelCopyWith<ClientModel> get copyWith => _$ClientModelCopyWithImpl<Clie
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
+  final _this = this as ClientModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.phone1, _this.phone1) || other.phone1 == _this.phone1)&&(identical(other.phone2, _this.phone2) || other.phone2 == _this.phone2)&&(identical(other.phone1E164, _this.phone1E164) || other.phone1E164 == _this.phone1E164)&&(identical(other.phone2E164, _this.phone2E164) || other.phone2E164 == _this.phone2E164));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2,phone1E164,phone2E164);
+int get hashCode {
+  final _this = this as ClientModel;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.phone1,_this.phone2,_this.phone1E164,_this.phone2E164);
+}
 
 @override
 String toString() {
-  return 'ClientModel(id: $id, name: $name, phone1: $phone1, phone2: $phone2, phone1E164: $phone1E164, phone2E164: $phone2E164)';
+  final _this = this as ClientModel;
+  return 'ClientModel(id: ${_this.id}, name: ${_this.name}, phone1: ${_this.phone1}, phone2: ${_this.phone2}, phone1E164: ${_this.phone1E164}, phone2E164: ${_this.phone2E164})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ClientModelCopyWithImpl<$Res>
 /// Create a copy of ClientModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? phone1 = null,Object? phone2 = freezed,Object? phone1E164 = freezed,Object? phone2E164 = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ClientModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phone1: null == phone1 ? _self.phone1 : phone1 // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phone1, phone1) || other.phone1 == phone1)&&(identical(other.phone2, phone2) || other.phone2 == phone2)&&(identical(other.phone1E164, phone1E164) || other.phone1E164 == phone1E164)&&(identical(other.phone2E164, phone2E164) || other.phone2E164 == phone2E164));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phone1,phone2,phone1E164,phone2E164);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,phone1,phone2,phone1E164,phone2E164);
+}
 
 @override
 String toString() {
-  return 'ClientModel(id: $id, name: $name, phone1: $phone1, phone2: $phone2, phone1E164: $phone1E164, phone2E164: $phone2E164)';
+    return 'ClientModel(id: $id, name: $name, phone1: $phone1, phone2: $phone2, phone1E164: $phone1E164, phone2E164: $phone2E164)';
 }
 
 

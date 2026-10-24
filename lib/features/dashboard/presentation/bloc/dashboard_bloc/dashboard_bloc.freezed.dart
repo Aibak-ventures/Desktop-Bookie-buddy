@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'dashboard_bloc.dart';
@@ -9,6 +9,7 @@ part of 'dashboard_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$DashboardEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DashboardEvent()';
+    return 'DashboardEvent()';
 }
 
 
@@ -209,16 +210,18 @@ _$LoadDashboardDataCopyWith<_LoadDashboardData> get copyWith => __$LoadDashboard
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardData&&(identical(other.activeShop, activeShop) || other.activeShop == activeShop)&&(identical(other.useOldState, useOldState) || other.useOldState == useOldState));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardData&&(identical(other.activeShop, activeShop) || other.activeShop == activeShop)&&(identical(other.useOldState, useOldState) || other.useOldState == useOldState));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,activeShop,useOldState);
+int get hashCode {
+    return Object.hash(runtimeType,activeShop,useOldState);
+}
 
 @override
 String toString() {
-  return 'DashboardEvent.loadDashboardData(activeShop: $activeShop, useOldState: $useOldState)';
+    return 'DashboardEvent.loadDashboardData(activeShop: $activeShop, useOldState: $useOldState)';
 }
 
 
@@ -283,7 +286,7 @@ class _LoadDashboardNextPageData implements DashboardEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardNextPageData);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadDashboardNextPageData);
 }
 
 
@@ -292,7 +295,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DashboardEvent.loadDashboardNextPageData()';
+    return 'DashboardEvent.loadDashboardNextPageData()';
 }
 
 
@@ -322,16 +325,18 @@ _$UpdateDataCopyWith<_UpdateData> get copyWith => __$UpdateDataCopyWithImpl<_Upd
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateData&&(identical(other.updateBooking, updateBooking) || other.updateBooking == updateBooking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateData&&(identical(other.updateBooking, updateBooking) || other.updateBooking == updateBooking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,updateBooking,shouldRefresh,isDeleted);
+int get hashCode {
+    return Object.hash(runtimeType,updateBooking,shouldRefresh,isDeleted);
+}
 
 @override
 String toString() {
-  return 'DashboardEvent.updateData(updateBooking: $updateBooking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
+    return 'DashboardEvent.updateData(updateBooking: $updateBooking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
 }
 
 
@@ -397,7 +402,7 @@ class _LoadIfNot implements DashboardEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadIfNot);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadIfNot);
 }
 
 
@@ -406,7 +411,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DashboardEvent.loadIfNot()';
+    return 'DashboardEvent.loadIfNot()';
 }
 
 
@@ -424,7 +429,7 @@ mixin _$DashboardState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState);
 }
 
 
@@ -433,7 +438,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DashboardState()';
+    return 'DashboardState()';
 }
 
 
@@ -601,7 +606,7 @@ class _Loading implements DashboardState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -610,7 +615,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'DashboardState.loading()';
+    return 'DashboardState.loading()';
 }
 
 
@@ -623,7 +628,7 @@ String toString() {
 
 
 class _Loaded implements DashboardState {
-  const _Loaded({required final  Map<String, List<BookingEntity>> upcomingGrouped, required final  Map<String, List<BookingEntity>> returnsGrouped, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages, this.isPaginating = false}): _upcomingGrouped = upcomingGrouped,_returnsGrouped = returnsGrouped;
+  const _Loaded({required  Map<String, List<BookingEntity>> upcomingGrouped, required  Map<String, List<BookingEntity>> returnsGrouped, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages, this.isPaginating = false}): _upcomingGrouped = upcomingGrouped,_returnsGrouped = returnsGrouped;
   
 
  final  Map<String, List<BookingEntity>> _upcomingGrouped;
@@ -656,16 +661,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._upcomingGrouped, _upcomingGrouped)&&const DeepCollectionEquality().equals(other._returnsGrouped, _returnsGrouped)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.upcomingGrouped, _upcomingGrouped)&&const DeepCollectionEquality().equals(other.returnsGrouped, _returnsGrouped)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcomingGrouped),const DeepCollectionEquality().hash(_returnsGrouped),carouselData,nextPageUrl,currentPage,totalPages,isPaginating);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcomingGrouped),const DeepCollectionEquality().hash(_returnsGrouped),carouselData,nextPageUrl,currentPage,totalPages,isPaginating);
+}
 
 @override
 String toString() {
-  return 'DashboardState.loaded(upcomingGrouped: $upcomingGrouped, returnsGrouped: $returnsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages, isPaginating: $isPaginating)';
+    return 'DashboardState.loaded(upcomingGrouped: $upcomingGrouped, returnsGrouped: $returnsGrouped, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages, isPaginating: $isPaginating)';
 }
 
 
@@ -737,16 +744,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'DashboardState.error(error: $error)';
+    return 'DashboardState.error(error: $error)';
 }
 
 

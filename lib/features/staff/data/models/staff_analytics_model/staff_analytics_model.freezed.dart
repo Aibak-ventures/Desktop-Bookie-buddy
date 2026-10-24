@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'staff_analytics_model.dart';
@@ -9,6 +9,7 @@ part of 'staff_analytics_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $StaffAnalyticsModelCopyWith<StaffAnalyticsModel> get copyWith => _$StaffAnalyti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffAnalyticsModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.monthName, monthName) || other.monthName == monthName)&&(identical(other.totalBookingsCount, totalBookingsCount) || other.totalBookingsCount == totalBookingsCount)&&(identical(other.totalSalesCount, totalSalesCount) || other.totalSalesCount == totalSalesCount)&&(identical(other.totalPendingsCount, totalPendingsCount) || other.totalPendingsCount == totalPendingsCount)&&(identical(other.totalBookingsAmount, totalBookingsAmount) || other.totalBookingsAmount == totalBookingsAmount)&&(identical(other.totalSalesAmount, totalSalesAmount) || other.totalSalesAmount == totalSalesAmount)&&(identical(other.totalPendingAmount, totalPendingAmount) || other.totalPendingAmount == totalPendingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.performancePercent, performancePercent) || other.performancePercent == performancePercent));
+  final _this = this as StaffAnalyticsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffAnalyticsModel&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName)&&(identical(other.year, _this.year) || other.year == _this.year)&&(identical(other.month, _this.month) || other.month == _this.month)&&(identical(other.monthName, _this.monthName) || other.monthName == _this.monthName)&&(identical(other.totalBookingsCount, _this.totalBookingsCount) || other.totalBookingsCount == _this.totalBookingsCount)&&(identical(other.totalSalesCount, _this.totalSalesCount) || other.totalSalesCount == _this.totalSalesCount)&&(identical(other.totalPendingsCount, _this.totalPendingsCount) || other.totalPendingsCount == _this.totalPendingsCount)&&(identical(other.totalBookingsAmount, _this.totalBookingsAmount) || other.totalBookingsAmount == _this.totalBookingsAmount)&&(identical(other.totalSalesAmount, _this.totalSalesAmount) || other.totalSalesAmount == _this.totalSalesAmount)&&(identical(other.totalPendingAmount, _this.totalPendingAmount) || other.totalPendingAmount == _this.totalPendingAmount)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount)&&(identical(other.performancePercent, _this.performancePercent) || other.performancePercent == _this.performancePercent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,staffId,staffName,year,month,monthName,totalBookingsCount,totalSalesCount,totalPendingsCount,totalBookingsAmount,totalSalesAmount,totalPendingAmount,totalAmount,performancePercent);
+int get hashCode {
+  final _this = this as StaffAnalyticsModel;
+  return Object.hash(runtimeType,_this.staffId,_this.staffName,_this.year,_this.month,_this.monthName,_this.totalBookingsCount,_this.totalSalesCount,_this.totalPendingsCount,_this.totalBookingsAmount,_this.totalSalesAmount,_this.totalPendingAmount,_this.totalAmount,_this.performancePercent);
+}
 
 @override
 String toString() {
-  return 'StaffAnalyticsModel(staffId: $staffId, staffName: $staffName, year: $year, month: $month, monthName: $monthName, totalBookingsCount: $totalBookingsCount, totalSalesCount: $totalSalesCount, totalPendingsCount: $totalPendingsCount, totalBookingsAmount: $totalBookingsAmount, totalSalesAmount: $totalSalesAmount, totalPendingAmount: $totalPendingAmount, totalAmount: $totalAmount, performancePercent: $performancePercent)';
+  final _this = this as StaffAnalyticsModel;
+  return 'StaffAnalyticsModel(staffId: ${_this.staffId}, staffName: ${_this.staffName}, year: ${_this.year}, month: ${_this.month}, monthName: ${_this.monthName}, totalBookingsCount: ${_this.totalBookingsCount}, totalSalesCount: ${_this.totalSalesCount}, totalPendingsCount: ${_this.totalPendingsCount}, totalBookingsAmount: ${_this.totalBookingsAmount}, totalSalesAmount: ${_this.totalSalesAmount}, totalPendingAmount: ${_this.totalPendingAmount}, totalAmount: ${_this.totalAmount}, performancePercent: ${_this.performancePercent})';
 }
 
 
@@ -66,7 +72,7 @@ class _$StaffAnalyticsModelCopyWithImpl<$Res>
 /// Create a copy of StaffAnalyticsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? staffId = null,Object? staffName = null,Object? year = null,Object? month = null,Object? monthName = null,Object? totalBookingsCount = null,Object? totalSalesCount = null,Object? totalPendingsCount = null,Object? totalBookingsAmount = null,Object? totalSalesAmount = null,Object? totalPendingAmount = null,Object? totalAmount = null,Object? performancePercent = null,}) {
-  return _then(_self.copyWith(
+  return _then(StaffAnalyticsModel(
 staffId: null == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int,staffName: null == staffName ? _self.staffName : staffName // ignore: cast_nullable_to_non_nullable
 as String,year: null == year ? _self.year : year // ignore: cast_nullable_to_non_nullable
@@ -251,16 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffAnalyticsModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.monthName, monthName) || other.monthName == monthName)&&(identical(other.totalBookingsCount, totalBookingsCount) || other.totalBookingsCount == totalBookingsCount)&&(identical(other.totalSalesCount, totalSalesCount) || other.totalSalesCount == totalSalesCount)&&(identical(other.totalPendingsCount, totalPendingsCount) || other.totalPendingsCount == totalPendingsCount)&&(identical(other.totalBookingsAmount, totalBookingsAmount) || other.totalBookingsAmount == totalBookingsAmount)&&(identical(other.totalSalesAmount, totalSalesAmount) || other.totalSalesAmount == totalSalesAmount)&&(identical(other.totalPendingAmount, totalPendingAmount) || other.totalPendingAmount == totalPendingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.performancePercent, performancePercent) || other.performancePercent == performancePercent));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffAnalyticsModel&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.monthName, monthName) || other.monthName == monthName)&&(identical(other.totalBookingsCount, totalBookingsCount) || other.totalBookingsCount == totalBookingsCount)&&(identical(other.totalSalesCount, totalSalesCount) || other.totalSalesCount == totalSalesCount)&&(identical(other.totalPendingsCount, totalPendingsCount) || other.totalPendingsCount == totalPendingsCount)&&(identical(other.totalBookingsAmount, totalBookingsAmount) || other.totalBookingsAmount == totalBookingsAmount)&&(identical(other.totalSalesAmount, totalSalesAmount) || other.totalSalesAmount == totalSalesAmount)&&(identical(other.totalPendingAmount, totalPendingAmount) || other.totalPendingAmount == totalPendingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.performancePercent, performancePercent) || other.performancePercent == performancePercent));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,staffId,staffName,year,month,monthName,totalBookingsCount,totalSalesCount,totalPendingsCount,totalBookingsAmount,totalSalesAmount,totalPendingAmount,totalAmount,performancePercent);
+int get hashCode {
+    return Object.hash(runtimeType,staffId,staffName,year,month,monthName,totalBookingsCount,totalSalesCount,totalPendingsCount,totalBookingsAmount,totalSalesAmount,totalPendingAmount,totalAmount,performancePercent);
+}
 
 @override
 String toString() {
-  return 'StaffAnalyticsModel(staffId: $staffId, staffName: $staffName, year: $year, month: $month, monthName: $monthName, totalBookingsCount: $totalBookingsCount, totalSalesCount: $totalSalesCount, totalPendingsCount: $totalPendingsCount, totalBookingsAmount: $totalBookingsAmount, totalSalesAmount: $totalSalesAmount, totalPendingAmount: $totalPendingAmount, totalAmount: $totalAmount, performancePercent: $performancePercent)';
+    return 'StaffAnalyticsModel(staffId: $staffId, staffName: $staffName, year: $year, month: $month, monthName: $monthName, totalBookingsCount: $totalBookingsCount, totalSalesCount: $totalSalesCount, totalPendingsCount: $totalPendingsCount, totalBookingsAmount: $totalBookingsAmount, totalSalesAmount: $totalSalesAmount, totalPendingAmount: $totalPendingAmount, totalAmount: $totalAmount, performancePercent: $performancePercent)';
 }
 
 

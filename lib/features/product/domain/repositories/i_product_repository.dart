@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/booking_entity
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract interface class IProductRepository {
   // --- Mutations ---

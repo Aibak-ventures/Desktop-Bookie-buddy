@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_model.dart';
@@ -9,6 +9,7 @@ part of 'user_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  final _this = this as UserModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.block, _this.block) || other.block == _this.block)&&(identical(other.haveMultipleShops, _this.haveMultipleShops) || other.haveMultipleShops == _this.haveMultipleShops)&&(identical(other.isNotificationActive, _this.isNotificationActive) || other.isNotificationActive == _this.isNotificationActive)&&(identical(other.subscription, _this.subscription) || other.subscription == _this.subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, _this.passwordSettings)&&(identical(other.shopSettings, _this.shopSettings) || other.shopSettings == _this.shopSettings)&&(identical(other.shopDetails, _this.shopDetails) || other.shopDetails == _this.shopDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
+int get hashCode {
+  final _this = this as UserModel;
+  return Object.hash(runtimeType,_this.id,_this.firstName,_this.lastName,_this.phone,_this.email,_this.block,_this.haveMultipleShops,_this.isNotificationActive,_this.subscription,const DeepCollectionEquality().hash(_this.passwordSettings),_this.shopSettings,_this.shopDetails);
+}
 
 @override
 String toString() {
-  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  final _this = this as UserModel;
+  return 'UserModel(id: ${_this.id}, firstName: ${_this.firstName}, lastName: ${_this.lastName}, phone: ${_this.phone}, email: ${_this.email}, block: ${_this.block}, haveMultipleShops: ${_this.haveMultipleShops}, isNotificationActive: ${_this.isNotificationActive}, subscription: ${_this.subscription}, passwordSettings: ${_this.passwordSettings}, shopSettings: ${_this.shopSettings}, shopDetails: ${_this.shopDetails})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserModelCopyWithImpl<$Res>
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -250,7 +256,7 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,
 @JsonSerializable()
 
 class _UserModel implements UserModel {
-  const _UserModel({required this.id, @JsonKey(name: 'full_name') required this.firstName, @JsonKey(name: 'last_name', defaultValue: '') required this.lastName, required this.phone, @JsonKey(defaultValue: '') required this.email, @JsonKey(defaultValue: false) required this.block, @JsonKey(name: 'multiple_shops', defaultValue: false) required this.haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false) required this.isNotificationActive, @JsonKey(name: 'subscription') this.subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) required final  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings') required this.shopSettings, @JsonKey(name: 'shop') required this.shopDetails}): _passwordSettings = passwordSettings;
+  const _UserModel({required this.id, @JsonKey(name: 'full_name') required this.firstName, @JsonKey(name: 'last_name', defaultValue: '') required this.lastName, required this.phone, @JsonKey(defaultValue: '') required this.email, @JsonKey(defaultValue: false) required this.block, @JsonKey(name: 'multiple_shops', defaultValue: false) required this.haveMultipleShops, @JsonKey(name: 'has_active_notification', defaultValue: false) required this.isNotificationActive, @JsonKey(name: 'subscription') this.subscription, @JsonKey(name: 'password_settings', fromJson: _passwordSettingsFromJson) required  List<UserPasswordSettingsModel> passwordSettings, @JsonKey(name: 'shop_settings') required this.shopSettings, @JsonKey(name: 'shop') required this.shopDetails}): _passwordSettings = passwordSettings;
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override final  int id;
@@ -285,16 +291,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+int get hashCode {
+    return Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+}
 
 @override
 String toString() {
-  return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+    return 'UserModel(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -390,16 +398,21 @@ $UserSubscriptionModelCopyWith<UserSubscriptionModel> get copyWith => _$UserSubs
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, userFeatureDetails));
+  final _this = this as UserSubscriptionModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionModel&&(identical(other.plan, _this.plan) || other.plan == _this.plan)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.expiryDate, _this.expiryDate) || other.expiryDate == _this.expiryDate)&&(identical(other.daysRemaining, _this.daysRemaining) || other.daysRemaining == _this.daysRemaining)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, _this.userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, _this.userFeatureDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(userSpecificFeatures),const DeepCollectionEquality().hash(userFeatureDetails));
+int get hashCode {
+  final _this = this as UserSubscriptionModel;
+  return Object.hash(runtimeType,_this.plan,_this.status,_this.expiryDate,_this.daysRemaining,const DeepCollectionEquality().hash(_this.userSpecificFeatures),const DeepCollectionEquality().hash(_this.userFeatureDetails));
+}
 
 @override
 String toString() {
-  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
+  final _this = this as UserSubscriptionModel;
+  return 'UserSubscriptionModel(plan: ${_this.plan}, status: ${_this.status}, expiryDate: ${_this.expiryDate}, daysRemaining: ${_this.daysRemaining}, userSpecificFeatures: ${_this.userSpecificFeatures}, userFeatureDetails: ${_this.userFeatureDetails})';
 }
 
 
@@ -428,7 +441,7 @@ class _$UserSubscriptionModelCopyWithImpl<$Res>
 /// Create a copy of UserSubscriptionModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserSubscriptionModel(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
@@ -576,7 +589,7 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_th
 @JsonSerializable()
 
 class _UserSubscriptionModel implements UserSubscriptionModel {
-  const _UserSubscriptionModel({required this.plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) required this.status, @JsonKey(name: 'expiry_date', defaultValue: '') required this.expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0) required this.daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) required final  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const []) required final  List<UserFeatureDetailsModel> userFeatureDetails}): _userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
+  const _UserSubscriptionModel({required this.plan, @JsonKey(name: 'status', fromJson: SubscriptionStatus.fromJson, toJson: SubscriptionStatus.toJson) required this.status, @JsonKey(name: 'expiry_date', defaultValue: '') required this.expiryDate, @JsonKey(name: 'days_remaining', defaultValue: 0) required this.daysRemaining, @JsonKey(name: 'user_features', defaultValue: const {}, fromJson: AppPremiumFeatures.fromList, toJson: AppPremiumFeatures.toJsonList) required  Set<AppPremiumFeatures> userSpecificFeatures, @JsonKey(name: 'features_details', defaultValue: const []) required  List<UserFeatureDetailsModel> userFeatureDetails}): _userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
   factory _UserSubscriptionModel.fromJson(Map<String, dynamic> json) => _$UserSubscriptionModelFromJson(json);
 
 @override final  String plan;
@@ -611,16 +624,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other._userFeatureDetails, _userFeatureDetails));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionModel&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, _userFeatureDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
+int get hashCode {
+    return Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
+}
 
 @override
 String toString() {
-  return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
+    return 'UserSubscriptionModel(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -680,16 +695,21 @@ $UserPasswordSettingsModelCopyWith<UserPasswordSettingsModel> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
+  final _this = this as UserPasswordSettingsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsModel&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.description, _this.description) || other.description == _this.description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,location,role,description);
+int get hashCode {
+  final _this = this as UserPasswordSettingsModel;
+  return Object.hash(runtimeType,_this.location,_this.role,_this.description);
+}
 
 @override
 String toString() {
-  return 'UserPasswordSettingsModel(location: $location, role: $role, description: $description)';
+  final _this = this as UserPasswordSettingsModel;
+  return 'UserPasswordSettingsModel(location: ${_this.location}, role: ${_this.role}, description: ${_this.description})';
 }
 
 
@@ -718,7 +738,7 @@ class _$UserPasswordSettingsModelCopyWithImpl<$Res>
 /// Create a copy of UserPasswordSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserPasswordSettingsModel(
 location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -883,16 +903,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsModel&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,location,role,description);
+int get hashCode {
+    return Object.hash(runtimeType,location,role,description);
+}
 
 @override
 String toString() {
-  return 'UserPasswordSettingsModel(location: $location, role: $role, description: $description)';
+    return 'UserPasswordSettingsModel(location: $location, role: $role, description: $description)';
 }
 
 

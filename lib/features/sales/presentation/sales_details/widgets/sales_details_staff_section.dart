@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_details_entity/sale_details_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Staff section for [SalesDetailsDrawer].
 class SalesDetailsStaffSection extends StatelessWidget {

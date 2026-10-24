@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/constants/app_assets.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A widget that displays an animation and a message when no results are found.
 class NoResultFoundAnimationWidget extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/booking_fo
 import 'package:bookie_buddy_web/features/booking/presentation/common/booking_form/booking_type_enum.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/booking_product_row_widget.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class BookingSelectedProductsListWidget extends StatelessWidget {
   final BookingFormControllers form;

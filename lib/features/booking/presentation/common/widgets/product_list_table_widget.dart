@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/se
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProductListTableWidget extends StatefulWidget {
   final ValueNotifier<List<ProductSelectedEntity>> selectedProductsNotifier;

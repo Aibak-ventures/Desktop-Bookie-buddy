@@ -7,8 +7,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/booking_details/b
 import 'package:bookie_buddy_web/features/booking/presentation/booking_details/widgets/components/payment_transaction_row.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 // Unified transaction entry for display

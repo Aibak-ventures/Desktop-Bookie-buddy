@@ -2,8 +2,8 @@ import 'package:bookie_buddy_web/core/common/widgets/custom_shimmer_box.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/features/accounts/presentation/accounts_summary/widgets/account_list_tile.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AccountsSummaryShimmer extends StatelessWidget {
   const AccountsSummaryShimmer({super.key});

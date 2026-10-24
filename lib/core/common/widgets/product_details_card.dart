@@ -5,7 +5,7 @@ import 'package:bookie_buddy_shared/core/features/booking/domain/entities/person
 import 'package:bookie_buddy_web/core/common/widgets/person_measurement_widgets.dart';
 import 'package:bookie_buddy_web/core/common/widgets/zoomable_image_dialog.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A product line as shown in the details screens: photo, name and specs,
 /// price and quantity, and the line's measurements (see

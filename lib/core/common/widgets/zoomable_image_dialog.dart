@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ZoomableImageDialog extends StatelessWidget {
   const ZoomableImageDialog({super.key, required this.imageUrl, this.title});

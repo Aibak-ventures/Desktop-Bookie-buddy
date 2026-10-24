@@ -54,6 +54,10 @@ class ErrorHandler {
         return const DioFailure(
           "Couldn't connect to the server. Please check your internet.",
         );
+      case DioExceptionType.transformTimeout:
+        return const DioFailure(
+          'Processing the response took too long. Try again.',
+        );
       case DioExceptionType.unknown:
         return const DioFailure('Something went wrong. Please try again.');
     }

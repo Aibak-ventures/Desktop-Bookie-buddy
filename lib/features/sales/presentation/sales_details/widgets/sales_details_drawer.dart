@@ -4,8 +4,8 @@ import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sal
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/bloc/sales_details_bloc/sales_details_bloc.dart';
 import 'package:bookie_buddy_web/features/sales/presentation/sales_details/widgets/sales_details_content.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Rendered by [GlobalDetailsDrawer], permanently mounted alongside
 /// [BookingDetailsDrawer] so its `BlocListener` is always subscribed and

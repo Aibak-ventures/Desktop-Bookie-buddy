@@ -1,8 +1,8 @@
 import 'package:bookie_buddy_web/core/app/my_app.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 extension NumX on num {
   /// Formats the number as a currency string in Indian Rupees with the symbol

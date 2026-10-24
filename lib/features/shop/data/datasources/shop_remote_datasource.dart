@@ -69,7 +69,6 @@ class ShopRemoteDatasource {
         _serviceEndpoint.selected,
         options: Options(
           receiveTimeout: const Duration(seconds: 30),
-          sendTimeout: const Duration(seconds: 15),
           extra: {'retries': 3},
         ),
       );

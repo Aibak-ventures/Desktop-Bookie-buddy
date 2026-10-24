@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'account_snapshot_model.dart';
@@ -9,6 +9,7 @@ part of 'account_snapshot_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AccountSnapshotModelCopyWith<AccountSnapshotModel> get copyWith => _$AccountSna
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountSnapshotModel&&(identical(other.name, name) || other.name == name)&&(identical(other.amount, amount) || other.amount == amount));
+  final _this = this as AccountSnapshotModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountSnapshotModel&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.amount, _this.amount) || other.amount == _this.amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,amount);
+int get hashCode {
+  final _this = this as AccountSnapshotModel;
+  return Object.hash(runtimeType,_this.name,_this.amount);
+}
 
 @override
 String toString() {
-  return 'AccountSnapshotModel(name: $name, amount: $amount)';
+  final _this = this as AccountSnapshotModel;
+  return 'AccountSnapshotModel(name: ${_this.name}, amount: ${_this.amount})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AccountSnapshotModelCopyWithImpl<$Res>
 /// Create a copy of AccountSnapshotModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? amount = null,}) {
-  return _then(_self.copyWith(
+  return _then(AccountSnapshotModel(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as double,
@@ -229,16 +235,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountSnapshotModel&&(identical(other.name, name) || other.name == name)&&(identical(other.amount, amount) || other.amount == amount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountSnapshotModel&&(identical(other.name, name) || other.name == name)&&(identical(other.amount, amount) || other.amount == amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,amount);
+int get hashCode {
+    return Object.hash(runtimeType,name,amount);
+}
 
 @override
 String toString() {
-  return 'AccountSnapshotModel(name: $name, amount: $amount)';
+    return 'AccountSnapshotModel(name: $name, amount: $amount)';
 }
 
 

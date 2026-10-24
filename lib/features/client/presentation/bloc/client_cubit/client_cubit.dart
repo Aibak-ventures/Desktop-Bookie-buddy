@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:bookie_buddy_shared/core/features/client/domain/entities/client_entity/client_entity.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/usecases/get_client_details_usecase.dart';
 import 'package:bookie_buddy_shared/core/features/client/domain/usecases/get_clients_usecase.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'client_cubit.freezed.dart';
 part 'client_state.dart';

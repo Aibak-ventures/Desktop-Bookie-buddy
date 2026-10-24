@@ -56,7 +56,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/new_booking/bloc/
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/booking_request_builder.dart';
 // Conditional import for web-specific code
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/helpers/web_helper_stub.dart'
-    if (dart.library.html) '../helpers/web_helper_web.dart'
+    if (dart.library.js_interop) '../helpers/web_helper_web.dart'
     as web_helper;
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/new_booking_app_bar.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/widgets/old_booking_content_widget.dart';
@@ -76,9 +76,9 @@ import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:bookie_buddy_web/utils/phone_number_utils.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 part '../widgets/booking_content_widget.dart';

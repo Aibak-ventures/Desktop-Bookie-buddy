@@ -3,6 +3,7 @@ import 'package:bookie_buddy_web/core/constants/endpoints/baseurl.dart';
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/core/session/session_storage.dart';
 import 'package:bookie_buddy_web/utils/network/dio_client/auth_interceptor.dart';
+import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -27,6 +28,7 @@ class DioClient {
             },
           ),
         )
+        ..silenceCorsPreflightWarning()
         ..interceptors.addAll([
           AuthInterceptor(getIt<SessionStorage>()),
           if (kDebugMode)
@@ -48,7 +50,7 @@ class DioClient {
       receiveTimeout: const Duration(seconds: 15),
       headers: {'Accept': 'application/json'},
     ),
-  );
+  )..silenceCorsPreflightWarning();
 
   /// Initializes the Dio client configuration.
   ///
@@ -169,6 +171,19 @@ class DioClient {
           ),
         );
       }
+    }
+  }
+}
+
+extension on Dio {
+  /// dio_web_adapter logs a debug warning (with a stack trace) for every
+  /// request that triggers a CORS preflight. Our backend answers preflights
+  /// correctly, so it is pure noise; real CORS failures still surface as
+  /// `DioException.connectionError`.
+  void silenceCorsPreflightWarning() {
+    final adapter = httpClientAdapter;
+    if (adapter is BrowserHttpClientAdapter) {
+      adapter.enableCORSWarning = false;
     }
   }
 }

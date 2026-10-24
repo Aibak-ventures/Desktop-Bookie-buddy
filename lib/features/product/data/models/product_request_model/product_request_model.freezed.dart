@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_request_model.dart';
@@ -9,15 +9,14 @@ part of 'product_request_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$ProductRequestModel {
 
-@JsonKey(includeIfNull: false) int? get productId;@JsonKey(name: 'shop_service_id', includeIfNull: false) int? get serviceId;@JsonKey(includeIfNull: false) String? get name;@JsonKey(includeIfNull: false) String? get description;@JsonKey(includeIfNull: false) String? get color;@JsonKey(name: 'purchase_price', includeIfNull: false) int? get purchasePrice;@JsonKey(includeIfNull: false) int? get price;@JsonKey(name: 'sale_price', includeIfNull: false) int? get salePrice;@JsonKey(includeIfNull: false) String? get category;@JsonKey(includeIfNull: false) String? get model;// Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
-@JsonKey(includeFromJson: false, includeToJson: false) String? get registrationNumber;@JsonKey(includeFromJson: false, includeToJson: false) String? get pollutionExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get insuranceExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get fitnessExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get barcode;@JsonKey(toJson: _variantsToJson, includeIfNull: false) List<ProductVariantModel>? get variants;// Don't include this in auto-generated JSON
-@JsonKey(includeFromJson: false, includeToJson: false) XFile? get image;
+@JsonKey(includeIfNull: false) int? get productId;@JsonKey(name: 'shop_service_id', includeIfNull: false) int? get serviceId;@JsonKey(includeIfNull: false) String? get name;@JsonKey(includeIfNull: false) String? get description;@JsonKey(includeIfNull: false) String? get color;@JsonKey(name: 'purchase_price', includeIfNull: false) int? get purchasePrice;@JsonKey(includeIfNull: false) int? get price;@JsonKey(name: 'sale_price', includeIfNull: false) int? get salePrice;@JsonKey(includeIfNull: false) String? get category;@JsonKey(includeIfNull: false) String? get model;@JsonKey(includeFromJson: false, includeToJson: false) String? get registrationNumber;@JsonKey(includeFromJson: false, includeToJson: false) String? get pollutionExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get insuranceExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get fitnessExpiry;@JsonKey(includeFromJson: false, includeToJson: false) String? get barcode;@JsonKey(toJson: _variantsToJson, includeIfNull: false) List<ProductVariantModel>? get variants;@JsonKey(includeFromJson: false, includeToJson: false) XFile? get image;
 /// Create a copy of ProductRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +29,21 @@ $ProductRequestModelCopyWith<ProductRequestModel> get copyWith => _$ProductReque
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductRequestModel&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.color, color) || other.color == color)&&(identical(other.purchasePrice, purchasePrice) || other.purchasePrice == purchasePrice)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&const DeepCollectionEquality().equals(other.variants, variants)&&(identical(other.image, image) || other.image == image));
+  final _this = this as ProductRequestModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductRequestModel&&(identical(other.productId, _this.productId) || other.productId == _this.productId)&&(identical(other.serviceId, _this.serviceId) || other.serviceId == _this.serviceId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.purchasePrice, _this.purchasePrice) || other.purchasePrice == _this.purchasePrice)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.salePrice, _this.salePrice) || other.salePrice == _this.salePrice)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.model, _this.model) || other.model == _this.model)&&(identical(other.registrationNumber, _this.registrationNumber) || other.registrationNumber == _this.registrationNumber)&&(identical(other.pollutionExpiry, _this.pollutionExpiry) || other.pollutionExpiry == _this.pollutionExpiry)&&(identical(other.insuranceExpiry, _this.insuranceExpiry) || other.insuranceExpiry == _this.insuranceExpiry)&&(identical(other.fitnessExpiry, _this.fitnessExpiry) || other.fitnessExpiry == _this.fitnessExpiry)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&const DeepCollectionEquality().equals(other.variants, _this.variants)&&(identical(other.image, _this.image) || other.image == _this.image));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,productId,serviceId,name,description,color,purchasePrice,price,salePrice,category,model,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,const DeepCollectionEquality().hash(variants),image);
+int get hashCode {
+  final _this = this as ProductRequestModel;
+  return Object.hash(runtimeType,_this.productId,_this.serviceId,_this.name,_this.description,_this.color,_this.purchasePrice,_this.price,_this.salePrice,_this.category,_this.model,_this.registrationNumber,_this.pollutionExpiry,_this.insuranceExpiry,_this.fitnessExpiry,_this.barcode,const DeepCollectionEquality().hash(_this.variants),_this.image);
+}
 
 @override
 String toString() {
-  return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, salePrice: $salePrice, category: $category, model: $model, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, variants: $variants, image: $image)';
+  final _this = this as ProductRequestModel;
+  return 'ProductRequestModel(productId: ${_this.productId}, serviceId: ${_this.serviceId}, name: ${_this.name}, description: ${_this.description}, color: ${_this.color}, purchasePrice: ${_this.purchasePrice}, price: ${_this.price}, salePrice: ${_this.salePrice}, category: ${_this.category}, model: ${_this.model}, registrationNumber: ${_this.registrationNumber}, pollutionExpiry: ${_this.pollutionExpiry}, insuranceExpiry: ${_this.insuranceExpiry}, fitnessExpiry: ${_this.fitnessExpiry}, barcode: ${_this.barcode}, variants: ${_this.variants}, image: ${_this.image})';
 }
 
 
@@ -68,7 +72,7 @@ class _$ProductRequestModelCopyWithImpl<$Res>
 /// Create a copy of ProductRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? productId = freezed,Object? serviceId = freezed,Object? name = freezed,Object? description = freezed,Object? color = freezed,Object? purchasePrice = freezed,Object? price = freezed,Object? salePrice = freezed,Object? category = freezed,Object? model = freezed,Object? registrationNumber = freezed,Object? pollutionExpiry = freezed,Object? insuranceExpiry = freezed,Object? fitnessExpiry = freezed,Object? barcode = freezed,Object? variants = freezed,Object? image = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ProductRequestModel(
 productId: freezed == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as int?,serviceId: freezed == serviceId ? _self.serviceId : serviceId // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -227,7 +231,7 @@ return $default(_that.productId,_that.serviceId,_that.name,_that.description,_th
 @JsonSerializable()
 
 class _ProductRequestModel implements ProductRequestModel {
-  const _ProductRequestModel({@JsonKey(includeIfNull: false) this.productId, @JsonKey(name: 'shop_service_id', includeIfNull: false) this.serviceId, @JsonKey(includeIfNull: false) this.name, @JsonKey(includeIfNull: false) this.description, @JsonKey(includeIfNull: false) this.color, @JsonKey(name: 'purchase_price', includeIfNull: false) this.purchasePrice, @JsonKey(includeIfNull: false) this.price, @JsonKey(name: 'sale_price', includeIfNull: false) this.salePrice, @JsonKey(includeIfNull: false) this.category, @JsonKey(includeIfNull: false) this.model, @JsonKey(includeFromJson: false, includeToJson: false) this.registrationNumber, @JsonKey(includeFromJson: false, includeToJson: false) this.pollutionExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.insuranceExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.fitnessExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.barcode, @JsonKey(toJson: _variantsToJson, includeIfNull: false) final  List<ProductVariantModel>? variants, @JsonKey(includeFromJson: false, includeToJson: false) this.image}): _variants = variants;
+  const _ProductRequestModel({@JsonKey(includeIfNull: false) this.productId, @JsonKey(name: 'shop_service_id', includeIfNull: false) this.serviceId, @JsonKey(includeIfNull: false) this.name, @JsonKey(includeIfNull: false) this.description, @JsonKey(includeIfNull: false) this.color, @JsonKey(name: 'purchase_price', includeIfNull: false) this.purchasePrice, @JsonKey(includeIfNull: false) this.price, @JsonKey(name: 'sale_price', includeIfNull: false) this.salePrice, @JsonKey(includeIfNull: false) this.category, @JsonKey(includeIfNull: false) this.model, @JsonKey(includeFromJson: false, includeToJson: false) this.registrationNumber, @JsonKey(includeFromJson: false, includeToJson: false) this.pollutionExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.insuranceExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.fitnessExpiry, @JsonKey(includeFromJson: false, includeToJson: false) this.barcode, @JsonKey(toJson: _variantsToJson, includeIfNull: false)  List<ProductVariantModel>? variants, @JsonKey(includeFromJson: false, includeToJson: false) this.image}): _variants = variants;
   factory _ProductRequestModel.fromJson(Map<String, dynamic> json) => _$ProductRequestModelFromJson(json);
 
 @override@JsonKey(includeIfNull: false) final  int? productId;
@@ -240,7 +244,6 @@ class _ProductRequestModel implements ProductRequestModel {
 @override@JsonKey(name: 'sale_price', includeIfNull: false) final  int? salePrice;
 @override@JsonKey(includeIfNull: false) final  String? category;
 @override@JsonKey(includeIfNull: false) final  String? model;
-// Vehicle-specific fields - these won't be in JSON, handled separately in toFormJson
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  String? registrationNumber;
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  String? pollutionExpiry;
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  String? insuranceExpiry;
@@ -255,7 +258,6 @@ class _ProductRequestModel implements ProductRequestModel {
   return EqualUnmodifiableListView(value);
 }
 
-// Don't include this in auto-generated JSON
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  XFile? image;
 
 /// Create a copy of ProductRequestModel
@@ -271,16 +273,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductRequestModel&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.color, color) || other.color == color)&&(identical(other.purchasePrice, purchasePrice) || other.purchasePrice == purchasePrice)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&const DeepCollectionEquality().equals(other._variants, _variants)&&(identical(other.image, image) || other.image == image));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductRequestModel&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.color, color) || other.color == color)&&(identical(other.purchasePrice, purchasePrice) || other.purchasePrice == purchasePrice)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber)&&(identical(other.pollutionExpiry, pollutionExpiry) || other.pollutionExpiry == pollutionExpiry)&&(identical(other.insuranceExpiry, insuranceExpiry) || other.insuranceExpiry == insuranceExpiry)&&(identical(other.fitnessExpiry, fitnessExpiry) || other.fitnessExpiry == fitnessExpiry)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&const DeepCollectionEquality().equals(other.variants, _variants)&&(identical(other.image, image) || other.image == image));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,productId,serviceId,name,description,color,purchasePrice,price,salePrice,category,model,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,const DeepCollectionEquality().hash(_variants),image);
+int get hashCode {
+    return Object.hash(runtimeType,productId,serviceId,name,description,color,purchasePrice,price,salePrice,category,model,registrationNumber,pollutionExpiry,insuranceExpiry,fitnessExpiry,barcode,const DeepCollectionEquality().hash(_variants),image);
+}
 
 @override
 String toString() {
-  return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, salePrice: $salePrice, category: $category, model: $model, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, variants: $variants, image: $image)';
+    return 'ProductRequestModel(productId: $productId, serviceId: $serviceId, name: $name, description: $description, color: $color, purchasePrice: $purchasePrice, price: $price, salePrice: $salePrice, category: $category, model: $model, registrationNumber: $registrationNumber, pollutionExpiry: $pollutionExpiry, insuranceExpiry: $insuranceExpiry, fitnessExpiry: $fitnessExpiry, barcode: $barcode, variants: $variants, image: $image)';
 }
 
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A two-column layout used by both the add-booking and edit-booking screens.
 ///
