@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'security_summary_model.dart';
@@ -9,6 +9,7 @@ part of 'security_summary_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SecuritySummaryModelCopyWith<SecuritySummaryModel> get copyWith => _$SecuritySu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SecuritySummaryModel&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.totalRefunded, totalRefunded) || other.totalRefunded == totalRefunded)&&(identical(other.totalDeducted, totalDeducted) || other.totalDeducted == totalDeducted)&&(identical(other.remainingBalance, remainingBalance) || other.remainingBalance == remainingBalance));
+  final _this = this as SecuritySummaryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SecuritySummaryModel&&(identical(other.securityAmount, _this.securityAmount) || other.securityAmount == _this.securityAmount)&&(identical(other.totalRefunded, _this.totalRefunded) || other.totalRefunded == _this.totalRefunded)&&(identical(other.totalDeducted, _this.totalDeducted) || other.totalDeducted == _this.totalDeducted)&&(identical(other.remainingBalance, _this.remainingBalance) || other.remainingBalance == _this.remainingBalance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,securityAmount,totalRefunded,totalDeducted,remainingBalance);
+int get hashCode {
+  final _this = this as SecuritySummaryModel;
+  return Object.hash(runtimeType,_this.securityAmount,_this.totalRefunded,_this.totalDeducted,_this.remainingBalance);
+}
 
 @override
 String toString() {
-  return 'SecuritySummaryModel(securityAmount: $securityAmount, totalRefunded: $totalRefunded, totalDeducted: $totalDeducted, remainingBalance: $remainingBalance)';
+  final _this = this as SecuritySummaryModel;
+  return 'SecuritySummaryModel(securityAmount: ${_this.securityAmount}, totalRefunded: ${_this.totalRefunded}, totalDeducted: ${_this.totalDeducted}, remainingBalance: ${_this.remainingBalance})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SecuritySummaryModelCopyWithImpl<$Res>
 /// Create a copy of SecuritySummaryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? securityAmount = null,Object? totalRefunded = null,Object? totalDeducted = null,Object? remainingBalance = null,}) {
-  return _then(_self.copyWith(
+  return _then(SecuritySummaryModel(
 securityAmount: null == securityAmount ? _self.securityAmount : securityAmount // ignore: cast_nullable_to_non_nullable
 as double,totalRefunded: null == totalRefunded ? _self.totalRefunded : totalRefunded // ignore: cast_nullable_to_non_nullable
 as double,totalDeducted: null == totalDeducted ? _self.totalDeducted : totalDeducted // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SecuritySummaryModel&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.totalRefunded, totalRefunded) || other.totalRefunded == totalRefunded)&&(identical(other.totalDeducted, totalDeducted) || other.totalDeducted == totalDeducted)&&(identical(other.remainingBalance, remainingBalance) || other.remainingBalance == remainingBalance));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SecuritySummaryModel&&(identical(other.securityAmount, securityAmount) || other.securityAmount == securityAmount)&&(identical(other.totalRefunded, totalRefunded) || other.totalRefunded == totalRefunded)&&(identical(other.totalDeducted, totalDeducted) || other.totalDeducted == totalDeducted)&&(identical(other.remainingBalance, remainingBalance) || other.remainingBalance == remainingBalance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,securityAmount,totalRefunded,totalDeducted,remainingBalance);
+int get hashCode {
+    return Object.hash(runtimeType,securityAmount,totalRefunded,totalDeducted,remainingBalance);
+}
 
 @override
 String toString() {
-  return 'SecuritySummaryModel(securityAmount: $securityAmount, totalRefunded: $totalRefunded, totalDeducted: $totalDeducted, remainingBalance: $remainingBalance)';
+    return 'SecuritySummaryModel(securityAmount: $securityAmount, totalRefunded: $totalRefunded, totalDeducted: $totalDeducted, remainingBalance: $remainingBalance)';
 }
 
 

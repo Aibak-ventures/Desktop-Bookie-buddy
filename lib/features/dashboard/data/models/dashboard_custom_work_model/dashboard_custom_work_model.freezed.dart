@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'dashboard_custom_work_model.dart';
@@ -9,6 +9,7 @@ part of 'dashboard_custom_work_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $DashboardCustomWorkModelCopyWith<DashboardCustomWorkModel> get copyWith => _$Da
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardCustomWorkModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tailorName, tailorName) || other.tailorName == tailorName)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor));
+  final _this = this as DashboardCustomWorkModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardCustomWorkModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.tailorName, _this.tailorName) || other.tailorName == _this.tailorName)&&(identical(other.pickupDate, _this.pickupDate) || other.pickupDate == _this.pickupDate)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.products, _this.products) || other.products == _this.products)&&(identical(other.staffColor, _this.staffColor) || other.staffColor == _this.staffColor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,tailorName,pickupDate,status,products,staffColor);
+int get hashCode {
+  final _this = this as DashboardCustomWorkModel;
+  return Object.hash(runtimeType,_this.id,_this.tailorName,_this.pickupDate,_this.status,_this.products,_this.staffColor);
+}
 
 @override
 String toString() {
-  return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
+  final _this = this as DashboardCustomWorkModel;
+  return 'DashboardCustomWorkModel(id: ${_this.id}, tailorName: ${_this.tailorName}, pickupDate: ${_this.pickupDate}, status: ${_this.status}, products: ${_this.products}, staffColor: ${_this.staffColor})';
 }
 
 
@@ -66,7 +72,7 @@ class _$DashboardCustomWorkModelCopyWithImpl<$Res>
 /// Create a copy of DashboardCustomWorkModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? tailorName = null,Object? pickupDate = null,Object? status = null,Object? products = null,Object? staffColor = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(DashboardCustomWorkModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,tailorName: null == tailorName ? _self.tailorName : tailorName // ignore: cast_nullable_to_non_nullable
 as String,pickupDate: null == pickupDate ? _self.pickupDate : pickupDate // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardCustomWorkModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tailorName, tailorName) || other.tailorName == tailorName)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardCustomWorkModel&&(identical(other.id, id) || other.id == id)&&(identical(other.tailorName, tailorName) || other.tailorName == tailorName)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.status, status) || other.status == status)&&(identical(other.products, products) || other.products == products)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,tailorName,pickupDate,status,products,staffColor);
+int get hashCode {
+    return Object.hash(runtimeType,id,tailorName,pickupDate,status,products,staffColor);
+}
 
 @override
 String toString() {
-  return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
+    return 'DashboardCustomWorkModel(id: $id, tailorName: $tailorName, pickupDate: $pickupDate, status: $status, products: $products, staffColor: $staffColor)';
 }
 
 

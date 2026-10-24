@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sale_details_model.dart';
@@ -9,21 +9,14 @@ part of 'sale_details_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$SaleDetailsModel {
 
- int get id;@JsonKey(name: 'client') ClientModel? get client;@JsonKey(name: 'client_phone_e164') String? get clientPhone;@JsonKey(name: 'address', defaultValue: '') String get address;@JsonKey(name: 'description') String get description;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at', defaultValue: '') String get createdAt;// The sale-details endpoint sends both `total_amount` (pre-discount)
-// and `total_amount_after_discount` — this entity's `totalAmount` is
-// meant to be what's actually payable, so it has to read the latter
-// (mirrors mobile; the sales *list* endpoint's `SaleModel` has no such
-// split and correctly keeps reading plain `total_amount`).
-@JsonKey(name: 'total_amount_after_discount') int get totalAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'items_subtotal', defaultValue: 0) int get productTotal;@JsonKey(name: 'shop_sale_id', defaultValue: '') String get invoiceId;@JsonKey(name: 'balance_due') int get balanceDueAmount;@JsonKey(name: 'items') List<ProductSaleInfoModel> get products;@JsonKey(name: 'staff_id') int? get staffId;@JsonKey(name: 'staff_name') String? get staffName;@JsonKey(name: 'payments') List<SaleDetailsPaymentHistoryModel> get paymentHistory;// Same `tax` shape as booking/custom work; modeled as a list so a future
-// multi-tax API response needs no changes beyond
-// AppliedTaxModel.listFromJson.
-@JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson) List<AppliedTaxModel> get appliedTaxes;
+ int get id;@JsonKey(name: 'client') ClientModel? get client;@JsonKey(name: 'client_phone_e164') String? get clientPhone;@JsonKey(name: 'address', defaultValue: '') String get address;@JsonKey(name: 'description') String get description;@JsonKey(name: 'sale_date') String get saleDate;@JsonKey(name: 'created_at', defaultValue: '') String get createdAt;@JsonKey(name: 'total_amount_after_discount') int get totalAmount;@JsonKey(name: 'discount') int get discountAmount;@JsonKey(name: 'paid_amount') int get paidAmount;@JsonKey(name: 'items_subtotal', defaultValue: 0) int get productTotal;@JsonKey(name: 'shop_sale_id', defaultValue: '') String get invoiceId;@JsonKey(name: 'balance_due') int get balanceDueAmount;@JsonKey(name: 'items') List<ProductSaleInfoModel> get products;@JsonKey(name: 'staff_id') int? get staffId;@JsonKey(name: 'staff_name') String? get staffName;@JsonKey(name: 'payments') List<SaleDetailsPaymentHistoryModel> get paymentHistory;@JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson) List<AppliedTaxModel> get appliedTaxes;
 /// Create a copy of SaleDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -36,16 +29,21 @@ $SaleDetailsModelCopyWith<SaleDetailsModel> get copyWith => _$SaleDetailsModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.productTotal, productTotal) || other.productTotal == productTotal)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&const DeepCollectionEquality().equals(other.paymentHistory, paymentHistory)&&const DeepCollectionEquality().equals(other.appliedTaxes, appliedTaxes));
+  final _this = this as SaleDetailsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount)&&(identical(other.discountAmount, _this.discountAmount) || other.discountAmount == _this.discountAmount)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&(identical(other.productTotal, _this.productTotal) || other.productTotal == _this.productTotal)&&(identical(other.invoiceId, _this.invoiceId) || other.invoiceId == _this.invoiceId)&&(identical(other.balanceDueAmount, _this.balanceDueAmount) || other.balanceDueAmount == _this.balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, _this.products)&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName)&&const DeepCollectionEquality().equals(other.paymentHistory, _this.paymentHistory)&&const DeepCollectionEquality().equals(other.appliedTaxes, _this.appliedTaxes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,client,clientPhone,address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,productTotal,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(products),staffId,staffName,const DeepCollectionEquality().hash(paymentHistory),const DeepCollectionEquality().hash(appliedTaxes));
+int get hashCode {
+  final _this = this as SaleDetailsModel;
+  return Object.hash(runtimeType,_this.id,_this.client,_this.clientPhone,_this.address,_this.description,_this.saleDate,_this.createdAt,_this.totalAmount,_this.discountAmount,_this.paidAmount,_this.productTotal,_this.invoiceId,_this.balanceDueAmount,const DeepCollectionEquality().hash(_this.products),_this.staffId,_this.staffName,const DeepCollectionEquality().hash(_this.paymentHistory),const DeepCollectionEquality().hash(_this.appliedTaxes));
+}
 
 @override
 String toString() {
-  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, productTotal: $productTotal, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, staffId: $staffId, staffName: $staffName, paymentHistory: $paymentHistory, appliedTaxes: $appliedTaxes)';
+  final _this = this as SaleDetailsModel;
+  return 'SaleDetailsModel(id: ${_this.id}, client: ${_this.client}, clientPhone: ${_this.clientPhone}, address: ${_this.address}, description: ${_this.description}, saleDate: ${_this.saleDate}, createdAt: ${_this.createdAt}, totalAmount: ${_this.totalAmount}, discountAmount: ${_this.discountAmount}, paidAmount: ${_this.paidAmount}, productTotal: ${_this.productTotal}, invoiceId: ${_this.invoiceId}, balanceDueAmount: ${_this.balanceDueAmount}, products: ${_this.products}, staffId: ${_this.staffId}, staffName: ${_this.staffName}, paymentHistory: ${_this.paymentHistory}, appliedTaxes: ${_this.appliedTaxes})';
 }
 
 
@@ -74,7 +72,7 @@ class _$SaleDetailsModelCopyWithImpl<$Res>
 /// Create a copy of SaleDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? client = freezed,Object? clientPhone = freezed,Object? address = null,Object? description = null,Object? saleDate = null,Object? createdAt = null,Object? totalAmount = null,Object? discountAmount = null,Object? paidAmount = null,Object? productTotal = null,Object? invoiceId = null,Object? balanceDueAmount = null,Object? products = null,Object? staffId = freezed,Object? staffName = freezed,Object? paymentHistory = null,Object? appliedTaxes = null,}) {
-  return _then(_self.copyWith(
+  return _then(SaleDetailsModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,client: freezed == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
 as ClientModel?,clientPhone: freezed == clientPhone ? _self.clientPhone : clientPhone // ignore: cast_nullable_to_non_nullable
@@ -246,7 +244,7 @@ return $default(_that.id,_that.client,_that.clientPhone,_that.address,_that.desc
 @JsonSerializable()
 
 class _SaleDetailsModel implements SaleDetailsModel {
-  const _SaleDetailsModel({required this.id, @JsonKey(name: 'client') this.client, @JsonKey(name: 'client_phone_e164') this.clientPhone, @JsonKey(name: 'address', defaultValue: '') required this.address, @JsonKey(name: 'description') required this.description, @JsonKey(name: 'sale_date') required this.saleDate, @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt, @JsonKey(name: 'total_amount_after_discount') required this.totalAmount, @JsonKey(name: 'discount') required this.discountAmount, @JsonKey(name: 'paid_amount') required this.paidAmount, @JsonKey(name: 'items_subtotal', defaultValue: 0) required this.productTotal, @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId, @JsonKey(name: 'balance_due') required this.balanceDueAmount, @JsonKey(name: 'items') required final  List<ProductSaleInfoModel> products, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'payments') final  List<SaleDetailsPaymentHistoryModel> paymentHistory = const [], @JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson) final  List<AppliedTaxModel> appliedTaxes = const []}): _products = products,_paymentHistory = paymentHistory,_appliedTaxes = appliedTaxes;
+  const _SaleDetailsModel({required this.id, @JsonKey(name: 'client') this.client, @JsonKey(name: 'client_phone_e164') this.clientPhone, @JsonKey(name: 'address', defaultValue: '') required this.address, @JsonKey(name: 'description') required this.description, @JsonKey(name: 'sale_date') required this.saleDate, @JsonKey(name: 'created_at', defaultValue: '') required this.createdAt, @JsonKey(name: 'total_amount_after_discount') required this.totalAmount, @JsonKey(name: 'discount') required this.discountAmount, @JsonKey(name: 'paid_amount') required this.paidAmount, @JsonKey(name: 'items_subtotal', defaultValue: 0) required this.productTotal, @JsonKey(name: 'shop_sale_id', defaultValue: '') required this.invoiceId, @JsonKey(name: 'balance_due') required this.balanceDueAmount, @JsonKey(name: 'items') required  List<ProductSaleInfoModel> products, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'payments')  List<SaleDetailsPaymentHistoryModel> paymentHistory = const [], @JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson)  List<AppliedTaxModel> appliedTaxes = const []}): _products = products,_paymentHistory = paymentHistory,_appliedTaxes = appliedTaxes;
   factory _SaleDetailsModel.fromJson(Map<String, dynamic> json) => _$SaleDetailsModelFromJson(json);
 
 @override final  int id;
@@ -256,11 +254,6 @@ class _SaleDetailsModel implements SaleDetailsModel {
 @override@JsonKey(name: 'description') final  String description;
 @override@JsonKey(name: 'sale_date') final  String saleDate;
 @override@JsonKey(name: 'created_at', defaultValue: '') final  String createdAt;
-// The sale-details endpoint sends both `total_amount` (pre-discount)
-// and `total_amount_after_discount` — this entity's `totalAmount` is
-// meant to be what's actually payable, so it has to read the latter
-// (mirrors mobile; the sales *list* endpoint's `SaleModel` has no such
-// split and correctly keeps reading plain `total_amount`).
 @override@JsonKey(name: 'total_amount_after_discount') final  int totalAmount;
 @override@JsonKey(name: 'discount') final  int discountAmount;
 @override@JsonKey(name: 'paid_amount') final  int paidAmount;
@@ -283,13 +276,7 @@ class _SaleDetailsModel implements SaleDetailsModel {
   return EqualUnmodifiableListView(_paymentHistory);
 }
 
-// Same `tax` shape as booking/custom work; modeled as a list so a future
-// multi-tax API response needs no changes beyond
-// AppliedTaxModel.listFromJson.
  final  List<AppliedTaxModel> _appliedTaxes;
-// Same `tax` shape as booking/custom work; modeled as a list so a future
-// multi-tax API response needs no changes beyond
-// AppliedTaxModel.listFromJson.
 @override@JsonKey(name: 'tax', fromJson: AppliedTaxModel.listFromJson) List<AppliedTaxModel> get appliedTaxes {
   if (_appliedTaxes is EqualUnmodifiableListView) return _appliedTaxes;
   // ignore: implicit_dynamic_type
@@ -310,16 +297,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.productTotal, productTotal) || other.productTotal == productTotal)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&const DeepCollectionEquality().equals(other._paymentHistory, _paymentHistory)&&const DeepCollectionEquality().equals(other._appliedTaxes, _appliedTaxes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.client, client) || other.client == client)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.description, description) || other.description == description)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&(identical(other.productTotal, productTotal) || other.productTotal == productTotal)&&(identical(other.invoiceId, invoiceId) || other.invoiceId == invoiceId)&&(identical(other.balanceDueAmount, balanceDueAmount) || other.balanceDueAmount == balanceDueAmount)&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&const DeepCollectionEquality().equals(other.paymentHistory, _paymentHistory)&&const DeepCollectionEquality().equals(other.appliedTaxes, _appliedTaxes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,client,clientPhone,address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,productTotal,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),staffId,staffName,const DeepCollectionEquality().hash(_paymentHistory),const DeepCollectionEquality().hash(_appliedTaxes));
+int get hashCode {
+    return Object.hash(runtimeType,id,client,clientPhone,address,description,saleDate,createdAt,totalAmount,discountAmount,paidAmount,productTotal,invoiceId,balanceDueAmount,const DeepCollectionEquality().hash(_products),staffId,staffName,const DeepCollectionEquality().hash(_paymentHistory),const DeepCollectionEquality().hash(_appliedTaxes));
+}
 
 @override
 String toString() {
-  return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, productTotal: $productTotal, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, staffId: $staffId, staffName: $staffName, paymentHistory: $paymentHistory, appliedTaxes: $appliedTaxes)';
+    return 'SaleDetailsModel(id: $id, client: $client, clientPhone: $clientPhone, address: $address, description: $description, saleDate: $saleDate, createdAt: $createdAt, totalAmount: $totalAmount, discountAmount: $discountAmount, paidAmount: $paidAmount, productTotal: $productTotal, invoiceId: $invoiceId, balanceDueAmount: $balanceDueAmount, products: $products, staffId: $staffId, staffName: $staffName, paymentHistory: $paymentHistory, appliedTaxes: $appliedTaxes)';
 }
 
 
@@ -403,16 +392,21 @@ $SaleDetailsPaymentHistoryModelCopyWith<SaleDetailsPaymentHistoryModel> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
+  final _this = this as SaleDetailsPaymentHistoryModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaleDetailsPaymentHistoryModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.amount, _this.amount) || other.amount == _this.amount)&&(identical(other.accountName, _this.accountName) || other.accountName == _this.accountName)&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.date, _this.date) || other.date == _this.date)&&(identical(other.paymentMethod, _this.paymentMethod) || other.paymentMethod == _this.paymentMethod));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,date,paymentMethod);
+int get hashCode {
+  final _this = this as SaleDetailsPaymentHistoryModel;
+  return Object.hash(runtimeType,_this.id,_this.amount,_this.accountName,_this.accountId,_this.date,_this.paymentMethod);
+}
 
 @override
 String toString() {
-  return 'SaleDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, date: $date, paymentMethod: $paymentMethod)';
+  final _this = this as SaleDetailsPaymentHistoryModel;
+  return 'SaleDetailsPaymentHistoryModel(id: ${_this.id}, amount: ${_this.amount}, accountName: ${_this.accountName}, accountId: ${_this.accountId}, date: ${_this.date}, paymentMethod: ${_this.paymentMethod})';
 }
 
 
@@ -441,7 +435,7 @@ class _$SaleDetailsPaymentHistoryModelCopyWithImpl<$Res>
 /// Create a copy of SaleDetailsPaymentHistoryModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? amount = null,Object? accountName = freezed,Object? accountId = freezed,Object? date = null,Object? paymentMethod = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SaleDetailsPaymentHistoryModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,accountName: freezed == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
@@ -612,16 +606,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaleDetailsPaymentHistoryModel&&(identical(other.id, id) || other.id == id)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.date, date) || other.date == date)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,amount,accountName,accountId,date,paymentMethod);
+int get hashCode {
+    return Object.hash(runtimeType,id,amount,accountName,accountId,date,paymentMethod);
+}
 
 @override
 String toString() {
-  return 'SaleDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, date: $date, paymentMethod: $paymentMethod)';
+    return 'SaleDetailsPaymentHistoryModel(id: $id, amount: $amount, accountName: $accountName, accountId: $accountId, date: $date, paymentMethod: $paymentMethod)';
 }
 
 
@@ -681,16 +677,21 @@ $ProductSaleInfoModelCopyWith<ProductSaleInfoModel> get copyWith => _$ProductSal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSaleInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes));
+  final _this = this as ProductSaleInfoModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSaleInfoModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.productId, _this.productId) || other.productId == _this.productId)&&(identical(other.variantId, _this.variantId) || other.variantId == _this.variantId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.variantAttribute, _this.variantAttribute) || other.variantAttribute == _this.variantAttribute)&&(identical(other.quantity, _this.quantity) || other.quantity == _this.quantity)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.subtotal, _this.subtotal) || other.subtotal == _this.subtotal)&&(identical(other.image, _this.image) || other.image == _this.image)&&(identical(other.thumbnailImage, _this.thumbnailImage) || other.thumbnailImage == _this.thumbnailImage)&&(identical(other.color, _this.color) || other.color == _this.color)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.model, _this.model) || other.model == _this.model)&&(identical(other.mainServiceType, _this.mainServiceType) || other.mainServiceType == _this.mainServiceType)&&(identical(other.fabricLength, _this.fabricLength) || other.fabricLength == _this.fabricLength)&&(identical(other.attributes, _this.attributes) || other.attributes == _this.attributes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,variantAttribute,quantity,price,subtotal,image,thumbnailImage,color,category,model,mainServiceType,fabricLength,attributes);
+int get hashCode {
+  final _this = this as ProductSaleInfoModel;
+  return Object.hash(runtimeType,_this.id,_this.productId,_this.variantId,_this.name,_this.variantAttribute,_this.quantity,_this.price,_this.subtotal,_this.image,_this.thumbnailImage,_this.color,_this.category,_this.model,_this.mainServiceType,_this.fabricLength,_this.attributes);
+}
 
 @override
 String toString() {
-  return 'ProductSaleInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, variantAttribute: $variantAttribute, quantity: $quantity, price: $price, subtotal: $subtotal, image: $image, thumbnailImage: $thumbnailImage, color: $color, category: $category, model: $model, mainServiceType: $mainServiceType, fabricLength: $fabricLength, attributes: $attributes)';
+  final _this = this as ProductSaleInfoModel;
+  return 'ProductSaleInfoModel(id: ${_this.id}, productId: ${_this.productId}, variantId: ${_this.variantId}, name: ${_this.name}, variantAttribute: ${_this.variantAttribute}, quantity: ${_this.quantity}, price: ${_this.price}, subtotal: ${_this.subtotal}, image: ${_this.image}, thumbnailImage: ${_this.thumbnailImage}, color: ${_this.color}, category: ${_this.category}, model: ${_this.model}, mainServiceType: ${_this.mainServiceType}, fabricLength: ${_this.fabricLength}, attributes: ${_this.attributes})';
 }
 
 
@@ -719,7 +720,7 @@ class _$ProductSaleInfoModelCopyWithImpl<$Res>
 /// Create a copy of ProductSaleInfoModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? productId = null,Object? variantId = null,Object? name = null,Object? variantAttribute = freezed,Object? quantity = null,Object? price = null,Object? subtotal = null,Object? image = freezed,Object? thumbnailImage = freezed,Object? color = freezed,Object? category = freezed,Object? model = freezed,Object? mainServiceType = freezed,Object? fabricLength = null,Object? attributes = null,}) {
-  return _then(_self.copyWith(
+  return _then(ProductSaleInfoModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as int,variantId: null == variantId ? _self.variantId : variantId // ignore: cast_nullable_to_non_nullable
@@ -919,16 +920,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSaleInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSaleInfoModel&&(identical(other.id, id) || other.id == id)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.variantId, variantId) || other.variantId == variantId)&&(identical(other.name, name) || other.name == name)&&(identical(other.variantAttribute, variantAttribute) || other.variantAttribute == variantAttribute)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.price, price) || other.price == price)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.image, image) || other.image == image)&&(identical(other.thumbnailImage, thumbnailImage) || other.thumbnailImage == thumbnailImage)&&(identical(other.color, color) || other.color == color)&&(identical(other.category, category) || other.category == category)&&(identical(other.model, model) || other.model == model)&&(identical(other.mainServiceType, mainServiceType) || other.mainServiceType == mainServiceType)&&(identical(other.fabricLength, fabricLength) || other.fabricLength == fabricLength)&&(identical(other.attributes, attributes) || other.attributes == attributes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,productId,variantId,name,variantAttribute,quantity,price,subtotal,image,thumbnailImage,color,category,model,mainServiceType,fabricLength,attributes);
+int get hashCode {
+    return Object.hash(runtimeType,id,productId,variantId,name,variantAttribute,quantity,price,subtotal,image,thumbnailImage,color,category,model,mainServiceType,fabricLength,attributes);
+}
 
 @override
 String toString() {
-  return 'ProductSaleInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, variantAttribute: $variantAttribute, quantity: $quantity, price: $price, subtotal: $subtotal, image: $image, thumbnailImage: $thumbnailImage, color: $color, category: $category, model: $model, mainServiceType: $mainServiceType, fabricLength: $fabricLength, attributes: $attributes)';
+    return 'ProductSaleInfoModel(id: $id, productId: $productId, variantId: $variantId, name: $name, variantAttribute: $variantAttribute, quantity: $quantity, price: $price, subtotal: $subtotal, image: $image, thumbnailImage: $thumbnailImage, color: $color, category: $category, model: $model, mainServiceType: $mainServiceType, fabricLength: $fabricLength, attributes: $attributes)';
 }
 
 

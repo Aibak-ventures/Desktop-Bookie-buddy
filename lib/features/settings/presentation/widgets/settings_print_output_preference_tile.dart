@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/features/settings/presentation/widgets/settings
 import 'package:bookie_buddy_web/features/shop/domain/entities/update_shop_settings_request_entity/update_shop_settings_request_entity.dart';
 import 'package:bookie_buddy_web/features/shop/domain/usecases/update_shop_settings_usecase.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// "Print" button behavior across the app (booking/sale detail, etc.):
 /// thermal receipt, PDF invoice, or ask every time — a suffix dropdown

@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/features/sales/domain/repositories/i_sales_repo
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/open_pdf_in_new_tab_web.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void showBookingSuccessDialog({

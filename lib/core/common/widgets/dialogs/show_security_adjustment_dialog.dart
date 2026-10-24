@@ -12,18 +12,17 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Called when the user submits the security adjustment dialog. Return
 /// `null` on success, or an error message to show and keep the dialog open.
-typedef SecurityAdjustmentSubmitCallback =
-    Future<String?> Function({
-      required int amount,
-      required SecurityTransactionAction action,
-      AccountEntity? account,
-      String? note,
-      String? paymentDate,
-    });
+typedef SecurityAdjustmentSubmitCallback = Future<String?> Function({
+  required int amount,
+  required SecurityTransactionAction action,
+  AccountEntity? account,
+  String? note,
+  String? paymentDate,
+});
 
 /// Dialog for refunding or deducting a booking's security deposit.
 ///

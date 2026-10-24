@@ -6,8 +6,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/all_booking/widge
 import 'package:bookie_buddy_web/features/global_search/presentation/bloc/global_search_bloc/global_search_bloc.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/widgets/search_screen_shared_widgets.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GlobalSearchInvoiceSearchResults extends StatelessWidget {
   final TextEditingController searchController;

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_payment_request_entity.dart';
@@ -9,6 +9,7 @@ part of 'booking_payment_request_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $BookingPaymentRequestEntityCopyWith<BookingPaymentRequestEntity> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingPaymentRequestEntity&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.amount, amount) || other.amount == amount));
+  final _this = this as BookingPaymentRequestEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingPaymentRequestEntity&&(identical(other.accountId, _this.accountId) || other.accountId == _this.accountId)&&(identical(other.amount, _this.amount) || other.amount == _this.amount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,accountId,amount);
+int get hashCode {
+  final _this = this as BookingPaymentRequestEntity;
+  return Object.hash(runtimeType,_this.accountId,_this.amount);
+}
 
 @override
 String toString() {
-  return 'BookingPaymentRequestEntity(accountId: $accountId, amount: $amount)';
+  final _this = this as BookingPaymentRequestEntity;
+  return 'BookingPaymentRequestEntity(accountId: ${_this.accountId}, amount: ${_this.amount})';
 }
 
 
@@ -63,7 +69,7 @@ class _$BookingPaymentRequestEntityCopyWithImpl<$Res>
 /// Create a copy of BookingPaymentRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? amount = null,}) {
-  return _then(_self.copyWith(
+  return _then(BookingPaymentRequestEntity(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as int,amount: null == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
 as int,
@@ -223,16 +229,18 @@ _$BookingPaymentRequestEntityCopyWith<_BookingPaymentRequestEntity> get copyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingPaymentRequestEntity&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.amount, amount) || other.amount == amount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingPaymentRequestEntity&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.amount, amount) || other.amount == amount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,accountId,amount);
+int get hashCode {
+    return Object.hash(runtimeType,accountId,amount);
+}
 
 @override
 String toString() {
-  return 'BookingPaymentRequestEntity(accountId: $accountId, amount: $amount)';
+    return 'BookingPaymentRequestEntity(accountId: $accountId, amount: $amount)';
 }
 
 

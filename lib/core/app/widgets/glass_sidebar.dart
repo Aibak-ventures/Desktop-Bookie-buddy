@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/core/app/widgets/shop_switcher_bottom_sheet.dar
 import 'package:bookie_buddy_web/core/app/widgets/sidebar_logout_button.dart';
 import 'package:bookie_buddy_web/core/app/widgets/sidebar_nav_item.dart';
 import 'package:bookie_buddy_web/core/app/widgets/sidebar_profile_header.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Hover-expandable glass sidebar for [AppShellScreen].
 ///

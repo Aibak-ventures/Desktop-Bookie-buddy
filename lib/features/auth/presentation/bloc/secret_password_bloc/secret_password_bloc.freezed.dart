@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'secret_password_bloc.dart';
@@ -9,6 +9,7 @@ part of 'secret_password_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SecretPasswordEventCopyWith<SecretPasswordEvent> get copyWith => _$SecretPasswo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SecretPasswordEvent&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
+  final _this = this as SecretPasswordEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SecretPasswordEvent&&(identical(other.oldPassword, _this.oldPassword) || other.oldPassword == _this.oldPassword)&&(identical(other.newPassword, _this.newPassword) || other.newPassword == _this.newPassword));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,oldPassword,newPassword);
+int get hashCode {
+  final _this = this as SecretPasswordEvent;
+  return Object.hash(runtimeType,_this.oldPassword,_this.newPassword);
+}
 
 @override
 String toString() {
-  return 'SecretPasswordEvent(oldPassword: $oldPassword, newPassword: $newPassword)';
+  final _this = this as SecretPasswordEvent;
+  return 'SecretPasswordEvent(oldPassword: ${_this.oldPassword}, newPassword: ${_this.newPassword})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SecretPasswordEventCopyWithImpl<$Res>
 /// Create a copy of SecretPasswordEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? oldPassword = null,Object? newPassword = null,}) {
-  return _then(_self.copyWith(
+  return _then(SecretPasswordEvent.submitPasswordChange(
 oldPassword: null == oldPassword ? _self.oldPassword : oldPassword // ignore: cast_nullable_to_non_nullable
 as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String,
@@ -223,16 +229,18 @@ _$SubmitPasswordChangeCopyWith<_SubmitPasswordChange> get copyWith => __$SubmitP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubmitPasswordChange&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SubmitPasswordChange&&(identical(other.oldPassword, oldPassword) || other.oldPassword == oldPassword)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,oldPassword,newPassword);
+int get hashCode {
+    return Object.hash(runtimeType,oldPassword,newPassword);
+}
 
 @override
 String toString() {
-  return 'SecretPasswordEvent.submitPasswordChange(oldPassword: $oldPassword, newPassword: $newPassword)';
+    return 'SecretPasswordEvent.submitPasswordChange(oldPassword: $oldPassword, newPassword: $newPassword)';
 }
 
 
@@ -280,7 +288,7 @@ mixin _$SecretPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SecretPasswordState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SecretPasswordState);
 }
 
 
@@ -289,7 +297,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SecretPasswordState()';
+    return 'SecretPasswordState()';
 }
 
 
@@ -463,7 +471,7 @@ class _Initial implements SecretPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -472,7 +480,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SecretPasswordState.initial()';
+    return 'SecretPasswordState.initial()';
 }
 
 
@@ -495,7 +503,7 @@ class _Loading implements SecretPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -504,7 +512,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SecretPasswordState.loading()';
+    return 'SecretPasswordState.loading()';
 }
 
 
@@ -527,7 +535,7 @@ class _Success implements SecretPasswordState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success);
 }
 
 
@@ -536,7 +544,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SecretPasswordState.success()';
+    return 'SecretPasswordState.success()';
 }
 
 
@@ -564,16 +572,18 @@ _$FailureCopyWith<_Failure> get copyWith => __$FailureCopyWithImpl<_Failure>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failure&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failure&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'SecretPasswordState.failure(message: $message)';
+    return 'SecretPasswordState.failure(message: $message)';
 }
 
 

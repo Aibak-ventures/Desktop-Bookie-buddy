@@ -3,7 +3,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/booking_fo
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/advance_split_payment.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 export 'package:bookie_buddy_web/features/booking/presentation/common/helpers/booking_validation_helper.dart'
     show BookingValidationResult;

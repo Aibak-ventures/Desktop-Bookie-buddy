@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'custom_response_model.dart';
@@ -9,6 +9,7 @@ part of 'custom_response_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CustomResponseModelCopyWith<CustomResponseModel> get copyWith => _$CustomRespon
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CustomResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.devMessage, devMessage)&&const DeepCollectionEquality().equals(other.meta, meta)&&const DeepCollectionEquality().equals(other.data, data));
+  final _this = this as CustomResponseModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CustomResponseModel&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.message, _this.message) || other.message == _this.message)&&const DeepCollectionEquality().equals(other.devMessage, _this.devMessage)&&const DeepCollectionEquality().equals(other.meta, _this.meta)&&const DeepCollectionEquality().equals(other.data, _this.data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(devMessage),const DeepCollectionEquality().hash(meta),const DeepCollectionEquality().hash(data));
+int get hashCode {
+  final _this = this as CustomResponseModel;
+  return Object.hash(runtimeType,_this.status,_this.message,const DeepCollectionEquality().hash(_this.devMessage),const DeepCollectionEquality().hash(_this.meta),const DeepCollectionEquality().hash(_this.data));
+}
 
 @override
 String toString() {
-  return 'CustomResponseModel(status: $status, message: $message, devMessage: $devMessage, meta: $meta, data: $data)';
+  final _this = this as CustomResponseModel;
+  return 'CustomResponseModel(status: ${_this.status}, message: ${_this.message}, devMessage: ${_this.devMessage}, meta: ${_this.meta}, data: ${_this.data})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CustomResponseModelCopyWithImpl<$Res>
 /// Create a copy of CustomResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? message = freezed,Object? devMessage = freezed,Object? meta = freezed,Object? data = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CustomResponseModel(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as CustomResponseStatus,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,devMessage: freezed == devMessage ? _self.devMessage : devMessage // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CustomResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.devMessage, devMessage)&&const DeepCollectionEquality().equals(other.meta, meta)&&const DeepCollectionEquality().equals(other.data, data));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CustomResponseModel&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.devMessage, devMessage)&&const DeepCollectionEquality().equals(other.meta, meta)&&const DeepCollectionEquality().equals(other.data, data));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(devMessage),const DeepCollectionEquality().hash(meta),const DeepCollectionEquality().hash(data));
+int get hashCode {
+    return Object.hash(runtimeType,status,message,const DeepCollectionEquality().hash(devMessage),const DeepCollectionEquality().hash(meta),const DeepCollectionEquality().hash(data));
+}
 
 @override
 String toString() {
-  return 'CustomResponseModel(status: $status, message: $message, devMessage: $devMessage, meta: $meta, data: $data)';
+    return 'CustomResponseModel(status: $status, message: $message, devMessage: $devMessage, meta: $meta, data: $data)';
 }
 
 

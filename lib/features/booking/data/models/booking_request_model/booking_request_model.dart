@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/features/client/data/models/client_request_mode
 import 'package:bookie_buddy_web/features/product/data/models/product_selected_model/product_selected_model.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'booking_request_model.freezed.dart';
 part 'booking_request_model.g.dart';

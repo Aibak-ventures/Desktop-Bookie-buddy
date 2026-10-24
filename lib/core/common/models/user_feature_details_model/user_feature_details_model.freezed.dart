@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_feature_details_model.dart';
@@ -9,6 +9,7 @@ part of 'user_feature_details_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserFeatureDetailsModelCopyWith<UserFeatureDetailsModel> get copyWith => _$User
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFeatureDetailsModel&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.feature, feature) || other.feature == feature)&&(identical(other.status, status) || other.status == status));
+  final _this = this as UserFeatureDetailsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserFeatureDetailsModel&&(identical(other.displayName, _this.displayName) || other.displayName == _this.displayName)&&(identical(other.feature, _this.feature) || other.feature == _this.feature)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,displayName,feature,status);
+int get hashCode {
+  final _this = this as UserFeatureDetailsModel;
+  return Object.hash(runtimeType,_this.displayName,_this.feature,_this.status);
+}
 
 @override
 String toString() {
-  return 'UserFeatureDetailsModel(displayName: $displayName, feature: $feature, status: $status)';
+  final _this = this as UserFeatureDetailsModel;
+  return 'UserFeatureDetailsModel(displayName: ${_this.displayName}, feature: ${_this.feature}, status: ${_this.status})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserFeatureDetailsModelCopyWithImpl<$Res>
 /// Create a copy of UserFeatureDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? displayName = null,Object? feature = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserFeatureDetailsModel(
 displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,feature: null == feature ? _self.feature : feature // ignore: cast_nullable_to_non_nullable
 as AppPremiumFeatures,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFeatureDetailsModel&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.feature, feature) || other.feature == feature)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserFeatureDetailsModel&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.feature, feature) || other.feature == feature)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,displayName,feature,status);
+int get hashCode {
+    return Object.hash(runtimeType,displayName,feature,status);
+}
 
 @override
 String toString() {
-  return 'UserFeatureDetailsModel(displayName: $displayName, feature: $feature, status: $status)';
+    return 'UserFeatureDetailsModel(displayName: $displayName, feature: $feature, status: $status)';
 }
 
 

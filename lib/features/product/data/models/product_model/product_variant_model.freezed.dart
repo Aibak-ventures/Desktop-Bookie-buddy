@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_variant_model.dart';
@@ -9,6 +9,7 @@ part of 'product_variant_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -29,16 +30,21 @@ $ProductVariantModelCopyWith<ProductVariantModel> get copyWith => _$ProductVaria
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductVariantModel&&(identical(other.id, id) || other.id == id)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.externalQrCode, externalQrCode) || other.externalQrCode == externalQrCode));
+  final _this = this as ProductVariantModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductVariantModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.attribute, _this.attribute) || other.attribute == _this.attribute)&&(identical(other.stock, _this.stock) || other.stock == _this.stock)&&(identical(other.remainingStock, _this.remainingStock) || other.remainingStock == _this.remainingStock)&&(identical(other.price, _this.price) || other.price == _this.price)&&(identical(other.salePrice, _this.salePrice) || other.salePrice == _this.salePrice)&&(identical(other.externalQrCode, _this.externalQrCode) || other.externalQrCode == _this.externalQrCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,attribute,stock,remainingStock,price,salePrice,externalQrCode);
+int get hashCode {
+  final _this = this as ProductVariantModel;
+  return Object.hash(runtimeType,_this.id,_this.attribute,_this.stock,_this.remainingStock,_this.price,_this.salePrice,_this.externalQrCode);
+}
 
 @override
 String toString() {
-  return 'ProductVariantModel(id: $id, attribute: $attribute, stock: $stock, remainingStock: $remainingStock, price: $price, salePrice: $salePrice, externalQrCode: $externalQrCode)';
+  final _this = this as ProductVariantModel;
+  return 'ProductVariantModel(id: ${_this.id}, attribute: ${_this.attribute}, stock: ${_this.stock}, remainingStock: ${_this.remainingStock}, price: ${_this.price}, salePrice: ${_this.salePrice}, externalQrCode: ${_this.externalQrCode})';
 }
 
 
@@ -67,7 +73,7 @@ class _$ProductVariantModelCopyWithImpl<$Res>
 /// Create a copy of ProductVariantModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? attribute = null,Object? stock = null,Object? remainingStock = freezed,Object? price = freezed,Object? salePrice = freezed,Object? externalQrCode = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ProductVariantModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,attribute: null == attribute ? _self.attribute : attribute // ignore: cast_nullable_to_non_nullable
 as String,stock: null == stock ? _self.stock : stock // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductVariantModel&&(identical(other.id, id) || other.id == id)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.externalQrCode, externalQrCode) || other.externalQrCode == externalQrCode));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductVariantModel&&(identical(other.id, id) || other.id == id)&&(identical(other.attribute, attribute) || other.attribute == attribute)&&(identical(other.stock, stock) || other.stock == stock)&&(identical(other.remainingStock, remainingStock) || other.remainingStock == remainingStock)&&(identical(other.price, price) || other.price == price)&&(identical(other.salePrice, salePrice) || other.salePrice == salePrice)&&(identical(other.externalQrCode, externalQrCode) || other.externalQrCode == externalQrCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,attribute,stock,remainingStock,price,salePrice,externalQrCode);
+int get hashCode {
+    return Object.hash(runtimeType,id,attribute,stock,remainingStock,price,salePrice,externalQrCode);
+}
 
 @override
 String toString() {
-  return 'ProductVariantModel(id: $id, attribute: $attribute, stock: $stock, remainingStock: $remainingStock, price: $price, salePrice: $salePrice, externalQrCode: $externalQrCode)';
+    return 'ProductVariantModel(id: $id, attribute: $attribute, stock: $stock, remainingStock: $remainingStock, price: $price, salePrice: $salePrice, externalQrCode: $externalQrCode)';
 }
 
 

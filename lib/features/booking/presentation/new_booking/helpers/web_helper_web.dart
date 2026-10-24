@@ -1,34 +1,35 @@
-// ignore: avoid_web_libraries_in_flutter, deprecated_member_use
-import 'dart:html' as html;
+import 'dart:js_interop';
 
-/// Web-specific implementation using dart:html
+import 'package:web/web.dart' as web;
+
+/// Web-specific implementation using package:web
 /// Prevents accidental browser close/refresh when there are unsaved changes
 
-html.EventListener? _beforeUnloadListener;
+JSFunction? _beforeUnloadListener;
 
 void setupBeforeUnloadListener(bool Function() hasUnsavedChanges) {
   // Remove any existing listener first
   removeBeforeUnloadListener();
 
   // Create and store the listener
-  _beforeUnloadListener =
-      (html.Event e) {
-            if (hasUnsavedChanges()) {
-              // Set returnValue to trigger the browser's confirmation dialog
-              (e as html.BeforeUnloadEvent).returnValue =
-                  'You have unsaved changes. Are you sure you want to leave?';
-              return 'You have unsaved changes. Are you sure you want to leave?';
-            }
-          }
-          as html.EventListener;
+  final listener = ((web.BeforeUnloadEvent e) {
+    if (hasUnsavedChanges()) {
+      // preventDefault + returnValue triggers the browser's confirmation dialog
+      e.preventDefault();
+      e.returnValue =
+          'You have unsaved changes. Are you sure you want to leave?';
+    }
+  }).toJS;
+  _beforeUnloadListener = listener;
 
   // Add the listener to window
-  html.window.addEventListener('beforeunload', _beforeUnloadListener!);
+  web.window.addEventListener('beforeunload', listener);
 }
 
 void removeBeforeUnloadListener() {
-  if (_beforeUnloadListener != null) {
-    html.window.removeEventListener('beforeunload', _beforeUnloadListener!);
+  final listener = _beforeUnloadListener;
+  if (listener != null) {
+    web.window.removeEventListener('beforeunload', listener);
     _beforeUnloadListener = null;
   }
 }

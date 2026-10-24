@@ -1,7 +1,7 @@
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/controllers/add_or_edit_sales_form_state_controller.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Sale date selection section for [EditSalesScreen].
 class SalesFormDateSection extends StatelessWidget {

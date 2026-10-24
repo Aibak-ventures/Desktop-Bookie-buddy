@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shop_model.dart';
@@ -9,6 +9,7 @@ part of 'shop_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ShopModelCopyWith<ShopModel> get copyWith => _$ShopModelCopyWithImpl<ShopModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.place, place) || other.place == place)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.subscriptionStatus, subscriptionStatus) || other.subscriptionStatus == subscriptionStatus)&&(identical(other.image, image) || other.image == image));
+  final _this = this as ShopModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.place, _this.place) || other.place == _this.place)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.pincode, _this.pincode) || other.pincode == _this.pincode)&&(identical(other.subscriptionStatus, _this.subscriptionStatus) || other.subscriptionStatus == _this.subscriptionStatus)&&(identical(other.image, _this.image) || other.image == _this.image));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,place,phone,email,address,pincode,subscriptionStatus,image);
+int get hashCode {
+  final _this = this as ShopModel;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.place,_this.phone,_this.email,_this.address,_this.pincode,_this.subscriptionStatus,_this.image);
+}
 
 @override
 String toString() {
-  return 'ShopModel(id: $id, name: $name, place: $place, phone: $phone, email: $email, address: $address, pincode: $pincode, subscriptionStatus: $subscriptionStatus, image: $image)';
+  final _this = this as ShopModel;
+  return 'ShopModel(id: ${_this.id}, name: ${_this.name}, place: ${_this.place}, phone: ${_this.phone}, email: ${_this.email}, address: ${_this.address}, pincode: ${_this.pincode}, subscriptionStatus: ${_this.subscriptionStatus}, image: ${_this.image})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ShopModelCopyWithImpl<$Res>
 /// Create a copy of ShopModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? place = freezed,Object? phone = null,Object? email = freezed,Object? address = null,Object? pincode = freezed,Object? subscriptionStatus = freezed,Object? image = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ShopModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,place: freezed == place ? _self.place : place // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.place, place) || other.place == place)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.subscriptionStatus, subscriptionStatus) || other.subscriptionStatus == subscriptionStatus)&&(identical(other.image, image) || other.image == image));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.place, place) || other.place == place)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.address, address) || other.address == address)&&(identical(other.pincode, pincode) || other.pincode == pincode)&&(identical(other.subscriptionStatus, subscriptionStatus) || other.subscriptionStatus == subscriptionStatus)&&(identical(other.image, image) || other.image == image));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,place,phone,email,address,pincode,subscriptionStatus,image);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,place,phone,email,address,pincode,subscriptionStatus,image);
+}
 
 @override
 String toString() {
-  return 'ShopModel(id: $id, name: $name, place: $place, phone: $phone, email: $email, address: $address, pincode: $pincode, subscriptionStatus: $subscriptionStatus, image: $image)';
+    return 'ShopModel(id: $id, name: $name, place: $place, phone: $phone, email: $email, address: $address, pincode: $pincode, subscriptionStatus: $subscriptionStatus, image: $image)';
 }
 
 

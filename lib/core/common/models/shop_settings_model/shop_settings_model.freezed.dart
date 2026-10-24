@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'shop_settings_model.dart';
@@ -9,6 +9,7 @@ part of 'shop_settings_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ShopSettingsModelCopyWith<ShopSettingsModel> get copyWith => _$ShopSettingsMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
+  final _this = this as ShopSettingsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShopSettingsModel&&(identical(other.coolingPeriodDuration, _this.coolingPeriodDuration) || other.coolingPeriodDuration == _this.coolingPeriodDuration)&&(identical(other.coolingPeriodMode, _this.coolingPeriodMode) || other.coolingPeriodMode == _this.coolingPeriodMode)&&(identical(other.addButtonDefaultAction, _this.addButtonDefaultAction) || other.addButtonDefaultAction == _this.addButtonDefaultAction)&&(identical(other.searchClient, _this.searchClient) || other.searchClient == _this.searchClient)&&(identical(other.printOutputPreference, _this.printOutputPreference) || other.printOutputPreference == _this.printOutputPreference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+int get hashCode {
+  final _this = this as ShopSettingsModel;
+  return Object.hash(runtimeType,_this.coolingPeriodDuration,_this.coolingPeriodMode,_this.addButtonDefaultAction,_this.searchClient,_this.printOutputPreference);
+}
 
 @override
 String toString() {
-  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
+  final _this = this as ShopSettingsModel;
+  return 'ShopSettingsModel(coolingPeriodDuration: ${_this.coolingPeriodDuration}, coolingPeriodMode: ${_this.coolingPeriodMode}, addButtonDefaultAction: ${_this.addButtonDefaultAction}, searchClient: ${_this.searchClient}, printOutputPreference: ${_this.printOutputPreference})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ShopSettingsModelCopyWithImpl<$Res>
 /// Create a copy of ShopSettingsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = null,Object? coolingPeriodMode = null,Object? addButtonDefaultAction = null,Object? searchClient = null,Object? printOutputPreference = null,}) {
-  return _then(_self.copyWith(
+  return _then(ShopSettingsModel(
 coolingPeriodDuration: null == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int,coolingPeriodMode: null == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode,addButtonDefaultAction: null == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShopSettingsModel&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+int get hashCode {
+    return Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+}
 
 @override
 String toString() {
-  return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
+    return 'ShopSettingsModel(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 

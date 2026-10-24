@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/main_service_type_enums.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum SecretPasswordLocations {
   ledgerView('LEDGER_VIEW', 'Ledger View'),

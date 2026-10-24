@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MonthlyBarChart extends StatelessWidget {
   final List<ProductMonthlyDataEntity> monthlyData;

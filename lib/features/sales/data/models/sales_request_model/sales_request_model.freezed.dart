@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sales_request_model.dart';
@@ -9,6 +9,7 @@ part of 'sales_request_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SalesRequestModelCopyWith<SalesRequestModel> get copyWith => _$SalesRequestMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&const DeepCollectionEquality().equals(other.products, products)&&(identical(other.stockCountDecrease, stockCountDecrease) || other.stockCountDecrease == stockCountDecrease)&&(identical(other.description, description) || other.description == description)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&const DeepCollectionEquality().equals(other.payments, payments)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp));
+  final _this = this as SalesRequestModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesRequestModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&const DeepCollectionEquality().equals(other.products, _this.products)&&(identical(other.stockCountDecrease, _this.stockCountDecrease) || other.stockCountDecrease == _this.stockCountDecrease)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.discountAmount, _this.discountAmount) || other.discountAmount == _this.discountAmount)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&const DeepCollectionEquality().equals(other.payments, _this.payments)&&(identical(other.sendPdfToWhatsApp, _this.sendPdfToWhatsApp) || other.sendPdfToWhatsApp == _this.sendPdfToWhatsApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,staffId,clientPhone,address,saleDate,const DeepCollectionEquality().hash(products),stockCountDecrease,description,discountAmount,paidAmount,const DeepCollectionEquality().hash(payments),sendPdfToWhatsApp);
+int get hashCode {
+  final _this = this as SalesRequestModel;
+  return Object.hash(runtimeType,_this.id,_this.staffId,_this.clientPhone,_this.address,_this.saleDate,const DeepCollectionEquality().hash(_this.products),_this.stockCountDecrease,_this.description,_this.discountAmount,_this.paidAmount,const DeepCollectionEquality().hash(_this.payments),_this.sendPdfToWhatsApp);
+}
 
 @override
 String toString() {
-  return 'SalesRequestModel(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, payments: $payments, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
+  final _this = this as SalesRequestModel;
+  return 'SalesRequestModel(id: ${_this.id}, staffId: ${_this.staffId}, clientPhone: ${_this.clientPhone}, address: ${_this.address}, saleDate: ${_this.saleDate}, products: ${_this.products}, stockCountDecrease: ${_this.stockCountDecrease}, description: ${_this.description}, discountAmount: ${_this.discountAmount}, paidAmount: ${_this.paidAmount}, payments: ${_this.payments}, sendPdfToWhatsApp: ${_this.sendPdfToWhatsApp})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SalesRequestModelCopyWithImpl<$Res>
 /// Create a copy of SalesRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? staffId = freezed,Object? clientPhone = freezed,Object? address = freezed,Object? saleDate = freezed,Object? products = freezed,Object? stockCountDecrease = freezed,Object? description = freezed,Object? discountAmount = freezed,Object? paidAmount = freezed,Object? payments = freezed,Object? sendPdfToWhatsApp = null,}) {
-  return _then(_self.copyWith(
+  return _then(SalesRequestModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
 as int?,clientPhone: freezed == clientPhone ? _self.clientPhone : clientPhone // ignore: cast_nullable_to_non_nullable
@@ -220,7 +226,7 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 
 @JsonSerializable(includeIfNull: false)
 class _SalesRequestModel implements SalesRequestModel {
-  const _SalesRequestModel({@JsonKey(includeToJson: false) this.id, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'client_address') this.address, @JsonKey(name: 'sale_date') this.saleDate, @JsonKey(name: 'variants', toJson: _variantsToJson) final  List<ProductSelectedModel>? products, @JsonKey(name: 'decrease_stock') this.stockCountDecrease, @JsonKey(name: 'description') this.description, @JsonKey(name: 'discount') this.discountAmount, @JsonKey(name: 'paid_amount') this.paidAmount, @JsonKey(name: 'payments', toJson: _paymentsToJson) final  List<SalesPaymentRequestModel>? payments, @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false) this.sendPdfToWhatsApp = false}): _products = products,_payments = payments;
+  const _SalesRequestModel({@JsonKey(includeToJson: false) this.id, @JsonKey(name: 'staff_id') this.staffId, @JsonKey(name: 'client_phone') this.clientPhone, @JsonKey(name: 'client_address') this.address, @JsonKey(name: 'sale_date') this.saleDate, @JsonKey(name: 'variants', toJson: _variantsToJson)  List<ProductSelectedModel>? products, @JsonKey(name: 'decrease_stock') this.stockCountDecrease, @JsonKey(name: 'description') this.description, @JsonKey(name: 'discount') this.discountAmount, @JsonKey(name: 'paid_amount') this.paidAmount, @JsonKey(name: 'payments', toJson: _paymentsToJson)  List<SalesPaymentRequestModel>? payments, @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false) this.sendPdfToWhatsApp = false}): _products = products,_payments = payments;
   factory _SalesRequestModel.fromJson(Map<String, dynamic> json) => _$SalesRequestModelFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  int? id;
@@ -265,16 +271,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalesRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.stockCountDecrease, stockCountDecrease) || other.stockCountDecrease == stockCountDecrease)&&(identical(other.description, description) || other.description == description)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&const DeepCollectionEquality().equals(other._payments, _payments)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalesRequestModel&&(identical(other.id, id) || other.id == id)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.stockCountDecrease, stockCountDecrease) || other.stockCountDecrease == stockCountDecrease)&&(identical(other.description, description) || other.description == description)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&const DeepCollectionEquality().equals(other.payments, _payments)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,staffId,clientPhone,address,saleDate,const DeepCollectionEquality().hash(_products),stockCountDecrease,description,discountAmount,paidAmount,const DeepCollectionEquality().hash(_payments),sendPdfToWhatsApp);
+int get hashCode {
+    return Object.hash(runtimeType,id,staffId,clientPhone,address,saleDate,const DeepCollectionEquality().hash(_products),stockCountDecrease,description,discountAmount,paidAmount,const DeepCollectionEquality().hash(_payments),sendPdfToWhatsApp);
+}
 
 @override
 String toString() {
-  return 'SalesRequestModel(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, payments: $payments, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
+    return 'SalesRequestModel(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, payments: $payments, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
 }
 
 

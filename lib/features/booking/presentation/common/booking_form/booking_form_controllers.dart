@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/features/booking/domain/entities/document_file_
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/common/bloc/select_product_bloc/select_product_bloc.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Holds all shared form controllers, notifiers, and focus nodes used by both
 /// [NewBookingScreen] and [EditNewBookingScreen].

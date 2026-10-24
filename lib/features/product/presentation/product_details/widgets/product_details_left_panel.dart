@@ -5,8 +5,8 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_entity
 import 'package:bookie_buddy_web/features/product/domain/entities/product_variant_entity/product_variant_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Left panel for [ProductDetailsScreen]: image, name, price, variants,
 /// specs, vehicle info, and description.

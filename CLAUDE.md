@@ -18,6 +18,16 @@ All 9 features are fully migrated to Clean Architecture with entity/model separa
 
 ---
 
+## Material / Cupertino
+
+Import `package:material_ui/material_ui.dart` and `package:cupertino_ui/cupertino_ui.dart`, never `package:flutter/material.dart` or `package:flutter/cupertino.dart` (including in `bookie_buddy_shared`). Mixing them yields incompatible duplicate types (`TimeOfDay`, `InputDecoration`).
+
+## Web interop
+
+Use `package:web` + `dart:js_interop` only — never `dart:html`, `dart:js`, `dart:js_util` or `package:js` (they block Wasm builds). Conditional imports key on `dart.library.js_interop`, not `dart.library.html` (the latter is false under Wasm and silently selects the stub).
+
+---
+
 ## Tech Stack
 
 | Concern | Library |
@@ -29,7 +39,6 @@ All 9 features are fully migrated to Clean Architecture with entity/model separa
 | HTTP | `dio` |
 | Routing | Flutter `Navigator` (imperative) — `go_router` planned for future |
 | Local storage | `shared_preferences`, `flutter_secure_storage` |
-| Analytics / Push | Firebase (Crashlytics, Analytics, Messaging) |
 
 ---
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'account_model.dart';
@@ -9,14 +9,14 @@ part of 'account_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$AccountModel {
 
- int get id;@JsonKey(name: 'name') String get accountName;@JsonKey(name: 'account_type', fromJson: AccountType.fromJson, toJson: AccountType.toJson) AccountType get accountType;@JsonKey(name: 'account_number') String? get accountNumber;@JsonKey(name: 'description') String? get description;@JsonKey(name: 'is_active') bool get isActive;@JsonKey(name: 'is_default') bool get isDefault;@JsonKey(name: 'created_at') String get createdAt;// Present only in the accounts-with-amounts (summary) response
-@JsonKey(name: 'current_balance') double? get currentBalance;
+ int get id;@JsonKey(name: 'name') String get accountName;@JsonKey(name: 'account_type', fromJson: AccountType.fromJson, toJson: AccountType.toJson) AccountType get accountType;@JsonKey(name: 'account_number') String? get accountNumber;@JsonKey(name: 'description') String? get description;@JsonKey(name: 'is_active') bool get isActive;@JsonKey(name: 'is_default') bool get isDefault;@JsonKey(name: 'created_at') String get createdAt;@JsonKey(name: 'current_balance') double? get currentBalance;
 /// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,21 @@ $AccountModelCopyWith<AccountModel> get copyWith => _$AccountModelCopyWithImpl<A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountModel&&(identical(other.id, id) || other.id == id)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.currentBalance, currentBalance) || other.currentBalance == currentBalance));
+  final _this = this as AccountModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.accountName, _this.accountName) || other.accountName == _this.accountName)&&(identical(other.accountType, _this.accountType) || other.accountType == _this.accountType)&&(identical(other.accountNumber, _this.accountNumber) || other.accountNumber == _this.accountNumber)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive)&&(identical(other.isDefault, _this.isDefault) || other.isDefault == _this.isDefault)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.currentBalance, _this.currentBalance) || other.currentBalance == _this.currentBalance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,accountName,accountType,accountNumber,description,isActive,isDefault,createdAt,currentBalance);
+int get hashCode {
+  final _this = this as AccountModel;
+  return Object.hash(runtimeType,_this.id,_this.accountName,_this.accountType,_this.accountNumber,_this.description,_this.isActive,_this.isDefault,_this.createdAt,_this.currentBalance);
+}
 
 @override
 String toString() {
-  return 'AccountModel(id: $id, accountName: $accountName, accountType: $accountType, accountNumber: $accountNumber, description: $description, isActive: $isActive, isDefault: $isDefault, createdAt: $createdAt, currentBalance: $currentBalance)';
+  final _this = this as AccountModel;
+  return 'AccountModel(id: ${_this.id}, accountName: ${_this.accountName}, accountType: ${_this.accountType}, accountNumber: ${_this.accountNumber}, description: ${_this.description}, isActive: ${_this.isActive}, isDefault: ${_this.isDefault}, createdAt: ${_this.createdAt}, currentBalance: ${_this.currentBalance})';
 }
 
 
@@ -67,7 +72,7 @@ class _$AccountModelCopyWithImpl<$Res>
 /// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? accountName = null,Object? accountType = null,Object? accountNumber = freezed,Object? description = freezed,Object? isActive = null,Object? isDefault = null,Object? createdAt = null,Object? currentBalance = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AccountModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,accountName: null == accountName ? _self.accountName : accountName // ignore: cast_nullable_to_non_nullable
 as String,accountType: null == accountType ? _self.accountType : accountType // ignore: cast_nullable_to_non_nullable
@@ -229,7 +234,6 @@ class _AccountModel implements AccountModel {
 @override@JsonKey(name: 'is_active') final  bool isActive;
 @override@JsonKey(name: 'is_default') final  bool isDefault;
 @override@JsonKey(name: 'created_at') final  String createdAt;
-// Present only in the accounts-with-amounts (summary) response
 @override@JsonKey(name: 'current_balance') final  double? currentBalance;
 
 /// Create a copy of AccountModel
@@ -245,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountModel&&(identical(other.id, id) || other.id == id)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.currentBalance, currentBalance) || other.currentBalance == currentBalance));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountModel&&(identical(other.id, id) || other.id == id)&&(identical(other.accountName, accountName) || other.accountName == accountName)&&(identical(other.accountType, accountType) || other.accountType == accountType)&&(identical(other.accountNumber, accountNumber) || other.accountNumber == accountNumber)&&(identical(other.description, description) || other.description == description)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isDefault, isDefault) || other.isDefault == isDefault)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.currentBalance, currentBalance) || other.currentBalance == currentBalance));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,accountName,accountType,accountNumber,description,isActive,isDefault,createdAt,currentBalance);
+int get hashCode {
+    return Object.hash(runtimeType,id,accountName,accountType,accountNumber,description,isActive,isDefault,createdAt,currentBalance);
+}
 
 @override
 String toString() {
-  return 'AccountModel(id: $id, accountName: $accountName, accountType: $accountType, accountNumber: $accountNumber, description: $description, isActive: $isActive, isDefault: $isDefault, createdAt: $createdAt, currentBalance: $currentBalance)';
+    return 'AccountModel(id: $id, accountName: $accountName, accountType: $accountType, accountNumber: $accountNumber, description: $description, isActive: $isActive, isDefault: $isDefault, createdAt: $createdAt, currentBalance: $currentBalance)';
 }
 
 

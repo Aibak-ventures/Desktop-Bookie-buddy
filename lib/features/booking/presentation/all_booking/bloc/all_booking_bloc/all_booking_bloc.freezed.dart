@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'all_booking_bloc.dart';
@@ -9,6 +9,7 @@ part of 'all_booking_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$AllBookingEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllBookingEvent()';
+    return 'AllBookingEvent()';
 }
 
 
@@ -224,16 +225,18 @@ _$LoadBookingsCopyWith<_LoadBookings> get copyWith => __$LoadBookingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadBookings&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadBookings&&(identical(other.status, status) || other.status == status)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,startDate,endDate,searchQuery,purchaseMode);
+int get hashCode {
+    return Object.hash(runtimeType,status,startDate,endDate,searchQuery,purchaseMode);
+}
 
 @override
 String toString() {
-  return 'AllBookingEvent.loadBookings(status: $status, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, purchaseMode: $purchaseMode)';
+    return 'AllBookingEvent.loadBookings(status: $status, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, purchaseMode: $purchaseMode)';
 }
 
 
@@ -289,7 +292,7 @@ class _LoadNextPageBookings implements AllBookingEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageBookings);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageBookings);
 }
 
 
@@ -298,7 +301,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllBookingEvent.loadNextPageBookings()';
+    return 'AllBookingEvent.loadNextPageBookings()';
 }
 
 
@@ -328,16 +331,18 @@ _$UpdateBookingCopyWith<_UpdateBooking> get copyWith => __$UpdateBookingCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBooking&&(identical(other.booking, booking) || other.booking == booking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBooking&&(identical(other.booking, booking) || other.booking == booking)&&(identical(other.shouldRefresh, shouldRefresh) || other.shouldRefresh == shouldRefresh)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,booking,shouldRefresh,isDeleted);
+int get hashCode {
+    return Object.hash(runtimeType,booking,shouldRefresh,isDeleted);
+}
 
 @override
 String toString() {
-  return 'AllBookingEvent.updateBooking(booking: $booking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
+    return 'AllBookingEvent.updateBooking(booking: $booking, shouldRefresh: $shouldRefresh, isDeleted: $isDeleted)';
 }
 
 
@@ -409,16 +414,18 @@ _$UpdateDeliveryStatusCopyWith<_UpdateDeliveryStatus> get copyWith => __$UpdateD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,deliveryStatus);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,deliveryStatus);
+}
 
 @override
 String toString() {
-  return 'AllBookingEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
+    return 'AllBookingEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
 }
 
 
@@ -476,16 +483,18 @@ _$DeleteBookingCopyWith<_DeleteBooking> get copyWith => __$DeleteBookingCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId);
+}
 
 @override
 String toString() {
-  return 'AllBookingEvent.deleteBooking(bookingId: $bookingId)';
+    return 'AllBookingEvent.deleteBooking(bookingId: $bookingId)';
 }
 
 
@@ -543,16 +552,18 @@ _$MarkAsCompletedCopyWith<_MarkAsCompleted> get copyWith => __$MarkAsCompletedCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkAsCompleted&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkAsCompleted&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,currentStatus);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,currentStatus);
+}
 
 @override
 String toString() {
-  return 'AllBookingEvent.markAsCompleted(bookingId: $bookingId, currentStatus: $currentStatus)';
+    return 'AllBookingEvent.markAsCompleted(bookingId: $bookingId, currentStatus: $currentStatus)';
 }
 
 
@@ -600,7 +611,7 @@ mixin _$AllBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is AllBookingState);
 }
 
 
@@ -609,7 +620,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllBookingState()';
+    return 'AllBookingState()';
 }
 
 
@@ -783,7 +794,7 @@ class _Initial implements AllBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -792,7 +803,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllBookingState.initial()';
+    return 'AllBookingState.initial()';
 }
 
 
@@ -815,7 +826,7 @@ class _Loading implements AllBookingState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -824,7 +835,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'AllBookingState.loading()';
+    return 'AllBookingState.loading()';
 }
 
 
@@ -837,7 +848,7 @@ String toString() {
 
 
 class _Loaded implements AllBookingState {
-  const _Loaded({required final  List<DesktopBookingItemEntity> bookings, this.nextPageUrl, this.isPaginating = false, this.startDate, this.endDate, this.searchQuery, this.status, this.purchaseMode, this.statusCounts, this.actionError}): _bookings = bookings;
+  const _Loaded({required  List<DesktopBookingItemEntity> bookings, this.nextPageUrl, this.isPaginating = false, this.startDate, this.endDate, this.searchQuery, this.status, this.purchaseMode, this.statusCounts, this.actionError}): _bookings = bookings;
   
 
  final  List<DesktopBookingItemEntity> _bookings;
@@ -867,16 +878,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._bookings, _bookings)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.status, status) || other.status == status)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.statusCounts, statusCounts) || other.statusCounts == statusCounts)&&(identical(other.actionError, actionError) || other.actionError == actionError));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.bookings, _bookings)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.status, status) || other.status == status)&&(identical(other.purchaseMode, purchaseMode) || other.purchaseMode == purchaseMode)&&(identical(other.statusCounts, statusCounts) || other.statusCounts == statusCounts)&&(identical(other.actionError, actionError) || other.actionError == actionError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_bookings),nextPageUrl,isPaginating,startDate,endDate,searchQuery,status,purchaseMode,statusCounts,actionError);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_bookings),nextPageUrl,isPaginating,startDate,endDate,searchQuery,status,purchaseMode,statusCounts,actionError);
+}
 
 @override
 String toString() {
-  return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, purchaseMode: $purchaseMode, statusCounts: $statusCounts, actionError: $actionError)';
+    return 'AllBookingState.loaded(bookings: $bookings, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating, startDate: $startDate, endDate: $endDate, searchQuery: $searchQuery, status: $status, purchaseMode: $purchaseMode, statusCounts: $statusCounts, actionError: $actionError)';
 }
 
 
@@ -954,16 +967,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'AllBookingState.error(error: $error)';
+    return 'AllBookingState.error(error: $error)';
 }
 
 

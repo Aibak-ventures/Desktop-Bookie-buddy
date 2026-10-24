@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'select_product_bloc.dart';
@@ -9,6 +9,7 @@ part of 'select_product_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$SelectProductEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectProductEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectProductEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SelectProductEvent()';
+    return 'SelectProductEvent()';
 }
 
 
@@ -193,7 +194,7 @@ return loadNextSearchResults();case _:
 
 
 class _LoadProducts implements SelectProductEvent {
-  const _LoadProducts({this.serviceId, required this.pickupDate, required this.returnDate, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false, this.bookingId, final  List<int>? variantIds}): _variantIds = variantIds;
+  const _LoadProducts({this.serviceId, required this.pickupDate, required this.returnDate, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false, this.bookingId,  List<int>? variantIds}): _variantIds = variantIds;
   
 
  final  int? serviceId;
@@ -204,9 +205,7 @@ class _LoadProducts implements SelectProductEvent {
 @JsonKey() final  bool useAvailableProductsApi;
 @JsonKey() final  bool isSales;
  final  int? bookingId;
-// For edit mode - to check availability excluding current booking
  final  List<int>? _variantIds;
-// For edit mode - to check availability excluding current booking
  List<int>? get variantIds {
   final value = _variantIds;
   if (value == null) return null;
@@ -226,16 +225,18 @@ _$LoadProductsCopyWith<_LoadProducts> get copyWith => __$LoadProductsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other._variantIds, _variantIds));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other.variantIds, _variantIds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId,pickupDate,returnDate,pickupTime,returnTime,useAvailableProductsApi,isSales,bookingId,const DeepCollectionEquality().hash(_variantIds));
+int get hashCode {
+    return Object.hash(runtimeType,serviceId,pickupDate,returnDate,pickupTime,returnTime,useAvailableProductsApi,isSales,bookingId,const DeepCollectionEquality().hash(_variantIds));
+}
 
 @override
 String toString() {
-  return 'SelectProductEvent.loadProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
+    return 'SelectProductEvent.loadProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
 }
 
 
@@ -295,7 +296,7 @@ class _LoadNextPageProducts implements SelectProductEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageProducts);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextPageProducts);
 }
 
 
@@ -304,7 +305,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SelectProductEvent.loadNextPageProducts()';
+    return 'SelectProductEvent.loadNextPageProducts()';
 }
 
 
@@ -317,7 +318,7 @@ String toString() {
 
 
 class _SearchProducts implements SelectProductEvent {
-  const _SearchProducts({this.serviceId, required this.pickupDate, required this.returnDate, this.query, this.type = 'name', this.startPrice, this.endPrice, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false, this.bookingId, final  List<int>? variantIds}): _variantIds = variantIds;
+  const _SearchProducts({this.serviceId, required this.pickupDate, required this.returnDate, this.query, this.type = 'name', this.startPrice, this.endPrice, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false, this.bookingId,  List<int>? variantIds}): _variantIds = variantIds;
   
 
  final  int? serviceId;
@@ -332,9 +333,7 @@ class _SearchProducts implements SelectProductEvent {
 @JsonKey() final  bool useAvailableProductsApi;
 @JsonKey() final  bool isSales;
  final  int? bookingId;
-// For edit mode
  final  List<int>? _variantIds;
-// For edit mode
  List<int>? get variantIds {
   final value = _variantIds;
   if (value == null) return null;
@@ -354,16 +353,18 @@ _$SearchProductsCopyWith<_SearchProducts> get copyWith => __$SearchProductsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.query, query) || other.query == query)&&(identical(other.type, type) || other.type == type)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other._variantIds, _variantIds));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchProducts&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.query, query) || other.query == query)&&(identical(other.type, type) || other.type == type)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales)&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other.variantIds, _variantIds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,serviceId,pickupDate,returnDate,query,type,startPrice,endPrice,pickupTime,returnTime,useAvailableProductsApi,isSales,bookingId,const DeepCollectionEquality().hash(_variantIds));
+int get hashCode {
+    return Object.hash(runtimeType,serviceId,pickupDate,returnDate,query,type,startPrice,endPrice,pickupTime,returnTime,useAvailableProductsApi,isSales,bookingId,const DeepCollectionEquality().hash(_variantIds));
+}
 
 @override
 String toString() {
-  return 'SelectProductEvent.searchProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
+    return 'SelectProductEvent.searchProducts(serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, query: $query, type: $type, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales, bookingId: $bookingId, variantIds: $variantIds)';
 }
 
 
@@ -427,7 +428,7 @@ class _LoadNextSearchResults implements SelectProductEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextSearchResults);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextSearchResults);
 }
 
 
@@ -436,7 +437,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SelectProductEvent.loadNextSearchResults()';
+    return 'SelectProductEvent.loadNextSearchResults()';
 }
 
 
@@ -454,7 +455,7 @@ mixin _$SelectProductState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectProductState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectProductState);
 }
 
 
@@ -463,7 +464,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SelectProductState()';
+    return 'SelectProductState()';
 }
 
 
@@ -631,7 +632,7 @@ class _Loading implements SelectProductState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -640,7 +641,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SelectProductState.loading()';
+    return 'SelectProductState.loading()';
 }
 
 
@@ -653,7 +654,7 @@ String toString() {
 
 
 class _Loaded implements SelectProductState {
-  const _Loaded({required final  List<ProductEntity> products, required this.nextPageUrl, this.serviceId, required this.pickupDate, required this.returnDate, this.isPaginating = false, this.isSearching = false, this.searchQuery, this.searchType, this.startPrice, this.endPrice, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false}): _products = products;
+  const _Loaded({required  List<ProductEntity> products, required this.nextPageUrl, this.serviceId, required this.pickupDate, required this.returnDate, this.isPaginating = false, this.isSearching = false, this.searchQuery, this.searchType, this.startPrice, this.endPrice, this.pickupTime, this.returnTime, this.useAvailableProductsApi = true, this.isSales = false}): _products = products;
   
 
  final  List<ProductEntity> _products;
@@ -688,16 +689,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._products, _products)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.searchType, searchType) || other.searchType == searchType)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.serviceId, serviceId) || other.serviceId == serviceId)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating)&&(identical(other.isSearching, isSearching) || other.isSearching == isSearching)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.searchType, searchType) || other.searchType == searchType)&&(identical(other.startPrice, startPrice) || other.startPrice == startPrice)&&(identical(other.endPrice, endPrice) || other.endPrice == endPrice)&&(identical(other.pickupTime, pickupTime) || other.pickupTime == pickupTime)&&(identical(other.returnTime, returnTime) || other.returnTime == returnTime)&&(identical(other.useAvailableProductsApi, useAvailableProductsApi) || other.useAvailableProductsApi == useAvailableProductsApi)&&(identical(other.isSales, isSales) || other.isSales == isSales));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),nextPageUrl,serviceId,pickupDate,returnDate,isPaginating,isSearching,searchQuery,searchType,startPrice,endPrice,pickupTime,returnTime,useAvailableProductsApi,isSales);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_products),nextPageUrl,serviceId,pickupDate,returnDate,isPaginating,isSearching,searchQuery,searchType,startPrice,endPrice,pickupTime,returnTime,useAvailableProductsApi,isSales);
+}
 
 @override
 String toString() {
-  return 'SelectProductState.loaded(products: $products, nextPageUrl: $nextPageUrl, serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, isPaginating: $isPaginating, isSearching: $isSearching, searchQuery: $searchQuery, searchType: $searchType, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales)';
+    return 'SelectProductState.loaded(products: $products, nextPageUrl: $nextPageUrl, serviceId: $serviceId, pickupDate: $pickupDate, returnDate: $returnDate, isPaginating: $isPaginating, isSearching: $isSearching, searchQuery: $searchQuery, searchType: $searchType, startPrice: $startPrice, endPrice: $endPrice, pickupTime: $pickupTime, returnTime: $returnTime, useAvailableProductsApi: $useAvailableProductsApi, isSales: $isSales)';
 }
 
 
@@ -768,16 +771,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'SelectProductState.error(error: $error)';
+    return 'SelectProductState.error(error: $error)';
 }
 
 

@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/app/my_app.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void CustomSnackBar({
   required String message,

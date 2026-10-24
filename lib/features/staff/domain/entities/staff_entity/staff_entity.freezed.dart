@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'staff_entity.dart';
@@ -9,6 +9,7 @@ part of 'staff_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StaffEntityCopyWith<StaffEntity> get copyWith => _$StaffEntityCopyWithImpl<Staf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber));
+  final _this = this as StaffEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.phoneNumber, _this.phoneNumber) || other.phoneNumber == _this.phoneNumber));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phoneNumber);
+int get hashCode {
+  final _this = this as StaffEntity;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.phoneNumber);
+}
 
 @override
 String toString() {
-  return 'StaffEntity(id: $id, name: $name, phoneNumber: $phoneNumber)';
+  final _this = this as StaffEntity;
+  return 'StaffEntity(id: ${_this.id}, name: ${_this.name}, phoneNumber: ${_this.phoneNumber})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StaffEntityCopyWithImpl<$Res>
 /// Create a copy of StaffEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? phoneNumber = null,}) {
-  return _then(_self.copyWith(
+  return _then(StaffEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,phoneNumber: null == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$StaffEntityCopyWith<_StaffEntity> get copyWith => __$StaffEntityCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phoneNumber);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,phoneNumber);
+}
 
 @override
 String toString() {
-  return 'StaffEntity(id: $id, name: $name, phoneNumber: $phoneNumber)';
+    return 'StaffEntity(id: $id, name: $name, phoneNumber: $phoneNumber)';
 }
 
 

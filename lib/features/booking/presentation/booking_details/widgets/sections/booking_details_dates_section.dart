@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/booking_details_entity/booking_details_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Dates & time section for [BookingDetailsDrawer].
 class BookingDetailsDatesSection extends StatelessWidget {

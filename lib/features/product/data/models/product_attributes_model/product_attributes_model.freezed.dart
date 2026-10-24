@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_attributes_model.dart';
@@ -9,6 +9,7 @@ part of 'product_attributes_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ProductAttributesModelCopyWith<ProductAttributesModel> get copyWith => _$Produc
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductAttributesModel&&(identical(other.pollutionExpiryDate, pollutionExpiryDate) || other.pollutionExpiryDate == pollutionExpiryDate)&&(identical(other.insuranceExpiryDate, insuranceExpiryDate) || other.insuranceExpiryDate == insuranceExpiryDate)&&(identical(other.fitnessExpiryDate, fitnessExpiryDate) || other.fitnessExpiryDate == fitnessExpiryDate)&&(identical(other.permitDate, permitDate) || other.permitDate == permitDate)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber));
+  final _this = this as ProductAttributesModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductAttributesModel&&(identical(other.pollutionExpiryDate, _this.pollutionExpiryDate) || other.pollutionExpiryDate == _this.pollutionExpiryDate)&&(identical(other.insuranceExpiryDate, _this.insuranceExpiryDate) || other.insuranceExpiryDate == _this.insuranceExpiryDate)&&(identical(other.fitnessExpiryDate, _this.fitnessExpiryDate) || other.fitnessExpiryDate == _this.fitnessExpiryDate)&&(identical(other.permitDate, _this.permitDate) || other.permitDate == _this.permitDate)&&(identical(other.registrationNumber, _this.registrationNumber) || other.registrationNumber == _this.registrationNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,pollutionExpiryDate,insuranceExpiryDate,fitnessExpiryDate,permitDate,registrationNumber);
+int get hashCode {
+  final _this = this as ProductAttributesModel;
+  return Object.hash(runtimeType,_this.pollutionExpiryDate,_this.insuranceExpiryDate,_this.fitnessExpiryDate,_this.permitDate,_this.registrationNumber);
+}
 
 @override
 String toString() {
-  return 'ProductAttributesModel(pollutionExpiryDate: $pollutionExpiryDate, insuranceExpiryDate: $insuranceExpiryDate, fitnessExpiryDate: $fitnessExpiryDate, permitDate: $permitDate, registrationNumber: $registrationNumber)';
+  final _this = this as ProductAttributesModel;
+  return 'ProductAttributesModel(pollutionExpiryDate: ${_this.pollutionExpiryDate}, insuranceExpiryDate: ${_this.insuranceExpiryDate}, fitnessExpiryDate: ${_this.fitnessExpiryDate}, permitDate: ${_this.permitDate}, registrationNumber: ${_this.registrationNumber})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ProductAttributesModelCopyWithImpl<$Res>
 /// Create a copy of ProductAttributesModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? pollutionExpiryDate = freezed,Object? insuranceExpiryDate = freezed,Object? fitnessExpiryDate = freezed,Object? permitDate = freezed,Object? registrationNumber = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ProductAttributesModel(
 pollutionExpiryDate: freezed == pollutionExpiryDate ? _self.pollutionExpiryDate : pollutionExpiryDate // ignore: cast_nullable_to_non_nullable
 as String?,insuranceExpiryDate: freezed == insuranceExpiryDate ? _self.insuranceExpiryDate : insuranceExpiryDate // ignore: cast_nullable_to_non_nullable
 as String?,fitnessExpiryDate: freezed == fitnessExpiryDate ? _self.fitnessExpiryDate : fitnessExpiryDate // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductAttributesModel&&(identical(other.pollutionExpiryDate, pollutionExpiryDate) || other.pollutionExpiryDate == pollutionExpiryDate)&&(identical(other.insuranceExpiryDate, insuranceExpiryDate) || other.insuranceExpiryDate == insuranceExpiryDate)&&(identical(other.fitnessExpiryDate, fitnessExpiryDate) || other.fitnessExpiryDate == fitnessExpiryDate)&&(identical(other.permitDate, permitDate) || other.permitDate == permitDate)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductAttributesModel&&(identical(other.pollutionExpiryDate, pollutionExpiryDate) || other.pollutionExpiryDate == pollutionExpiryDate)&&(identical(other.insuranceExpiryDate, insuranceExpiryDate) || other.insuranceExpiryDate == insuranceExpiryDate)&&(identical(other.fitnessExpiryDate, fitnessExpiryDate) || other.fitnessExpiryDate == fitnessExpiryDate)&&(identical(other.permitDate, permitDate) || other.permitDate == permitDate)&&(identical(other.registrationNumber, registrationNumber) || other.registrationNumber == registrationNumber));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,pollutionExpiryDate,insuranceExpiryDate,fitnessExpiryDate,permitDate,registrationNumber);
+int get hashCode {
+    return Object.hash(runtimeType,pollutionExpiryDate,insuranceExpiryDate,fitnessExpiryDate,permitDate,registrationNumber);
+}
 
 @override
 String toString() {
-  return 'ProductAttributesModel(pollutionExpiryDate: $pollutionExpiryDate, insuranceExpiryDate: $insuranceExpiryDate, fitnessExpiryDate: $fitnessExpiryDate, permitDate: $permitDate, registrationNumber: $registrationNumber)';
+    return 'ProductAttributesModel(pollutionExpiryDate: $pollutionExpiryDate, insuranceExpiryDate: $insuranceExpiryDate, fitnessExpiryDate: $fitnessExpiryDate, permitDate: $permitDate, registrationNumber: $registrationNumber)';
 }
 
 

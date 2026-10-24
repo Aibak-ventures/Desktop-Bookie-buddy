@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:bookie_buddy_shared/core/core/common/utils/string_date_extensions.dart';
 import 'package:bookie_buddy_shared/ui/utils/extensions/string_date_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 export 'package:bookie_buddy_shared/core/utils/extensions/string_extensions.dart';
@@ -44,21 +44,18 @@ extension StringXDateFormatWeb on String {
   String formatToUiTime({bool is24Hour = false}) {
     try {
       // Try format: dd-MM-yyyy hh:mm a (12-hour with AM/PM)
-      return DateFormat(
-        is24Hour ? 'HH:mm' : 'hh:mm a',
-      ).format(DateFormat('dd-MM-yyyy hh:mm a').parse(this));
+      return DateFormat(is24Hour ? 'HH:mm' : 'hh:mm a')
+          .format(DateFormat('dd-MM-yyyy hh:mm a').parse(this));
     } catch (_) {
       try {
         // Try format: dd-MM-yyyy HH:mm:ss (24-hour with seconds)
-        return DateFormat(
-          is24Hour ? 'HH:mm' : 'hh:mm a',
-        ).format(DateFormat('dd-MM-yyyy HH:mm:ss').parse(this));
+        return DateFormat(is24Hour ? 'HH:mm' : 'hh:mm a')
+            .format(DateFormat('dd-MM-yyyy HH:mm:ss').parse(this));
       } catch (_) {
         try {
           // Try format: yyyy-MM-dd HH:mm:ss (if your backend ever sends this)
-          return DateFormat(
-            is24Hour ? 'HH:mm' : 'hh:mm a',
-          ).format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(this));
+          return DateFormat(is24Hour ? 'HH:mm' : 'hh:mm a')
+              .format(DateFormat('yyyy-MM-dd HH:mm:ss').parse(this));
         } catch (e) {
           log('Failed to parse time: $this, error: $e');
           // Fallback
@@ -72,9 +69,8 @@ extension StringXDateFormatWeb on String {
   /// Formats to full Date + Time if needed
   String formatToUiDateTime({bool is24Hour = true}) {
     final dateTime = DateTime.tryParse(this) ?? parseToDateTime();
-    return DateFormat(
-      'dd-MM-yyyy ${is24Hour ? 'HH:mm' : 'hh:mm a'}',
-    ).format(dateTime);
+    return DateFormat('dd-MM-yyyy ${is24Hour ? 'HH:mm' : 'hh:mm a'}')
+        .format(dateTime);
   }
 
   // Optional: Smart heading like Today, Yesterday, or Full Date
@@ -98,9 +94,9 @@ extension StringXDateFormatWeb on String {
       final dateTime = parseToDateTime();
       final today = DateTime.now();
       final timeFormat = is24Hour ? 'HH:mm' : 'h:mma';
-      final formattedTime = DateFormat(
-        timeFormat,
-      ).format(dateTime).toLowerCase();
+      final formattedTime = DateFormat(timeFormat)
+          .format(dateTime)
+          .toLowerCase();
 
       if (DateUtils.isSameDay(dateTime, today)) {
         return 'Today, $formattedTime';

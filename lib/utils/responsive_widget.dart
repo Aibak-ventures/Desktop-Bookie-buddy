@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/responsive_helper.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ResponsiveWidget extends StatelessWidget {
   final Widget mobile;

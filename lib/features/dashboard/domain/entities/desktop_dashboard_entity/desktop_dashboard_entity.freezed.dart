@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'desktop_dashboard_entity.dart';
@@ -9,6 +9,7 @@ part of 'desktop_dashboard_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $DesktopDashboardEntityCopyWith<DesktopDashboardEntity> get copyWith => _$Deskto
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardEntity&&const DeepCollectionEquality().equals(other.upcoming, upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, ongoingBookings)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+  final _this = this as DesktopDashboardEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopDashboardEntity&&const DeepCollectionEquality().equals(other.upcoming, _this.upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, _this.ongoingBookings)&&(identical(other.carouselData, _this.carouselData) || other.carouselData == _this.carouselData)&&(identical(other.nextPageUrl, _this.nextPageUrl) || other.nextPageUrl == _this.nextPageUrl)&&(identical(other.currentPage, _this.currentPage) || other.currentPage == _this.currentPage)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(upcoming),const DeepCollectionEquality().hash(ongoingBookings),carouselData,nextPageUrl,currentPage,totalPages);
+int get hashCode {
+  final _this = this as DesktopDashboardEntity;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.upcoming),const DeepCollectionEquality().hash(_this.ongoingBookings),_this.carouselData,_this.nextPageUrl,_this.currentPage,_this.totalPages);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardEntity(upcoming: $upcoming, ongoingBookings: $ongoingBookings, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages)';
+  final _this = this as DesktopDashboardEntity;
+  return 'DesktopDashboardEntity(upcoming: ${_this.upcoming}, ongoingBookings: ${_this.ongoingBookings}, carouselData: ${_this.carouselData}, nextPageUrl: ${_this.nextPageUrl}, currentPage: ${_this.currentPage}, totalPages: ${_this.totalPages})';
 }
 
 
@@ -63,7 +69,7 @@ class _$DesktopDashboardEntityCopyWithImpl<$Res>
 /// Create a copy of DesktopDashboardEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? upcoming = null,Object? ongoingBookings = null,Object? carouselData = null,Object? nextPageUrl = freezed,Object? currentPage = null,Object? totalPages = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopDashboardEntity(
 upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
 as List<BookingEntity>,ongoingBookings: null == ongoingBookings ? _self.ongoingBookings : ongoingBookings // ignore: cast_nullable_to_non_nullable
 as List<BookingEntity>,carouselData: null == carouselData ? _self.carouselData : carouselData // ignore: cast_nullable_to_non_nullable
@@ -220,7 +226,7 @@ return $default(_that.upcoming,_that.ongoingBookings,_that.carouselData,_that.ne
 
 
 class _DesktopDashboardEntity implements DesktopDashboardEntity {
-  const _DesktopDashboardEntity({required final  List<BookingEntity> upcoming, required final  List<BookingEntity> ongoingBookings, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages}): _upcoming = upcoming,_ongoingBookings = ongoingBookings;
+  const _DesktopDashboardEntity({required  List<BookingEntity> upcoming, required  List<BookingEntity> ongoingBookings, required this.carouselData, required this.nextPageUrl, required this.currentPage, required this.totalPages}): _upcoming = upcoming,_ongoingBookings = ongoingBookings;
   
 
  final  List<BookingEntity> _upcoming;
@@ -252,16 +258,18 @@ _$DesktopDashboardEntityCopyWith<_DesktopDashboardEntity> get copyWith => __$Des
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardEntity&&const DeepCollectionEquality().equals(other._upcoming, _upcoming)&&const DeepCollectionEquality().equals(other._ongoingBookings, _ongoingBookings)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopDashboardEntity&&const DeepCollectionEquality().equals(other.upcoming, _upcoming)&&const DeepCollectionEquality().equals(other.ongoingBookings, _ongoingBookings)&&(identical(other.carouselData, carouselData) || other.carouselData == carouselData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.currentPage, currentPage) || other.currentPage == currentPage)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcoming),const DeepCollectionEquality().hash(_ongoingBookings),carouselData,nextPageUrl,currentPage,totalPages);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_upcoming),const DeepCollectionEquality().hash(_ongoingBookings),carouselData,nextPageUrl,currentPage,totalPages);
+}
 
 @override
 String toString() {
-  return 'DesktopDashboardEntity(upcoming: $upcoming, ongoingBookings: $ongoingBookings, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages)';
+    return 'DesktopDashboardEntity(upcoming: $upcoming, ongoingBookings: $ongoingBookings, carouselData: $carouselData, nextPageUrl: $nextPageUrl, currentPage: $currentPage, totalPages: $totalPages)';
 }
 
 

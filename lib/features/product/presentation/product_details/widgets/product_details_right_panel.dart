@@ -5,8 +5,8 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/bo
 import 'package:bookie_buddy_web/features/product/domain/entities/product_entity/product_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/entities/product_monthly_data_entity/product_monthly_data_entity.dart';
 import 'package:bookie_buddy_web/features/product/presentation/product_details/widgets/monthly_bar_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Right panel for [ProductDetailsScreen]: monthly bar chart + tabbed bookings.
 class ProductDetailsRightPanel extends StatelessWidget {

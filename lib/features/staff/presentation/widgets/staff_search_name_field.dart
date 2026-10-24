@@ -3,10 +3,10 @@ import 'package:bookie_buddy_web/features/staff/domain/entities/staff_entity/sta
 import 'package:bookie_buddy_web/features/staff/presentation/bloc/staff_search_cubit/staff_search_cubit.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StaffSearchNameField extends StatefulWidget {
   const StaffSearchNameField({
@@ -133,7 +133,6 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
             focusNode: widget.focusNode,
             suggestionsController: _suggestionsController,
             debounceDuration: const Duration(milliseconds: 150),
-            hideWithKeyboard: false,
             hideOnUnfocus: true,
             hideOnSelect: true,
             suggestionsCallback: (search) {
@@ -242,10 +241,10 @@ class _StaffSearchNameFieldState extends State<StaffSearchNameField> {
             ),
             itemBuilder: (context, staff) {
               final index = _currentSuggestions.indexOf(staff);
-              return Container(
+              return Material(
                 color: _highlightedIndex == index
                     ? AppColors.purple.withValues(alpha: 0.1)
-                    : null,
+                    : Colors.transparent,
                 child: ListTile(
                   dense: true,
                   title: Text(staff.name, style: const TextStyle(fontSize: 14)),

@@ -16,7 +16,7 @@ import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The kind of transaction being added through [showAddPaymentDialog].
 enum PaymentTransactionType {
@@ -28,15 +28,14 @@ enum PaymentTransactionType {
 
 /// Called when the user submits the dialog. Return `null` on success, or an
 /// error message to show and keep the dialog open.
-typedef PaymentDialogSubmitCallback =
-    Future<String?> Function({
-      required int amount,
-      required AccountEntity account,
-      required PaymentTransactionType transactionType,
-      String? reason,
-      String? paymentDate,
-      required bool useSecurityRefund,
-    });
+typedef PaymentDialogSubmitCallback = Future<String?> Function({
+  required int amount,
+  required AccountEntity account,
+  required PaymentTransactionType transactionType,
+  String? reason,
+  String? paymentDate,
+  required bool useSecurityRefund,
+});
 
 /// Generic add-payment / add-refund dialog. Feature-agnostic: the caller
 /// supplies [onSubmit] to actually perform the payment or refund action.

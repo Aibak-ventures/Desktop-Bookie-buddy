@@ -13,8 +13,8 @@ import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/carouse
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_bookings_columns.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_card.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/widgets/dashboard_header.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DashboardScreen extends StatefulWidget {
   final void Function(BookingListFilter statusTab)? onNavigateToBookings;

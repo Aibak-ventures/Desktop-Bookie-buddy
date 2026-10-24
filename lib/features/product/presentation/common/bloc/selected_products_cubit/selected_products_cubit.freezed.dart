@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'selected_products_cubit.dart';
@@ -9,6 +9,7 @@ part of 'selected_products_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SelectedProductsStateCopyWith<SelectedProductsState> get copyWith => _$Selected
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectedProductsState&&const DeepCollectionEquality().equals(other.selectedProductsWithAmount, selectedProductsWithAmount));
+  final _this = this as SelectedProductsState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SelectedProductsState&&const DeepCollectionEquality().equals(other.selectedProductsWithAmount, _this.selectedProductsWithAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(selectedProductsWithAmount));
+int get hashCode {
+  final _this = this as SelectedProductsState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.selectedProductsWithAmount));
+}
 
 @override
 String toString() {
-  return 'SelectedProductsState(selectedProductsWithAmount: $selectedProductsWithAmount)';
+  final _this = this as SelectedProductsState;
+  return 'SelectedProductsState(selectedProductsWithAmount: ${_this.selectedProductsWithAmount})';
 }
 
 
@@ -63,8 +69,8 @@ class _$SelectedProductsStateCopyWithImpl<$Res>
 /// Create a copy of SelectedProductsState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? selectedProductsWithAmount = null,}) {
-  return _then(_self.copyWith(
-selectedProductsWithAmount: null == selectedProductsWithAmount ? _self.selectedProductsWithAmount : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
+  return _then(SelectedProductsState.selected(
+null == selectedProductsWithAmount ? _self.selectedProductsWithAmount : selectedProductsWithAmount // ignore: cast_nullable_to_non_nullable
 as List<ProductSelectedEntity>,
   ));
 }
@@ -206,7 +212,7 @@ return selected(_that.selectedProductsWithAmount);case _:
 
 
 class _Selected implements SelectedProductsState {
-  const _Selected(final  List<ProductSelectedEntity> selectedProductsWithAmount): _selectedProductsWithAmount = selectedProductsWithAmount;
+  const _Selected( List<ProductSelectedEntity> selectedProductsWithAmount): _selectedProductsWithAmount = selectedProductsWithAmount;
   
 
  final  List<ProductSelectedEntity> _selectedProductsWithAmount;
@@ -227,16 +233,18 @@ _$SelectedCopyWith<_Selected> get copyWith => __$SelectedCopyWithImpl<_Selected>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Selected&&const DeepCollectionEquality().equals(other._selectedProductsWithAmount, _selectedProductsWithAmount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Selected&&const DeepCollectionEquality().equals(other.selectedProductsWithAmount, _selectedProductsWithAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_selectedProductsWithAmount));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_selectedProductsWithAmount));
+}
 
 @override
 String toString() {
-  return 'SelectedProductsState.selected(selectedProductsWithAmount: $selectedProductsWithAmount)';
+    return 'SelectedProductsState.selected(selectedProductsWithAmount: $selectedProductsWithAmount)';
 }
 
 

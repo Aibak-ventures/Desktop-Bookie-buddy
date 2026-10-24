@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'desktop_booking_item_entity.dart';
@@ -9,6 +9,7 @@ part of 'desktop_booking_item_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $DesktopBookingItemEntityCopyWith<DesktopBookingItemEntity> get copyWith => _$De
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopBookingItemEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount));
+  final _this = this as DesktopBookingItemEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DesktopBookingItemEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.shopBookingId, _this.shopBookingId) || other.shopBookingId == _this.shopBookingId)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.pickupDate, _this.pickupDate) || other.pickupDate == _this.pickupDate)&&(identical(other.returnDate, _this.returnDate) || other.returnDate == _this.returnDate)&&(identical(other.paymentStatus, _this.paymentStatus) || other.paymentStatus == _this.paymentStatus)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName)&&(identical(other.staffColor, _this.staffColor) || other.staffColor == _this.staffColor)&&(identical(other.deliveryStatus, _this.deliveryStatus) || other.deliveryStatus == _this.deliveryStatus)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.bookedItems, _this.bookedItems) || other.bookedItems == _this.bookedItems)&&(identical(other.advanceAmount, _this.advanceAmount) || other.advanceAmount == _this.advanceAmount)&&(identical(other.remainingAmount, _this.remainingAmount) || other.remainingAmount == _this.remainingAmount)&&(identical(other.totalAmount, _this.totalAmount) || other.totalAmount == _this.totalAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount,totalAmount);
+int get hashCode {
+  final _this = this as DesktopBookingItemEntity;
+  return Object.hash(runtimeType,_this.id,_this.shopBookingId,_this.client,_this.pickupDate,_this.returnDate,_this.paymentStatus,_this.staffName,_this.staffColor,_this.deliveryStatus,_this.createdAt,_this.bookedItems,_this.advanceAmount,_this.remainingAmount,_this.totalAmount);
+}
 
 @override
 String toString() {
-  return 'DesktopBookingItemEntity(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount, totalAmount: $totalAmount)';
+  final _this = this as DesktopBookingItemEntity;
+  return 'DesktopBookingItemEntity(id: ${_this.id}, shopBookingId: ${_this.shopBookingId}, client: ${_this.client}, pickupDate: ${_this.pickupDate}, returnDate: ${_this.returnDate}, paymentStatus: ${_this.paymentStatus}, staffName: ${_this.staffName}, staffColor: ${_this.staffColor}, deliveryStatus: ${_this.deliveryStatus}, createdAt: ${_this.createdAt}, bookedItems: ${_this.bookedItems}, advanceAmount: ${_this.advanceAmount}, remainingAmount: ${_this.remainingAmount}, totalAmount: ${_this.totalAmount})';
 }
 
 
@@ -63,7 +69,7 @@ class _$DesktopBookingItemEntityCopyWithImpl<$Res>
 /// Create a copy of DesktopBookingItemEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? shopBookingId = null,Object? client = null,Object? pickupDate = null,Object? returnDate = null,Object? paymentStatus = null,Object? staffName = freezed,Object? staffColor = freezed,Object? deliveryStatus = freezed,Object? createdAt = null,Object? bookedItems = null,Object? advanceAmount = null,Object? remainingAmount = null,Object? totalAmount = null,}) {
-  return _then(_self.copyWith(
+  return _then(DesktopBookingItemEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,shopBookingId: null == shopBookingId ? _self.shopBookingId : shopBookingId // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ _$DesktopBookingItemEntityCopyWith<_DesktopBookingItemEntity> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopBookingItemEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DesktopBookingItemEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.client, client) || other.client == client)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.staffColor, staffColor) || other.staffColor == staffColor)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.bookedItems, bookedItems) || other.bookedItems == bookedItems)&&(identical(other.advanceAmount, advanceAmount) || other.advanceAmount == advanceAmount)&&(identical(other.remainingAmount, remainingAmount) || other.remainingAmount == remainingAmount)&&(identical(other.totalAmount, totalAmount) || other.totalAmount == totalAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount,totalAmount);
+int get hashCode {
+    return Object.hash(runtimeType,id,shopBookingId,client,pickupDate,returnDate,paymentStatus,staffName,staffColor,deliveryStatus,createdAt,bookedItems,advanceAmount,remainingAmount,totalAmount);
+}
 
 @override
 String toString() {
-  return 'DesktopBookingItemEntity(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount, totalAmount: $totalAmount)';
+    return 'DesktopBookingItemEntity(id: $id, shopBookingId: $shopBookingId, client: $client, pickupDate: $pickupDate, returnDate: $returnDate, paymentStatus: $paymentStatus, staffName: $staffName, staffColor: $staffColor, deliveryStatus: $deliveryStatus, createdAt: $createdAt, bookedItems: $bookedItems, advanceAmount: $advanceAmount, remainingAmount: $remainingAmount, totalAmount: $totalAmount)';
 }
 
 

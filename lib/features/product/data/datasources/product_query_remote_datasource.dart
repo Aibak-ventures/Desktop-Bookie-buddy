@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/core/constants/endpoints/product_endpoints.dart
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProductQueryRemoteDatasource {
   final Dio _dio;

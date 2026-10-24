@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/gender_type_enums.dart';
 import 'package:bookie_buddy_shared/core/features/booking/domain/entities/measurement_value_entity/standard_measurement_fields.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MeasurementFieldFormState {
   final String name;

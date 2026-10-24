@@ -7,7 +7,7 @@ import 'package:bookie_buddy_web/features/printer/domain/entities/quick_print_re
 import 'package:bookie_buddy_web/features/printer/domain/usecases/quick_print_receipt_usecase.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/pages/qz_print_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _logName = 'QuickPrint';
 

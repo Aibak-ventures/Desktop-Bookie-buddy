@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/sales/presentation/edit_sales/widgets/sales_product_table_flex.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Column headers for the selected products table in [EditSalesScreen].
 class SalesFormProductListHeader extends StatelessWidget {

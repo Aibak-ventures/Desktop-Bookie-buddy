@@ -8,8 +8,8 @@ import 'package:bookie_buddy_web/features/printer/domain/entities/printer_device
 import 'package:bookie_buddy_web/features/printer/presentation/print/bloc/qz_printer_cubit/qz_printer_cubit.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/print/widgets/printer_list_card.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Screen that lets the user pick (and print to) a QZ Tray printer.

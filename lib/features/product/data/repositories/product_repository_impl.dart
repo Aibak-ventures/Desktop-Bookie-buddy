@@ -13,7 +13,7 @@ import 'package:bookie_buddy_web/features/product/domain/entities/product_monthl
 import 'package:bookie_buddy_web/features/product/domain/entities/product_request_entity/product_request_entity.dart';
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
 import 'package:bookie_buddy_web/utils/safe_api_call.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProductRepositoryImpl implements IProductRepository {
   final ProductQueryRemoteDatasource _queryDatasource;

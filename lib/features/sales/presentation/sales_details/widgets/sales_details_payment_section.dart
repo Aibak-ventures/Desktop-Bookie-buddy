@@ -3,7 +3,7 @@ import 'package:bookie_buddy_shared/core/features/sales/domain/entities/sale_det
 import 'package:bookie_buddy_web/core/common/widgets/tax_info_button.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Payment details section for [SalesDetailsDrawer].
 class SalesDetailsPaymentSection extends StatelessWidget {

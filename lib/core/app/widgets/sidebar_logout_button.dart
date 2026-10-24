@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Sidebar logout action, shown as an icon-only button when collapsed and
 /// an icon+label button when [expanded].

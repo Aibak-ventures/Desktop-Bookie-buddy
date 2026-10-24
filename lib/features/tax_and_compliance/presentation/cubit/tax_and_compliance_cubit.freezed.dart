@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'tax_and_compliance_cubit.dart';
@@ -9,6 +9,7 @@ part of 'tax_and_compliance_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$TaxAndComplianceState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaxAndComplianceState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is TaxAndComplianceState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TaxAndComplianceState()';
+    return 'TaxAndComplianceState()';
 }
 
 
@@ -197,7 +198,7 @@ class _Loading implements TaxAndComplianceState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'TaxAndComplianceState.loading()';
+    return 'TaxAndComplianceState.loading()';
 }
 
 
@@ -219,7 +220,7 @@ String toString() {
 
 
 class _Loaded implements TaxAndComplianceState {
-  const _Loaded({required final  List<TaxConfigurationEntity> taxConfigurations, this.status = TaxConfigurationActionStatus.idle, this.message}): _taxConfigurations = taxConfigurations;
+  const _Loaded({required  List<TaxConfigurationEntity> taxConfigurations, this.status = TaxConfigurationActionStatus.idle, this.message}): _taxConfigurations = taxConfigurations;
   
 
  final  List<TaxConfigurationEntity> _taxConfigurations;
@@ -242,16 +243,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._taxConfigurations, _taxConfigurations)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.taxConfigurations, _taxConfigurations)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_taxConfigurations),status,message);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_taxConfigurations),status,message);
+}
 
 @override
 String toString() {
-  return 'TaxAndComplianceState.loaded(taxConfigurations: $taxConfigurations, status: $status, message: $message)';
+    return 'TaxAndComplianceState.loaded(taxConfigurations: $taxConfigurations, status: $status, message: $message)';
 }
 
 
@@ -310,16 +313,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'TaxAndComplianceState.error(error: $error)';
+    return 'TaxAndComplianceState.error(error: $error)';
 }
 
 

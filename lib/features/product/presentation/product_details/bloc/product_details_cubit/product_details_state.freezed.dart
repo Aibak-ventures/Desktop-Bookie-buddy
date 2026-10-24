@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_details_state.dart';
@@ -9,6 +9,7 @@ part of 'product_details_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$ProductDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductDetailsState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductDetailsState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductDetailsState()';
+    return 'ProductDetailsState()';
 }
 
 
@@ -203,7 +204,7 @@ class _Initial implements ProductDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductDetailsState.initial()';
+    return 'ProductDetailsState.initial()';
 }
 
 
@@ -235,7 +236,7 @@ class _Loading implements ProductDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -244,7 +245,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProductDetailsState.loading()';
+    return 'ProductDetailsState.loading()';
 }
 
 
@@ -257,7 +258,7 @@ String toString() {
 
 
 class _Loaded implements ProductDetailsState {
-  const _Loaded({required this.product, final  List<BookingEntity> bookings = const [], final  List<ProductMonthlyDataEntity> monthlySummary = const [], this.nextPageUrl, this.isPaginatingBookings = false}): _bookings = bookings,_monthlySummary = monthlySummary;
+  const _Loaded({required this.product,  List<BookingEntity> bookings = const [],  List<ProductMonthlyDataEntity> monthlySummary = const [], this.nextPageUrl, this.isPaginatingBookings = false}): _bookings = bookings,_monthlySummary = monthlySummary;
   
 
  final  ProductEntity product;
@@ -288,16 +289,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.product, product) || other.product == product)&&const DeepCollectionEquality().equals(other._bookings, _bookings)&&const DeepCollectionEquality().equals(other._monthlySummary, _monthlySummary)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginatingBookings, isPaginatingBookings) || other.isPaginatingBookings == isPaginatingBookings));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.product, product) || other.product == product)&&const DeepCollectionEquality().equals(other.bookings, _bookings)&&const DeepCollectionEquality().equals(other.monthlySummary, _monthlySummary)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginatingBookings, isPaginatingBookings) || other.isPaginatingBookings == isPaginatingBookings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,product,const DeepCollectionEquality().hash(_bookings),const DeepCollectionEquality().hash(_monthlySummary),nextPageUrl,isPaginatingBookings);
+int get hashCode {
+    return Object.hash(runtimeType,product,const DeepCollectionEquality().hash(_bookings),const DeepCollectionEquality().hash(_monthlySummary),nextPageUrl,isPaginatingBookings);
+}
 
 @override
 String toString() {
-  return 'ProductDetailsState.loaded(product: $product, bookings: $bookings, monthlySummary: $monthlySummary, nextPageUrl: $nextPageUrl, isPaginatingBookings: $isPaginatingBookings)';
+    return 'ProductDetailsState.loaded(product: $product, bookings: $bookings, monthlySummary: $monthlySummary, nextPageUrl: $nextPageUrl, isPaginatingBookings: $isPaginatingBookings)';
 }
 
 
@@ -367,16 +370,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'ProductDetailsState.error(message: $message)';
+    return 'ProductDetailsState.error(message: $message)';
 }
 
 

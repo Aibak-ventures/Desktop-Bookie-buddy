@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_entity.dart';
@@ -9,6 +9,7 @@ part of 'user_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UserEntityCopyWith<UserEntity> get copyWith => _$UserEntityCopyWithImpl<UserEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+  final _this = this as UserEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.firstName, _this.firstName) || other.firstName == _this.firstName)&&(identical(other.lastName, _this.lastName) || other.lastName == _this.lastName)&&(identical(other.phone, _this.phone) || other.phone == _this.phone)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.block, _this.block) || other.block == _this.block)&&(identical(other.haveMultipleShops, _this.haveMultipleShops) || other.haveMultipleShops == _this.haveMultipleShops)&&(identical(other.isNotificationActive, _this.isNotificationActive) || other.isNotificationActive == _this.isNotificationActive)&&(identical(other.subscription, _this.subscription) || other.subscription == _this.subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, _this.passwordSettings)&&(identical(other.shopSettings, _this.shopSettings) || other.shopSettings == _this.shopSettings)&&(identical(other.shopDetails, _this.shopDetails) || other.shopDetails == _this.shopDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(passwordSettings),shopSettings,shopDetails);
+int get hashCode {
+  final _this = this as UserEntity;
+  return Object.hash(runtimeType,_this.id,_this.firstName,_this.lastName,_this.phone,_this.email,_this.block,_this.haveMultipleShops,_this.isNotificationActive,_this.subscription,const DeepCollectionEquality().hash(_this.passwordSettings),_this.shopSettings,_this.shopDetails);
+}
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+  final _this = this as UserEntity;
+  return 'UserEntity(id: ${_this.id}, firstName: ${_this.firstName}, lastName: ${_this.lastName}, phone: ${_this.phone}, email: ${_this.email}, block: ${_this.block}, haveMultipleShops: ${_this.haveMultipleShops}, isNotificationActive: ${_this.isNotificationActive}, subscription: ${_this.subscription}, passwordSettings: ${_this.passwordSettings}, shopSettings: ${_this.shopSettings}, shopDetails: ${_this.shopDetails})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UserEntityCopyWithImpl<$Res>
 /// Create a copy of UserEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? phone = null,Object? email = null,Object? block = null,Object? haveMultipleShops = null,Object? isNotificationActive = null,Object? subscription = freezed,Object? passwordSettings = null,Object? shopSettings = null,Object? shopDetails = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -247,7 +253,7 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.phone,_that.email,
 
 
 class _UserEntity implements UserEntity {
-  const _UserEntity({required this.id, required this.firstName, required this.lastName, required this.phone, required this.email, required this.block, required this.haveMultipleShops, required this.isNotificationActive, this.subscription, required final  List<UserPasswordSettingsEntity> passwordSettings, required this.shopSettings, required this.shopDetails}): _passwordSettings = passwordSettings;
+  const _UserEntity({required this.id, required this.firstName, required this.lastName, required this.phone, required this.email, required this.block, required this.haveMultipleShops, required this.isNotificationActive, this.subscription, required  List<UserPasswordSettingsEntity> passwordSettings, required this.shopSettings, required this.shopDetails}): _passwordSettings = passwordSettings;
   
 
 @override final  int id;
@@ -279,16 +285,18 @@ _$UserEntityCopyWith<_UserEntity> get copyWith => __$UserEntityCopyWithImpl<_Use
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other._passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.email, email) || other.email == email)&&(identical(other.block, block) || other.block == block)&&(identical(other.haveMultipleShops, haveMultipleShops) || other.haveMultipleShops == haveMultipleShops)&&(identical(other.isNotificationActive, isNotificationActive) || other.isNotificationActive == isNotificationActive)&&(identical(other.subscription, subscription) || other.subscription == subscription)&&const DeepCollectionEquality().equals(other.passwordSettings, _passwordSettings)&&(identical(other.shopSettings, shopSettings) || other.shopSettings == shopSettings)&&(identical(other.shopDetails, shopDetails) || other.shopDetails == shopDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+int get hashCode {
+    return Object.hash(runtimeType,id,firstName,lastName,phone,email,block,haveMultipleShops,isNotificationActive,subscription,const DeepCollectionEquality().hash(_passwordSettings),shopSettings,shopDetails);
+}
 
 @override
 String toString() {
-  return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
+    return 'UserEntity(id: $id, firstName: $firstName, lastName: $lastName, phone: $phone, email: $email, block: $block, haveMultipleShops: $haveMultipleShops, isNotificationActive: $isNotificationActive, subscription: $subscription, passwordSettings: $passwordSettings, shopSettings: $shopSettings, shopDetails: $shopDetails)';
 }
 
 
@@ -381,16 +389,21 @@ $UserSubscriptionEntityCopyWith<UserSubscriptionEntity> get copyWith => _$UserSu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.features, features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, userFeatureDetails));
+  final _this = this as UserSubscriptionEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSubscriptionEntity&&(identical(other.plan, _this.plan) || other.plan == _this.plan)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.expiryDate, _this.expiryDate) || other.expiryDate == _this.expiryDate)&&(identical(other.daysRemaining, _this.daysRemaining) || other.daysRemaining == _this.daysRemaining)&&const DeepCollectionEquality().equals(other.features, _this.features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, _this.userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, _this.userFeatureDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(features),const DeepCollectionEquality().hash(userSpecificFeatures),const DeepCollectionEquality().hash(userFeatureDetails));
+int get hashCode {
+  final _this = this as UserSubscriptionEntity;
+  return Object.hash(runtimeType,_this.plan,_this.status,_this.expiryDate,_this.daysRemaining,const DeepCollectionEquality().hash(_this.features),const DeepCollectionEquality().hash(_this.userSpecificFeatures),const DeepCollectionEquality().hash(_this.userFeatureDetails));
+}
 
 @override
 String toString() {
-  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, features: $features, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
+  final _this = this as UserSubscriptionEntity;
+  return 'UserSubscriptionEntity(plan: ${_this.plan}, status: ${_this.status}, expiryDate: ${_this.expiryDate}, daysRemaining: ${_this.daysRemaining}, features: ${_this.features}, userSpecificFeatures: ${_this.userSpecificFeatures}, userFeatureDetails: ${_this.userFeatureDetails})';
 }
 
 
@@ -419,7 +432,7 @@ class _$UserSubscriptionEntityCopyWithImpl<$Res>
 /// Create a copy of UserSubscriptionEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? plan = null,Object? status = null,Object? expiryDate = null,Object? daysRemaining = null,Object? features = null,Object? userSpecificFeatures = null,Object? userFeatureDetails = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserSubscriptionEntity(
 plan: null == plan ? _self.plan : plan // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as SubscriptionStatus,expiryDate: null == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
@@ -568,7 +581,7 @@ return $default(_that.plan,_that.status,_that.expiryDate,_that.daysRemaining,_th
 
 
 class _UserSubscriptionEntity implements UserSubscriptionEntity {
-  const _UserSubscriptionEntity({required this.plan, required this.status, required this.expiryDate, required this.daysRemaining, required final  Set<AppPremiumFeatures> features, required final  Set<AppPremiumFeatures> userSpecificFeatures, required final  List<UserFeatureDetailsEntity> userFeatureDetails}): _features = features,_userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
+  const _UserSubscriptionEntity({required this.plan, required this.status, required this.expiryDate, required this.daysRemaining, required  Set<AppPremiumFeatures> features, required  Set<AppPremiumFeatures> userSpecificFeatures, required  List<UserFeatureDetailsEntity> userFeatureDetails}): _features = features,_userSpecificFeatures = userSpecificFeatures,_userFeatureDetails = userFeatureDetails;
   
 
 @override final  String plan;
@@ -607,16 +620,18 @@ _$UserSubscriptionEntityCopyWith<_UserSubscriptionEntity> get copyWith => __$Use
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other._features, _features)&&const DeepCollectionEquality().equals(other._userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other._userFeatureDetails, _userFeatureDetails));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSubscriptionEntity&&(identical(other.plan, plan) || other.plan == plan)&&(identical(other.status, status) || other.status == status)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.daysRemaining, daysRemaining) || other.daysRemaining == daysRemaining)&&const DeepCollectionEquality().equals(other.features, _features)&&const DeepCollectionEquality().equals(other.userSpecificFeatures, _userSpecificFeatures)&&const DeepCollectionEquality().equals(other.userFeatureDetails, _userFeatureDetails));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
+int get hashCode {
+    return Object.hash(runtimeType,plan,status,expiryDate,daysRemaining,const DeepCollectionEquality().hash(_features),const DeepCollectionEquality().hash(_userSpecificFeatures),const DeepCollectionEquality().hash(_userFeatureDetails));
+}
 
 @override
 String toString() {
-  return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, features: $features, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
+    return 'UserSubscriptionEntity(plan: $plan, status: $status, expiryDate: $expiryDate, daysRemaining: $daysRemaining, features: $features, userSpecificFeatures: $userSpecificFeatures, userFeatureDetails: $userFeatureDetails)';
 }
 
 
@@ -674,16 +689,21 @@ $UserPasswordSettingsEntityCopyWith<UserPasswordSettingsEntity> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
+  final _this = this as UserPasswordSettingsEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPasswordSettingsEntity&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.description, _this.description) || other.description == _this.description));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,location,role,description);
+int get hashCode {
+  final _this = this as UserPasswordSettingsEntity;
+  return Object.hash(runtimeType,_this.location,_this.role,_this.description);
+}
 
 @override
 String toString() {
-  return 'UserPasswordSettingsEntity(location: $location, role: $role, description: $description)';
+  final _this = this as UserPasswordSettingsEntity;
+  return 'UserPasswordSettingsEntity(location: ${_this.location}, role: ${_this.role}, description: ${_this.description})';
 }
 
 
@@ -712,7 +732,7 @@ class _$UserPasswordSettingsEntityCopyWithImpl<$Res>
 /// Create a copy of UserPasswordSettingsEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? location = freezed,Object? role = null,Object? description = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserPasswordSettingsEntity(
 location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as SecretPasswordLocations?,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as UserPasswordSettingRole,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -874,16 +894,18 @@ _$UserPasswordSettingsEntityCopyWith<_UserPasswordSettingsEntity> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPasswordSettingsEntity&&(identical(other.location, location) || other.location == location)&&(identical(other.role, role) || other.role == role)&&(identical(other.description, description) || other.description == description));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,location,role,description);
+int get hashCode {
+    return Object.hash(runtimeType,location,role,description);
+}
 
 @override
 String toString() {
-  return 'UserPasswordSettingsEntity(location: $location, role: $role, description: $description)';
+    return 'UserPasswordSettingsEntity(location: $location, role: $role, description: $description)';
 }
 
 

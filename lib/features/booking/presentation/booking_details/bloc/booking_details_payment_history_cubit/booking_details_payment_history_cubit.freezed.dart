@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_details_payment_history_cubit.dart';
@@ -9,6 +9,7 @@ part of 'booking_details_payment_history_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$BookingDetailsPaymentHistoryState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsPaymentHistoryState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryState()';
+    return 'BookingDetailsPaymentHistoryState()';
 }
 
 
@@ -203,7 +204,7 @@ class _Collapsed implements BookingDetailsPaymentHistoryState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Collapsed);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Collapsed);
 }
 
 
@@ -212,7 +213,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryState.collapsed()';
+    return 'BookingDetailsPaymentHistoryState.collapsed()';
 }
 
 
@@ -235,7 +236,7 @@ class _Loading implements BookingDetailsPaymentHistoryState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -244,7 +245,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryState.loading()';
+    return 'BookingDetailsPaymentHistoryState.loading()';
 }
 
 
@@ -272,16 +273,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryState.error(error: $error)';
+    return 'BookingDetailsPaymentHistoryState.error(error: $error)';
 }
 
 
@@ -323,7 +326,7 @@ as String,
 
 
 class _Expanded implements BookingDetailsPaymentHistoryState {
-  const _Expanded(final  List<BookingPaymentHistoryEntity> paymentHistory): _paymentHistory = paymentHistory;
+  const _Expanded( List<BookingPaymentHistoryEntity> paymentHistory): _paymentHistory = paymentHistory;
   
 
  final  List<BookingPaymentHistoryEntity> _paymentHistory;
@@ -344,16 +347,18 @@ _$ExpandedCopyWith<_Expanded> get copyWith => __$ExpandedCopyWithImpl<_Expanded>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expanded&&const DeepCollectionEquality().equals(other._paymentHistory, _paymentHistory));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Expanded&&const DeepCollectionEquality().equals(other.paymentHistory, _paymentHistory));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_paymentHistory));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_paymentHistory));
+}
 
 @override
 String toString() {
-  return 'BookingDetailsPaymentHistoryState.expanded(paymentHistory: $paymentHistory)';
+    return 'BookingDetailsPaymentHistoryState.expanded(paymentHistory: $paymentHistory)';
 }
 
 

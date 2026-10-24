@@ -22,8 +22,8 @@ import 'package:bookie_buddy_web/features/sales/presentation/common/bloc/all_sal
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
 import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AllBookingsDesktopScreen extends StatefulWidget {
   final BookingListFilter? initialStatusTab;

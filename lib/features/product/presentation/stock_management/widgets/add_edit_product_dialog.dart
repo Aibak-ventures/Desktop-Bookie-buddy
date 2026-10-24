@@ -16,10 +16,10 @@ import 'package:bookie_buddy_web/utils/extensions/main_service_type_web_extensio
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Modal dialog for adding or editing products.
 /// This is a web-optimized modal version of the AddOrEditProductScreen.
@@ -550,30 +550,16 @@ class _AddEditProductDialogState extends State<AddEditProductDialog> {
   Future<void> _pickProductImage() async {
     try {
       print('📷 Starting image picker...');
-      final result = await FilePicker.platform.pickFiles(
+      final pickedFile = await FilePicker.pickFile(
         type: FileType.image,
-        allowMultiple: false,
         dialogTitle: 'Select Product Image',
-        withData: true,
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        print('📷 File picked: ${result.files.first.name}');
-        Uint8List? imageBytes;
-        String fileName;
-
-        if (result.files.first.bytes != null) {
-          imageBytes = result.files.first.bytes!;
-          fileName = result.files.first.name;
-          print('📷 Got image bytes from web: ${imageBytes.length} bytes');
-        } else if (result.files.first.path != null) {
-          imageBytes = await XFile(result.files.first.path!).readAsBytes();
-          fileName = result.files.first.name;
-          print('📷 Got image bytes from path: ${imageBytes.length} bytes');
-        } else {
-          print('❌ No bytes or path available');
-          return;
-        }
+      if (pickedFile != null) {
+        print('📷 File picked: ${pickedFile.name}');
+        final imageBytes = await pickedFile.readAsBytes();
+        final fileName = pickedFile.name;
+        print('📷 Got image bytes: ${imageBytes.length} bytes');
 
         print('📷 Opening crop dialog...');
         final croppedBytes = await _showImageCropDialog(imageBytes, fileName);

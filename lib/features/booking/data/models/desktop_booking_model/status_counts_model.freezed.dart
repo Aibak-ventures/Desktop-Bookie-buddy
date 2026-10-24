@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'status_counts_model.dart';
@@ -9,6 +9,7 @@ part of 'status_counts_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $StatusCountsModelCopyWith<StatusCountsModel> get copyWith => _$StatusCountsMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled)&&(identical(other.expired, expired) || other.expired == expired));
+  final _this = this as StatusCountsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusCountsModel&&(identical(other.completed, _this.completed) || other.completed == _this.completed)&&(identical(other.upcoming, _this.upcoming) || other.upcoming == _this.upcoming)&&(identical(other.returns, _this.returns) || other.returns == _this.returns)&&(identical(other.pending, _this.pending) || other.pending == _this.pending)&&(identical(other.notReturned, _this.notReturned) || other.notReturned == _this.notReturned)&&(identical(other.cancelled, _this.cancelled) || other.cancelled == _this.cancelled)&&(identical(other.expired, _this.expired) || other.expired == _this.expired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled,expired);
+int get hashCode {
+  final _this = this as StatusCountsModel;
+  return Object.hash(runtimeType,_this.completed,_this.upcoming,_this.returns,_this.pending,_this.notReturned,_this.cancelled,_this.expired);
+}
 
 @override
 String toString() {
-  return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled, expired: $expired)';
+  final _this = this as StatusCountsModel;
+  return 'StatusCountsModel(completed: ${_this.completed}, upcoming: ${_this.upcoming}, returns: ${_this.returns}, pending: ${_this.pending}, notReturned: ${_this.notReturned}, cancelled: ${_this.cancelled}, expired: ${_this.expired})';
 }
 
 
@@ -66,7 +72,7 @@ class _$StatusCountsModelCopyWithImpl<$Res>
 /// Create a copy of StatusCountsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? completed = null,Object? upcoming = null,Object? returns = null,Object? pending = null,Object? notReturned = null,Object? cancelled = null,Object? expired = null,}) {
-  return _then(_self.copyWith(
+  return _then(StatusCountsModel(
 completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as int,upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
 as int,returns: null == returns ? _self.returns : returns // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled)&&(identical(other.expired, expired) || other.expired == expired));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled)&&(identical(other.expired, expired) || other.expired == expired));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled,expired);
+int get hashCode {
+    return Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled,expired);
+}
 
 @override
 String toString() {
-  return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled, expired: $expired)';
+    return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled, expired: $expired)';
 }
 
 

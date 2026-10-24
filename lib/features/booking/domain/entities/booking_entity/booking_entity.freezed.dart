@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_entity.dart';
@@ -9,6 +9,7 @@ part of 'booking_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $BookingEntityCopyWith<BookingEntity> get copyWith => _$BookingEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, bookedItems)&&(identical(other.type, type) || other.type == type));
+  final _this = this as BookingEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.bookingStatus, _this.bookingStatus) || other.bookingStatus == _this.bookingStatus)&&(identical(other.bookedDate, _this.bookedDate) || other.bookedDate == _this.bookedDate)&&(identical(other.pickupDate, _this.pickupDate) || other.pickupDate == _this.pickupDate)&&(identical(other.returnDate, _this.returnDate) || other.returnDate == _this.returnDate)&&(identical(other.deliveryStatus, _this.deliveryStatus) || other.deliveryStatus == _this.deliveryStatus)&&(identical(other.paymentStatus, _this.paymentStatus) || other.paymentStatus == _this.paymentStatus)&&(identical(other.shopBookingId, _this.shopBookingId) || other.shopBookingId == _this.shopBookingId)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, _this.bookedItems)&&(identical(other.type, _this.type) || other.type == _this.type));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(bookedItems),type);
+int get hashCode {
+  final _this = this as BookingEntity;
+  return Object.hash(runtimeType,_this.id,_this.clientName,_this.bookingStatus,_this.bookedDate,_this.pickupDate,_this.returnDate,_this.deliveryStatus,_this.paymentStatus,_this.shopBookingId,_this.staffName,_this.createdAt,const DeepCollectionEquality().hash(_this.bookedItems),_this.type);
+}
 
 @override
 String toString() {
-  return 'BookingEntity(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
+  final _this = this as BookingEntity;
+  return 'BookingEntity(id: ${_this.id}, clientName: ${_this.clientName}, bookingStatus: ${_this.bookingStatus}, bookedDate: ${_this.bookedDate}, pickupDate: ${_this.pickupDate}, returnDate: ${_this.returnDate}, deliveryStatus: ${_this.deliveryStatus}, paymentStatus: ${_this.paymentStatus}, shopBookingId: ${_this.shopBookingId}, staffName: ${_this.staffName}, createdAt: ${_this.createdAt}, bookedItems: ${_this.bookedItems}, type: ${_this.type})';
 }
 
 
@@ -63,7 +69,7 @@ class _$BookingEntityCopyWithImpl<$Res>
 /// Create a copy of BookingEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? clientName = null,Object? bookingStatus = null,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? deliveryStatus = null,Object? paymentStatus = null,Object? shopBookingId = freezed,Object? staffName = freezed,Object? createdAt = freezed,Object? bookedItems = null,Object? type = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(BookingEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,clientName: null == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String,bookingStatus: null == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
@@ -218,7 +224,7 @@ return $default(_that.id,_that.clientName,_that.bookingStatus,_that.bookedDate,_
 
 
 class _BookingEntity implements BookingEntity {
-  const _BookingEntity({this.id, required this.clientName, required this.bookingStatus, this.bookedDate, this.pickupDate, this.returnDate, required this.deliveryStatus, required this.paymentStatus, this.shopBookingId, this.staffName, this.createdAt, final  List<String> bookedItems = const [], this.type}): _bookedItems = bookedItems;
+  const _BookingEntity({this.id, required this.clientName, required this.bookingStatus, this.bookedDate, this.pickupDate, this.returnDate, required this.deliveryStatus, required this.paymentStatus, this.shopBookingId, this.staffName, this.createdAt,  List<String> bookedItems = const [], this.type}): _bookedItems = bookedItems;
   
 
 @override final  int? id;
@@ -251,16 +257,18 @@ _$BookingEntityCopyWith<_BookingEntity> get copyWith => __$BookingEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._bookedItems, _bookedItems)&&(identical(other.type, type) || other.type == type));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, _bookedItems)&&(identical(other.type, type) || other.type == type));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(_bookedItems),type);
+int get hashCode {
+    return Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(_bookedItems),type);
+}
 
 @override
 String toString() {
-  return 'BookingEntity(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
+    return 'BookingEntity(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
 }
 
 

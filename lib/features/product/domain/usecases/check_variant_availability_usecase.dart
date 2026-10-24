@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/features/product/domain/repositories/i_product_repository.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CheckVariantAvailabilityUseCase {
   final IProductRepository _repository;

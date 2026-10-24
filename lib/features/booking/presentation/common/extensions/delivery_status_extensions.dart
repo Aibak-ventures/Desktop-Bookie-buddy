@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_shared/core/core/constants/enums/booking_status_enums.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 // Color is a Flutter type, doesn't belong in the pure-Dart shared package
 // (see bookie_buddy_ui's theme/status_ui_extensions.dart for the same

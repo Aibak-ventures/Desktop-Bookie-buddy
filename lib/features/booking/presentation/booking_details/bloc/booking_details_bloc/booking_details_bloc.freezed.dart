@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_details_bloc.dart';
@@ -9,6 +9,7 @@ part of 'booking_details_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $BookingDetailsEventCopyWith<BookingDetailsEvent> get copyWith => _$BookingDetai
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsEvent&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+  final _this = this as BookingDetailsEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsEvent&&(identical(other.bookingId, _this.bookingId) || other.bookingId == _this.bookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId);
+int get hashCode {
+  final _this = this as BookingDetailsEvent;
+  return Object.hash(runtimeType,_this.bookingId);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent(bookingId: $bookingId)';
+  final _this = this as BookingDetailsEvent;
+  return 'BookingDetailsEvent(bookingId: ${_this.bookingId})';
 }
 
 
@@ -287,16 +293,18 @@ _$FetchBookingDetailsCopyWith<_FetchBookingDetails> get copyWith => __$FetchBook
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchBookingDetails&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchBookingDetails&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.fetchBookingDetails(bookingId: $bookingId)';
+    return 'BookingDetailsEvent.fetchBookingDetails(bookingId: $bookingId)';
 }
 
 
@@ -354,16 +362,18 @@ _$UpdateDeliveryStatusCopyWith<_UpdateDeliveryStatus> get copyWith => __$UpdateD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateDeliveryStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,deliveryStatus);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,deliveryStatus);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
+    return 'BookingDetailsEvent.updateDeliveryStatus(bookingId: $bookingId, deliveryStatus: $deliveryStatus)';
 }
 
 
@@ -422,16 +432,18 @@ _$UpdateBookingStatusCopyWith<_UpdateBookingStatus> get copyWith => __$UpdateBoo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBookingStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateBookingStatus&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,bookingStatus);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,bookingStatus);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updateBookingStatus(bookingId: $bookingId, bookingStatus: $bookingStatus)';
+    return 'BookingDetailsEvent.updateBookingStatus(bookingId: $bookingId, bookingStatus: $bookingStatus)';
 }
 
 
@@ -494,16 +506,18 @@ _$UpdatePaymentCopyWith<_UpdatePayment> get copyWith => __$UpdatePaymentCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.useSecurityRefund, useSecurityRefund) || other.useSecurityRefund == useSecurityRefund)&&(identical(other.note, note) || other.note == note));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate)&&(identical(other.useSecurityRefund, useSecurityRefund) || other.useSecurityRefund == useSecurityRefund)&&(identical(other.note, note) || other.note == note));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,paymentDate,useSecurityRefund,note);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,amount,accountId,paymentDate,useSecurityRefund,note);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, accountId: $accountId, paymentDate: $paymentDate, useSecurityRefund: $useSecurityRefund, note: $note)';
+    return 'BookingDetailsEvent.updatePayment(bookingId: $bookingId, amount: $amount, accountId: $accountId, paymentDate: $paymentDate, useSecurityRefund: $useSecurityRefund, note: $note)';
 }
 
 
@@ -566,16 +580,18 @@ _$DeletePaymentCopyWith<_DeletePayment> get copyWith => __$DeletePaymentCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeletePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeletePayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,paymentId);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,paymentId);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.deletePayment(bookingId: $bookingId, paymentId: $paymentId)';
+    return 'BookingDetailsEvent.deletePayment(bookingId: $bookingId, paymentId: $paymentId)';
 }
 
 
@@ -636,16 +652,18 @@ _$CancelBookingCopyWith<_CancelBooking> get copyWith => __$CancelBookingCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CancelBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,accountId,paymentDate);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,refundAmount,accountId,paymentDate);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, accountId: $accountId, paymentDate: $paymentDate)';
+    return 'BookingDetailsEvent.cancelBooking(bookingId: $bookingId, refundAmount: $refundAmount, accountId: $accountId, paymentDate: $paymentDate)';
 }
 
 
@@ -705,16 +723,18 @@ _$DeleteBookingCopyWith<_DeleteBooking> get copyWith => __$DeleteBookingCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteBooking&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.deleteBooking(bookingId: $bookingId)';
+    return 'BookingDetailsEvent.deleteBooking(bookingId: $bookingId)';
 }
 
 
@@ -775,16 +795,18 @@ _$AddRefundCopyWith<_AddRefund> get copyWith => __$AddRefundCopyWithImpl<_AddRef
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.refundReason, refundReason) || other.refundReason == refundReason)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.amount, amount) || other.amount == amount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.refundReason, refundReason) || other.refundReason == refundReason)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,amount,accountId,refundReason,paymentDate);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,amount,accountId,refundReason,paymentDate);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.addRefund(bookingId: $bookingId, amount: $amount, accountId: $accountId, refundReason: $refundReason, paymentDate: $paymentDate)';
+    return 'BookingDetailsEvent.addRefund(bookingId: $bookingId, amount: $amount, accountId: $accountId, refundReason: $refundReason, paymentDate: $paymentDate)';
 }
 
 
@@ -846,16 +868,18 @@ _$DeleteRefundCopyWith<_DeleteRefund> get copyWith => __$DeleteRefundCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundId, refundId) || other.refundId == refundId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundId, refundId) || other.refundId == refundId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,refundId);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,refundId);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.deleteRefund(bookingId: $bookingId, refundId: $refundId)';
+    return 'BookingDetailsEvent.deleteRefund(bookingId: $bookingId, refundId: $refundId)';
 }
 
 
@@ -918,16 +942,18 @@ _$UpdateSecurityRefundCopyWith<_UpdateSecurityRefund> get copyWith => __$UpdateS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateSecurityRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.deductionAmount, deductionAmount) || other.deductionAmount == deductionAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateSecurityRefund&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.refundAmount, refundAmount) || other.refundAmount == refundAmount)&&(identical(other.deductionAmount, deductionAmount) || other.deductionAmount == deductionAmount)&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.note, note) || other.note == note)&&(identical(other.paymentDate, paymentDate) || other.paymentDate == paymentDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,refundAmount,deductionAmount,accountId,note,paymentDate);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,refundAmount,deductionAmount,accountId,note,paymentDate);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updateSecurityRefund(bookingId: $bookingId, refundAmount: $refundAmount, deductionAmount: $deductionAmount, accountId: $accountId, note: $note, paymentDate: $paymentDate)';
+    return 'BookingDetailsEvent.updateSecurityRefund(bookingId: $bookingId, refundAmount: $refundAmount, deductionAmount: $deductionAmount, accountId: $accountId, note: $note, paymentDate: $paymentDate)';
 }
 
 
@@ -991,16 +1017,18 @@ _$DeleteSecurityRefundedPaymentCopyWith<_DeleteSecurityRefundedPayment> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteSecurityRefundedPayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.securityPaymentType, securityPaymentType) || other.securityPaymentType == securityPaymentType));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteSecurityRefundedPayment&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&(identical(other.securityPaymentType, securityPaymentType) || other.securityPaymentType == securityPaymentType));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,paymentId,securityPaymentType);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,paymentId,securityPaymentType);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.deleteSecurityRefundedPayment(bookingId: $bookingId, paymentId: $paymentId, securityPaymentType: $securityPaymentType)';
+    return 'BookingDetailsEvent.deleteSecurityRefundedPayment(bookingId: $bookingId, paymentId: $paymentId, securityPaymentType: $securityPaymentType)';
 }
 
 
@@ -1044,7 +1072,7 @@ as SecurityPaymentHistoryType,
 
 
 class _UpdatePartialReturn implements BookingDetailsEvent {
-  const _UpdatePartialReturn({required this.bookingId, required final  List<int> returnedProductIds, required final  List<int> notReturnedProductIds, required this.newReturnDate}): _returnedProductIds = returnedProductIds,_notReturnedProductIds = notReturnedProductIds;
+  const _UpdatePartialReturn({required this.bookingId, required  List<int> returnedProductIds, required  List<int> notReturnedProductIds, required this.newReturnDate}): _returnedProductIds = returnedProductIds,_notReturnedProductIds = notReturnedProductIds;
   
 
 @override final  int bookingId;
@@ -1074,16 +1102,18 @@ _$UpdatePartialReturnCopyWith<_UpdatePartialReturn> get copyWith => __$UpdatePar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePartialReturn&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other._returnedProductIds, _returnedProductIds)&&const DeepCollectionEquality().equals(other._notReturnedProductIds, _notReturnedProductIds)&&(identical(other.newReturnDate, newReturnDate) || other.newReturnDate == newReturnDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdatePartialReturn&&(identical(other.bookingId, bookingId) || other.bookingId == bookingId)&&const DeepCollectionEquality().equals(other.returnedProductIds, _returnedProductIds)&&const DeepCollectionEquality().equals(other.notReturnedProductIds, _notReturnedProductIds)&&(identical(other.newReturnDate, newReturnDate) || other.newReturnDate == newReturnDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bookingId,const DeepCollectionEquality().hash(_returnedProductIds),const DeepCollectionEquality().hash(_notReturnedProductIds),newReturnDate);
+int get hashCode {
+    return Object.hash(runtimeType,bookingId,const DeepCollectionEquality().hash(_returnedProductIds),const DeepCollectionEquality().hash(_notReturnedProductIds),newReturnDate);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsEvent.updatePartialReturn(bookingId: $bookingId, returnedProductIds: $returnedProductIds, notReturnedProductIds: $notReturnedProductIds, newReturnDate: $newReturnDate)';
+    return 'BookingDetailsEvent.updatePartialReturn(bookingId: $bookingId, returnedProductIds: $returnedProductIds, notReturnedProductIds: $notReturnedProductIds, newReturnDate: $newReturnDate)';
 }
 
 
@@ -1133,7 +1163,7 @@ mixin _$BookingDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingDetailsState);
 }
 
 
@@ -1142,7 +1172,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'BookingDetailsState()';
+    return 'BookingDetailsState()';
 }
 
 
@@ -1322,7 +1352,7 @@ class _Loading implements BookingDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -1331,7 +1361,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'BookingDetailsState.loading()';
+    return 'BookingDetailsState.loading()';
 }
 
 
@@ -1359,16 +1389,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.booking, booking) || other.booking == booking));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.booking, booking) || other.booking == booking));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,booking);
+int get hashCode {
+    return Object.hash(runtimeType,booking);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsState.loaded(booking: $booking)';
+    return 'BookingDetailsState.loaded(booking: $booking)';
 }
 
 
@@ -1436,16 +1468,18 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.message, message) || other.message == message)&&(identical(other.didPop, didPop) || other.didPop == didPop)&&(identical(other.needRefresh, needRefresh) || other.needRefresh == needRefresh));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.message, message) || other.message == message)&&(identical(other.didPop, didPop) || other.didPop == didPop)&&(identical(other.needRefresh, needRefresh) || other.needRefresh == needRefresh));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,didPop,needRefresh);
+int get hashCode {
+    return Object.hash(runtimeType,message,didPop,needRefresh);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
+    return 'BookingDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
 }
 
 
@@ -1489,7 +1523,7 @@ as bool,
 
 
 class _Failed implements BookingDetailsState {
-  const _Failed(this.message, {this.error, final  List<ProductInfoEntity>? products}): _products = products;
+  const _Failed(this.message, {this.error,  List<ProductInfoEntity>? products}): _products = products;
   
 
  final  String message;
@@ -1514,16 +1548,18 @@ _$FailedCopyWith<_Failed> get copyWith => __$FailedCopyWithImpl<_Failed>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failed&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.error, error)&&const DeepCollectionEquality().equals(other._products, _products));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failed&&(identical(other.message, message) || other.message == message)&&const DeepCollectionEquality().equals(other.error, error)&&const DeepCollectionEquality().equals(other.products, _products));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,const DeepCollectionEquality().hash(error),const DeepCollectionEquality().hash(_products));
+int get hashCode {
+    return Object.hash(runtimeType,message,const DeepCollectionEquality().hash(error),const DeepCollectionEquality().hash(_products));
+}
 
 @override
 String toString() {
-  return 'BookingDetailsState.failed(message: $message, error: $error, products: $products)';
+    return 'BookingDetailsState.failed(message: $message, error: $error, products: $products)';
 }
 
 
@@ -1582,16 +1618,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'BookingDetailsState.error(error: $error)';
+    return 'BookingDetailsState.error(error: $error)';
 }
 
 

@@ -19,7 +19,7 @@
 ///
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CustomIcons {
   CustomIcons._();

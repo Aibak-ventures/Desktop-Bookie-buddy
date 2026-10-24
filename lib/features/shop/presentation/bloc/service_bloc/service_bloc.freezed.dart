@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'service_bloc.dart';
@@ -9,6 +9,7 @@ part of 'service_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ServiceEventCopyWith<ServiceEvent> get copyWith => _$ServiceEventCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceEvent&&(identical(other.force, force) || other.force == force));
+  final _this = this as ServiceEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceEvent&&(identical(other.force, _this.force) || other.force == _this.force));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,force);
+int get hashCode {
+  final _this = this as ServiceEvent;
+  return Object.hash(runtimeType,_this.force);
+}
 
 @override
 String toString() {
-  return 'ServiceEvent(force: $force)';
+  final _this = this as ServiceEvent;
+  return 'ServiceEvent(force: ${_this.force})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ServiceEventCopyWithImpl<$Res>
 /// Create a copy of ServiceEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? force = null,}) {
-  return _then(_self.copyWith(
+  return _then(ServiceEvent.loadServices(
 force: null == force ? _self.force : force // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -221,16 +227,18 @@ _$LoadServicesCopyWith<_LoadServices> get copyWith => __$LoadServicesCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadServices&&(identical(other.force, force) || other.force == force));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadServices&&(identical(other.force, force) || other.force == force));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,force);
+int get hashCode {
+    return Object.hash(runtimeType,force);
+}
 
 @override
 String toString() {
-  return 'ServiceEvent.loadServices(force: $force)';
+    return 'ServiceEvent.loadServices(force: $force)';
 }
 
 
@@ -277,7 +285,7 @@ mixin _$ServiceState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is ServiceState);
 }
 
 
@@ -286,7 +294,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ServiceState()';
+    return 'ServiceState()';
 }
 
 
@@ -454,7 +462,7 @@ class _Loading implements ServiceState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -463,7 +471,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ServiceState.loading()';
+    return 'ServiceState.loading()';
 }
 
 
@@ -476,7 +484,7 @@ String toString() {
 
 
 class _Loaded implements ServiceState {
-  const _Loaded(final  List<ServiceEntity> services): _services = services;
+  const _Loaded( List<ServiceEntity> services): _services = services;
   
 
  final  List<ServiceEntity> _services;
@@ -497,16 +505,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._services, _services));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.services, _services));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_services));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_services));
+}
 
 @override
 String toString() {
-  return 'ServiceState.loaded(services: $services)';
+    return 'ServiceState.loaded(services: $services)';
 }
 
 
@@ -563,16 +573,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'ServiceState.error(error: $error)';
+    return 'ServiceState.error(error: $error)';
 }
 
 

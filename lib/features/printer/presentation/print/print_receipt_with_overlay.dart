@@ -9,8 +9,8 @@ import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user
 import 'package:bookie_buddy_web/features/printer/presentation/print/quick_print_receipt.dart';
 import 'package:bookie_buddy_web/features/printer/presentation/receipt_design/preview/receipt_ticket_preview_screen.dart';
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 const _logName = 'QzPrinter';
 

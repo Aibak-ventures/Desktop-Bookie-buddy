@@ -2,7 +2,7 @@ import 'package:bookie_buddy_shared/core/features/service/domain/entities/servic
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
 import 'package:bookie_buddy_web/utils/extensions/number_extensions.dart';
 import 'package:bookie_buddy_web/utils/price_filter_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProductFilterDialog extends StatefulWidget {
   const ProductFilterDialog({

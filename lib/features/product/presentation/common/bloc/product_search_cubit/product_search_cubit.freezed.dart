@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_search_cubit.dart';
@@ -9,6 +9,7 @@ part of 'product_search_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ProductSearchStateCopyWith<ProductSearchState> get copyWith => _$ProductSearchS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSearchState&&const DeepCollectionEquality().equals(other.suggestions, suggestions)&&(identical(other.selectedProduct, selectedProduct) || other.selectedProduct == selectedProduct)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+  final _this = this as ProductSearchState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductSearchState&&const DeepCollectionEquality().equals(other.suggestions, _this.suggestions)&&(identical(other.selectedProduct, _this.selectedProduct) || other.selectedProduct == _this.selectedProduct)&&(identical(other.searchQuery, _this.searchQuery) || other.searchQuery == _this.searchQuery)&&(identical(other.nextPageUrl, _this.nextPageUrl) || other.nextPageUrl == _this.nextPageUrl)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(suggestions),selectedProduct,searchQuery,nextPageUrl,isLoading);
+int get hashCode {
+  final _this = this as ProductSearchState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.suggestions),_this.selectedProduct,_this.searchQuery,_this.nextPageUrl,_this.isLoading);
+}
 
 @override
 String toString() {
-  return 'ProductSearchState(suggestions: $suggestions, selectedProduct: $selectedProduct, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
+  final _this = this as ProductSearchState;
+  return 'ProductSearchState(suggestions: ${_this.suggestions}, selectedProduct: ${_this.selectedProduct}, searchQuery: ${_this.searchQuery}, nextPageUrl: ${_this.nextPageUrl}, isLoading: ${_this.isLoading})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ProductSearchStateCopyWithImpl<$Res>
 /// Create a copy of ProductSearchState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? suggestions = null,Object? selectedProduct = freezed,Object? searchQuery = null,Object? nextPageUrl = freezed,Object? isLoading = null,}) {
-  return _then(_self.copyWith(
+  return _then(ProductSearchState(
 suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
 as List<ProductEntity>,selectedProduct: freezed == selectedProduct ? _self.selectedProduct : selectedProduct // ignore: cast_nullable_to_non_nullable
 as ProductEntity?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
@@ -222,7 +228,7 @@ return $default(_that.suggestions,_that.selectedProduct,_that.searchQuery,_that.
 
 
 class _ProductSearchState implements ProductSearchState {
-  const _ProductSearchState({required final  List<ProductEntity> suggestions, required this.selectedProduct, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
+  const _ProductSearchState({required  List<ProductEntity> suggestions, required this.selectedProduct, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
   
 
  final  List<ProductEntity> _suggestions;
@@ -247,16 +253,18 @@ _$ProductSearchStateCopyWith<_ProductSearchState> get copyWith => __$ProductSear
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSearchState&&const DeepCollectionEquality().equals(other._suggestions, _suggestions)&&(identical(other.selectedProduct, selectedProduct) || other.selectedProduct == selectedProduct)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductSearchState&&const DeepCollectionEquality().equals(other.suggestions, _suggestions)&&(identical(other.selectedProduct, selectedProduct) || other.selectedProduct == selectedProduct)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_suggestions),selectedProduct,searchQuery,nextPageUrl,isLoading);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_suggestions),selectedProduct,searchQuery,nextPageUrl,isLoading);
+}
 
 @override
 String toString() {
-  return 'ProductSearchState(suggestions: $suggestions, selectedProduct: $selectedProduct, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
+    return 'ProductSearchState(suggestions: $suggestions, selectedProduct: $selectedProduct, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
 }
 
 

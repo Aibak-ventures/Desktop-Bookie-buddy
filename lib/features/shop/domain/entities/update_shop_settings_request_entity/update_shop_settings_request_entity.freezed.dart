@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'update_shop_settings_request_entity.dart';
@@ -9,6 +9,7 @@ part of 'update_shop_settings_request_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UpdateShopSettingsRequestEntityCopyWith<UpdateShopSettingsRequestEntity> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateShopSettingsRequestEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
+  final _this = this as UpdateShopSettingsRequestEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateShopSettingsRequestEntity&&(identical(other.coolingPeriodDuration, _this.coolingPeriodDuration) || other.coolingPeriodDuration == _this.coolingPeriodDuration)&&(identical(other.coolingPeriodMode, _this.coolingPeriodMode) || other.coolingPeriodMode == _this.coolingPeriodMode)&&(identical(other.addButtonDefaultAction, _this.addButtonDefaultAction) || other.addButtonDefaultAction == _this.addButtonDefaultAction)&&(identical(other.searchClient, _this.searchClient) || other.searchClient == _this.searchClient)&&(identical(other.printOutputPreference, _this.printOutputPreference) || other.printOutputPreference == _this.printOutputPreference));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+int get hashCode {
+  final _this = this as UpdateShopSettingsRequestEntity;
+  return Object.hash(runtimeType,_this.coolingPeriodDuration,_this.coolingPeriodMode,_this.addButtonDefaultAction,_this.searchClient,_this.printOutputPreference);
+}
 
 @override
 String toString() {
-  return 'UpdateShopSettingsRequestEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
+  final _this = this as UpdateShopSettingsRequestEntity;
+  return 'UpdateShopSettingsRequestEntity(coolingPeriodDuration: ${_this.coolingPeriodDuration}, coolingPeriodMode: ${_this.coolingPeriodMode}, addButtonDefaultAction: ${_this.addButtonDefaultAction}, searchClient: ${_this.searchClient}, printOutputPreference: ${_this.printOutputPreference})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UpdateShopSettingsRequestEntityCopyWithImpl<$Res>
 /// Create a copy of UpdateShopSettingsRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? coolingPeriodDuration = freezed,Object? coolingPeriodMode = freezed,Object? addButtonDefaultAction = freezed,Object? searchClient = freezed,Object? printOutputPreference = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UpdateShopSettingsRequestEntity(
 coolingPeriodDuration: freezed == coolingPeriodDuration ? _self.coolingPeriodDuration : coolingPeriodDuration // ignore: cast_nullable_to_non_nullable
 as int?,coolingPeriodMode: freezed == coolingPeriodMode ? _self.coolingPeriodMode : coolingPeriodMode // ignore: cast_nullable_to_non_nullable
 as CoolingPeriodMode?,addButtonDefaultAction: freezed == addButtonDefaultAction ? _self.addButtonDefaultAction : addButtonDefaultAction // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ _$UpdateShopSettingsRequestEntityCopyWith<_UpdateShopSettingsRequestEntity> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateShopSettingsRequestEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateShopSettingsRequestEntity&&(identical(other.coolingPeriodDuration, coolingPeriodDuration) || other.coolingPeriodDuration == coolingPeriodDuration)&&(identical(other.coolingPeriodMode, coolingPeriodMode) || other.coolingPeriodMode == coolingPeriodMode)&&(identical(other.addButtonDefaultAction, addButtonDefaultAction) || other.addButtonDefaultAction == addButtonDefaultAction)&&(identical(other.searchClient, searchClient) || other.searchClient == searchClient)&&(identical(other.printOutputPreference, printOutputPreference) || other.printOutputPreference == printOutputPreference));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+int get hashCode {
+    return Object.hash(runtimeType,coolingPeriodDuration,coolingPeriodMode,addButtonDefaultAction,searchClient,printOutputPreference);
+}
 
 @override
 String toString() {
-  return 'UpdateShopSettingsRequestEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
+    return 'UpdateShopSettingsRequestEntity(coolingPeriodDuration: $coolingPeriodDuration, coolingPeriodMode: $coolingPeriodMode, addButtonDefaultAction: $addButtonDefaultAction, searchClient: $searchClient, printOutputPreference: $printOutputPreference)';
 }
 
 

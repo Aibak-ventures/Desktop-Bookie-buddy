@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shared slide-in-from-the-right chrome for every feature's details drawer
 /// (booking, sales, ...) — the animation, shadow, and close-button header are

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'global_search_bloc.dart';
@@ -9,6 +9,7 @@ part of 'global_search_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$GlobalSearchEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchEvent);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchEvent);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'GlobalSearchEvent()';
+    return 'GlobalSearchEvent()';
 }
 
 
@@ -204,16 +205,18 @@ _$SearchCopyWith<_Search> get copyWith => __$SearchCopyWithImpl<_Search>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Search&&(identical(other.query, query) || other.query == query)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Search&&(identical(other.query, query) || other.query == query)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,query,startDate,endDate);
+int get hashCode {
+    return Object.hash(runtimeType,query,startDate,endDate);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchEvent.search(query: $query, startDate: $startDate, endDate: $endDate)';
+    return 'GlobalSearchEvent.search(query: $query, startDate: $startDate, endDate: $endDate)';
 }
 
 
@@ -274,16 +277,18 @@ _$LoadNextSearchResultsCopyWith<_LoadNextSearchResults> get copyWith => __$LoadN
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextSearchResults&&(identical(other.query, query) || other.query == query)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoadNextSearchResults&&(identical(other.query, query) || other.query == query)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,query,startDate,endDate);
+int get hashCode {
+    return Object.hash(runtimeType,query,startDate,endDate);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchEvent.loadNextSearchResults(query: $query, startDate: $startDate, endDate: $endDate)';
+    return 'GlobalSearchEvent.loadNextSearchResults(query: $query, startDate: $startDate, endDate: $endDate)';
 }
 
 
@@ -337,7 +342,7 @@ class _Reset implements GlobalSearchEvent {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Reset);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Reset);
 }
 
 
@@ -346,7 +351,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'GlobalSearchEvent.reset()';
+    return 'GlobalSearchEvent.reset()';
 }
 
 
@@ -364,7 +369,7 @@ mixin _$GlobalSearchState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is GlobalSearchState);
 }
 
 
@@ -373,7 +378,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'GlobalSearchState()';
+    return 'GlobalSearchState()';
 }
 
 
@@ -547,7 +552,7 @@ class _Initial implements GlobalSearchState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -556,7 +561,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'GlobalSearchState.initial()';
+    return 'GlobalSearchState.initial()';
 }
 
 
@@ -579,7 +584,7 @@ class _Loading implements GlobalSearchState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -588,7 +593,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'GlobalSearchState.loading()';
+    return 'GlobalSearchState.loading()';
 }
 
 
@@ -601,7 +606,7 @@ String toString() {
 
 
 class _Loaded implements GlobalSearchState {
-  const _Loaded({required final  List<GlobalSearchEntity> searchData, required this.nextPageUrl, this.isPaginating = false}): _searchData = searchData;
+  const _Loaded({required  List<GlobalSearchEntity> searchData, required this.nextPageUrl, this.isPaginating = false}): _searchData = searchData;
   
 
  final  List<GlobalSearchEntity> _searchData;
@@ -624,16 +629,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other._searchData, _searchData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&const DeepCollectionEquality().equals(other.searchData, _searchData)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isPaginating, isPaginating) || other.isPaginating == isPaginating));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_searchData),nextPageUrl,isPaginating);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_searchData),nextPageUrl,isPaginating);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchState.loaded(searchData: $searchData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating)';
+    return 'GlobalSearchState.loaded(searchData: $searchData, nextPageUrl: $nextPageUrl, isPaginating: $isPaginating)';
 }
 
 
@@ -692,16 +699,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,error);
+int get hashCode {
+    return Object.hash(runtimeType,error);
+}
 
 @override
 String toString() {
-  return 'GlobalSearchState.error(error: $error)';
+    return 'GlobalSearchState.error(error: $error)';
 }
 
 

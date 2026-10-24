@@ -12,7 +12,7 @@ import 'package:bookie_buddy_web/features/booking/presentation/common/widgets/pe
 import 'package:bookie_buddy_web/features/product/domain/entities/product_selected_entity/product_selected_entity.dart';
 import 'package:bookie_buddy_web/utils/app_input_validators.dart';
 import 'package:bookie_buddy_web/utils/extensions/string_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProductCustomizationWidget extends StatefulWidget {
   const ProductCustomizationWidget({

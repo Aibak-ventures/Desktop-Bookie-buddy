@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'product_monthly_data_entity.dart';
@@ -9,6 +9,7 @@ part of 'product_monthly_data_entity.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ProductMonthlyDataEntityCopyWith<ProductMonthlyDataEntity> get copyWith => _$Pr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductMonthlyDataEntity&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.totalExpense, totalExpense) || other.totalExpense == totalExpense)&&(identical(other.totalEarned, totalEarned) || other.totalEarned == totalEarned));
+  final _this = this as ProductMonthlyDataEntity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProductMonthlyDataEntity&&(identical(other.year, _this.year) || other.year == _this.year)&&(identical(other.month, _this.month) || other.month == _this.month)&&(identical(other.totalExpense, _this.totalExpense) || other.totalExpense == _this.totalExpense)&&(identical(other.totalEarned, _this.totalEarned) || other.totalEarned == _this.totalEarned));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,year,month,totalExpense,totalEarned);
+int get hashCode {
+  final _this = this as ProductMonthlyDataEntity;
+  return Object.hash(runtimeType,_this.year,_this.month,_this.totalExpense,_this.totalEarned);
+}
 
 @override
 String toString() {
-  return 'ProductMonthlyDataEntity(year: $year, month: $month, totalExpense: $totalExpense, totalEarned: $totalEarned)';
+  final _this = this as ProductMonthlyDataEntity;
+  return 'ProductMonthlyDataEntity(year: ${_this.year}, month: ${_this.month}, totalExpense: ${_this.totalExpense}, totalEarned: ${_this.totalEarned})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ProductMonthlyDataEntityCopyWithImpl<$Res>
 /// Create a copy of ProductMonthlyDataEntity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? year = null,Object? month = null,Object? totalExpense = null,Object? totalEarned = null,}) {
-  return _then(_self.copyWith(
+  return _then(ProductMonthlyDataEntity(
 year: null == year ? _self.year : year // ignore: cast_nullable_to_non_nullable
 as int,month: null == month ? _self.month : month // ignore: cast_nullable_to_non_nullable
 as int,totalExpense: null == totalExpense ? _self.totalExpense : totalExpense // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$ProductMonthlyDataEntityCopyWith<_ProductMonthlyDataEntity> get copyWith => __
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductMonthlyDataEntity&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.totalExpense, totalExpense) || other.totalExpense == totalExpense)&&(identical(other.totalEarned, totalEarned) || other.totalEarned == totalEarned));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProductMonthlyDataEntity&&(identical(other.year, year) || other.year == year)&&(identical(other.month, month) || other.month == month)&&(identical(other.totalExpense, totalExpense) || other.totalExpense == totalExpense)&&(identical(other.totalEarned, totalEarned) || other.totalEarned == totalEarned));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,year,month,totalExpense,totalEarned);
+int get hashCode {
+    return Object.hash(runtimeType,year,month,totalExpense,totalEarned);
+}
 
 @override
 String toString() {
-  return 'ProductMonthlyDataEntity(year: $year, month: $month, totalExpense: $totalExpense, totalEarned: $totalEarned)';
+    return 'ProductMonthlyDataEntity(year: $year, month: $month, totalExpense: $totalExpense, totalEarned: $totalEarned)';
 }
 
 

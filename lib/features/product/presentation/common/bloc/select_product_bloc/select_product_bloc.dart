@@ -6,9 +6,9 @@ import 'package:bookie_buddy_web/features/product/domain/usecases/get_available_
 import 'package:bookie_buddy_web/features/product/domain/usecases/get_products_paginated_usecase.dart';
 import 'package:bookie_buddy_web/features/product/domain/usecases/search_and_filter_products_usecase.dart';
 import 'package:bookie_buddy_web/utils/bloc_transforms.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'select_product_bloc.freezed.dart';
 part 'select_product_event.dart';

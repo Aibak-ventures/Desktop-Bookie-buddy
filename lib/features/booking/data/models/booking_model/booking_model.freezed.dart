@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_model.dart';
@@ -9,6 +9,7 @@ part of 'booking_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $BookingsModelCopyWith<BookingsModel> get copyWith => _$BookingsModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, bookedItems)&&(identical(other.type, type) || other.type == type));
+  final _this = this as BookingsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingsModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.clientName, _this.clientName) || other.clientName == _this.clientName)&&(identical(other.bookingStatus, _this.bookingStatus) || other.bookingStatus == _this.bookingStatus)&&(identical(other.bookedDate, _this.bookedDate) || other.bookedDate == _this.bookedDate)&&(identical(other.pickupDate, _this.pickupDate) || other.pickupDate == _this.pickupDate)&&(identical(other.returnDate, _this.returnDate) || other.returnDate == _this.returnDate)&&(identical(other.deliveryStatus, _this.deliveryStatus) || other.deliveryStatus == _this.deliveryStatus)&&(identical(other.paymentStatus, _this.paymentStatus) || other.paymentStatus == _this.paymentStatus)&&(identical(other.shopBookingId, _this.shopBookingId) || other.shopBookingId == _this.shopBookingId)&&(identical(other.staffName, _this.staffName) || other.staffName == _this.staffName)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, _this.bookedItems)&&(identical(other.type, _this.type) || other.type == _this.type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(bookedItems),type);
+int get hashCode {
+  final _this = this as BookingsModel;
+  return Object.hash(runtimeType,_this.id,_this.clientName,_this.bookingStatus,_this.bookedDate,_this.pickupDate,_this.returnDate,_this.deliveryStatus,_this.paymentStatus,_this.shopBookingId,_this.staffName,_this.createdAt,const DeepCollectionEquality().hash(_this.bookedItems),_this.type);
+}
 
 @override
 String toString() {
-  return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
+  final _this = this as BookingsModel;
+  return 'BookingsModel(id: ${_this.id}, clientName: ${_this.clientName}, bookingStatus: ${_this.bookingStatus}, bookedDate: ${_this.bookedDate}, pickupDate: ${_this.pickupDate}, returnDate: ${_this.returnDate}, deliveryStatus: ${_this.deliveryStatus}, paymentStatus: ${_this.paymentStatus}, shopBookingId: ${_this.shopBookingId}, staffName: ${_this.staffName}, createdAt: ${_this.createdAt}, bookedItems: ${_this.bookedItems}, type: ${_this.type})';
 }
 
 
@@ -66,7 +72,7 @@ class _$BookingsModelCopyWithImpl<$Res>
 /// Create a copy of BookingsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? clientName = null,Object? bookingStatus = null,Object? bookedDate = freezed,Object? pickupDate = freezed,Object? returnDate = freezed,Object? deliveryStatus = null,Object? paymentStatus = null,Object? shopBookingId = freezed,Object? staffName = freezed,Object? createdAt = freezed,Object? bookedItems = null,Object? type = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(BookingsModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,clientName: null == clientName ? _self.clientName : clientName // ignore: cast_nullable_to_non_nullable
 as String,bookingStatus: null == bookingStatus ? _self.bookingStatus : bookingStatus // ignore: cast_nullable_to_non_nullable
@@ -221,7 +227,7 @@ return $default(_that.id,_that.clientName,_that.bookingStatus,_that.bookedDate,_
 @JsonSerializable()
 
 class _BookingsModel implements BookingsModel {
-  const _BookingsModel({@JsonKey(name: 'id', readValue: _idCustomRead) this.id, @JsonKey(name: 'client', defaultValue: 'Unknown', readValue: _clientCustomRead) required this.clientName, @JsonKey(name: 'booking_status', fromJson: BookingStatus.fromJson, toJson: BookingStatus.toJson, readValue: _bookingStatusCustomRead) required this.bookingStatus, @JsonKey(name: 'booking_date') this.bookedDate, @JsonKey(name: 'pickup_date') this.pickupDate, @JsonKey(name: 'return_date') this.returnDate, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromJson, toJson: DeliveryStatus.toJson, defaultValue: DeliveryStatus.booked) required this.deliveryStatus, @JsonKey(name: 'payment_status', defaultValue: PaymentStatus.pending, fromJson: PaymentStatus.fromBool, toJson: PaymentStatus.toJson) required this.paymentStatus, @JsonKey(name: 'shop_booking_id') this.shopBookingId, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead) final  List<String> bookedItems = const [], @JsonKey(name: 'type') this.type}): _bookedItems = bookedItems;
+  const _BookingsModel({@JsonKey(name: 'id', readValue: _idCustomRead) this.id, @JsonKey(name: 'client', defaultValue: 'Unknown', readValue: _clientCustomRead) required this.clientName, @JsonKey(name: 'booking_status', fromJson: BookingStatus.fromJson, toJson: BookingStatus.toJson, readValue: _bookingStatusCustomRead) required this.bookingStatus, @JsonKey(name: 'booking_date') this.bookedDate, @JsonKey(name: 'pickup_date') this.pickupDate, @JsonKey(name: 'return_date') this.returnDate, @JsonKey(name: 'delivery_status', fromJson: DeliveryStatus.fromJson, toJson: DeliveryStatus.toJson, defaultValue: DeliveryStatus.booked) required this.deliveryStatus, @JsonKey(name: 'payment_status', defaultValue: PaymentStatus.pending, fromJson: PaymentStatus.fromBool, toJson: PaymentStatus.toJson) required this.paymentStatus, @JsonKey(name: 'shop_booking_id') this.shopBookingId, @JsonKey(name: 'staff_name') this.staffName, @JsonKey(name: 'created_at') this.createdAt, @JsonKey(name: 'booked_items', readValue: _bookedItemsCustomRead)  List<String> bookedItems = const [], @JsonKey(name: 'type') this.type}): _bookedItems = bookedItems;
   factory _BookingsModel.fromJson(Map<String, dynamic> json) => _$BookingsModelFromJson(json);
 
 @override@JsonKey(name: 'id', readValue: _idCustomRead) final  int? id;
@@ -257,16 +263,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._bookedItems, _bookedItems)&&(identical(other.type, type) || other.type == type));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingsModel&&(identical(other.id, id) || other.id == id)&&(identical(other.clientName, clientName) || other.clientName == clientName)&&(identical(other.bookingStatus, bookingStatus) || other.bookingStatus == bookingStatus)&&(identical(other.bookedDate, bookedDate) || other.bookedDate == bookedDate)&&(identical(other.pickupDate, pickupDate) || other.pickupDate == pickupDate)&&(identical(other.returnDate, returnDate) || other.returnDate == returnDate)&&(identical(other.deliveryStatus, deliveryStatus) || other.deliveryStatus == deliveryStatus)&&(identical(other.paymentStatus, paymentStatus) || other.paymentStatus == paymentStatus)&&(identical(other.shopBookingId, shopBookingId) || other.shopBookingId == shopBookingId)&&(identical(other.staffName, staffName) || other.staffName == staffName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.bookedItems, _bookedItems)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(_bookedItems),type);
+int get hashCode {
+    return Object.hash(runtimeType,id,clientName,bookingStatus,bookedDate,pickupDate,returnDate,deliveryStatus,paymentStatus,shopBookingId,staffName,createdAt,const DeepCollectionEquality().hash(_bookedItems),type);
+}
 
 @override
 String toString() {
-  return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
+    return 'BookingsModel(id: $id, clientName: $clientName, bookingStatus: $bookingStatus, bookedDate: $bookedDate, pickupDate: $pickupDate, returnDate: $returnDate, deliveryStatus: $deliveryStatus, paymentStatus: $paymentStatus, shopBookingId: $shopBookingId, staffName: $staffName, createdAt: $createdAt, bookedItems: $bookedItems, type: $type)';
 }
 
 

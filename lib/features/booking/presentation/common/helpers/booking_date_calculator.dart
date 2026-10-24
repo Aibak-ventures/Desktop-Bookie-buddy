@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/shop_based_enums.dart';
 import 'package:bookie_buddy_web/utils/extensions/date_time_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Centralized date/cooling-period calculations shared by the New Booking and
 /// Edit Booking flows. All methods are static and side-effect free.

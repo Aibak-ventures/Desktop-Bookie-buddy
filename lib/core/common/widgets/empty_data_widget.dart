@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/utils/extensions/context_extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class EmptyDataWidget extends StatelessWidget {
   final String message;

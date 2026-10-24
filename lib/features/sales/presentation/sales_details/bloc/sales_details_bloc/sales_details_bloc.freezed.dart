@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'sales_details_bloc.dart';
@@ -9,6 +9,7 @@ part of 'sales_details_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SalesDetailsEventCopyWith<SalesDetailsEvent> get copyWith => _$SalesDetailsEven
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesDetailsEvent&&(identical(other.saleId, saleId) || other.saleId == saleId));
+  final _this = this as SalesDetailsEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesDetailsEvent&&(identical(other.saleId, _this.saleId) || other.saleId == _this.saleId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,saleId);
+int get hashCode {
+  final _this = this as SalesDetailsEvent;
+  return Object.hash(runtimeType,_this.saleId);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsEvent(saleId: $saleId)';
+  final _this = this as SalesDetailsEvent;
+  return 'SalesDetailsEvent(saleId: ${_this.saleId})';
 }
 
 
@@ -227,16 +233,18 @@ _$FetchSaleDetailsCopyWith<_FetchSaleDetails> get copyWith => __$FetchSaleDetail
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchSaleDetails&&(identical(other.saleId, saleId) || other.saleId == saleId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchSaleDetails&&(identical(other.saleId, saleId) || other.saleId == saleId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,saleId);
+int get hashCode {
+    return Object.hash(runtimeType,saleId);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsEvent.fetchSaleDetails(saleId: $saleId)';
+    return 'SalesDetailsEvent.fetchSaleDetails(saleId: $saleId)';
 }
 
 
@@ -293,16 +301,18 @@ _$DeleteSaleCopyWith<_DeleteSale> get copyWith => __$DeleteSaleCopyWithImpl<_Del
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteSale&&(identical(other.saleId, saleId) || other.saleId == saleId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DeleteSale&&(identical(other.saleId, saleId) || other.saleId == saleId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,saleId);
+int get hashCode {
+    return Object.hash(runtimeType,saleId);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsEvent.deleteSale(saleId: $saleId)';
+    return 'SalesDetailsEvent.deleteSale(saleId: $saleId)';
 }
 
 
@@ -349,7 +359,7 @@ mixin _$SalesDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesDetailsState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesDetailsState);
 }
 
 
@@ -358,7 +368,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SalesDetailsState()';
+    return 'SalesDetailsState()';
 }
 
 
@@ -538,7 +548,7 @@ class _Initial implements SalesDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
 
@@ -547,7 +557,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SalesDetailsState.initial()';
+    return 'SalesDetailsState.initial()';
 }
 
 
@@ -570,7 +580,7 @@ class _Loading implements SalesDetailsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
 }
 
 
@@ -579,7 +589,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SalesDetailsState.loading()';
+    return 'SalesDetailsState.loading()';
 }
 
 
@@ -607,16 +617,18 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.sale, sale) || other.sale == sale));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.sale, sale) || other.sale == sale));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,sale);
+int get hashCode {
+    return Object.hash(runtimeType,sale);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsState.loaded(sale: $sale)';
+    return 'SalesDetailsState.loaded(sale: $sale)';
 }
 
 
@@ -682,16 +694,18 @@ _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsState.error(message: $message)';
+    return 'SalesDetailsState.error(message: $message)';
 }
 
 
@@ -750,16 +764,18 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.message, message) || other.message == message)&&(identical(other.didPop, didPop) || other.didPop == didPop)&&(identical(other.needRefresh, needRefresh) || other.needRefresh == needRefresh));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.message, message) || other.message == message)&&(identical(other.didPop, didPop) || other.didPop == didPop)&&(identical(other.needRefresh, needRefresh) || other.needRefresh == needRefresh));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message,didPop,needRefresh);
+int get hashCode {
+    return Object.hash(runtimeType,message,didPop,needRefresh);
+}
 
 @override
 String toString() {
-  return 'SalesDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
+    return 'SalesDetailsState.success(message: $message, didPop: $didPop, needRefresh: $needRefresh)';
 }
 
 

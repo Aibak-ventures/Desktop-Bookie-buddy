@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'staff_search_cubit.dart';
@@ -9,6 +9,7 @@ part of 'staff_search_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StaffSearchStateCopyWith<StaffSearchState> get copyWith => _$StaffSearchStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffSearchState&&const DeepCollectionEquality().equals(other.staffs, staffs)&&(identical(other.selectedStaff, selectedStaff) || other.selectedStaff == selectedStaff)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+  final _this = this as StaffSearchState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StaffSearchState&&const DeepCollectionEquality().equals(other.staffs, _this.staffs)&&(identical(other.selectedStaff, _this.selectedStaff) || other.selectedStaff == _this.selectedStaff)&&(identical(other.errorMessage, _this.errorMessage) || other.errorMessage == _this.errorMessage)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(staffs),selectedStaff,errorMessage,isLoading);
+int get hashCode {
+  final _this = this as StaffSearchState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.staffs),_this.selectedStaff,_this.errorMessage,_this.isLoading);
+}
 
 @override
 String toString() {
-  return 'StaffSearchState(staffs: $staffs, selectedStaff: $selectedStaff, errorMessage: $errorMessage, isLoading: $isLoading)';
+  final _this = this as StaffSearchState;
+  return 'StaffSearchState(staffs: ${_this.staffs}, selectedStaff: ${_this.selectedStaff}, errorMessage: ${_this.errorMessage}, isLoading: ${_this.isLoading})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StaffSearchStateCopyWithImpl<$Res>
 /// Create a copy of StaffSearchState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? staffs = null,Object? selectedStaff = freezed,Object? errorMessage = freezed,Object? isLoading = null,}) {
-  return _then(_self.copyWith(
+  return _then(StaffSearchState(
 staffs: null == staffs ? _self.staffs : staffs // ignore: cast_nullable_to_non_nullable
 as List<StaffEntity>,selectedStaff: freezed == selectedStaff ? _self.selectedStaff : selectedStaff // ignore: cast_nullable_to_non_nullable
 as StaffEntity?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -221,7 +227,7 @@ return $default(_that.staffs,_that.selectedStaff,_that.errorMessage,_that.isLoad
 
 
 class _StaffSearchState implements StaffSearchState {
-  const _StaffSearchState({final  List<StaffEntity> staffs = const [], this.selectedStaff, this.errorMessage, this.isLoading = false}): _staffs = staffs;
+  const _StaffSearchState({ List<StaffEntity> staffs = const [], this.selectedStaff, this.errorMessage, this.isLoading = false}): _staffs = staffs;
   
 
  final  List<StaffEntity> _staffs;
@@ -245,16 +251,18 @@ _$StaffSearchStateCopyWith<_StaffSearchState> get copyWith => __$StaffSearchStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffSearchState&&const DeepCollectionEquality().equals(other._staffs, _staffs)&&(identical(other.selectedStaff, selectedStaff) || other.selectedStaff == selectedStaff)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StaffSearchState&&const DeepCollectionEquality().equals(other.staffs, _staffs)&&(identical(other.selectedStaff, selectedStaff) || other.selectedStaff == selectedStaff)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_staffs),selectedStaff,errorMessage,isLoading);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_staffs),selectedStaff,errorMessage,isLoading);
+}
 
 @override
 String toString() {
-  return 'StaffSearchState(staffs: $staffs, selectedStaff: $selectedStaff, errorMessage: $errorMessage, isLoading: $isLoading)';
+    return 'StaffSearchState(staffs: $staffs, selectedStaff: $selectedStaff, errorMessage: $errorMessage, isLoading: $isLoading)';
 }
 
 

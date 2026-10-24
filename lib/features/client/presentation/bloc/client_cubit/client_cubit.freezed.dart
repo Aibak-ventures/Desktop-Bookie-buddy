@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'client_cubit.dart';
@@ -9,6 +9,7 @@ part of 'client_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ClientStateCopyWith<ClientState> get copyWith => _$ClientStateCopyWithImpl<Clie
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientState&&const DeepCollectionEquality().equals(other.suggestions, suggestions)&&(identical(other.selectedClient, selectedClient) || other.selectedClient == selectedClient)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+  final _this = this as ClientState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClientState&&const DeepCollectionEquality().equals(other.suggestions, _this.suggestions)&&(identical(other.selectedClient, _this.selectedClient) || other.selectedClient == _this.selectedClient)&&(identical(other.searchQuery, _this.searchQuery) || other.searchQuery == _this.searchQuery)&&(identical(other.nextPageUrl, _this.nextPageUrl) || other.nextPageUrl == _this.nextPageUrl)&&(identical(other.isLoading, _this.isLoading) || other.isLoading == _this.isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(suggestions),selectedClient,searchQuery,nextPageUrl,isLoading);
+int get hashCode {
+  final _this = this as ClientState;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.suggestions),_this.selectedClient,_this.searchQuery,_this.nextPageUrl,_this.isLoading);
+}
 
 @override
 String toString() {
-  return 'ClientState(suggestions: $suggestions, selectedClient: $selectedClient, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
+  final _this = this as ClientState;
+  return 'ClientState(suggestions: ${_this.suggestions}, selectedClient: ${_this.selectedClient}, searchQuery: ${_this.searchQuery}, nextPageUrl: ${_this.nextPageUrl}, isLoading: ${_this.isLoading})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ClientStateCopyWithImpl<$Res>
 /// Create a copy of ClientState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? suggestions = null,Object? selectedClient = freezed,Object? searchQuery = null,Object? nextPageUrl = freezed,Object? isLoading = null,}) {
-  return _then(_self.copyWith(
+  return _then(ClientState(
 suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
 as List<ClientEntity>,selectedClient: freezed == selectedClient ? _self.selectedClient : selectedClient // ignore: cast_nullable_to_non_nullable
 as ClientEntity?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
@@ -222,7 +228,7 @@ return $default(_that.suggestions,_that.selectedClient,_that.searchQuery,_that.n
 
 
 class _ClientState implements ClientState {
-  const _ClientState({required final  List<ClientEntity> suggestions, required this.selectedClient, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
+  const _ClientState({required  List<ClientEntity> suggestions, required this.selectedClient, required this.searchQuery, this.nextPageUrl, this.isLoading = false}): _suggestions = suggestions;
   
 
  final  List<ClientEntity> _suggestions;
@@ -247,16 +253,18 @@ _$ClientStateCopyWith<_ClientState> get copyWith => __$ClientStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientState&&const DeepCollectionEquality().equals(other._suggestions, _suggestions)&&(identical(other.selectedClient, selectedClient) || other.selectedClient == selectedClient)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClientState&&const DeepCollectionEquality().equals(other.suggestions, _suggestions)&&(identical(other.selectedClient, selectedClient) || other.selectedClient == selectedClient)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.nextPageUrl, nextPageUrl) || other.nextPageUrl == nextPageUrl)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_suggestions),selectedClient,searchQuery,nextPageUrl,isLoading);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_suggestions),selectedClient,searchQuery,nextPageUrl,isLoading);
+}
 
 @override
 String toString() {
-  return 'ClientState(suggestions: $suggestions, selectedClient: $selectedClient, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
+    return 'ClientState(suggestions: $suggestions, selectedClient: $selectedClient, searchQuery: $searchQuery, nextPageUrl: $nextPageUrl, isLoading: $isLoading)';
 }
 
 

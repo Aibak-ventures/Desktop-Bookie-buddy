@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Titled white card container used in [DashboardScreen].
 class DashboardCard extends StatelessWidget {

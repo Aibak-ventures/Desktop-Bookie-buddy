@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'booking_other_details_model.dart';
@@ -9,19 +9,14 @@ part of 'booking_other_details_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$BookingOtherDetailsModel {
 
-@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;// Vehicle odometer reading — read/display only, never submitted back
-// through this model. See BookingOtherDetailsEntity.runningKilometers
-// (bookie_buddy_core) for the full explanation: the value the user
-// enters is submitted per-product instead (running_kilometers inside
-// each variant's measurements), not via this field, on either the
-// new-booking or edit path.
-@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? get coolingPeriodType;@JsonKey(name: 'total_product_count') int? get totalProductCount;
+@JsonKey(name: 'location_start') String? get locationStart;@JsonKey(name: 'location_from') String? get locationFrom;@JsonKey(name: 'location_to') String? get locationTo;@JsonKey(name: 'end') String? get end;@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) CoolingPeriodMode? get coolingPeriodType;@JsonKey(name: 'total_product_count') int? get totalProductCount;
 /// Create a copy of BookingOtherDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -34,16 +29,21 @@ $BookingOtherDetailsModelCopyWith<BookingOtherDetailsModel> get copyWith => _$Bo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingOtherDetailsModel&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.totalProductCount, totalProductCount) || other.totalProductCount == totalProductCount));
+  final _this = this as BookingOtherDetailsModel;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookingOtherDetailsModel&&(identical(other.locationStart, _this.locationStart) || other.locationStart == _this.locationStart)&&(identical(other.locationFrom, _this.locationFrom) || other.locationFrom == _this.locationFrom)&&(identical(other.locationTo, _this.locationTo) || other.locationTo == _this.locationTo)&&(identical(other.end, _this.end) || other.end == _this.end)&&(identical(other.coolingPeriodType, _this.coolingPeriodType) || other.coolingPeriodType == _this.coolingPeriodType)&&(identical(other.totalProductCount, _this.totalProductCount) || other.totalProductCount == _this.totalProductCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType,totalProductCount);
+int get hashCode {
+  final _this = this as BookingOtherDetailsModel;
+  return Object.hash(runtimeType,_this.locationStart,_this.locationFrom,_this.locationTo,_this.end,_this.coolingPeriodType,_this.totalProductCount);
+}
 
 @override
 String toString() {
-  return 'BookingOtherDetailsModel(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType, totalProductCount: $totalProductCount)';
+  final _this = this as BookingOtherDetailsModel;
+  return 'BookingOtherDetailsModel(locationStart: ${_this.locationStart}, locationFrom: ${_this.locationFrom}, locationTo: ${_this.locationTo}, end: ${_this.end}, coolingPeriodType: ${_this.coolingPeriodType}, totalProductCount: ${_this.totalProductCount})';
 }
 
 
@@ -72,7 +72,7 @@ class _$BookingOtherDetailsModelCopyWithImpl<$Res>
 /// Create a copy of BookingOtherDetailsModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? locationStart = freezed,Object? locationFrom = freezed,Object? locationTo = freezed,Object? end = freezed,Object? coolingPeriodType = freezed,Object? totalProductCount = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(BookingOtherDetailsModel(
 locationStart: freezed == locationStart ? _self.locationStart : locationStart // ignore: cast_nullable_to_non_nullable
 as String?,locationFrom: freezed == locationFrom ? _self.locationFrom : locationFrom // ignore: cast_nullable_to_non_nullable
 as String?,locationTo: freezed == locationTo ? _self.locationTo : locationTo // ignore: cast_nullable_to_non_nullable
@@ -226,12 +226,6 @@ class _BookingOtherDetailsModel implements BookingOtherDetailsModel {
 @override@JsonKey(name: 'location_start') final  String? locationStart;
 @override@JsonKey(name: 'location_from') final  String? locationFrom;
 @override@JsonKey(name: 'location_to') final  String? locationTo;
-// Vehicle odometer reading — read/display only, never submitted back
-// through this model. See BookingOtherDetailsEntity.runningKilometers
-// (bookie_buddy_core) for the full explanation: the value the user
-// enters is submitted per-product instead (running_kilometers inside
-// each variant's measurements), not via this field, on either the
-// new-booking or edit path.
 @override@JsonKey(name: 'end') final  String? end;
 @override@JsonKey(name: 'cooling_period_type', fromJson: CoolingPeriodMode.tryFromJson, toJson: CoolingPeriodMode.tryToJson) final  CoolingPeriodMode? coolingPeriodType;
 @override@JsonKey(name: 'total_product_count') final  int? totalProductCount;
@@ -249,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingOtherDetailsModel&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.totalProductCount, totalProductCount) || other.totalProductCount == totalProductCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookingOtherDetailsModel&&(identical(other.locationStart, locationStart) || other.locationStart == locationStart)&&(identical(other.locationFrom, locationFrom) || other.locationFrom == locationFrom)&&(identical(other.locationTo, locationTo) || other.locationTo == locationTo)&&(identical(other.end, end) || other.end == end)&&(identical(other.coolingPeriodType, coolingPeriodType) || other.coolingPeriodType == coolingPeriodType)&&(identical(other.totalProductCount, totalProductCount) || other.totalProductCount == totalProductCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType,totalProductCount);
+int get hashCode {
+    return Object.hash(runtimeType,locationStart,locationFrom,locationTo,end,coolingPeriodType,totalProductCount);
+}
 
 @override
 String toString() {
-  return 'BookingOtherDetailsModel(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType, totalProductCount: $totalProductCount)';
+    return 'BookingOtherDetailsModel(locationStart: $locationStart, locationFrom: $locationFrom, locationTo: $locationTo, end: $end, coolingPeriodType: $coolingPeriodType, totalProductCount: $totalProductCount)';
 }
 
 

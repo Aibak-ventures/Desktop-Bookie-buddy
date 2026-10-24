@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 class KeyboardNavigableDatePicker extends StatefulWidget {
   final DateTime initialDate;
@@ -204,9 +204,8 @@ class _KeyboardNavigableDatePickerState
               child: Center(
                 child: Text(
                   day,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodySmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -251,9 +250,8 @@ class _KeyboardNavigableDatePickerState
                     ? (widget.selectedColor ??
                           Theme.of(context).colorScheme.primary)
                     : isFocused
-                    ? Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.2)
+                    ? Theme.of(context).colorScheme.primary
+                          .withValues(alpha: 0.2)
                     : null,
                 borderRadius: BorderRadius.circular(8),
                 border: isToday
