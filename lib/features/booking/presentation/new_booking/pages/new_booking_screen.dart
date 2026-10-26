@@ -10,6 +10,7 @@ import 'package:bookie_buddy_shared/core/core/constants/enums/payment_method_enu
 import 'package:bookie_buddy_shared/core/features/accounts/domain/entities/account_entity/account_entity.dart';
 import 'package:bookie_buddy_shared/core/features/service/domain/entities/service_entity/service_entity.dart';
 import 'package:bookie_buddy_web/core/common/entities/user_entity/user_entity.dart';
+import 'package:bookie_buddy_web/core/common/widgets/apply_tax_switch.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_drop_down_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/custom_phone_number_field.dart';
 import 'package:bookie_buddy_web/core/common/widgets/dialogs/show_discard_dialog.dart';
@@ -231,6 +232,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
   PurchaseMode purchaseMode = PurchaseMode.normal;
   bool isSecurityPaid = true;
   bool sendPdfToWhatsApp = false;
+  bool isTaxApplied = true;
   bool decreaseStockForPastDate = false;
   bool isDiscountPercentage = false;
   final _discountTypeNotifier = ValueNotifier<bool>(false);
@@ -626,6 +628,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     advanceAmountController.clear();
     securityAmountController.clear();
     isSecurityPaid = true;
+    isTaxApplied = true;
     _securityPaidDate = DateTime.now();
     isAdvanceSplit = false;
     splitBankAmountController.clear();
@@ -1124,17 +1127,35 @@ class NewBookingScreenState extends State<NewBookingScreen> {
     );
   }
 
+  bool get _showTaxSwitch =>
+      selectedBookingType != BookingType.oldBooking &&
+      (context.read<UserCubit>().state?.shopDetails.hasEnabledTax ?? false);
+
+  void _onTaxAppliedChanged(bool value) {
+    rebuild(() => isTaxApplied = value);
+    _handleSalesTotalMayHaveChanged();
+  }
+
   TaxSummaryEntity _calculateTaxSummary({
     double productTotal = 0,
     double additionalCharges = 0,
     double securityAmount = 0,
     double discountAmount = 0,
-  }) => context.read<UserCubit>().state!.shopDetails.calculateTaxSummary(
-    productTotal: productTotal,
-    additionalCharges: additionalCharges,
-    securityAmount: securityAmount,
-    discountAmount: discountAmount,
-  );
+  }) {
+    if (!isTaxApplied) {
+      return const TaxSummaryEntity(
+        appliedTaxes: [],
+        additionalTaxAmount: 0,
+        includedTaxAmount: 0,
+      );
+    }
+    return context.read<UserCubit>().state!.shopDetails.calculateTaxSummary(
+      productTotal: productTotal,
+      additionalCharges: additionalCharges,
+      securityAmount: securityAmount,
+      discountAmount: discountAmount,
+    );
+  }
 
   Widget _buildSummarySection() {
     return BookingSummarySection(
@@ -1304,6 +1325,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       pickupTime: pickupTime,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
+      isTaxApplied: _showTaxSwitch ? isTaxApplied : null,
       purchaseMode: purchaseMode,
     );
   }
@@ -1324,6 +1346,7 @@ class NewBookingScreenState extends State<NewBookingScreen> {
       salesSplit: _salesSplit,
       decreaseStockForPastDate: decreaseStockForPastDate,
       isPastDate: _isPastDate(),
+      isTaxApplied: _showTaxSwitch ? isTaxApplied : null,
     );
   }
 }

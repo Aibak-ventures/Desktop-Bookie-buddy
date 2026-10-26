@@ -24,5 +24,6 @@ abstract class SalesRequestEntity with _$SalesRequestEntity {
     // for how this is assembled.
     List<SalesPaymentRequestEntity>? payments,
     @Default(false) bool sendPdfToWhatsApp,
+    bool? isTaxApplied,
   }) = _SalesRequestEntity;
 }

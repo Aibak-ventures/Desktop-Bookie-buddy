@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SalesRequestEntity {
 
- int? get id; int? get staffId; String? get clientPhone; String? get address; String? get saleDate; List<ProductSelectedEntity>? get products; bool? get stockCountDecrease; String? get description; int? get discountAmount; int? get paidAmount; List<SalesPaymentRequestEntity>? get payments; bool get sendPdfToWhatsApp;
+ int? get id; int? get staffId; String? get clientPhone; String? get address; String? get saleDate; List<ProductSelectedEntity>? get products; bool? get stockCountDecrease; String? get description; int? get discountAmount; int? get paidAmount; List<SalesPaymentRequestEntity>? get payments; bool get sendPdfToWhatsApp; bool? get isTaxApplied;
 /// Create a copy of SalesRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $SalesRequestEntityCopyWith<SalesRequestEntity> get copyWith => _$SalesRequestEn
 @override
 bool operator ==(Object other) {
   final _this = this as SalesRequestEntity;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesRequestEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&const DeepCollectionEquality().equals(other.products, _this.products)&&(identical(other.stockCountDecrease, _this.stockCountDecrease) || other.stockCountDecrease == _this.stockCountDecrease)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.discountAmount, _this.discountAmount) || other.discountAmount == _this.discountAmount)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&const DeepCollectionEquality().equals(other.payments, _this.payments)&&(identical(other.sendPdfToWhatsApp, _this.sendPdfToWhatsApp) || other.sendPdfToWhatsApp == _this.sendPdfToWhatsApp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalesRequestEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.staffId, _this.staffId) || other.staffId == _this.staffId)&&(identical(other.clientPhone, _this.clientPhone) || other.clientPhone == _this.clientPhone)&&(identical(other.address, _this.address) || other.address == _this.address)&&(identical(other.saleDate, _this.saleDate) || other.saleDate == _this.saleDate)&&const DeepCollectionEquality().equals(other.products, _this.products)&&(identical(other.stockCountDecrease, _this.stockCountDecrease) || other.stockCountDecrease == _this.stockCountDecrease)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.discountAmount, _this.discountAmount) || other.discountAmount == _this.discountAmount)&&(identical(other.paidAmount, _this.paidAmount) || other.paidAmount == _this.paidAmount)&&const DeepCollectionEquality().equals(other.payments, _this.payments)&&(identical(other.sendPdfToWhatsApp, _this.sendPdfToWhatsApp) || other.sendPdfToWhatsApp == _this.sendPdfToWhatsApp)&&(identical(other.isTaxApplied, _this.isTaxApplied) || other.isTaxApplied == _this.isTaxApplied));
 }
 
 
 @override
 int get hashCode {
   final _this = this as SalesRequestEntity;
-  return Object.hash(runtimeType,_this.id,_this.staffId,_this.clientPhone,_this.address,_this.saleDate,const DeepCollectionEquality().hash(_this.products),_this.stockCountDecrease,_this.description,_this.discountAmount,_this.paidAmount,const DeepCollectionEquality().hash(_this.payments),_this.sendPdfToWhatsApp);
+  return Object.hash(runtimeType,_this.id,_this.staffId,_this.clientPhone,_this.address,_this.saleDate,const DeepCollectionEquality().hash(_this.products),_this.stockCountDecrease,_this.description,_this.discountAmount,_this.paidAmount,const DeepCollectionEquality().hash(_this.payments),_this.sendPdfToWhatsApp,_this.isTaxApplied);
 }
 
 @override
 String toString() {
   final _this = this as SalesRequestEntity;
-  return 'SalesRequestEntity(id: ${_this.id}, staffId: ${_this.staffId}, clientPhone: ${_this.clientPhone}, address: ${_this.address}, saleDate: ${_this.saleDate}, products: ${_this.products}, stockCountDecrease: ${_this.stockCountDecrease}, description: ${_this.description}, discountAmount: ${_this.discountAmount}, paidAmount: ${_this.paidAmount}, payments: ${_this.payments}, sendPdfToWhatsApp: ${_this.sendPdfToWhatsApp})';
+  return 'SalesRequestEntity(id: ${_this.id}, staffId: ${_this.staffId}, clientPhone: ${_this.clientPhone}, address: ${_this.address}, saleDate: ${_this.saleDate}, products: ${_this.products}, stockCountDecrease: ${_this.stockCountDecrease}, description: ${_this.description}, discountAmount: ${_this.discountAmount}, paidAmount: ${_this.paidAmount}, payments: ${_this.payments}, sendPdfToWhatsApp: ${_this.sendPdfToWhatsApp}, isTaxApplied: ${_this.isTaxApplied})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $SalesRequestEntityCopyWith<$Res>  {
   factory $SalesRequestEntityCopyWith(SalesRequestEntity value, $Res Function(SalesRequestEntity) _then) = _$SalesRequestEntityCopyWithImpl;
 @useResult
 $Res call({
- int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, List<SalesPaymentRequestEntity>? payments, bool sendPdfToWhatsApp
+ int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, List<SalesPaymentRequestEntity>? payments, bool sendPdfToWhatsApp, bool? isTaxApplied
 });
 
 
@@ -68,7 +68,7 @@ class _$SalesRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of SalesRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? staffId = freezed,Object? clientPhone = freezed,Object? address = freezed,Object? saleDate = freezed,Object? products = freezed,Object? stockCountDecrease = freezed,Object? description = freezed,Object? discountAmount = freezed,Object? paidAmount = freezed,Object? payments = freezed,Object? sendPdfToWhatsApp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? staffId = freezed,Object? clientPhone = freezed,Object? address = freezed,Object? saleDate = freezed,Object? products = freezed,Object? stockCountDecrease = freezed,Object? description = freezed,Object? discountAmount = freezed,Object? paidAmount = freezed,Object? payments = freezed,Object? sendPdfToWhatsApp = null,Object? isTaxApplied = freezed,}) {
   return _then(SalesRequestEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
@@ -82,7 +82,8 @@ as String?,discountAmount: freezed == discountAmount ? _self.discountAmount : di
 as int?,paidAmount: freezed == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable
 as int?,payments: freezed == payments ? _self.payments : payments // ignore: cast_nullable_to_non_nullable
 as List<SalesPaymentRequestEntity>?,sendPdfToWhatsApp: null == sendPdfToWhatsApp ? _self.sendPdfToWhatsApp : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isTaxApplied: freezed == isTaxApplied ? _self.isTaxApplied : isTaxApplied // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -167,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp,  bool? isTaxApplied)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity() when $default != null:
-return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp);case _:
+return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp,_that.isTaxApplied);case _:
   return orElse();
 
 }
@@ -188,10 +189,10 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp,  bool? isTaxApplied)  $default,) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity():
-return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp);case _:
+return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp,_that.isTaxApplied);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +209,10 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int? staffId,  String? clientPhone,  String? address,  String? saleDate,  List<ProductSelectedEntity>? products,  bool? stockCountDecrease,  String? description,  int? discountAmount,  int? paidAmount,  List<SalesPaymentRequestEntity>? payments,  bool sendPdfToWhatsApp,  bool? isTaxApplied)?  $default,) {final _that = this;
 switch (_that) {
 case _SalesRequestEntity() when $default != null:
-return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp);case _:
+return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.saleDate,_that.products,_that.stockCountDecrease,_that.description,_that.discountAmount,_that.paidAmount,_that.payments,_that.sendPdfToWhatsApp,_that.isTaxApplied);case _:
   return null;
 
 }
@@ -223,7 +224,7 @@ return $default(_that.id,_that.staffId,_that.clientPhone,_that.address,_that.sal
 
 
 class _SalesRequestEntity implements SalesRequestEntity {
-  const _SalesRequestEntity({this.id, this.staffId, this.clientPhone, this.address, this.saleDate,  List<ProductSelectedEntity>? products, this.stockCountDecrease, this.description, this.discountAmount, this.paidAmount,  List<SalesPaymentRequestEntity>? payments, this.sendPdfToWhatsApp = false}): _products = products,_payments = payments;
+  const _SalesRequestEntity({this.id, this.staffId, this.clientPhone, this.address, this.saleDate,  List<ProductSelectedEntity>? products, this.stockCountDecrease, this.description, this.discountAmount, this.paidAmount,  List<SalesPaymentRequestEntity>? payments, this.sendPdfToWhatsApp = false, this.isTaxApplied}): _products = products,_payments = payments;
   
 
 @override final  int? id;
@@ -254,6 +255,7 @@ class _SalesRequestEntity implements SalesRequestEntity {
 }
 
 @override@JsonKey() final  bool sendPdfToWhatsApp;
+@override final  bool? isTaxApplied;
 
 /// Create a copy of SalesRequestEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -265,18 +267,18 @@ _$SalesRequestEntityCopyWith<_SalesRequestEntity> get copyWith => __$SalesReques
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalesRequestEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.stockCountDecrease, stockCountDecrease) || other.stockCountDecrease == stockCountDecrease)&&(identical(other.description, description) || other.description == description)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&const DeepCollectionEquality().equals(other.payments, _payments)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalesRequestEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.staffId, staffId) || other.staffId == staffId)&&(identical(other.clientPhone, clientPhone) || other.clientPhone == clientPhone)&&(identical(other.address, address) || other.address == address)&&(identical(other.saleDate, saleDate) || other.saleDate == saleDate)&&const DeepCollectionEquality().equals(other.products, _products)&&(identical(other.stockCountDecrease, stockCountDecrease) || other.stockCountDecrease == stockCountDecrease)&&(identical(other.description, description) || other.description == description)&&(identical(other.discountAmount, discountAmount) || other.discountAmount == discountAmount)&&(identical(other.paidAmount, paidAmount) || other.paidAmount == paidAmount)&&const DeepCollectionEquality().equals(other.payments, _payments)&&(identical(other.sendPdfToWhatsApp, sendPdfToWhatsApp) || other.sendPdfToWhatsApp == sendPdfToWhatsApp)&&(identical(other.isTaxApplied, isTaxApplied) || other.isTaxApplied == isTaxApplied));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,staffId,clientPhone,address,saleDate,const DeepCollectionEquality().hash(_products),stockCountDecrease,description,discountAmount,paidAmount,const DeepCollectionEquality().hash(_payments),sendPdfToWhatsApp);
+    return Object.hash(runtimeType,id,staffId,clientPhone,address,saleDate,const DeepCollectionEquality().hash(_products),stockCountDecrease,description,discountAmount,paidAmount,const DeepCollectionEquality().hash(_payments),sendPdfToWhatsApp,isTaxApplied);
 }
 
 @override
 String toString() {
-    return 'SalesRequestEntity(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, payments: $payments, sendPdfToWhatsApp: $sendPdfToWhatsApp)';
+    return 'SalesRequestEntity(id: $id, staffId: $staffId, clientPhone: $clientPhone, address: $address, saleDate: $saleDate, products: $products, stockCountDecrease: $stockCountDecrease, description: $description, discountAmount: $discountAmount, paidAmount: $paidAmount, payments: $payments, sendPdfToWhatsApp: $sendPdfToWhatsApp, isTaxApplied: $isTaxApplied)';
 }
 
 
@@ -287,7 +289,7 @@ abstract mixin class _$SalesRequestEntityCopyWith<$Res> implements $SalesRequest
   factory _$SalesRequestEntityCopyWith(_SalesRequestEntity value, $Res Function(_SalesRequestEntity) _then) = __$SalesRequestEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, List<SalesPaymentRequestEntity>? payments, bool sendPdfToWhatsApp
+ int? id, int? staffId, String? clientPhone, String? address, String? saleDate, List<ProductSelectedEntity>? products, bool? stockCountDecrease, String? description, int? discountAmount, int? paidAmount, List<SalesPaymentRequestEntity>? payments, bool sendPdfToWhatsApp, bool? isTaxApplied
 });
 
 
@@ -304,7 +306,7 @@ class __$SalesRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of SalesRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? staffId = freezed,Object? clientPhone = freezed,Object? address = freezed,Object? saleDate = freezed,Object? products = freezed,Object? stockCountDecrease = freezed,Object? description = freezed,Object? discountAmount = freezed,Object? paidAmount = freezed,Object? payments = freezed,Object? sendPdfToWhatsApp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? staffId = freezed,Object? clientPhone = freezed,Object? address = freezed,Object? saleDate = freezed,Object? products = freezed,Object? stockCountDecrease = freezed,Object? description = freezed,Object? discountAmount = freezed,Object? paidAmount = freezed,Object? payments = freezed,Object? sendPdfToWhatsApp = null,Object? isTaxApplied = freezed,}) {
   return _then(_SalesRequestEntity(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,staffId: freezed == staffId ? _self.staffId : staffId // ignore: cast_nullable_to_non_nullable
@@ -318,7 +320,8 @@ as String?,discountAmount: freezed == discountAmount ? _self.discountAmount : di
 as int?,paidAmount: freezed == paidAmount ? _self.paidAmount : paidAmount // ignore: cast_nullable_to_non_nullable
 as int?,payments: freezed == payments ? _self._payments : payments // ignore: cast_nullable_to_non_nullable
 as List<SalesPaymentRequestEntity>?,sendPdfToWhatsApp: null == sendPdfToWhatsApp ? _self.sendPdfToWhatsApp : sendPdfToWhatsApp // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isTaxApplied: freezed == isTaxApplied ? _self.isTaxApplied : isTaxApplied // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

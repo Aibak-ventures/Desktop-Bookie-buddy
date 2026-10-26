@@ -66,6 +66,7 @@ class BookingRequestBuilder {
     required TimeOfDay? pickupTime,
     required TimeOfDay? returnTime,
     required bool sendPdfToWhatsApp,
+    bool? isTaxApplied,
     PurchaseMode purchaseMode = PurchaseMode.normal,
   }) {
     // --- Products: apply day multiplier + optional running km ---
@@ -182,6 +183,7 @@ class BookingRequestBuilder {
       pickupTime: pickupTime,
       returnTime: returnTime,
       sendPdfToWhatsApp: sendPdfToWhatsApp,
+      isTaxApplied: isTaxApplied,
     );
   }
 
@@ -206,6 +208,7 @@ class BookingRequestBuilder {
     required SalesSplitPayment salesSplit,
     required bool decreaseStockForPastDate,
     required bool isPastDate,
+    bool? isTaxApplied,
   }) {
     final variants = products
         .map(
@@ -245,6 +248,7 @@ class BookingRequestBuilder {
       saleDate: saleDate.format(),
       description: description,
       sendPdfToWhatsApp: sendInvoice,
+      isTaxApplied: isTaxApplied,
       products: products,
       // Not sent — sales have no partial-payment/credit workflow, so the
       // backend always settles a created sale as fully paid on its own

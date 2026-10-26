@@ -283,6 +283,14 @@ extension SalesFlowBuilders on NewBookingScreenState {
                         ),
                       ),
                     ),
+                  if (_showTaxSwitch) ...[
+                    const SizedBox(height: 12),
+                    ApplyTaxSwitch(
+                      value: isTaxApplied,
+                      onChanged: _onTaxAppliedChanged,
+                      itemName: 'sale',
+                    ),
+                  ],
                   const SizedBox(height: 16),
                 ],
               ),

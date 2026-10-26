@@ -25,6 +25,7 @@ _SalesRequestModel _$SalesRequestModelFromJson(Map<String, dynamic> json) =>
             (e) => SalesPaymentRequestModel.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
+      isTaxApplied: json['apply_tax'] as bool?,
     );
 
 Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
@@ -40,4 +41,5 @@ Map<String, dynamic> _$SalesRequestModelToJson(_SalesRequestModel instance) =>
       'paid_amount': ?instance.paidAmount,
       'payments': ?_paymentsToJson(instance.payments),
       'send_invoice': instance.sendPdfToWhatsApp,
+      'apply_tax': ?instance.isTaxApplied,
     };

@@ -990,6 +990,14 @@ extension BookingFlowBuilders on NewBookingScreenState {
                       );
                     },
                   ),
+                  if (_showTaxSwitch) ...[
+                    const SizedBox(height: 12),
+                    ApplyTaxSwitch(
+                      value: isTaxApplied,
+                      onChanged: _onTaxAppliedChanged,
+                      itemName: 'booking',
+                    ),
+                  ],
                   const SizedBox(height: 20),
                 ],
               ),

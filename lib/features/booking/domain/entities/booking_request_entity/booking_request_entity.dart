@@ -43,6 +43,7 @@ abstract class BookingRequestEntity with _$BookingRequestEntity {
     int? oldBookingAccountId,
     // Only use this field when creating an old booking.
     int? taxAmount,
+    bool? isTaxApplied,
   }) = _BookingRequestEntity;
 }
 

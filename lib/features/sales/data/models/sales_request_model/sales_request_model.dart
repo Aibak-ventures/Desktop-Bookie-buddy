@@ -38,6 +38,7 @@ abstract class SalesRequestModel with _$SalesRequestModel {
     @JsonKey(name: 'send_invoice', includeToJson: true, includeFromJson: false)
     @Default(false)
     bool sendPdfToWhatsApp,
+    @JsonKey(name: 'apply_tax') bool? isTaxApplied,
   }) = _SalesRequestModel;
 
   factory SalesRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -59,5 +60,6 @@ abstract class SalesRequestModel with _$SalesRequestModel {
             ?.map((e) => SalesPaymentRequestModel.fromEntity(e))
             .toList(),
         sendPdfToWhatsApp: entity.sendPdfToWhatsApp,
+        isTaxApplied: entity.isTaxApplied,
       );
 }

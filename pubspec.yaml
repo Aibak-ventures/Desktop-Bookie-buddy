@@ -47,7 +47,7 @@ dependencies:
   bookie_buddy_shared:
     git:
       url: https://github.com/Aibak-ventures/bookie-buddy-shared.git
-      ref: v2.0.0 # tag name
+      ref: v2.1.0 # tag name
 
 
   image_picker: ^1.1.2

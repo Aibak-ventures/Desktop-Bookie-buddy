@@ -59,6 +59,7 @@ _BookingRequestModel _$BookingRequestModelFromJson(Map<String, dynamic> json) =>
       securityPaymentAccountId: (json['security_account_id'] as num?)?.toInt(),
       oldBookingAccountId: (json['account_id'] as num?)?.toInt(),
       taxAmount: (json['tax_amount'] as num?)?.toInt(),
+      isTaxApplied: json['apply_tax'] as bool?,
     );
 
 Map<String, dynamic> _$BookingRequestModelToJson(
@@ -92,6 +93,7 @@ Map<String, dynamic> _$BookingRequestModelToJson(
   'security_account_id': ?instance.securityPaymentAccountId,
   'account_id': ?instance.oldBookingAccountId,
   'tax_amount': ?instance.taxAmount,
+  'apply_tax': ?instance.isTaxApplied,
 };
 
 const _$DeliveryStatusEnumMap = {
