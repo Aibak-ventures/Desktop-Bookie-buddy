@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "connectivity_plus", path: "../.packages/connectivity_plus-7.3.2"),
-        .package(name: "file_picker_darwin", path: "../.packages/file_picker_darwin-2.3.4"),
+        .package(name: "file_picker_darwin", path: "../.packages/file_picker_darwin-2.4.0"),
         .package(name: "flutter_image_compress_common", path: "../.packages/flutter_image_compress_common-1.1.1"),
         .package(name: "image_cropper", path: "../.packages/image_cropper-13.0.0"),
         .package(name: "image_picker_ios", path: "../.packages/image_picker_ios-0.8.13+13"),
