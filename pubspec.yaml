@@ -47,8 +47,7 @@ dependencies:
   bookie_buddy_shared:
     git:
       url: https://github.com/Aibak-ventures/bookie-buddy-shared.git
-      ref: v2.1.0 # tag name
-
+      ref: v2.1.1 # tag name
 
   image_picker: ^1.1.2
   image: ^4.3.0
@@ -109,7 +108,6 @@ dev_dependencies:
   freezed: ^4.0.3
   build_runner: ^2.11.0
   json_serializable: ^6.14.0
-
 
 # App icon configuration
 flutter_launcher_icons:
