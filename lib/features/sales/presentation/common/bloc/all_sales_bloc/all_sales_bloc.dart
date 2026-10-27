@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bookie_buddy_shared/core/core/common/models/pagination_model/pagination_model.dart';
 import 'package:bookie_buddy_web/features/sales/domain/entities/sale_entity/sale_entity.dart';
 import 'package:bookie_buddy_web/features/sales/domain/usecases/get_sales_usecase.dart';
@@ -41,7 +42,7 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
   AllSalesBloc({required GetSalesUseCase getSalesUseCase})
     : _getSalesUseCase = getSalesUseCase,
       super(const AllSalesState.loading()) {
-    on<_LoadSales>(_onFetchSales);
+    on<_LoadSales>(_onFetchSales, transformer: restartable());
     on<_LoadMoreSales>(_onLoadMoreSales, transformer: throttleDroppable());
   }
 
@@ -63,6 +64,14 @@ class AllSalesBloc extends Bloc<AllSalesEvent, AllSalesState> {
         fromDate: s.fromDate,
         toDate: s.toDate,
       );
+
+      // Filters changed or a reload started while this page was loading.
+      final latest = state;
+      if (latest is! _Loaded ||
+          latest.nextPageUrl != s.nextPageUrl ||
+          latest.searchQuery != s.searchQuery) {
+        return;
+      }
 
       emit(
         s.copyWith(

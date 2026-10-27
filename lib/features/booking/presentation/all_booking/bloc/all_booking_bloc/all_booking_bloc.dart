@@ -163,6 +163,10 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
 
     if (shouldShowLoading) {
       emit(const _Loading());
+    } else {
+      // Drop the previous query's cursor so a scroll while this reload is in
+      // flight can't request a page that doesn't exist for the new filters.
+      emit(currentState.copyWith(nextPageUrl: null, isPaginating: false));
     }
 
     try {
@@ -214,6 +218,15 @@ class AllBookingBloc extends Bloc<AllBookingEvent, AllBookingState> {
         searchQuery: s.searchQuery,
         purchaseMode: s.purchaseMode,
       );
+
+      // Filters changed (or a reload started) while this page was loading;
+      // its rows belong to the old query, so discard them.
+      final latest = state;
+      if (latest is! _Loaded ||
+          latest.nextPageUrl != s.nextPageUrl ||
+          latest.searchQuery != s.searchQuery) {
+        return;
+      }
 
       final mergedBookings = [...s.bookings, ...result.pagination.data];
       final uniqueBookings = <int, DesktopBookingItemEntity>{
