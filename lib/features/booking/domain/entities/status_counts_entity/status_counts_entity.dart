@@ -6,42 +6,10 @@ part 'status_counts_entity.freezed.dart';
 @freezed
 abstract class StatusCountsEntity with _$StatusCountsEntity {
   const factory StatusCountsEntity({
-    @Default(0) int completed,
-    @Default(0) int upcoming,
-    @Default(0) int returns,
-    @Default(0) int pending,
-    @Default(0) int notReturned,
-    @Default(0) int cancelled,
-    @Default(0) int expired,
+    @Default(<BookingListFilter, int>{}) Map<BookingListFilter, int> counts,
   }) = _StatusCountsEntity;
 }
 
 extension StatusCountsEntityX on StatusCountsEntity {
-  int get total =>
-      completed +
-      upcoming +
-      returns +
-      pending +
-      notReturned +
-      cancelled +
-      expired;
-
-  int fromFilter(BookingListFilter filter) {
-    switch (filter) {
-      case BookingListFilter.upcoming:
-        return upcoming;
-      case BookingListFilter.returns:
-        return returns;
-      case BookingListFilter.pending:
-        return pending;
-      case BookingListFilter.notReturned:
-        return notReturned;
-      case BookingListFilter.completed:
-        return completed;
-      case BookingListFilter.cancelled:
-        return cancelled;
-      case BookingListFilter.expired:
-        return expired;
-    }
-  }
+  int fromFilter(BookingListFilter filter) => counts[filter] ?? 0;
 }

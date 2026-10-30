@@ -1,6 +1,7 @@
 import 'package:bookie_buddy_shared/bookie_buddy_shared.dart';
 
 enum BookingListFilter implements BackendKeyedEnum {
+  all('all', 'All'),
   upcoming('upcoming', 'Upcoming'),
   returns('returns', 'Returns'),
   pending('pending', 'Pending'),

@@ -1,35 +1,27 @@
-// ignore_for_file: invalid_annotation_target
-
+import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/features/booking/domain/entities/status_counts_entity/status_counts_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'status_counts_model.freezed.dart';
-part 'status_counts_model.g.dart';
 
-@freezed
+/// `status_counts` from the bookings list API: a flat map of
+/// [BookingListFilter.value] → count. Keys are read from the enum, so a new
+/// filter only needs a new [BookingListFilter] value.
+@Freezed(fromJson: false, toJson: false)
 abstract class StatusCountsModel with _$StatusCountsModel {
   const factory StatusCountsModel({
-    @Default(0) int completed,
-    @Default(0) int upcoming,
-    @Default(0) int returns,
-    @Default(0) int pending,
-    @JsonKey(name: 'not_returned') @Default(0) int notReturned,
-    @Default(0) int cancelled,
-    @Default(0) int expired,
+    @Default(<BookingListFilter, int>{}) Map<BookingListFilter, int> counts,
   }) = _StatusCountsModel;
 
   factory StatusCountsModel.fromJson(Map<String, dynamic> json) =>
-      _$StatusCountsModelFromJson(json);
+      StatusCountsModel(
+        counts: {
+          for (final filter in BookingListFilter.values)
+            if (json[filter.value] case final num count) filter: count.toInt(),
+        },
+      );
 }
 
 extension StatusCountsModelMapper on StatusCountsModel {
-  StatusCountsEntity toEntity() => StatusCountsEntity(
-    completed: completed,
-    upcoming: upcoming,
-    returns: returns,
-    pending: pending,
-    notReturned: notReturned,
-    cancelled: cancelled,
-    expired: expired,
-  );
+  StatusCountsEntity toEntity() => StatusCountsEntity(counts: counts);
 }

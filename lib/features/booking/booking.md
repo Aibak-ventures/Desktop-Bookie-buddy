@@ -176,7 +176,7 @@ Handles: product search, date selection, product add/remove/quantity, price edit
 | --- | --- |
 | `BookingDetailsEntity` | Now from `bookie_buddy_shared` (core/) (shared with mobile — see `docs/shared-packages-plan.md` in the mobile repo). `actualPaidAmount`, `remainingSecurityBalance`, `netBalance`, `hasPartialSecurityRefund` live in `booking_details_entity_web_extensions.dart` (web-local, no mobile equivalent) |
 | `BookingRequestEntity` | `hasChanges` — compares to original for partial update detection |
-| `StatusCountsEntity` | pending, upcoming, returns, not_returned, completed counts |
+| `StatusCountsEntity` | `Map<BookingListFilter, int>` of tab counts, keyed by the enum |
 
 ---
 

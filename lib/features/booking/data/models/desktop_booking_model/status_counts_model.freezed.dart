@@ -12,38 +12,35 @@ part of 'status_counts_model.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$StatusCountsModel {
 
- int get completed; int get upcoming; int get returns; int get pending;@JsonKey(name: 'not_returned') int get notReturned; int get cancelled; int get expired;
+ Map<BookingListFilter, int> get counts;
 /// Create a copy of StatusCountsModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $StatusCountsModelCopyWith<StatusCountsModel> get copyWith => _$StatusCountsModelCopyWithImpl<StatusCountsModel>(this as StatusCountsModel, _$identity);
 
-  /// Serializes this StatusCountsModel to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
   final _this = this as StatusCountsModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusCountsModel&&(identical(other.completed, _this.completed) || other.completed == _this.completed)&&(identical(other.upcoming, _this.upcoming) || other.upcoming == _this.upcoming)&&(identical(other.returns, _this.returns) || other.returns == _this.returns)&&(identical(other.pending, _this.pending) || other.pending == _this.pending)&&(identical(other.notReturned, _this.notReturned) || other.notReturned == _this.notReturned)&&(identical(other.cancelled, _this.cancelled) || other.cancelled == _this.cancelled)&&(identical(other.expired, _this.expired) || other.expired == _this.expired));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatusCountsModel&&const DeepCollectionEquality().equals(other.counts, _this.counts));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode {
   final _this = this as StatusCountsModel;
-  return Object.hash(runtimeType,_this.completed,_this.upcoming,_this.returns,_this.pending,_this.notReturned,_this.cancelled,_this.expired);
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.counts));
 }
 
 @override
 String toString() {
   final _this = this as StatusCountsModel;
-  return 'StatusCountsModel(completed: ${_this.completed}, upcoming: ${_this.upcoming}, returns: ${_this.returns}, pending: ${_this.pending}, notReturned: ${_this.notReturned}, cancelled: ${_this.cancelled}, expired: ${_this.expired})';
+  return 'StatusCountsModel(counts: ${_this.counts})';
 }
 
 
@@ -54,7 +51,7 @@ abstract mixin class $StatusCountsModelCopyWith<$Res>  {
   factory $StatusCountsModelCopyWith(StatusCountsModel value, $Res Function(StatusCountsModel) _then) = _$StatusCountsModelCopyWithImpl;
 @useResult
 $Res call({
- int completed, int upcoming, int returns, int pending,@JsonKey(name: 'not_returned') int notReturned, int cancelled, int expired
+ Map<BookingListFilter, int> counts
 });
 
 
@@ -71,16 +68,10 @@ class _$StatusCountsModelCopyWithImpl<$Res>
 
 /// Create a copy of StatusCountsModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? completed = null,Object? upcoming = null,Object? returns = null,Object? pending = null,Object? notReturned = null,Object? cancelled = null,Object? expired = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? counts = null,}) {
   return _then(StatusCountsModel(
-completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
-as int,upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
-as int,returns: null == returns ? _self.returns : returns // ignore: cast_nullable_to_non_nullable
-as int,pending: null == pending ? _self.pending : pending // ignore: cast_nullable_to_non_nullable
-as int,notReturned: null == notReturned ? _self.notReturned : notReturned // ignore: cast_nullable_to_non_nullable
-as int,cancelled: null == cancelled ? _self.cancelled : cancelled // ignore: cast_nullable_to_non_nullable
-as int,expired: null == expired ? _self.expired : expired // ignore: cast_nullable_to_non_nullable
-as int,
+counts: null == counts ? _self.counts : counts // ignore: cast_nullable_to_non_nullable
+as Map<BookingListFilter, int>,
   ));
 }
 
@@ -165,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled,  int expired)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<BookingListFilter, int> counts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StatusCountsModel() when $default != null:
-return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled,_that.expired);case _:
+return $default(_that.counts);case _:
   return orElse();
 
 }
@@ -186,10 +177,10 @@ return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled,  int expired)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<BookingListFilter, int> counts)  $default,) {final _that = this;
 switch (_that) {
 case _StatusCountsModel():
-return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled,_that.expired);case _:
+return $default(_that.counts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +197,10 @@ return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int completed,  int upcoming,  int returns,  int pending, @JsonKey(name: 'not_returned')  int notReturned,  int cancelled,  int expired)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<BookingListFilter, int> counts)?  $default,) {final _that = this;
 switch (_that) {
 case _StatusCountsModel() when $default != null:
-return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that.notReturned,_that.cancelled,_that.expired);case _:
+return $default(_that.counts);case _:
   return null;
 
 }
@@ -218,19 +209,19 @@ return $default(_that.completed,_that.upcoming,_that.returns,_that.pending,_that
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _StatusCountsModel implements StatusCountsModel {
-  const _StatusCountsModel({this.completed = 0, this.upcoming = 0, this.returns = 0, this.pending = 0, @JsonKey(name: 'not_returned') this.notReturned = 0, this.cancelled = 0, this.expired = 0});
-  factory _StatusCountsModel.fromJson(Map<String, dynamic> json) => _$StatusCountsModelFromJson(json);
+  const _StatusCountsModel({ Map<BookingListFilter, int> counts = const <BookingListFilter, int>{}}): _counts = counts;
+  
 
-@override@JsonKey() final  int completed;
-@override@JsonKey() final  int upcoming;
-@override@JsonKey() final  int returns;
-@override@JsonKey() final  int pending;
-@override@JsonKey(name: 'not_returned') final  int notReturned;
-@override@JsonKey() final  int cancelled;
-@override@JsonKey() final  int expired;
+ final  Map<BookingListFilter, int> _counts;
+@override@JsonKey() Map<BookingListFilter, int> get counts {
+  if (_counts is EqualUnmodifiableMapView) return _counts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_counts);
+}
+
 
 /// Create a copy of StatusCountsModel
 /// with the given fields replaced by the non-null parameter values.
@@ -238,25 +229,22 @@ class _StatusCountsModel implements StatusCountsModel {
 @pragma('vm:prefer-inline')
 _$StatusCountsModelCopyWith<_StatusCountsModel> get copyWith => __$StatusCountsModelCopyWithImpl<_StatusCountsModel>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$StatusCountsModelToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusCountsModel&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.upcoming, upcoming) || other.upcoming == upcoming)&&(identical(other.returns, returns) || other.returns == returns)&&(identical(other.pending, pending) || other.pending == pending)&&(identical(other.notReturned, notReturned) || other.notReturned == notReturned)&&(identical(other.cancelled, cancelled) || other.cancelled == cancelled)&&(identical(other.expired, expired) || other.expired == expired));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatusCountsModel&&const DeepCollectionEquality().equals(other.counts, _counts));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode {
-    return Object.hash(runtimeType,completed,upcoming,returns,pending,notReturned,cancelled,expired);
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_counts));
 }
 
 @override
 String toString() {
-    return 'StatusCountsModel(completed: $completed, upcoming: $upcoming, returns: $returns, pending: $pending, notReturned: $notReturned, cancelled: $cancelled, expired: $expired)';
+    return 'StatusCountsModel(counts: $counts)';
 }
 
 
@@ -267,7 +255,7 @@ abstract mixin class _$StatusCountsModelCopyWith<$Res> implements $StatusCountsM
   factory _$StatusCountsModelCopyWith(_StatusCountsModel value, $Res Function(_StatusCountsModel) _then) = __$StatusCountsModelCopyWithImpl;
 @override @useResult
 $Res call({
- int completed, int upcoming, int returns, int pending,@JsonKey(name: 'not_returned') int notReturned, int cancelled, int expired
+ Map<BookingListFilter, int> counts
 });
 
 
@@ -284,16 +272,10 @@ class __$StatusCountsModelCopyWithImpl<$Res>
 
 /// Create a copy of StatusCountsModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? completed = null,Object? upcoming = null,Object? returns = null,Object? pending = null,Object? notReturned = null,Object? cancelled = null,Object? expired = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? counts = null,}) {
   return _then(_StatusCountsModel(
-completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
-as int,upcoming: null == upcoming ? _self.upcoming : upcoming // ignore: cast_nullable_to_non_nullable
-as int,returns: null == returns ? _self.returns : returns // ignore: cast_nullable_to_non_nullable
-as int,pending: null == pending ? _self.pending : pending // ignore: cast_nullable_to_non_nullable
-as int,notReturned: null == notReturned ? _self.notReturned : notReturned // ignore: cast_nullable_to_non_nullable
-as int,cancelled: null == cancelled ? _self.cancelled : cancelled // ignore: cast_nullable_to_non_nullable
-as int,expired: null == expired ? _self.expired : expired // ignore: cast_nullable_to_non_nullable
-as int,
+counts: null == counts ? _self._counts : counts // ignore: cast_nullable_to_non_nullable
+as Map<BookingListFilter, int>,
   ));
 }
 
