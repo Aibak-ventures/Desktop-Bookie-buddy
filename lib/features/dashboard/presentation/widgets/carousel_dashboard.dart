@@ -1,6 +1,6 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
 import 'package:bookie_buddy_web/core/theme/app_colors.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/domain/entities/desktop_dashboard_carousel_entity/desktop_dashboard_carousel_entity.dart';
 import 'package:bookie_buddy_web/utils/extensions/widget_extensions.dart';
 import 'package:material_ui/material_ui.dart';
@@ -150,7 +150,7 @@ class CarouselDashboard extends StatelessWidget {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => AllBookingsDesktopScreen(initialStatusTab: statusTab),
+        builder: (_) => AllBookingsScreen(initialStatusTab: statusTab),
       ),
     );
   }

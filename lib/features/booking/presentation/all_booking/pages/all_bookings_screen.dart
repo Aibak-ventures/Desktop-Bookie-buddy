@@ -25,7 +25,7 @@ import 'package:bookie_buddy_web/utils/extensions/list_extensions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
-class AllBookingsDesktopScreen extends StatefulWidget {
+class AllBookingsScreen extends StatefulWidget {
   final BookingListFilter? initialStatusTab;
 
   /// Consulted once, in `initState`, in place of [initialStatusTab]. Lets a
@@ -36,19 +36,19 @@ class AllBookingsDesktopScreen extends StatefulWidget {
   /// immediately replace it.
   final BookingListFilter? Function()? pendingStatusTab;
 
-  const AllBookingsDesktopScreen({
+  const AllBookingsScreen({
     super.key,
     this.initialStatusTab,
     this.pendingStatusTab,
   });
 
   @override
-  State<AllBookingsDesktopScreen> createState() =>
-      AllBookingsDesktopScreenState();
+  State<AllBookingsScreen> createState() =>
+      AllBookingsScreenState();
 }
 
-class AllBookingsDesktopScreenState extends State<AllBookingsDesktopScreen>
-    with AutomaticKeepAliveClientMixin<AllBookingsDesktopScreen> {
+class AllBookingsScreenState extends State<AllBookingsScreen>
+    with AutomaticKeepAliveClientMixin<AllBookingsScreen> {
   // Kept alive across tab switches in the shell's PageView — without this,
   // Flutter disposes/remounts this screen when it scrolls out of view,
   // re-running initState's default "upcoming" load every time the Orders

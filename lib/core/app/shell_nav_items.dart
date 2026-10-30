@@ -1,5 +1,5 @@
 import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:bookie_buddy_web/features/global_search/presentation/pages/global_search_screen.dart';
@@ -31,7 +31,7 @@ List<ShellNavItem> buildShellNavItems({
   required VoidCallback onNewOrderClosed,
   required void Function(BookingListFilter statusTab) onNavigateToBookings,
   required GlobalKey<NewBookingScreenState> newBookingKey,
-  required GlobalKey<AllBookingsDesktopScreenState> allBookingsKey,
+  required GlobalKey<AllBookingsScreenState> allBookingsKey,
   required BookingListFilter? Function() pendingOrdersFilter,
 }) => [
   ShellNavItem(
@@ -58,7 +58,7 @@ List<ShellNavItem> buildShellNavItems({
     id: ShellTabId.orders,
     icon: Icons.list_alt,
     label: 'Orders',
-    screenBuilder: (_) => AllBookingsDesktopScreen(
+    screenBuilder: (_) => AllBookingsScreen(
       key: allBookingsKey,
       pendingStatusTab: pendingOrdersFilter,
     ),

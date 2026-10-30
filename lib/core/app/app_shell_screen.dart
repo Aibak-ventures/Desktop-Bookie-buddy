@@ -10,7 +10,7 @@ import 'package:bookie_buddy_web/core/constants/enums/booking_list_filter_enum.d
 import 'package:bookie_buddy_web/core/di/app_dependencies.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/bloc/user_cubit/user_cubit.dart';
 import 'package:bookie_buddy_web/features/auth/presentation/pages/login_screen.dart';
-import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_desktop_screen.dart';
+import 'package:bookie_buddy_web/features/booking/presentation/all_booking/pages/all_bookings_screen.dart';
 import 'package:bookie_buddy_web/features/booking/presentation/new_booking/pages/new_booking_screen.dart';
 import 'package:bookie_buddy_web/features/dashboard/presentation/bloc/dashboard_bloc/dashboard_bloc.dart';
 import 'package:bookie_buddy_web/features/printer/domain/usecases/check_print_bridge_available_usecase.dart';
@@ -31,7 +31,7 @@ class AppShellScreenState extends State<AppShellScreen> {
   late final List<ShellNavItem> navItems;
 
   final GlobalKey<NewBookingScreenState> _newBookingKey = GlobalKey();
-  final GlobalKey<AllBookingsDesktopScreenState> _allBookingsKey = GlobalKey();
+  final GlobalKey<AllBookingsScreenState> _allBookingsKey = GlobalKey();
 
   /// Set by [_navigateToBookingsTab] just before the Orders screen's very
   /// first mount, so its `initState` can pick up the real target status
