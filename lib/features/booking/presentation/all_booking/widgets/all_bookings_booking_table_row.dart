@@ -15,7 +15,14 @@ import 'package:material_ui/material_ui.dart';
 class AllBookingsBookingTableRow extends StatelessWidget {
   final DesktopBookingItemEntity booking;
 
-  const AllBookingsBookingTableRow({super.key, required this.booking});
+  /// Shows the booked (created) date instead of the pickup date.
+  final bool showBookedDate;
+
+  const AllBookingsBookingTableRow({
+    super.key,
+    required this.booking,
+    this.showBookedDate = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +95,9 @@ class AllBookingsBookingTableRow extends StatelessWidget {
                 SizedBox(
                   width: 95,
                   child: Text(
-                    _formatDateWithLabel(booking.pickupDate),
+                    _formatDateWithLabel(
+                      showBookedDate ? booking.createdAt : booking.pickupDate,
+                    ),
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
@@ -212,6 +221,7 @@ class AllBookingsBookingTableRow extends StatelessWidget {
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final tomorrow = today.add(const Duration(days: 1));
+      final yesterday = today.subtract(const Duration(days: 1));
       final dateOnly = DateTime(
         bookingDate.year,
         bookingDate.month,
@@ -222,6 +232,8 @@ class AllBookingsBookingTableRow extends StatelessWidget {
         return 'Today';
       } else if (dateOnly == tomorrow) {
         return 'Tomorrow';
+      } else if (dateOnly == yesterday) {
+        return 'Yesterday';
       }
 
       // Default: Use formatted date

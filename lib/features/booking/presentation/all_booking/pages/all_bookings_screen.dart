@@ -686,7 +686,10 @@ class AllBookingsScreenState extends State<AllBookingsScreen>
             final itemIndex = index - 1;
 
             if (itemIndex < bookings.length) {
-              return AllBookingsBookingTableRow(booking: bookings[itemIndex]);
+              return AllBookingsBookingTableRow(
+                booking: bookings[itemIndex],
+                showBookedDate: _showBookedDate,
+              );
             } else {
               // Loading indicator or bottom padding
               if (isPaginating) {
@@ -704,9 +707,12 @@ class AllBookingsScreenState extends State<AllBookingsScreen>
     );
   }
 
+  /// The "All" filter is based on the booked (created) date, not pickup.
+  bool get _showBookedDate => _activeStatusTab == BookingListFilter.all;
+
   Widget _buildTableHeader() => _activeActionTab == 1
       ? const AllBookingsSalesTableHeader()
-      : const AllBookingsBookingTableHeader();
+      : AllBookingsBookingTableHeader(showBookedDate: _showBookedDate);
 
   Widget _buildSalesTableRow(SaleEntity sale) =>
       AllBookingsSalesTableRow(sale: sale);

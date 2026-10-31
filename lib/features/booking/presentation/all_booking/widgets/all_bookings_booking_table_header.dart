@@ -2,7 +2,10 @@ import 'package:material_ui/material_ui.dart';
 
 /// Column header row for the bookings table in [AllBookingsDesktopScreen].
 class AllBookingsBookingTableHeader extends StatelessWidget {
-  const AllBookingsBookingTableHeader({super.key});
+  /// Shows "Booked" instead of "Pickup" for the date column.
+  final bool showBookedDate;
+
+  const AllBookingsBookingTableHeader({super.key, this.showBookedDate = false});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +18,9 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
           topRight: Radius.circular(12),
         ),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             width: 100,
             child: Text(
               'Booking ID',
@@ -28,8 +31,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12),
-          SizedBox(
+          const SizedBox(width: 12),
+          const SizedBox(
             width: 105,
             child: Text(
               'Delivery Status',
@@ -41,20 +44,20 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           SizedBox(
             width: 95,
             child: Text(
-              'Pickup',
-              style: TextStyle(
+              showBookedDate ? 'Booked' : 'Pickup',
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
             ),
           ),
-          SizedBox(width: 12),
-          Expanded(
+          const SizedBox(width: 12),
+          const Expanded(
             child: Text(
               'Items',
               style: TextStyle(
@@ -64,7 +67,7 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 110,
             child: Text(
               'Customer',
@@ -75,8 +78,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12),
-          SizedBox(
+          const SizedBox(width: 12),
+          const SizedBox(
             width: 70,
             child: Text(
               'Paid',
@@ -87,8 +90,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12),
-          SizedBox(
+          const SizedBox(width: 12),
+          const SizedBox(
             width: 70,
             child: Text(
               'Balance',
@@ -99,8 +102,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 5),
-          SizedBox(
+          const SizedBox(width: 5),
+          const SizedBox(
             width: 90,
             child: Text(
               'Payment Status',
@@ -111,8 +114,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 12),
-          SizedBox(
+          const SizedBox(width: 12),
+          const SizedBox(
             width: 80,
             child: Text(
               'Staff',
@@ -123,8 +126,8 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 10),
-          SizedBox(
+          const SizedBox(width: 10),
+          const SizedBox(
             width: 80,
             child: Text(
               'Total',
@@ -135,7 +138,7 @@ class AllBookingsBookingTableHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 28),
+          const SizedBox(width: 28),
         ],
       ),
     );
